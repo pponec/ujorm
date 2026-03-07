@@ -40,21 +40,20 @@ import java.util.stream.StreamSupport;
  *
  * <h4>Sample of usage</h4>
  * <pre>
- * try (var builder = new SqlParamBuilder(dbConnection)) {
-      List&lt;Employee&gt; employees = builder.sql("""
-                SELECT t.id, t.name, t.created
-                FROM employee t
-                WHERE t.id &gt; :id
-                  AND t.code IN (:code)
-                ORDER BY t.id
-                """)
-        .bind("id", 10)
-        .bind("code", "T", "V")
-        .streamMap(rs -&gt; new Employee(
-                rs.getInt("id"),
-                rs.getString("name"),
-                rs.getObject("created", LocalDate.class)))
-        .toList();
+ *  List&lt;Employee&gt; employees = SqlParamBuilder.run(dbConnection, build -> build.sql("""
+ *         SELECT t.id, t.name, t.created
+ *         FROM employee t
+ *         WHERE t.id > :id
+ *           AND t.code IN (:code)
+ *         ORDER BY t.id
+ *         """)
+ *         .bind("id", 10)
+ *         .bind("code", "T", "V")
+ *         .streamMap(rs -> new Employee(
+ *                 rs.getInt("id"),
+ *                 rs.getString("name"),
+ *                 rs.getObject("created", LocalDate.class)))
+ *         .toList()
  * }
  * </pre>
  * Licence: Apache License, Version 2.0
