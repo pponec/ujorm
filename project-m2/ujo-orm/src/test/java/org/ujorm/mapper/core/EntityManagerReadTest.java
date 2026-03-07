@@ -35,18 +35,15 @@ class EntityManagerReadTest extends AbstractDaoTest {
     @Test
     void testSelectBuilder() {
         var cityDao = EntityManager.of(City.class, Long.class).crud(dbConnection);
-        var builder = cityDao.select("name = 'California'");
-
-        Assertions.assertNotNull(builder);
-
         var expectedSql = """
                 SELECT "ID" AS "id"
                 , "NAME" AS "name"
                 , "COUNTRY_CODE" AS "countryCode"
                 , "LATITUDE" AS "latitude"
-                , "LONGITUDE" AS "longitude" FROM "CITY" WHERE name = 'California'
+                , "LONGITUDE" AS "longitude" FROM "CITY" WHERE name = :name
                 """.trim();
-        var resultSql = builder.toString().replace(", ", "\n, ");
+        var sql = cityDao.selectWhere("name = :name", b -> b.toString());
+        var resultSql = sql.toString().replace(", ", "\n, ");
         Assertions.assertEquals(expectedSql, resultSql);
     }
 }
