@@ -380,6 +380,7 @@ public class SqlParamBuilder implements AutoCloseable {
                 throw (ex instanceof RuntimeException re) ? re : new SqlException(ex);
             }
         }
+        @NotNull
         R applyFunction(T resultSet) throws SQLException;
     }
 
@@ -409,8 +410,6 @@ public class SqlParamBuilder implements AutoCloseable {
     public static <R> R run(Connection connection, final SqlFunction<SqlParamBuilder, R> fun) {
         try (var builder = new SqlParamBuilder(connection)) {
             return fun.applyFunction(builder);
-        } catch (SQLException ex) {
-            throw SQLExceptionBuilder.build(ex);
         } catch (Exception ex) {
             throw (ex instanceof RuntimeException re) ? re : new SqlException(ex);
         }
