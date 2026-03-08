@@ -44,7 +44,7 @@ public class UjormMetaProcessor extends AbstractProcessor {
         processingEnv.getMessager().printMessage(Diagnostic.Kind.NOTE, "Ujorm3 APT Processor initialized.");
     }
 
-    /** Dynamically supports whatever Java version the compiler is running (e.g., Java 17, 21, 25) */
+    /** Dynamically supports whatever Java version the compiler is running. */
     @Override
     public SourceVersion getSupportedSourceVersion() {
         return SourceVersion.latestSupported();
@@ -52,27 +52,25 @@ public class UjormMetaProcessor extends AbstractProcessor {
 
     @Override
     public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
-        // We iterate over ALL root elements and their inner classes
         for (var element : roundEnv.getRootElements()) {
             scanElementRecursive(element);
         }
         return false;
     }
 
-    /** Recursively scans elements to find nested classes annotated with @Entity or @Table */
+    /** Recursively scans elements to find nested classes annotated with @Entity or @Table. */
     private void scanElementRecursive(Element element) {
         if (element.getKind() == ElementKind.CLASS || element.getKind() == ElementKind.RECORD) {
             if (hasEntityOrTableAnnotation(element)) {
                 processClassElement((TypeElement) element);
             }
-            // Scan inner elements (nested classes)
             for (var enclosed : element.getEnclosedElements()) {
                 scanElementRecursive(enclosed);
             }
         }
     }
 
-    /** Manually checks if the element has @Entity or @Table */
+    /** Manually checks if the element has @Entity or @Table. */
     private boolean hasEntityOrTableAnnotation(Element element) {
         for (var mirror : element.getAnnotationMirrors()) {
             var annoName = mirror.getAnnotationType().asElement().getSimpleName().toString();
@@ -97,7 +95,9 @@ public class UjormMetaProcessor extends AbstractProcessor {
 
         processingEnv.getMessager().printMessage(Diagnostic.Kind.NOTE, "Ujorm3: Generating metamodel -> " + fullClassName);
 
-        var sourceCode = SourceGenerator.generate(classElement, prefix, suffix, targetPackage, processingEnv);
+        // Instantiate the generator as a regular object
+        var generator = new SourceGenerator(processingEnv, prefix, suffix);
+        var sourceCode = generator.generate(classElement, targetPackage);
 
         try {
             var sourceFile = processingEnv.getFiler().createSourceFile(fullClassName, classElement);
@@ -109,11 +109,21 @@ public class UjormMetaProcessor extends AbstractProcessor {
         }
     }
 
-    /** Internal class for generating the source code text. */
+    /** Inner class for generating the source code text using an object-oriented approach. */
     private static class SourceGenerator {
 
+        private final ProcessingEnvironment env;
+        private final String prefix;
+        private final String suffix;
+
+        public SourceGenerator(ProcessingEnvironment env, String prefix, String suffix) {
+            this.env = env;
+            this.prefix = prefix;
+            this.suffix = suffix;
+        }
+
         /** Checks if the element has a @Transient annotation. */
-        private static boolean hasTransientAnnotation(Element element) {
+        private boolean hasTransientAnnotation(Element element) {
             for (var mirror : element.getAnnotationMirrors()) {
                 if (mirror.getAnnotationType().asElement().getSimpleName().toString().equals("Transient")) {
                     return true;
@@ -123,47 +133,62 @@ public class UjormMetaProcessor extends AbstractProcessor {
         }
 
         /** Checks for valid getter and setter methods, including Lombok annotations support. */
-        private static boolean hasValidGetterAndSetter(TypeElement classElement, VariableElement field) {
-            var suffix = capitalize(field.getSimpleName().toString());
-            var hasGetter = false;
-            var hasSetter = false;
+        private boolean hasValidGetterAndSetter(TypeElement classElement, VariableElement field) {
+            var fieldSuffix = capitalize(field.getSimpleName().toString());
+            var hasExplicitGetter = false;
+            var hasExplicitSetter = false;
 
             // 1. Check explicitly written methods
             var isBoolean = field.asType().getKind() == TypeKind.BOOLEAN;
-            var getterName1 = "get" + suffix;
-            var getterName2 = isBoolean ? "is" + suffix : getterName1;
-            var setterName = "set" + suffix;
+            var getterName1 = "get" + fieldSuffix;
+            var getterName2 = isBoolean ? "is" + fieldSuffix : getterName1;
+            var setterName = "set" + fieldSuffix;
 
             var methods = ElementFilter.methodsIn(classElement.getEnclosedElements());
             for (var method : methods) {
                 var name = method.getSimpleName().toString();
                 if ((name.equals(getterName1) || name.equals(getterName2)) && method.getParameters().isEmpty()) {
-                    hasGetter = true;
+                    hasExplicitGetter = true;
                 }
                 if (name.equals(setterName) && method.getParameters().size() == 1) {
-                    hasSetter = true;
+                    hasExplicitSetter = true;
                 }
             }
 
             // 2. Check Lombok annotations on the CLASS level (@Getter, @Setter, @Data)
+            var classHasGetter = false;
+            var classHasSetter = false;
             for (var am : classElement.getAnnotationMirrors()) {
                 var annoName = am.getAnnotationType().asElement().getSimpleName().toString();
-                if (annoName.equals("Getter") || annoName.equals("Data")) hasGetter = true;
-                if (annoName.equals("Setter") || annoName.equals("Data")) hasSetter = true;
+                if (annoName.equals("Getter") || annoName.equals("Data")) classHasGetter = true;
+                if (annoName.equals("Setter") || annoName.equals("Data")) classHasSetter = true;
             }
 
-            // 3. Check Lombok annotations on the FIELD level (@Getter, @Setter)
+            // 3. Check Lombok annotations on the FIELD level (overrides class level)
+            var hasLombokGetter = classHasGetter;
+            var hasLombokSetter = classHasSetter;
             for (var am : field.getAnnotationMirrors()) {
                 var annoName = am.getAnnotationType().asElement().getSimpleName().toString();
-                if (annoName.equals("Getter")) hasGetter = true;
-                if (annoName.equals("Setter")) hasSetter = true;
+
+                // Safe and exact way to read annotation values in APT
+                var isNone = false;
+                for (var entry : am.getElementValues().entrySet()) {
+                    // entry.getValue() represents the actual set value, e.g., lombok.AccessLevel.NONE
+                    if (entry.getValue().toString().contains("NONE")) {
+                        isNone = true;
+                        break;
+                    }
+                }
+
+                if (annoName.equals("Getter")) hasLombokGetter = !isNone;
+                if (annoName.equals("Setter")) hasLombokSetter = !isNone;
             }
 
-            return hasGetter && hasSetter;
+            return (hasExplicitGetter || hasLombokGetter) && (hasExplicitSetter || hasLombokSetter);
         }
 
         /** Formats the type name and handles primitive boxing for generics. */
-        private static String getTypeName(TypeMirror type, ProcessingEnvironment env) {
+        private String getTypeName(TypeMirror type) {
             var typeUtils = env.getTypeUtils();
             var objectType = type;
 
@@ -176,7 +201,6 @@ public class UjormMetaProcessor extends AbstractProcessor {
                 return objectType.toString();
             }
 
-            // Extract the fully qualified canonical name for generic parameters
             var result = getCanonicalName(typeElement);
             if (result.startsWith("java.lang.")) {
                 return result.substring(10);
@@ -184,8 +208,8 @@ public class UjormMetaProcessor extends AbstractProcessor {
             return result;
         }
 
-        /** Constructs the canonical name manually to properly support nested classes in APT. */
-        private static String getCanonicalName(TypeElement element) {
+        /** Constructs the canonical name manually to properly support nested classes. */
+        private String getCanonicalName(TypeElement element) {
             var enclosing = element.getEnclosingElement();
             if (enclosing != null && enclosing.getKind() == ElementKind.CLASS) {
                 return getCanonicalName((TypeElement) enclosing) + "." + element.getSimpleName();
@@ -194,7 +218,7 @@ public class UjormMetaProcessor extends AbstractProcessor {
         }
 
         /** Capitalizes the first letter of the string. */
-        private static String capitalize(String str) {
+        private String capitalize(String str) {
             if (str == null || str.isEmpty()) {
                 return str;
             }
@@ -202,10 +226,8 @@ public class UjormMetaProcessor extends AbstractProcessor {
         }
 
         /** Generates the final Java source code string for the metamodel. */
-        public static String generate(TypeElement classElement, String prefix, String suffix, String targetPackage, ProcessingEnvironment env) {
-            // Get fully qualified name (e.g., org.benchmark.ujorm.UjormBenchmark.Employee)
+        public String generate(TypeElement classElement, String targetPackage) {
             var canonicalName = getCanonicalName(classElement);
-            // Get simple name (e.g., Employee)
             var originalName = classElement.getSimpleName().toString();
             var newClassName = prefix + originalName + suffix;
             var isRecord = classElement.getKind() == ElementKind.RECORD;
@@ -213,7 +235,6 @@ public class UjormMetaProcessor extends AbstractProcessor {
             var result = new StringBuilder();
             result.append("package ").append(targetPackage).append(";\n\n");
 
-            // Direct import of the exact entity (works beautifully for nested classes too)
             if (!canonicalName.isEmpty()) {
                 result.append("import ").append(canonicalName).append(";\n");
             }
@@ -225,7 +246,6 @@ public class UjormMetaProcessor extends AbstractProcessor {
             result.append("/** Auto-generated metamodel for ").append(originalName).append(" */\n");
             result.append("public class ").append(newClassName).append(" {\n\n");
 
-            // Use the simple name since we explicitly imported the class
             result.append("    public static final DomainHandler<").append(originalName)
                     .append("> meta = DomainHandlerProvider.getHandler(").append(originalName).append(".class);\n\n");
 
@@ -263,18 +283,18 @@ public class UjormMetaProcessor extends AbstractProcessor {
 
             for (var field : validFields) {
                 var fieldName = field.getSimpleName().toString();
-                var typeName = getTypeName(field.asType(), env);
+                var typeName = getTypeName(field.asType());
 
                 if (isRecord) {
                     result.append("    /** The ").append(fieldName).append(" property */\n");
                 }
 
-                // Append the field Key definition using the simple name (e.g., Key<Employee, Long>)
                 result.append("    public static final Key<").append(originalName).append(", ").append(typeName).append("> ")
                         .append(fieldName).append(" = meta.getKey(\"").append(fieldName).append("\");\n");
             }
 
             result.append("}\n");
             return result.toString();
-        }    }
+        }
+    }
 }
