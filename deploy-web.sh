@@ -19,16 +19,23 @@ URL=https://oss.sonatype.org/service/local/staging/deploy/maven2/
 mvn clean install
 cd "project-m2"
 
+ARTEFACTS="
+  ujo-tools
+  ujo-web
+  ujo-core
+  ujo-orm
+  ujo-converter
+  ujorm-meta-processor
+"
+
 # For all artefact SIGN and DEPLOY:
-for ARTEFACT in ujo-tools ujo-web ujo-converter ujo-core ujo-orm ujorm-meta-processor
+for ITEM in $ARTEFACTS
 do
   (
-	  echo ARTEFACT=$ARTEFACT
-	  cd $ARTEFACT
+    echo "Processing ARTEFACT: $ITEM"
+    cd $ITEM
     mvn clean deploy -P gpg
   )
 done
 
 echo "Release $RELEASE is done"
-
-
