@@ -125,12 +125,24 @@
                 <version>3.14.1</version>
                 <configuration>
                 <annotationProcessorPaths>
+                    <!-- APT configuration for Lombok -->
                     <path>
                         <groupId>org.projectlombok</groupId>
                         <artifactId>lombok</artifactId>
                         <version>${lombok.version}</version>
                     </path>
+                    <!-- APT configuration for Ujorm -->
+                    <path>
+                        <groupId>org.ujorm</groupId>
+                        <artifactId>ujorm-meta-processor</artifactId>
+                        <version>3.0.0-BETA</version>
+                    </path>
                 </annotationProcessorPaths>
+                <compilerArgs>
+                    <!-- Optional attributes for APT Ujorm -->
+                    <arg>-Aujorm.prefix=Meta</arg>
+                    <arg>-Aujorm.suffix=</arg>
+                </compilerArgs>
             </configuration>
             </plugin>
 

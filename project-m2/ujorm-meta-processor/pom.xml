@@ -4,7 +4,7 @@
 
     <groupId>org.ujorm</groupId>
     <artifactId>ujorm-meta-processor</artifactId>
-    <version>3.0.0-SNAPSHOT</version>
+    <version>3.0.0-BETA</version>
     <packaging>jar</packaging>
 
     <properties>
