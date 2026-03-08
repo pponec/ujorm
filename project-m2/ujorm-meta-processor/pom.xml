@@ -8,7 +8,7 @@
     <packaging>jar</packaging>
     <name>ujorm-meta-processor</name>
     <description>Generates metamodel from entities during the compilation phase using APT.</description>
-    <url>https://ujorm.org/www/web/index.html</url> <!-- home page -->
+    <url>https://ujorm.org/www/web/index.html</url>
 
     <licenses>
         <license>
@@ -44,11 +44,80 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.11.0</version>
+                <version>3.14.1</version>
                 <configuration>
-                    <!-- Prevents an error when compiling APT itself -->
                     <compilerArgument>-proc:none</compilerArgument>
                 </configuration>
+            </plugin>
+
+            <!-- 1. Central Publishing Plugin (The most important part) -->
+            <plugin>
+                <groupId>org.sonatype.central</groupId>
+                <artifactId>central-publishing-maven-plugin</artifactId>
+                <version>0.9.0</version>
+                <extensions>true</extensions>
+                <configuration>
+                    <publishingServerId>central</publishingServerId>
+                    <autoPublish>true</autoPublish>
+                </configuration>
+            </plugin>
+
+            <!-- 2. GPG Signing -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-gpg-plugin</artifactId>
+                <version>3.2.8</version>
+                <executions>
+                    <execution>
+                        <id>sign-artifacts</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>sign</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <!-- 3. Sources -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <version>3.3.1</version>
+                <executions>
+                    <execution>
+                        <id>attach-sources</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <!-- 4. Javadoc -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>3.6.3</version>
+                <configuration>
+                    <failOnError>false</failOnError>
+                    <doclint>none</doclint>
+
+                    <javadocDirectory>${basedir}/src/javadoc</javadocDirectory>
+                    <docfilessubdirs>true</docfilessubdirs>
+                    <encoding>UTF-8</encoding>
+                    <bottom><![CDATA[Copyright 2025, <a target="_blank" href="https://ujorm.org/">PPonec</a>]]></bottom>
+                    <doctitle>Ujorm ${revision} (${project.name})</doctitle>
+                    <windowtitle>Ujorm ${revision} - ${project.name}</windowtitle>
+                    <packagesheader><![CDATA[<a class="UjoLogo" target="_top" href="https://ujorm.org/"> Ujorm<br>release ${project.version}</a>]]></packagesheader>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>attach-javadocs</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>
