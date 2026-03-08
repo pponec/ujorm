@@ -138,7 +138,7 @@ This test class demonstrates the full lifecycle of entities within the framework
 Please note that a database commit is performed automatically by the parent class after each test method finishes.
 Feel free to run and modify this test locally to get a hands-on feel for the API.
 
-Explore the full source code here: [BasicDemoTest.java in the Ujorm project](https://github.com/pponec/ujorm/blob/release/2026-03-08/3.0.0-BETA/project-m2/ujo-orm/src/test/java/org/ujorm/orm/tutorial/BasicDemoTest.java).
+Explore the full source code here: [BasicDemoTest.java in the Ujorm project](https://github.com/pponec/ujorm/blob/release/2026-03-08/3.0.0-SNAPSHOT/project-m2/ujo-orm/src/test/java/org/ujorm/orm/tutorial/BasicDemoTest.java).
 
 
 ## Class Diagram
@@ -183,7 +183,7 @@ Ujorm requires **Java 17 or higher**.
 <dependency>
     <groupId>org.ujorm</groupId>
     <artifactId>ujorm-core</artifactId>
-    <version>3.0.0-BETA</version>
+    <version>3.0.0-SNAPSHOT</version>
 </dependency>
 ```
 
@@ -203,12 +203,12 @@ Add the Ujorm core dependency and configure the `maven-compiler-plugin` to inclu
     <dependency>
         <groupId>org.ujorm</groupId>
         <artifactId>ujorm-core</artifactId>
-        <version>3.0.0-BETA</version>
+        <version>3.0.0-SNAPSHOT</version>
     </dependency>
     <dependency>
         <groupId>org.ujorm</groupId>
         <artifactId>ujorm-orm</artifactId>
-        <version>3.0.0-BETA</version>
+        <version>3.0.0-SNAPSHOT</version>
     </dependency>
 </dependencies>
 
@@ -231,7 +231,7 @@ Add the Ujorm core dependency and configure the `maven-compiler-plugin` to inclu
                 <path>
                     <groupId>org.ujorm</groupId>
                     <artifactId>ujorm-meta-processor</artifactId>
-                    <version>3.0.0-BETA</version>
+                    <version>3.0.0-SNAPSHOT</version>
                 </path>
             </annotationProcessorPaths>
             <compilerArgs>
@@ -273,7 +273,7 @@ public class MetaEmployee {
 
 Performance tests comparing Ujorm3 to popular modern ORM frameworks were executed using an in-memory database. While performance differences may blur on slower production databases, Ujorm's lightweight nature significantly reduces the deployment footprint and maintenance overhead.
 
-**Version tested:** `3.0.0-BETA`  
+**Version tested:** `3.0.0-SNAPSHOT`  
 **Full benchmark source and results:** [GitHub: orm-benchmarks](https://github.com/pponec/orm-benchmarks?tab=readme-ov-file#orm-benchmark)
 
 | Framework | Operations / sec | JAR Size Profile |
