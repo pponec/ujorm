@@ -85,9 +85,8 @@ class ConfigImplTest {
     }
 
     @Test
-    void testMakeReadOnlyThrowsExceptionOnModification() {
-        var config = new ConfigImpl();
-        config.makeReadOnly();
+    void testLockThrowsExceptionOnModification() {
+        var config = new ConfigImpl().lock();
 
         // Verifies that locked configuration prevents further modifications
         var exception = assertThrows(

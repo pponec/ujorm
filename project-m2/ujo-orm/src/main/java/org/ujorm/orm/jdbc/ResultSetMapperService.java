@@ -42,7 +42,7 @@ public class ResultSetMapperService {
     }
 
     public static final ResultSetMapperService of() {
-        return new ResultSetMapperService(DomainHandlerProvider.provider(), new ConfigImpl());
+        return new ResultSetMapperService(DomainHandlerProvider.provider(), Config.ofDefault());
     }
 
     public static final ResultSetMapperService ofSingleton(Config config) {
