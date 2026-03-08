@@ -28,7 +28,6 @@ To maintain a high utility-to-code ratio and minimize bugs, Ujorm3 intentionally
 * [Class Diagram](#class-diagram)
 * [Dependencies & Setup](#dependencies--setup)
 * [Code Generation (Meta Classes)](#code-generation-meta-classes)
-* [Architecture & Caching](#architecture--caching)
 * [Benchmarks](#benchmarks)
 * [FAQ](#faq)
 * [Feedback & Contributions](#feedback--contributions)
@@ -145,7 +144,7 @@ Explore the full source code here: [BasicDemoTest.java in the Ujorm project](htt
 ## Class Diagram
 
 <p align="center">
-  <img src="docs/images/OrmApi.svg" width="600" height="400" alt="OrmApi Class Diagram">
+  <img src="docs/images/OrmApi.svg" width="700" height="400" alt="OrmApi Class Diagram">
 </p>
 
 The image shows a simplified class diagram describing the API for working with the **Ujorm3** library.
@@ -164,6 +163,17 @@ Entities are domain objects with a 1:1 relationship to database columns.
 The same types of objects and annotations are supported for entities as in the previous cases.
 For basic entity manipulation, the `EntityManager` creates a `Crud` object that works with a database connection.
 This object provides all standard database operations of the **CRUD** type.
+
+### Caching Strategy
+
+There is **no data caching** for user queries. However, to maximize speed, Ujorm caches metadata:
+
+* **ResultSetMapper:** Caches column mapping structures to avoid repeatedly analyzing dot-notation labels or querying JDBC metadata. If the cache exceeds the limit (default 512 distinct queries), it clears itself to prevent memory leaks.
+* **EntityManager:** Retains the database table metamodel for each entity. It is recommended to use the `EntityManagerService` to retrieve shared singleton instances.
+
+### Under the Hood
+
+The original `Ujo` key-value architecture is now hidden entirely within the module's internal implementation. The bytecode generation happens purely in RAM, requiring no temporary disk space.
 
 ## Dependencies & Setup
 
@@ -256,29 +266,6 @@ public class MetaEmployee {
     public static final Key<Employee, Employee> boss = meta.getKey("boss");
 }
 ```
-
----
-
-## Architecture & Caching
-
-The ORM implementation is divided into three decoupled parts:
-
-1.  **SQL Builder:** Constructs parameterized SQL SELECT statements and returns a `Stream<ResultSet>`.
-2.  **Converter:** Maps the `ResultSet` into domain objects using dot-notation.
-3.  **CrudManager:** Handles PK-based entity management.
-
-### Caching Strategy
-
-There is **no data caching** for user queries. However, to maximize speed, Ujorm caches metadata:
-
-* **ResultSetMapper:** Caches column mapping structures to avoid repeatedly analyzing dot-notation labels or querying JDBC metadata. If the cache exceeds the limit (default 512 distinct queries), it clears itself to prevent memory leaks.
-* **EntityManager:** Retains the database table metamodel for each entity. It is recommended to use the `EntityManagerService` to retrieve shared singleton instances.
-
-### Under the Hood
-
-The original `Ujo` key-value architecture is now hidden entirely within the module's internal implementation. The bytecode generation happens purely in RAM, requiring no temporary disk space.
-
-*Acknowledgments:* The concept of mapping SQL columns to JavaBeans via column names was heavily inspired by the SimpleFlatMapper project, which traces its lineage back to iBATIS (2001) and NeXT's Enterprise Objects Framework (1994). Runtime bytecode generation was inspired by CGLIB (2000).
 
 ---
 
