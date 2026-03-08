@@ -20,7 +20,7 @@ mvn clean install
 cd "project-m2"
 
 # For all artefact SIGN and DEPLOY:
-for ARTEFACT in ujo-tools ujo-web ujo-converter
+for ARTEFACT in ujo-tools ujo-web ujo-converter ujo-core ujo-orm ujorm-meta-processor
 do
   (
 	  echo ARTEFACT=$ARTEFACT

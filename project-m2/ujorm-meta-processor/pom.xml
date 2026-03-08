@@ -6,10 +6,35 @@
     <artifactId>ujorm-meta-processor</artifactId>
     <version>3.0.0-BETA</version>
     <packaging>jar</packaging>
+    <name>ujorm-meta-processor</name>
+    <description>Generates metamodel from entities during the compilation phase using APT.</description>
+    <url>https://ujorm.org/www/web/index.html</url> <!-- home page -->
+
+    <licenses>
+        <license>
+            <name>Apache License, Version 2.0</name>
+            <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+    <developers>
+        <developer>
+            <id>pponec</id>
+            <name>PPonec</name>
+            <email>pponec@gmail.com</email>
+        </developer>
+    </developers>
+    <scm>
+        <url>https://github.com/pponec/ujorm.git</url>
+        <connection>scm:git:git@github.com/pponec/ujorm.git</connection>
+        <developerConnection>scm:git:git@github.com/pponec/ujorm.git</developerConnection>
+    </scm>
 
     <properties>
-        <maven.compiler.source>17</maven.compiler.source>
-        <maven.compiler.target>17</maven.compiler.target>
+        <revision>3.0.0-BETA</revision>
+        <java.version>17</java.version>
+        <maven.compiler.target>${java.version}</maven.compiler.target>
+        <maven.compiler.source>${java.version}</maven.compiler.source>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     </properties>

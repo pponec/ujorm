@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
-/** Generates Ujorm metamodel from entities during the compilation phase using APT. */
+/** Generates metamodel from entities during the compilation phase using APT. */
 @SupportedAnnotationTypes({
         "javax.persistence.Entity", "javax.persistence.Table",
         "jakarta.persistence.Entity", "jakarta.persistence.Table"
