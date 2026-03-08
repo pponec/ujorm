@@ -292,12 +292,12 @@ public final class EntityManager<D, V> {
 
         @Override
         @SafeVarargs
-        public final D[] insertBatch(@NotNull D... domains) {
+        public final D[] insert(@NotNull D... domains) {
             if (domains == null || domains.length == 0) {
                 return domains;
             }
             var index = new AtomicInteger(0);
-            insertBatch(Arrays.stream(domains), newDomain -> {
+            insert(Arrays.stream(domains), newDomain -> {
                 while (index.get() < domains.length && domains[index.get()] == null) {
                     index.incrementAndGet();
                 }
@@ -321,7 +321,7 @@ public final class EntityManager<D, V> {
          * @return The total number of rows inserted.
          */
         @Override
-        public final long insertBatch(@NotNull Stream<D> domains, @Nullable Consumer<D> onInserted) {
+        public final long insert(@NotNull Stream<D> domains, @Nullable Consumer<D> onInserted) {
             var result = 0L;
             if (domains == null) return result;
             var safeStream = domains.isParallel() ? domains.sequential() : domains;

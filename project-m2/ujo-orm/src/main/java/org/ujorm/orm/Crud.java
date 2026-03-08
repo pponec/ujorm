@@ -50,7 +50,7 @@ public interface Crud<D, V> {
      *                   especially for immutable objects (Records) where a new instance is yielded.
      * @return The total number of successfully inserted rows.
      */
-    long insertBatch(@NotNull Stream<D> domains, @Nullable Consumer<D> onInserted);
+    long insert(@NotNull Stream<D> domains, @Nullable Consumer<D> onInserted);
 
     /**
      * Inserts an array (or varargs) of domain objects using batching support.
@@ -68,7 +68,7 @@ public interface Crud<D, V> {
      * @return The original array containing the inserted entities, updated with generated identifiers.
      */
     @SuppressWarnings("unchecked")
-    D[] insertBatch(@NotNull D... domains);
+    D[] insert(@NotNull D... domains);
 
     /**
      * Inserts a single domain object into the database.
@@ -126,9 +126,9 @@ public interface Crud<D, V> {
      * @return A fluent query builder for fetching data.
      */
     @NotNull
-    public <R> R selectWhere(
-            @Nullable String whereCondition,
-            @NotNull SqlParamBuilder.SqlFunction<SqlParamBuilder, R> fun);
+        public <R> R selectWhere(
+                @Nullable String whereCondition,
+                @NotNull SqlParamBuilder.SqlFunction<SqlParamBuilder, R> fun);
 
     /**
      * Updates a single domain object in the database.

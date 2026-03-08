@@ -35,7 +35,7 @@ public class BasicDemoTest extends AbstractDemo {
         var emplCarol = Employee.of("Carol", cityOttawa, emplIngird);
 
         employeeCrud.insert(emplIngird);
-        employeeCrud.insertBatch(emplDave, emplCarol);
+        employeeCrud.insert(emplDave, emplCarol);
     }
 
     /** Safe aliasing using generated Meta classes prevents SQL typos */

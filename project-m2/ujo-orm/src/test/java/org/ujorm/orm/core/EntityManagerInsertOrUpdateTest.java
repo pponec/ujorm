@@ -30,7 +30,7 @@ class EntityManagerInsertOrUpdateTest extends AbstractDaoTest {
         );
 
         var insertedList = new ArrayList<Employee>();
-        var affectedRows = emplDao.insertBatch(newEmployees, insertedList::add);
+        var affectedRows = emplDao.insert(newEmployees, insertedList::add);
 
         Assertions.assertEquals(3L, affectedRows, "Měly by být vloženy 3 záznamy");
         Assertions.assertEquals(3, insertedList.size(), "Consumer by měl zachytit 3 objekty");

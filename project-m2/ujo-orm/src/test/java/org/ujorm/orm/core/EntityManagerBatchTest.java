@@ -28,7 +28,7 @@ class EntityManagerBatchTest extends AbstractDaoTest {
         var city4 = new City(1002L, "Plzen", "CZ", 49.7384, 13.3736);
 
         // Execute batch insert and fetch the updated instances (Returns the same array)
-        var insertedCities = cityDao.insertBatch(city1, city2, city3, city4);
+        var insertedCities = cityDao.insert(city1, city2, city3, city4);
         city1 = insertedCities[0];
         city2 = insertedCities[1];
         city3 = insertedCities[2];
@@ -62,7 +62,7 @@ class EntityManagerBatchTest extends AbstractDaoTest {
         }
 
         // Execute huge batch insert (updates the array in-place)
-        cities = cityDao.insertBatch(cities);
+        cities = cityDao.insert(cities);
 
         // Verify all entities received an ID
         for (int i = 0; i < totalCities; i++) {
@@ -117,7 +117,7 @@ class EntityManagerBatchTest extends AbstractDaoTest {
         }
 
         // Insert them all
-        employees = emplDao.insertBatch(employees);
+        employees = emplDao.insert(employees);
 
         // Now delete them all in a batch
         int deletedCount = emplDao.delete(Stream.of(employees));
@@ -132,12 +132,12 @@ class EntityManagerBatchTest extends AbstractDaoTest {
         var cityDao = EntityManager.of(City.class, pkType).crud(dbConnection);
 
         // Empty array
-        var result1 = cityDao.insertBatch(new City[0]);
+        var result1 = cityDao.insert(new City[0]);
         Assertions.assertEquals(0, result1.length);
 
         // Explicit nulls
         City nullCity = null;
-        var result2 = cityDao.insertBatch(nullCity, nullCity);
+        var result2 = cityDao.insert(nullCity, nullCity);
         Assertions.assertEquals(2, result2.length);
         Assertions.assertNull(result2[0]);
 
@@ -209,7 +209,7 @@ class EntityManagerBatchTest extends AbstractDaoTest {
         }
 
         // Test Insert: Verify that elements from the remainder chunk received an ID
-        employeeDao.insertBatch(employees);
+        employeeDao.insert(employees);
         Assertions.assertNotNull(employees[totalItems - 1].getId(), "The last element of the remainder chunk did not receive an ID.");
 
         // Test Update: Verify that the number of updated rows matches exactly
