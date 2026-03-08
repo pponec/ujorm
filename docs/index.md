@@ -1,3 +1,3 @@
-# Ujorm 3 Framework
+For the Ujorm 3 see the [home page](https://github.com/pponec/ujorm).
 
-The original Ujorm 2 homepage has moved [here](ujorm2/index.html).
+The original Ujorm 2 homepage has moved [here](docs/ujorm2).
