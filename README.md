@@ -130,6 +130,10 @@ void delete() {
 }
 ```
 
+### ALL EXAMPLES
+
+All code examples are contained in a single JUnit test, which is [part of the Ujorm project](https://github.com/pponec/ujorm/blob/release/2026-03-08/3.0.0-BETA/project-m2/ujo-orm/src/test/java/org/ujorm/orm/tutorial/BasicDemoTest.java).
+
 ---
 
 ## Dependencies & Setup
