@@ -49,7 +49,7 @@ public interface DomainHandler<D> {
      */
     @NotNull
     @SuppressWarnings("unchecked")
-    default Key<D, Object> getKey(@Nullable String name)
+    default <V> Key<D, V> getKey(@Nullable String name)
             throws NoSuchElementException {
         return getKey(name, null);
     }
@@ -62,8 +62,8 @@ public interface DomainHandler<D> {
      */
     @NotNull
     @SuppressWarnings("unchecked")
-    default Key<D, Object> getKey(@Nullable int order) {
-        return (Key<D, Object>) this.getKeyList().get(order);
+    default <V> Key<D, V> getKey(@Nullable int order) {
+        return (Key<D, V>) this.getKeyList().get(order);
     }
 
     /**
