@@ -38,10 +38,10 @@ public class BasicDemoTest extends AbstractDemo {
         employeeCrud.insertBatch(emplDave, emplCarol);
     }
 
+    /** Safe aliasing using generated Meta classes prevents SQL typos */
     @Test
     @Order(200)
     void selectWithTypeSafeLabels() {
-        // Safe aliasing using generated Meta classes prevents SQL typos
         var sql = """
                  SELECT e.id      AS ${e.id}
                  , e.name         AS ${e.name}

@@ -82,7 +82,7 @@ void insert() {
     var cityCrud = CITY_EM.crud(connection());
 
     var cityOttawa = cityCrud.insert(new City(null, "Ottawa", "CA"));
-    
+
     var emplIngird = Employee.of("Ingrid", cityOttawa, null);
     var emplDave = Employee.of("Dave", cityOttawa, emplIngird);
     var emplCarol = Employee.of("Carol", cityOttawa, emplIngird);
@@ -133,11 +133,12 @@ void delete() {
 
 ### All Examples
 
-To see the complete picture, all the code snippets shown above are extracted from a single, sequential JUnit test suite. This test class demonstrates the full lifecycle of entities within the framework, from database initialization to final cleanup. We highly recommend checking it out, as you can run and modify this test directly to get a hands-on feel for the API.
+To see the complete picture, all the code snippets shown above are extracted from a single, sequential JUnit test suite.
+This test class demonstrates the full lifecycle of entities within the framework, from database initialization to final cleanup.
+Please note that a database commit is performed automatically by the parent class after each test method finishes.
+Feel free to run and modify this test locally to get a hands-on feel for the API.
 
-Explore the full source code here: **[BasicDemoTest.java in the Ujorm project](https://github.com/pponec/ujorm/blob/release/2026-03-08/3.0.0-BETA/project-m2/ujo-orm/src/test/java/org/ujorm/orm/tutorial/BasicDemoTest.java)**.
-
----
+Explore the full source code here: [BasicDemoTest.java in the Ujorm project](https://github.com/pponec/ujorm/blob/release/2026-03-08/3.0.0-BETA/project-m2/ujo-orm/src/test/java/org/ujorm/orm/tutorial/BasicDemoTest.java).
 
 ## Dependencies & Setup
 
