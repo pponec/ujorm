@@ -3,10 +3,7 @@ package org.ujorm.orm.tutorial;
 import org.junit.jupiter.api.*;
 import org.ujorm.orm.Crud;
 import org.ujorm.orm.core.EntityManager;
-import org.ujorm.orm.tutorial.domains.City;
-import org.ujorm.orm.tutorial.domains.Employee;
-import org.ujorm.orm.tutorial.domains.meta.MetaCity;
-import org.ujorm.orm.tutorial.domains.meta.MetaEmployee;
+import org.ujorm.orm.tutorial.domains.*;
 import org.ujorm.tools.jdbc.SqlParamBuilder;
 
 import java.util.Comparator;
