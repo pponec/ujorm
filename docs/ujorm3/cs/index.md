@@ -1,6 +1,9 @@
-# Ujorm 3: Rychlý start a tutoriál
+# Ujorm3: Rychlý start a tutoriál
 
-Ujorm 3 je nový, lehký a rychlý ORM framework pro Javu. Je navržen s ohledem na maximální výkon, jednoduchost a bezpečné použití. Podporuje mapování na standardní Java Beans i moderní třídy typu Record. Zásadní výhodou je, že nevyhazuje kontrolované výjimky (využívá vlastní nekontrolovanou `SQLException`), což výrazně zjednodušuje psaní kódu.
+Ujorm3 je nový, lehký a rychlý ORM framework pro Javu. 
+Je navržen s ohledem na maximální výkon, jednoduchost a bezpečné použití. 
+Podporuje mapování na standardní Java Beans i moderní třídy typu Record. 
+Zásadní výhodou je, že nevyhazuje kontrolované výjimky (využívá vlastní nekontrolovanou `SQLException`), což výrazně zjednodušuje psaní kódu.
 
 ---
 

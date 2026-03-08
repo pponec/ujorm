@@ -12,7 +12,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
 /**
- * Ujorm 3: Lightweight, fast, and transparent ORM.
+ * Ujorm3: Lightweight, fast, and transparent ORM.
  * Entities are either standard JavaBeans or Records. No magic, pure speed.
  * Note: These tests run sequentially to demonstrate an entity lifecycle.
  */

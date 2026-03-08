@@ -5,12 +5,12 @@
 > *"Do the simplest thing that could possibly work."*  
 > — Kent Beck, creator of Extreme Programming and pioneer of Test-Driven Development.
 
-Ujorm 3 is a lightweight Object-Relational Mapping (ORM) library designed for efficient relational database development with minimalist code and a straightforward API. It supports mapping database rows to standard Java objects (both mutable JavaBeans and immutable Records), including M:1 relations.
+Ujorm3 is a lightweight Object-Relational Mapping (ORM) library designed for efficient relational database development with minimalist code and a straightforward API. It supports mapping database rows to standard Java objects (both mutable JavaBeans and immutable Records), including M:1 relations.
 
 To achieve data manipulation speeds comparable to hand-written JDBC code, Ujorm compiles its own bytecode at runtime in memory. Java reflection is strictly limited to the initial loading of domain object metadata. At its core, the library heavily utilizes the **Typed Key Pattern**—a technique introduced in Ujorm in 2007 (a year before Joshua Bloch formally published the similar *Typesafe Heterogeneous Container* pattern in *Effective Java*). Keys act as typed descriptors, providing type safety without casting and allowing bulk operations without reflection.
 
 ### Design Philosophy & Constraints
-To maintain a high utility-to-code ratio and minimize bugs, Ujorm 3 intentionally limits its scope:
+To maintain a high utility-to-code ratio and minimize bugs, Ujorm3 intentionally limits its scope:
 *   **No Lazy-Loading:** To prevent hidden performance costs and the N+1 query problem, relationships are not lazily fetched.
 *   **M:1 Relations Only:** Collection attributes (1:M) are not supported. The recommended approach is to query from the "many" side or use a secondary SQL query.
 *   **No Magic / No Stateful Lifecycle:** The library does not manage object lifecycles, database transactions, or entity data caching. Entities are treated as stateless data carriers.
@@ -259,14 +259,14 @@ The original `Ujo` key-value architecture is now hidden entirely within the modu
 
 ## Benchmarks
 
-Performance tests comparing Ujorm 3 to popular modern ORM frameworks were executed using an in-memory database. While performance differences may blur on slower production databases, Ujorm's lightweight nature significantly reduces the deployment footprint and maintenance overhead.
+Performance tests comparing Ujorm3 to popular modern ORM frameworks were executed using an in-memory database. While performance differences may blur on slower production databases, Ujorm's lightweight nature significantly reduces the deployment footprint and maintenance overhead.
 
 **Version tested:** `3.0.0-BETA`  
 **Full benchmark source and results:** [GitHub: orm-benchmarks](https://github.com/pponec/orm-benchmarks?tab=readme-ov-file#orm-benchmark)
 
 | Framework | Operations / sec | JAR Size Profile |
 | :--- | :--- | :--- |
-| **Ujorm 3** | Highly Competitive | **Ultra-lightweight** (\< 500 KB) |
+| **Ujorm3** | Highly Competitive | **Ultra-lightweight** (\< 500 KB) |
 | Hibernate / JPA | Baseline | Heavy (Megabytes) |
 | Spring Data JDBC | Competitive | Medium |
 | Exposed (Kotlin) | Competitive | Heavy (with Kotlin core) |
@@ -290,7 +290,7 @@ No, the use of `@JoinColumn` is optional. The library resolves relations automat
 
 ## Feedback & Contributions
 
-We are excited to share Ujorm 3 and would love to hear your thoughts!
+We are excited to share Ujorm3 and would love to hear your thoughts!
 Whether you want to provide feedback, report a bug, suggest a feature, or just chat about the framework's minimalist approach, please join the conversation on our GitHub page:
 
 👉 **[Join the Discussion / Open an Issue on GitHub](https://github.com/pponec/ujorm)**
