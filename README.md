@@ -1,13 +1,13 @@
-# <img src="docs/images/ujorm-logo.png" align="right" height="150" hspace="20"> Ujorm&nbsp;3 Framework
+# <img src="docs/images/ujorm-logo.png" align="right" height="150" hspace="20"> Ujorm3 Framework
 
-*<span style="color: grey;">The original Ujorm 2 homepage has moved [here](docs/ujorm2).</span>*
+*<span style="color: grey;">The original Ujorm v2 homepage has moved [here](docs/ujorm2).</span>*
 
 > *"Do the simplest thing that could possibly work."*  
 > — Kent Beck, creator of Extreme Programming and pioneer of Test-Driven Development.
 
 Ujorm3 is a lightweight Object-Relational Mapping (ORM) library designed for efficient relational database development with minimalist code and a straightforward API. It supports mapping database rows to standard Java objects (both mutable JavaBeans and immutable Records), including M:1 relations.
 
-To achieve data manipulation speeds comparable to hand-written JDBC code, Ujorm compiles its own bytecode at runtime in memory. Java reflection is strictly limited to the initial loading of domain object metadata. At its core, the library heavily utilizes the **Typed Key Pattern**—a technique introduced in Ujorm in 2007 (a year before Joshua Bloch formally published the similar *Typesafe Heterogeneous Container* pattern in *Effective Java*). Keys act as typed descriptors, providing type safety without casting and allowing bulk operations without reflection.
+To achieve data manipulation speeds comparable to hand-written JDBC code, Ujorm3 compiles its own bytecode at runtime in memory. Java reflection is strictly limited to the initial loading of domain object metadata. At its core, the library heavily utilizes the **Typed Key Pattern**—a technique introduced in Ujorm in 2007 (a year before Joshua Bloch formally published the similar *Typesafe Heterogeneous Container* pattern in *Effective Java*). Keys act as typed descriptors, providing type safety without casting and allowing bulk operations without reflection.
 
 ### Design Philosophy & Constraints
 To maintain a high utility-to-code ratio and minimize bugs, Ujorm3 intentionally limits its scope:
@@ -74,7 +74,7 @@ void select() {
 
 ### INSERT
 
-Ujorm seamlessly handles auto-assigned primary keys. When inserting an immutable Java Record (like `City`), the library creates and returns a new instance with the generated ID. For mutable JavaBeans (like `Employee`), the ID is simply injected into the existing object. For high-performance scenarios, batch operations are explicitly supported.
+Ujorm3 seamlessly handles auto-assigned primary keys. When inserting an immutable Java Record (like `City`), the library creates and returns a new instance with the generated ID. For mutable JavaBeans (like `Employee`), the ID is simply injected into the existing object. For high-performance scenarios, batch operations are explicitly supported.
 
 ```java
 void insert() {
@@ -94,7 +94,7 @@ void insert() {
 
 ### UPDATE
 
-To prevent accidental data overwrites and optimize database traffic, Ujorm supports partial updates. You can modify the state of your JavaBean and explicitly pass the specific columns (using the `Meta` model) to the `update` method. Only the specified columns will be modified in the database.
+To prevent accidental data overwrites and optimize database traffic, Ujorm3 supports partial updates. You can modify the state of your JavaBean and explicitly pass the specific columns (using the `Meta` model) to the `update` method. Only the specified columns will be modified in the database.
 
 ```java
 void update() {
@@ -114,7 +114,7 @@ void update() {
 
 ### DELETE
 
-Because Ujorm avoids hidden magic, you have full, explicit control over the deletion process. When removing entities with dependencies, you can query and sort them manually to safely respect Foreign Key constraints without relying on complex, implicit framework logic.
+Because Ujorm3 avoids hidden magic, you have full, explicit control over the deletion process. When removing entities with dependencies, you can query and sort them manually to safely respect Foreign Key constraints without relying on complex, implicit framework logic.
 
 ```java
 void delete() {
@@ -138,7 +138,7 @@ This test class demonstrates the full lifecycle of entities within the framework
 Please note that a database commit is performed automatically by the parent class after each test method finishes.
 Feel free to run and modify this test locally to get a hands-on feel for the API.
 
-Explore the full source code here: [BasicDemoTest.java in the Ujorm project](https://github.com/pponec/ujorm/blob/release/2026-03-08/3.0.0-SNAPSHOT/project-m2/ujo-orm/src/test/java/org/ujorm/orm/tutorial/BasicDemoTest.java).
+Explore the full source code here: [BasicDemoTest.java in the Ujorm3 project](https://github.com/pponec/ujorm/blob/release/2026-03-08/3.0.0-BETA/project-m2/ujo-orm/src/test/java/org/ujorm/orm/tutorial/BasicDemoTest.java).
 
 
 ## Class Diagram
@@ -166,7 +166,7 @@ This object provides all standard database operations of the **CRUD** type.
 
 ### Caching Strategy
 
-There is **no data caching** for user queries. However, to maximize speed, Ujorm caches metadata:
+There is **no data caching** for user queries. However, to maximize speed, Ujorm3 caches metadata:
 
 * **ResultSetMapper:** Caches column mapping structures to avoid repeatedly analyzing dot-notation labels or querying JDBC metadata. If the cache exceeds the limit (default 512 distinct queries), it clears itself to prevent memory leaks.
 * **EntityManager:** Retains the database table metamodel for each entity. It is recommended to use the `EntityManagerService` to retrieve shared singleton instances.
@@ -177,7 +177,7 @@ The original `Ujo` key-value architecture is now hidden entirely within the modu
 
 ## Dependencies & Setup
 
-Ujorm requires **Java 17 or higher**.
+Ujorm3 requires **Java 17 or higher**.
 
 ```xml
 <dependency>
@@ -191,15 +191,15 @@ Ujorm requires **Java 17 or higher**.
 
 ## Code Generation (Meta Classes)
 
-To ensure type safety without relying on string literals, Ujorm provides an Annotation Processor that generates `Meta` classes at compile time.
+To ensure type safety without relying on string literals, Ujorm3 provides an Annotation Processor that generates `Meta` classes at compile time.
 
 ### Maven Configuration
 
-Add the Ujorm core dependency and configure the `maven-compiler-plugin` to include the Ujorm Meta Processor:
+Add the Ujorm3 core dependency and configure the `maven-compiler-plugin` to include the Ujorm3 Meta Processor:
 
 ```xml
 <dependencies>
-    <!-- 1. Ujorm Core Dependencies -->
+    <!-- 1. Ujorm3 Core Dependencies -->
     <dependency>
         <groupId>org.ujorm</groupId>
         <artifactId>ujorm-core</artifactId>
@@ -227,7 +227,7 @@ Add the Ujorm core dependency and configure the `maven-compiler-plugin` to inclu
                     <artifactId>lombok</artifactId>
                     <version>${lombok.version}</version>
                 </path>
-                <!-- APT configuration for Ujorm -->
+                <!-- APT configuration for Ujorm3 -->
                 <path>
                     <groupId>org.ujorm</groupId>
                     <artifactId>ujorm-meta-processor</artifactId>
@@ -235,7 +235,7 @@ Add the Ujorm core dependency and configure the `maven-compiler-plugin` to inclu
                 </path>
             </annotationProcessorPaths>
             <compilerArgs>
-                <!-- Optional attributes for APT Ujorm -->
+                <!-- Optional attributes for APT Ujorm3 -->
                 <arg>-Aujorm.prefix=Meta</arg>
                 <arg>-Aujorm.suffix=</arg>
             </compilerArgs>
@@ -289,11 +289,11 @@ Performance tests comparing Ujorm3 to popular modern ORM frameworks were execute
 
 ## FAQ
 
-**Will Ujorm 2 still be supported?**  
-No, support for Ujorm 2 has ended and no further versions will be released. The original module remains available in the Git repository.
+**Will Ujorm v2 still be supported?**  
+No, support for Ujorm v2 has ended and no further versions will be released. The original module remains available in the Git repository.
 
 **Do domain objects need to implement `Serializable`?**  
-No. Ujorm works purely with stateless data structures and does not require serialization.
+No. Ujorm3 works purely with stateless data structures and does not require serialization.
 
 **Is `@JoinColumn` required for relations?**  
 No, the use of `@JoinColumn` is optional. The library resolves relations automatically based on the object graph.
