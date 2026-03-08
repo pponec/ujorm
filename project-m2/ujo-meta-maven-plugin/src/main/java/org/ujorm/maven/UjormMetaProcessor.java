@@ -1,0 +1,280 @@
+package org.ujorm.maven;
+
+import javax.annotation.processing.*;
+import javax.lang.model.SourceVersion;
+import javax.lang.model.element.*;
+import javax.lang.model.type.*;
+import javax.lang.model.util.ElementFilter;
+import javax.tools.Diagnostic;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
+
+/** Generates Ujorm metamodel from entities during the compilation phase using APT. */
+@SupportedAnnotationTypes({
+        "javax.persistence.Entity", "javax.persistence.Table",
+        "jakarta.persistence.Entity", "jakarta.persistence.Table"
+})
+@SupportedOptions({"ujorm.prefix", "ujorm.suffix"})
+public class UjormMetaProcessor extends AbstractProcessor {
+
+    private String prefix = "Meta";
+    private String suffix = "";
+    private final Set<String> processedClasses = new HashSet<>();
+
+    @Override
+    public synchronized void init(ProcessingEnvironment processingEnv) {
+        super.init(processingEnv);
+        var options = processingEnv.getOptions();
+
+        if (options.containsKey("ujorm.prefix")) {
+            var p = options.get("ujorm.prefix");
+            if (p != null) prefix = p;
+        }
+        if (options.containsKey("ujorm.suffix")) {
+            var s = options.get("ujorm.suffix");
+            if (s != null) suffix = s;
+        }
+
+        // Safety fallback against null values injected by Maven
+        if (prefix == null) prefix = "";
+        if (suffix == null) suffix = "";
+
+        processingEnv.getMessager().printMessage(Diagnostic.Kind.NOTE, "Ujorm3 APT Processor initialized.");
+    }
+
+    /** Dynamically supports whatever Java version the compiler is running (e.g., Java 17, 21, 25) */
+    @Override
+    public SourceVersion getSupportedSourceVersion() {
+        return SourceVersion.latestSupported();
+    }
+
+    @Override
+    public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
+        // We iterate over ALL root elements and their inner classes
+        for (var element : roundEnv.getRootElements()) {
+            scanElementRecursive(element);
+        }
+        return false;
+    }
+
+    /** Recursively scans elements to find nested classes annotated with @Entity or @Table */
+    private void scanElementRecursive(Element element) {
+        if (element.getKind() == ElementKind.CLASS || element.getKind() == ElementKind.RECORD) {
+            if (hasEntityOrTableAnnotation(element)) {
+                processClassElement((TypeElement) element);
+            }
+            // Scan inner elements (nested classes)
+            for (var enclosed : element.getEnclosedElements()) {
+                scanElementRecursive(enclosed);
+            }
+        }
+    }
+
+    /** Manually checks if the element has @Entity or @Table */
+    private boolean hasEntityOrTableAnnotation(Element element) {
+        for (var mirror : element.getAnnotationMirrors()) {
+            var annoName = mirror.getAnnotationType().asElement().getSimpleName().toString();
+            if (annoName.equals("Entity") || annoName.equals("Table")) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /** Processes a single annotated class or record and generates the metamodel source file. */
+    private void processClassElement(TypeElement classElement) {
+        var targetPackage = processingEnv.getElementUtils().getPackageOf(classElement).getQualifiedName().toString();
+        var originalName = classElement.getSimpleName().toString();
+        var newClassName = prefix + originalName + suffix;
+        var fullClassName = targetPackage + "." + newClassName;
+
+        // Prevent generating the same file multiple times across different processing rounds
+        if (!processedClasses.add(fullClassName)) {
+            return;
+        }
+
+        processingEnv.getMessager().printMessage(Diagnostic.Kind.NOTE, "Ujorm3: Generating metamodel -> " + fullClassName);
+
+        var sourceCode = SourceGenerator.generate(classElement, prefix, suffix, targetPackage, processingEnv);
+
+        try {
+            var sourceFile = processingEnv.getFiler().createSourceFile(fullClassName, classElement);
+            try (var writer = sourceFile.openWriter()) {
+                writer.write(sourceCode);
+            }
+        } catch (IOException e) {
+            processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR, "Failed to generate metamodel: " + e.getMessage(), classElement);
+        }
+    }
+
+    /** Internal class for generating the source code text. */
+    private static class SourceGenerator {
+
+        /** Checks if the element has a @Transient annotation. */
+        private static boolean hasTransientAnnotation(Element element) {
+            for (var mirror : element.getAnnotationMirrors()) {
+                if (mirror.getAnnotationType().asElement().getSimpleName().toString().equals("Transient")) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        /** Checks for valid getter and setter methods, including Lombok annotations support. */
+        private static boolean hasValidGetterAndSetter(TypeElement classElement, VariableElement field) {
+            var suffix = capitalize(field.getSimpleName().toString());
+            var hasGetter = false;
+            var hasSetter = false;
+
+            // 1. Check explicitly written methods
+            var isBoolean = field.asType().getKind() == TypeKind.BOOLEAN;
+            var getterName1 = "get" + suffix;
+            var getterName2 = isBoolean ? "is" + suffix : getterName1;
+            var setterName = "set" + suffix;
+
+            var methods = ElementFilter.methodsIn(classElement.getEnclosedElements());
+            for (var method : methods) {
+                var name = method.getSimpleName().toString();
+                if ((name.equals(getterName1) || name.equals(getterName2)) && method.getParameters().isEmpty()) {
+                    hasGetter = true;
+                }
+                if (name.equals(setterName) && method.getParameters().size() == 1) {
+                    hasSetter = true;
+                }
+            }
+
+            // 2. Check Lombok annotations on the CLASS level (@Getter, @Setter, @Data)
+            for (var am : classElement.getAnnotationMirrors()) {
+                var annoName = am.getAnnotationType().asElement().getSimpleName().toString();
+                if (annoName.equals("Getter") || annoName.equals("Data")) hasGetter = true;
+                if (annoName.equals("Setter") || annoName.equals("Data")) hasSetter = true;
+            }
+
+            // 3. Check Lombok annotations on the FIELD level (@Getter, @Setter)
+            for (var am : field.getAnnotationMirrors()) {
+                var annoName = am.getAnnotationType().asElement().getSimpleName().toString();
+                if (annoName.equals("Getter")) hasGetter = true;
+                if (annoName.equals("Setter")) hasSetter = true;
+            }
+
+            return hasGetter && hasSetter;
+        }
+
+        /** Formats the type name and handles primitive boxing for generics. */
+        private static String getTypeName(TypeMirror type, ProcessingEnvironment env) {
+            var typeUtils = env.getTypeUtils();
+            var objectType = type;
+
+            if (type.getKind().isPrimitive()) {
+                objectType = typeUtils.boxedClass((PrimitiveType) type).asType();
+            }
+
+            var typeElement = (TypeElement) typeUtils.asElement(objectType);
+            if (typeElement == null) {
+                return objectType.toString();
+            }
+
+            // Extract the fully qualified canonical name for generic parameters
+            var result = getCanonicalName(typeElement);
+            if (result.startsWith("java.lang.")) {
+                return result.substring(10);
+            }
+            return result;
+        }
+
+        /** Constructs the canonical name manually to properly support nested classes in APT. */
+        private static String getCanonicalName(TypeElement element) {
+            var enclosing = element.getEnclosingElement();
+            if (enclosing != null && enclosing.getKind() == ElementKind.CLASS) {
+                return getCanonicalName((TypeElement) enclosing) + "." + element.getSimpleName();
+            }
+            return element.getQualifiedName().toString();
+        }
+
+        /** Capitalizes the first letter of the string. */
+        private static String capitalize(String str) {
+            if (str == null || str.isEmpty()) {
+                return str;
+            }
+            return Character.toUpperCase(str.charAt(0)) + str.substring(1);
+        }
+
+        /** Generates the final Java source code string for the metamodel. */
+        public static String generate(TypeElement classElement, String prefix, String suffix, String targetPackage, ProcessingEnvironment env) {
+            // Get fully qualified name (e.g., org.benchmark.ujorm.UjormBenchmark.Employee)
+            var canonicalName = getCanonicalName(classElement);
+            // Get simple name (e.g., Employee)
+            var originalName = classElement.getSimpleName().toString();
+            var newClassName = prefix + originalName + suffix;
+            var isRecord = classElement.getKind() == ElementKind.RECORD;
+
+            var result = new StringBuilder();
+            result.append("package ").append(targetPackage).append(";\n\n");
+
+            // Direct import of the exact entity (works beautifully for nested classes too)
+            if (!canonicalName.isEmpty()) {
+                result.append("import ").append(canonicalName).append(";\n");
+            }
+
+            result.append("import org.ujorm.Key;\n");
+            result.append("import org.ujorm.DomainHandler;\n");
+            result.append("import org.ujorm.core.DomainHandlerProvider;\n\n");
+
+            result.append("/** Auto-generated metamodel for ").append(originalName).append(" */\n");
+            result.append("public class ").append(newClassName).append(" {\n\n");
+
+            // Use the simple name since we explicitly imported the class
+            result.append("    public static final DomainHandler<").append(originalName)
+                    .append("> meta = DomainHandlerProvider.getHandler(").append(originalName).append(".class);\n\n");
+
+            var validFields = new ArrayList<VariableElement>();
+            var currentClass = classElement;
+
+            while (currentClass != null && !currentClass.getQualifiedName().toString().equals("java.lang.Object")) {
+                var classFields = new ArrayList<VariableElement>();
+                var enclosedFields = ElementFilter.fieldsIn(currentClass.getEnclosedElements());
+
+                for (var field : enclosedFields) {
+                    var mods = field.getModifiers();
+                    if (mods.contains(Modifier.STATIC) || mods.contains(Modifier.TRANSIENT) || hasTransientAnnotation(field)) {
+                        continue;
+                    }
+
+                    if (isRecord || hasValidGetterAndSetter(currentClass, field)) {
+                        classFields.add(field);
+                    }
+                }
+
+                validFields.addAll(0, classFields);
+
+                if (isRecord) {
+                    break;
+                }
+
+                var superclassMirror = currentClass.getSuperclass();
+                if (superclassMirror.getKind() == TypeKind.DECLARED) {
+                    currentClass = (TypeElement) ((DeclaredType) superclassMirror).asElement();
+                } else {
+                    currentClass = null;
+                }
+            }
+
+            for (var field : validFields) {
+                var fieldName = field.getSimpleName().toString();
+                var typeName = getTypeName(field.asType(), env);
+
+                if (isRecord) {
+                    result.append("    /** The ").append(fieldName).append(" property */\n");
+                }
+
+                // Append the field Key definition using the simple name (e.g., Key<Employee, Long>)
+                result.append("    public static final Key<").append(originalName).append(", ").append(typeName).append("> ")
+                        .append(fieldName).append(" = meta.getKey(\"").append(fieldName).append("\");\n");
+            }
+
+            result.append("}\n");
+            return result.toString();
+        }    }
+}

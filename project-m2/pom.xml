@@ -29,6 +29,7 @@
                 <module>ujo-orm</module>
                 <module>ujo-web</module>
                 <module>ujo-arangodb</module>
+                <module>ujo-meta-maven-plugin</module>
             </modules>
         </profile>
 
@@ -40,6 +41,7 @@
                 <module>ujo-web</module>
                 <module>ujo-orm</module>
                 <module>ujo-converter</module>
+                <module>ujo-meta-maven-plugin</module>
             </modules>
         </profile>
     </profiles>
