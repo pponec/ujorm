@@ -25,6 +25,7 @@ To maintain a high utility-to-code ratio and minimize bugs, Ujorm3 intentionally
     * [UPDATE](#update)
     * [DELETE](#delete)
     * [All Examples](#all-examples)
+* [Class Diagram](#class-diagram)
 * [Dependencies & Setup](#dependencies--setup)
 * [Code Generation (Meta Classes)](#code-generation-meta-classes)
 * [Architecture & Caching](#architecture--caching)
@@ -139,6 +140,30 @@ Please note that a database commit is performed automatically by the parent clas
 Feel free to run and modify this test locally to get a hands-on feel for the API.
 
 Explore the full source code here: [BasicDemoTest.java in the Ujorm project](https://github.com/pponec/ujorm/blob/release/2026-03-08/3.0.0-BETA/project-m2/ujo-orm/src/test/java/org/ujorm/orm/tutorial/BasicDemoTest.java).
+
+
+## Class Diagram
+
+<p align="center">
+  <img src="docs/images/OrmApi.svg" width="600" height="400" alt="OrmApi Class Diagram">
+</p>
+
+The image shows a simplified class diagram describing the API for working with the **Ujorm3** library.
+All depicted methods are public.
+The `SqlParamBuilder` class is an autonomous class with a database connection and no other dependencies.
+It acts as a facade over an internal `PreparedStatement` object.
+Calling a `SELECT` statement leads to the creation of a `Stream<ResultSet>` object, which is efficiently converted to objects by the `ResultSetMapper` class.
+This is the second autonomous class that requires no other dependencies.
+Both classes cooperate with arbitrary objects of the **JavaBean** or **Record** type.
+For database mapping, annotations from JPA/Jakarta are recommended: `@Table`, `@Column`, and `@Id`.
+However, if they are missing, Ujorm3 will not fail and will attempt to derive the required properties automatically.
+If an attribute is a class with the `@Table` annotation, it is considered an M:1 relationship.
+Other types of relationships are not directly supported and must be resolved by proper SQL query modeling.
+The third important component is the `EntityManager` class, which works directly with entities.
+Entities are domain objects with a 1:1 relationship to database columns.
+The same types of objects and annotations are supported for entities as in the previous cases.
+For basic entity manipulation, the `EntityManager` creates a `Crud` object that works with a database connection.
+This object provides all standard database operations of the **CRUD** type.
 
 ## Dependencies & Setup
 
