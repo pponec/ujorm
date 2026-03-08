@@ -111,7 +111,7 @@ private Employee snapshot;
 
 K provádění standardních operací slouží třída `EntityManager`. Ta by se měla typicky inicializovat pouze jednou (např. při startu aplikace) a následně se z ní získává instance `Crud` pro konkrétní transakci nebo spojení.
 
-import org.ujorm.mapper.core.EntityManager;
+import org.ujorm.orm.core.EntityManager;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.time.LocalDate;
@@ -163,7 +163,7 @@ public class UjormTutorial {
 
 Pokud potřebujete provádět složitější dotazy, které přesahují základní CRUD, využijete `SqlParamBuilder` v kombinaci s `ResultSetMapper`.
 
-import org.ujorm.mapper.jdbc.ResultSetMapper;
+import org.ujorm.orm.jdbc.ResultSetMapper;
 import org.ujorm.tools.jdbc.SqlParamBuilder;
 import java.sql.Connection;
 import java.util.List;

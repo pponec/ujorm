@@ -222,7 +222,7 @@
                     <windowtitle>Ujorm ${revision} - ${project.name}</windowtitle>
                     <packagesheader><![CDATA[<a class="UjoLogo" target="_top" href="https://ujorm.org/"> Ujorm<br>release ${project.version}</a>]]></packagesheader>
                     <doclint>none</doclint> <!-- Disable Javadoc warnings -->
-<!--                <excludePackageNames>org.ujorm.mapper.impl</excludePackageNames>-->
+<!--                <excludePackageNames>org.ujorm.orm.impl</excludePackageNames>-->
                 </configuration>
                 <executions>
                     <execution>
