@@ -24,6 +24,7 @@ To maintain a high utility-to-code ratio and minimize bugs, Ujorm 3 intentionall
     * [INSERT](#insert)
     * [UPDATE](#update)
     * [DELETE](#delete)
+    * [All Examples](#all-examples)
 * [Dependencies & Setup](#dependencies--setup)
 * [Code Generation (Meta Classes)](#code-generation-meta-classes)
 * [Architecture & Caching](#architecture--caching)
@@ -130,6 +131,12 @@ void delete() {
 }
 ```
 
+### All Examples
+
+To see the complete picture, all the code snippets shown above are extracted from a single, sequential JUnit test suite. This test class demonstrates the full lifecycle of entities within the framework, from database initialization to final cleanup. We highly recommend checking it out, as you can run and modify this test directly to get a hands-on feel for the API.
+
+Explore the full source code here: **[BasicDemoTest.java in the Ujorm project](https://github.com/pponec/ujorm/blob/release/2026-03-08/3.0.0-BETA/project-m2/ujo-orm/src/test/java/org/ujorm/orm/tutorial/BasicDemoTest.java)**.
+
 ---
 
 ## Dependencies & Setup
@@ -170,35 +177,35 @@ Add the Ujorm core dependency and configure the `maven-compiler-plugin` to inclu
 </dependencies>
 
 <build>
-    <plugins>
-        <!-- 2. Compiler Plugin Setup -->
-        <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-compiler-plugin</artifactId>
-            <version>3.14.1</version>
-            <configuration>
-                <annotationProcessorPaths>
-                    <!-- Optional: APT configuration for Lombok -->
-                    <path>
-                        <groupId>org.projectlombok</groupId>
-                        <artifactId>lombok</artifactId>
-                        <version>${lombok.version}</version>
-                    </path>
-                    <!-- APT configuration for Ujorm -->
-                    <path>
-                        <groupId>org.ujorm</groupId>
-                        <artifactId>ujorm-meta-processor</artifactId>
-                        <version>3.0.0-BETA</version>
-                    </path>
-                </annotationProcessorPaths>
-                <compilerArgs>
-                    <!-- Optional attributes for APT Ujorm -->
-                    <arg>-Aujorm.prefix=Meta</arg>
-                    <arg>-Aujorm.suffix=</arg>
-                </compilerArgs>
-            </configuration>
-        </plugin>
-    </plugins>
+<plugins>
+    <!-- 2. Compiler Plugin Setup -->
+    <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.14.1</version>
+        <configuration>
+            <annotationProcessorPaths>
+                <!-- Optional: APT configuration for Lombok -->
+                <path>
+                    <groupId>org.projectlombok</groupId>
+                    <artifactId>lombok</artifactId>
+                    <version>${lombok.version}</version>
+                </path>
+                <!-- APT configuration for Ujorm -->
+                <path>
+                    <groupId>org.ujorm</groupId>
+                    <artifactId>ujorm-meta-processor</artifactId>
+                    <version>3.0.0-BETA</version>
+                </path>
+            </annotationProcessorPaths>
+            <compilerArgs>
+                <!-- Optional attributes for APT Ujorm -->
+                <arg>-Aujorm.prefix=Meta</arg>
+                <arg>-Aujorm.suffix=</arg>
+            </compilerArgs>
+        </configuration>
+    </plugin>
+</plugins>
 </build>
 ```
 
