@@ -7,7 +7,7 @@
 
     <groupId>org.ujorm</groupId>
     <artifactId>ujo-orm</artifactId>
-    <version>3.0.0-BETA</version>
+    <version>3.0.0-SNAPSHOT</version>
     <packaging>jar</packaging>
     <name>ujo-orm</name>
     <description>Map JDBC ResultSet to Java</description>
@@ -34,7 +34,7 @@
     </scm>
 
     <properties>
-        <revision>3.0.0-BETA</revision>
+        <revision>3.0.0-SNAPSHOT</revision>
         <java.version>17</java.version>
         <maven.compiler.target>${java.version}</maven.compiler.target>
         <maven.compiler.source>${java.version}</maven.compiler.source>
@@ -51,12 +51,19 @@
         <dependency>
             <groupId>org.ujorm</groupId>
             <artifactId>ujo-tools</artifactId>
-            <version>3.0.0-BETA</version>
+            <version>3.0.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.ujorm</groupId>
             <artifactId>ujo-core</artifactId>
-            <version>3.0.0-BETA</version>
+            <version>3.0.0-SNAPSHOT</version>
+        </dependency>
+        <!-- APT Processor dependency to enforce reactor build order -->
+        <dependency>
+            <groupId>org.ujorm</groupId>
+            <artifactId>ujorm-meta-processor</artifactId>
+            <version>${revision}</version>
+            <scope>provided</scope>
         </dependency>
 
         <!-- Static analyzer support -->
@@ -135,7 +142,7 @@
                     <path>
                         <groupId>org.ujorm</groupId>
                         <artifactId>ujorm-meta-processor</artifactId>
-                        <version>3.0.0-BETA</version>
+                        <version>${revision}</version>
                     </path>
                 </annotationProcessorPaths>
                 <compilerArgs>
