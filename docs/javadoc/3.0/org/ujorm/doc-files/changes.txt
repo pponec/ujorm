@@ -1,0 +1,853 @@
+The Ujorm release notes
+(Maven groupId: org.ujorm)
+*******************************
+
+release 3.0.0-SNAPSHOT
++ New module ujo-mapper.
++ Obsolete module are removed.
+
+release 2.30 (2026-02-11)
+WEB: New class HtmlToJavaConverter to convert HTML code to Java code using Element classes.
+WEB: JsonWriter class fixed for some specific characters.
+WEB: Some Javadoc comments extended.
+WEB: New method to join with text: HttpParameter.concat(String)
+WEB: Method HttpContext.getParameter() now accepts an argument of type CharSequence.
+WEB: Element class has direct support for CheckBox HTML components.
+WEB: Method HtmlElement.niceNumberOf() provides a root element for formatting numbers using an underscore as a thousands separator.
+TOOLS: Method StringUtils.numberFormatter() added to format numbers using an underscore as a thousands separator.
+
+release 2.29 (2025-12-30)
++ TOOLS: Implemented explicit ResultSet cleanup in SqlParamBuilder.close(). This prevents resource leaks caused by JDBC drivers that do not honor the contract of automatically closing the ResultSet when the PreparedStatement is closed.
++ TOOLS: New method is available to get a generated id by SQL INSERT: SqlParamBuilder.generatedLastKey()
+
+release 2.28 (2025-12-22)
++ JavaDoc is fixed
++ WEB: AJAX support is refactored and the eval() function is removed.
++ TOOLS: SQL input paremeters of the SqlParamBuilder supports JDBC types.
++ TOOLS: MessageService is textended.
+
+release 2.27 (2025-12-04)
++ Java 17+ is required
++ TOOLS: New method SqlParamBuilder.stream() closes the internal ResultSet for special cases.
++ TOOLS: New method SqlParamBuilder.streamGeneratedKeys() for retrieving the primary keys of an INSERT statement.
++ TOOLS: New method SqlParamBuilder.bind(enabled, ...)
++ TOOLS: New method HttpContext.getParameter() to get a type safe result object.
++ TOOLS: UnicodeCharacter class for supporting all Unicode characters.
++ WEB: A class RContext is renamed to the HttpContext
+
+release 2.26 (2024-11-06)
++ WEB: here is removed dependency on javax.servlet-api from ujo-web module. The goal was to make the module compatible with all versions in the range: servlet 3 to servlet 5.
++ WEB: unpairElement list is extended according to HTML 5
++ TOOLS: Package `org.ujorm.tools/xml` is moved to the `ujo-web` module.
+
+release 2.25 (2024-05-13)
++ WEB: Closing HTML element by the pair element is suppoted.
++ TOOLS: SqlParamBuilder for simple JDBC support.
++ TOOLS: RowIterator code cleaning.
++ TOOLS: ArrayUtils class for common use.
++ CORE: jUnit 5 is supported
++ CORE: Code cleaning
++ CORE: Maven Wrapper is included
+
+release 2.24 (2022-05-11)
++ WEB: New method: JavaScriptWriter.setIdleDelay().
++ WEB: New method: HttpParameter.buildParamName().
++ WEB: New method:  HttpParameter.createNameSupplier() to build a default parameter name.
++ WEB: The metod Element.addTable(Collection<Object[]>) ignores empty rows.
++ WEB: Some parser method of the HttpParameter class was fixed
+
+release 2.23
+- UNRELEASED
+
+release 2.22 (2022-02-22)
++ WEB: A method Element.setFor() is fixed.
++ WEB: ReportBuilder class is fixed for an AJAX table rendering.
+
+release 2.21 (2022-02-20)
++ WEB: The AJAX implementation allows sending part of Javascript commands to the web browser via JSON format.
++ WEB: The AJAX implementation allows a direct calling a JavaScript method process(), which is necessary for creating custom AJAX components.
++ WEB: New method Element.addHiddenInput() is available.
++ WEB: New method Element.setHint() is available to add both an 'alt' and 'placehoder' attributes.
++ WEB: The tab character is used to indent nested HTML code blocks in the default configuration.
++ WEB: External config of the JsonBuilder is fixed.
++ WEB: The method Element.then() was renamed to Element.next();
++ CORE: Test Database H2 is upgraded to 2.0.202.
+
+release 2.20 (2021-11-18)
++ WEB: An attribute 'JavaScriptWrier.isSortable' has been removed because it will no longer be needed.
++ WEB: A 'formSelector' is fixed in JavaScriptWriter
++ TOOLS: new method for HTML INPUT component: Element.setNameValue()
++ TOOLS: A new text builder class is available for a common use
++ TOOLS: StringUtils class is extended
++ TOOLS: ExceptionProvider class is fixed
++ COMMON: JetBrains annotations are used instead of JSR305
++ COMMON: jUnit was migrated from 4 to 5
++ COMMON: Maven cleaning
+
+release 2.16 was corupted (2021-11-10)
+
+release 2.15 (2021-04-02)
++ WEB: The TableBuilder component sorts columns with no Javascript support.
++ WEB: HttpParameter returns the last value of the HttpServletRequest.
++ WEB: Element name is type of String.
+
+release 2.14 (2021-03-21)
++ ORM: Indices are created for new tables as well
++ WEB: A TableBuilder class was divided into two new ones: ReportBulder & GridBuilder, the original class is deprecated now.
++ WEB: New factory method Element.of() supports both argument types: Elemnt and ApiElement
++ WEB: Extended JavaDoc
+
+release 2.13 (2021-03-04)
++ WEB: New method Element.addTextInp() for an explicit value
++ WEB: TableBuilder can be sortable without AJAX
++ TOOLS: New attribute HtmlConfig.getHeaderInjector() is available
++ TOOLS: The parameter HtmlConfig.getRawHeaderText() is deprecated now.
+
+release 2.12 (2021-02-27)
++ ORM: SQL LIMIT a OFFET are fixed for some cases on PosgtgreSQL
++ ORM: Criterion.toString() method is extended
++ WEB: ES6 Vanilla Javascript Writer is ready for AJAX requests
++ WEB: The NON_BREAKING_SPACE is supported for rendering a HTML now.
++ WEB: API of TableBuilder class is extended
++ CORE: Code cleaning
+
+release 2.11 (2011-01-14)
++ WEB: TableBuilder supports sortable columns.
++ WEB: The method Element.setAttribute() have got a new shortcut: Element.setAttr().
++ WEB: Code cleaning.
++ CORE: An general Confessionable interface for an export to an appendable writer is ready for a common use.
+
+release 2.10 (2021-01-03)
++ COMMON: More general API and better performance due removing unnecessary Writable class.
++ WEB: New TableBuilder class with an AJAX support is ready to a common use.
++ WEB: New JsonBuilder class to write a common JSON file is ready to a common use.
+- WEB: The Element.addTextTemplated() method was fixed.
+
+release 2.05 (2020-12-02)
++ WEB: New Element.addTextTemplated() method for a template based texts.
++ WEB: New Element.addLinkedText() method for anchors.
++ WEB: Element.addTable() method by an array of functions to getting values.
+- WEB: Bugfixing of the method: HtmlElement of(response, cssLinks).
++ TOOLS: New Wrapper class for a generic implementation: equals(), hash() and comparable().
++ TOOLS: New ApiElement.addTextTemplated() method for a template based texts.
+
+release 2.04 (2020-08-29)
++ TOOLS: New method ObjectUtil.iof() for a processing a value in case the one is the instance of a required class.
++ TOOLS: New method MessageService.formatMsg() for a parsing values to a template.
++ WEB-TOOLS: New method Element.addImage() to add an image to HTML model.
+
+release 2.03 (2020-07-23)
++ WEB: A ProxyServletRespnse class is renamed to a MockServletResponse.
++ WEB: New element constat is available: Html.HL.
++ WEB: New method is available for formatted texts: Element.addTemplate().
++ WEB: API cleaning, new interface ApiElement is available.
++ WEB: Method ApiElement.addAttrib() is renamed to ApiElement.addAttribute().
++ WEB: A HtmlElement class provides two method: addHead() and addBody().
++ TOOLS: XmlNew method is available for formatted texts: Element.addTemplate().
++ TOOLS: The interface MessageMaker was removed due a minority use.
++ TOOLS: The Thread package has been removed without replacement. Try project: https://projectreactor.io/docs/ .
++ TOOLS: API of an Assert can validate Supplier<V> supplier by a method: notNullValue().
++ TOOLS: Method Element.addTable() does not insert zero attributes CELLPADDING and CELLSPACING.
++ TOOLS: HtmlConfig class supports new config parameter for the 'Content type'.
+
+release 2.02-SNAPSHOT (2020-06-26)
++ WEB: New class ProxyServletResponse for a common use is available.
++ WEB: New configuration method HtmlConfig.isBuilderElement() controls an Element implementation.
+
+release 2.01 (2020-05-12)
++ CORE: Criterion implements implements Predicate<U>
++ ORM: Elements of the XML log are intended
++ ORM: Foreign key type of UUID is fixed for reading
++ TOOLS: DefaultXmlXonfig have got extended API
++ TOOLS: XmlPrinter API refactoring
+
+release 2.00 (2020-03-08)
++ TOOLS: Assert API is exended
++ TOOLS: An extended MultiJob class is ready for mulithreading tasks
++ TOOLS: New configuration interface XmlConfig is avalilable
++ TOOLS: New AsyncStreamBuilder class is avalilable for a common use
+
+release 1.94 (2019-12-05)
++ TOOLS: A new MultiJob class is ready for mulithreading tasks
+
+release 1.93 (2019-11-20)
++ ORM: new method LoopingIterator.toStream() is ready to a common use
+
+release 1.92 (2019-11-13)
++ ORM: An read-only database support is fixed.
++ ORM: new method MetaParams.getApplicationContext() is available.
++ TOOLS: Two methods are improved: Assert.isTrue() & Assert.isFalse()
++ TOOLS: UjoTools: New method LoopingIterator.toStream() is available.
++ HOTELS: Spring config cleaning
++ JavaDoc is extended
+
+release 1.91 (2019-05-26)
++ ORM: A default session is closed now, see the issue for detail: https://github.com/pponec/ujorm/issues/1
++ WEB: New class `Element` to building HTML pages is ready
+
+release 1.90 (2019-03-24)
++ ORM: Some OrmUjo improvement is done for better performance and less memory footprint
++ TOOLS: New method: JdbcBuilder.uniqueValueOptional()
++ TOOLS: Cleaning of an Element API
++ TOOLS: XmlBulder cleaning
++ TOOLS: The XMlBuilder is moved to a TOOLS module
++ TOOLS: New method JdbcBuilder.executeSelect() using a lambda expression
++ TOOLS: API of the XmlWriter is fixed
++ TOOLS: MsgFormatter: the output is type of StrringBuilder class instead of the CharArrayWriter class.
++ WICKET: A list of hotels is provided by a service, a correction of typo in method name: AbstractToolbar.createSearchField() is done
++ WICKET Hotels: Applicastion parameters are fixed
++ WICKET Hotels: Java sources can be visibled from the application
++ WICKET Hotels: Preselect an index of the tab by an URL parametr
++ WICKET Hotels: searching customers by its login is done
++ WICKET Hotels: CSS cleaning
++ ALL: Obsolete JavaDoc is removed
+
+release 1.88 (2018-11-17)
++ TOOLS: An API of the XmlElement class is extended
++ TOOLS: An API of the JdbcBuilder class is extended
+
+release 1.87 (2018-11-03)
++ TOOLS: An API of the JdbcBuilder class is extended
++ TOOLS: A SimpleValuePrinter class was renamed to a ValuePrinter
+
+release 1.86 (2018-10-28)
++ TOOLS: A new XmlElement class for HTML site generation was introduced
++ TOOLS: A new JdbcBuilder.executeSelect() method for reading ResultSet was introduced
++ TOOLS: Some classes was moved to separated packages
++ TOOLS: JavaDoc and some tests was extended
++ TOOLS: A project for demonstrating the use of the XmlElement class was introduced (https://servlet.ujorm.org/)
++ CORE: A new AbstractUjo.newNoCheckFactory() method for building a special Key instances was introduced
++ DOC: The HomePage fixing
+
+release 1.85
++ ORM: fixing the table sequences using the class FixingTableSequences.
+
+release 1.84 (2018-09-26)
++ TOOLS: new tools for a JDBC operation called JdbcBuilder is available (see jUnit test for usage)
++ ORM: fixing the table sequences using the class FixingTableSequences.
++ ORM: Method Session.save() is renamed to insert()
++ ORM: New config definition is available: ujorm-1.84.xsd
++ WICKET: new method DataProviderCached.clearCache()
++ WICKET: column CSS style settings is fixed for DataProvider class
++ An alternative home page: http://pponec.github.io/ujorm/
+
+release 1.83 (2018-04-21)
++ CORE New persistent interface called ValueWrapper where a sample implementation is the UnsignedShort class.
++ ORM: New persistent interface called ValueWrapper is supported in ORM.
++ ORM: Optional quoting of individual database items by an annotation argument
++ ORM: New method Session.updateSafely(batch)
++ SQL keyword list of SQL:2011
++ WICKET: Simple LocalDateTimeField implementation
++ WICKET: New method to add a default CSS to the Field is available
++ WICKET: CSS support for a table column with Panel
++ WICKET: TableColumn with a panelClass can by sortable by an argument
++ WICKET: Class Args is changed to Assert
++ ALL: code cleaning
++ ALL : JavaDoc is fixed
+
+release 1.82 (2018-03-18)
++ TOOLS: The MessageService class supports arguments type of Supplier
++ TOOLS: The MsgFormatter class supports arguments type of Supplier
++ TOOLS: New method Assert.validState()
++ TOOLS: New class CustomMap implementats a Map interface where methods equals() and hash() can be customized for all the Map.
++ ORM: New method for a safe update is implemented: Session.updateSafely(Ujo bo, Consumer updateBatch)
++ ORM: Parameter MetaParams.LAZY_LOADING is renamed to LOADING_POLICY ("loadingPolicy")
++ ORM: the Criterion class implements methods equals() and hashCode()
++ ORM: A LazyLoading enumerator is renamed to the LoadingPolicy enumerator
++ ORM: Some annotation in the UjormTransactionManager class
++ ORM: Some obsolete code is removed
++ ORM: A new method OrmTable.clone() for clonning first of parameters level.
++ ORM: A method update() of the CommonDao class is fixed
++ ORM: A new methods CommonDao.updateSafely() are implemented
++ ORM: Mysql is supported to version 3.1.14 only
++ ORM: A method CompositeKey.getCompositeCount() is renamed to CompositeKey.getKeyCount() +
++ ORM: A method CompositeKey.getKey(int) is created
++ ORM: A method CompositeKey.getFirstKey() is deleted
++ ORM: A Criterion class implements methods equals() and hashCode()
++ ORM: A SQL operator ILIKE is supported for dialects: PostrgreSQL and H2
++ ORM: The method Session.save() accept a domain list type of Collection now.
++ SPRING: Spring module supports the new method for a safe update
++ WICKET: New optimized OrmDataProvider with a a cache is available now
++ WICKET: The method FieldProvider.getLast() is fixed
++ WICKET: Create a wicket model by Lambda expression (Supplier) WICKET: UjoTab supports a visibility (by a Supplier)
+
+release 1.81 (2018-02-22)
++ A nullable Ujo property (mandatory=false) have got a SQL join of type LEFT OUTER JOIN by default
+
+release 1.80 (2018-02-20)
++ CORE: A new method Key.equals(Object) is implemented
++ CORE: Key names are build by the CamelFactory.class
++ CORE: UjoComparator code cleaning
++ CORE: ValidatorFactory supports LocalDate and LocalDateTime
++ CORE: new method PropertyModifier.setDefaultValue()
++ CORE: new three methods are available: Criterion.findFirst(Collection), Criterion.findAll(Collection), Criterion.findAll(Array)
++ HOTELS: Login by Spring service with a scope session
++ ORM: Method Query.addOuterJoin() returns this.
++ ORM: New implementation of the method: MetaDatabase.toString()
++ ORM: New method: MetaTable.getFullName()
++ ORM: StringWrapper annotation is extended
++ ORM: Test the ORM Ujorm bug of an ingeritance.
++ WICKET: BuildInfo class cleaning
++ WICKET: FieldProvider is extended
++ WICKET: The component LocalDateFiled is fixed
++ WICKET: The method FieldEvent.get() returns an nonnull value always
++ ALL: code cleaning
++ ALL: Javadoc is extended
+
+release 1.76 (2017-12-09)
++ ORM: new method Query.fetchAll() for fetching all related tables in the first level + jUnit test is extended + JavaDoc is extended + bugfixing
++ ORM: Connection closing in the NativeDbSequencer class is fixed
++ CORE: Criterion supports a value of function (including the lambda expression)
++ CORE: The method Criterion.toString() is optimized
++ TOOLS: Value formatter is implemented
++ TOOLS: Formatting the SQL statement is supported now.
++ WICKET: new features and extended API
++ WICKET: API of the AbstractToolbar is fixed
++ WICKET: The method UjoEvent.get() returns newer NULL
+
+release 1.75 (2017-11-10)
++ ORM: Bugfix: closing JDBC resources
++ ORM: The new class PackageDbConfig to loading a database model from a package is implemented
++ ORM: Checking a unique DB table name is implemented
++ CORE: Static analyzator is suppoorted using annotations form JSR305
++ CORE: JavaDoc is fixed
++ TOOLS: MessageArg class supports an optional format of the value
++ TOOLS: An stack trace of an exception can be formatted using the MsgFormatter class
++ HOTELS: code clenaing
++ HOTELS: java based spring configuraion is implemented
+
+release 1.74 (2017-09-28)
++ TOOLS: Assert class supports the Lambda expression by Predicate
++ TOOLS: Assert class supports the Map data type
++ TOOLS: MsgFormatter performance optimization is done
++ CORE: code cleaning
+
+release 1.73 (2017-09-24)
++ TOOLS: new module ujo-tools for common use
++ TOOLS: new clases to validate arguments: Assert
++ TOOLS: new clases to check text arguments: Check
+
+release 1.72 (2017-08-12)
++ CORE: Support to store a binary code as BASE64 string
++ ORM: The bug is fixed: database types BLOB and CLOB does not support the length
++ ORM: A creation new schema is fixed in some cases of additional read-only schemas.
++ ORM: The method OrmTools.isFilled() is renamed to the hasLength() according the Spring framework API.
++ CORE: UjoLogger arguments are fixed for java.uitl.Logger redirection.
++ CORE: new class MsgFormatter is implemented for a common use
++ ORM: New method MetaTable.getSchema() is available for common use.
++ ORM: Value of ResultSet is get using a SQL_TYPE allways.
++ CORE: New class PasswordBase64Wrapper is created for common use.
++ CORE: The interface UjoTextable is deprecated.
++ ORM: Code cleaning of the MetaDbService
++ CORE:  The BinaryWrapper is serializable now
++ ORM: A new class TypeServiceForOlderJdbc is redy to support an JDBC versio older than 4.2
++ CORE: Some annotations for a static anylyzer is added.
++ SPRING: A new class CommonDao is available for an easy use.
+
+release 1.71 (2017-07-08)
++ ORM: Support for ZonedDateTime is finished
++ ORM: A bug of ujorm is fixed for HSQLDB dialect
++ ORM: file ujorm-1.71.xsd is upgraded
+
+release 1.70 (2017-06-20)
++ CORE: Minimal Java 1.8 is required
++ ORM: Left-outer-join is implemented by the API
++ ORM: Java types LocalDate and LocalDateTime from package java.time date are supported by JDBC 4.2+
++ WICKET: Java types LocalDate and LocalDateTime from package java.time date are supported in Wicket 7.7.0
++ CORE: The method UjoComparator.compare() accepts NULL arguments
++ CORE: The rendering of the method is fixed: Criterion.not().toString()
++ CORE: some generic API is extended or fixed
+
+release 1.62 (2017-02-18)
++ CORE: Minimal Java 1.7 is required
++ CORE: Ujorm throws an UjormStateException and try-catch cleaning is done
++ CORE: Criterion join optimization is done for the next cases: CriterionProvider.forAll(), CriterionProvider.forNone()
++ ORM: The error is fixed for the case If two database model ORDER attributes have got a default value, then the the different databases are considered as the same.
++ ORM: An implementation is fixed for the method: HsqldbDialect.getJdbcUrl()
++ ORM: The table alias solution is improved
++ ORM: The UjoSequencer logs are extended
++ ORM: The method NativeDbSequencer.reset() is unsupported.
++ ORM: Wrong import of the SampleORM class is fixed
++ ORM: The insenstivie bug is fixed: ! "Geß".toUpperCase().equals("GES")
++ ORM: large code cleaning and correcting typing errors.
++ ORM: SnakeCaseFactory implementation class
++ ORM: Log the UjoSequence events are logged
++ SPRING: Don't throw exception in the method AroundServiceTransaction.finishTransaction(). The method is called from finally block, so origin exception would be lost
++ SPRING: The AroundServiceTransaction class is simplified in the TransactionManager (by the Effectiva Solutions company)
++ WICKET: new class KeyColumnExportable for a CSV support from a DataProvider
++ WICKET: KeyColumnDate is fixed
++ WICKET: refactoring to create a new method: AbstractDataProvider.createKeyColumn()
++ ALL: jUnit tests are extended
+
+release 1.61 (2016-03-02)
++ The Ujorm project is moved to the GitHub
++ CORE: JavaDoc is fixed
++ ORM: The AliasTable class is fixed
++ ORM: The UjoSequencer class have got an advanced logging
++ ORM: The OrmHandler provides a database model by API
++ WICKET: A new component for the waiting icon is part of the Ujorm now
++ HOTELS: Validation message of the ParamsEditor is changed
+
+release 1.60 (2015-10-28)
++ CORE: a new factory method of the KeyRing
++ CORE: Building a new instance of the UjoManagerCSV class by a KeyRing argument
++ CORE: The UjoManagerCSV class supports NEW_LINE characters inside cells
++ CORE: CSV log message is fixed
++ ORM: When creating the ROW_NUMBER (), he shall transmit the parameter  of the column by which to sort -> RowNum is now sorted itself  (otherwise the paging WHERE RowNum BETWEEN 1 AND 200 didn't make sense)
++ ORM: The session class have got a refactoring
++ ORM: The method OrmHandler.findTableModel(..) have got a new argument to throw an exception optionally
++ ORM: The method Session.save(...) cleans all flags of the modified attributes.
++ ORM: The IndexModelOrderedBuilder is fixed for the case the composite index is used for mixing annotation methods (index() and uniqueIndex())
++ WICKET:  The argument 'target' of the method  UjoTabbedPanel.selectTab() is not required now
++ WICKET: API cleaning
++ WICKET: The UjoDropDown component has fixed the API
++ WICKET: The WizardBar component is extended
++ ALL: JavaDoc is fixed
+
+release 1.56 (2015-04-17)
++ ORM: database composite indexes are supported for any columns with custom the order
++ ORM: the ORM configuration supports a custom index model building using an IndexModelBuilder sub-class implementation
++ ORM: the UUID type is supported
+
+release 1.55 (2015-03-22)
++ ORM: The fetching of relations is fixed
++ WICKET: UjoDropDown choice component
++ WICKET: The new method AbstractDialogPanel.onShowBefore(...)
++ WICKET: The new method Field.setEnabledInput(...)
+
+release 1.54 (2015-03-14)
++ CORE: Some jUnit tests are extended
++ ORM: Bug fixing for the additional Column alias name in the Query
++ WICKET: FieldFactory can register disabled fields by default
++ WICKET: The MessageArg class implements Serializable
++ WICKET: Event of the AbstractDialogPanel can be optimized by target attribute
++ WICKET: An attribute management if a Field provider class is fixed
++ WICKET: Localizations fixing for CompositeKeys with an Alias attribute
++ WICKET: The UjoField component is renamed to the OfferField
+
+release 1.53 (2015-02-18)
++ CORE: The MessageService class simplify a Date format
++ CORE: The API of the KeyList class is fixed
++ WICKET: The UjoField with an OfferDialogPanel are implemented (beta)
++ WICKET: Component ID for the TextField is fixed.
+
+release 1.52 (2015-02-02)
++ ORM: lazy loading is fixed for some cases
++ WICKET: There is extended support for localization Enum types
++ WICKET: Field model object is fixed for some cases of early data initialization
++ WICKET: New component for a Wizard is introduced
++ DEMO-HOTELS: Deleting entities is repaired
+
+release 1.51 (2014-11-27)
++ ORM: An exception message is fixed in the lazy-loading
++ WICKET: The CSS styling for the KeyColumnBoolean is fixed
++ WICKET: A method for a highlighting table rows is renamed + JavaDoc is fixed
++ WICKET: The AbstractDialogPanel class have got a new close method for a modal dialog.
++ SAMPLES: The Demo-hotels have got implemented management of the system and user parameters
++ UjoCodeGenerator: the plugin generates the method with name type 'isBooleanValue()' to return the primitive boolean type of 'boolean' for selected attributes/keys type of Boolean (optional feature)
++ UjoCodeGenerator: missing javadoc on the Key is replaced by the argument of the annotation @Comment("My description") for generated getters/setters
+
+release 1.50 (2014-10-01)
++ CORE:  The composite Key implements the interface Iterable<Key>
++ ORM: The new API for a multi DELETE
++ ORM: MySql dialect is fixed for an UPDATE with more database tables
++ WICKET: The class OrmDataProvider supports a hidden columns for a database column fetching
++ WICKET: The class AbstractDataProvider have got an extended API for a toolbar management.
++ WICKET: DateTime format fixing
++ WICKET: The class UjoTableProvider is renamed to the OrmTableProvider.
++ WICKET: The MessageDialogPanel have a new factory method with an autoclose argument.
++ SAMPLES: The application Demo-Hotels is upgraded and extended
+
+release 1.48 (2014-07-28)
++ WICKET: The autoclose attribute is supported in dialogs
++ WICKET: The generated HTML code from the component DataTable have got removed some excess HTML tags
++ WICKET: The component AbstractDataProvider is fixed for some AJAX requests
++ WICKET: The default Focus management in the GUI is implemented
++ WICKET: Common Actions are supported in the DataTable component
++ WICKET: Better support for a user column implementations
++ CORE: Java Runtime 6.0 is supported still (bug fixed)
++ CORE: Generic types are cleaned
++ CORE: A new interface 'UjoLockable' is released for a read-only state with two default implementations
++ SAMPLES: The application Demo-hotels is upgraded and extended
+
+
+release 1.47 (2014-06-16)
++ CORE: the Criterion class have got a new method cast() for the case where a Key domain is parent of the Criterion generic domain
++ CORE: the Logging is API have got a better support for the one argument
++ CORE: some core classes have got extended a generic API for a better support an inheritance
++ ORM: The method Session.delete(OrmUjo) accept a NULL argument now where the argument can be a result of NULLABLE relation type of M:1
++ SPRING: The original class AroundServiceTransaction is fixed thank to the Effectiva Solution company
++ WICKET: API changes and some bugfixing is done
+
+release 1.46 (2014-06-01)
++ CORE: UjoManagerCSV is running with runtime exceptions only
++ CORE: KeyColumn API is extended
++ CORE: performance of the method: Criterion.evaluate(Collection) has been improved for some cases of Criterions
++ ORM : the UjoSequencer have got fixed some prepare statements
++ ORM : the MySqlDialect is fixed for the statement DELETE from multiple tables
++ WICKET: bug fixing and an extended API implementations
++ JavaDoc bug fixing
+
+release 1.45 (2014-03-25)
++ the Ujorm release 1.45 is Java 8.0 ready
++ the method CompositeKey.setValue() creates all missing relations by default
++ many small code cleanings
++ new documentation for the CORE module
+
+release 1.44 (2014-03-16)
++ hierarchical database queries support an hierarchical UJO Key as a Criterion value argument
+
+release 1.43 (2014-03-05)
++ hierarchical queries (with a relation to yourself) are supported using an alias of the key (see the new method Key.alias())
++ an XSD generator is implemented to get an Ujo class structure in a XML format
++ new XSD file for ORM configuration files is available to a check
++ code cleaning is done
++ documentation was extended
+
+release 1.42 (2014-01-17)
++ method KeyRing.find(..) is improved for a parsing of composite Keys
++ native database sequences are supported by the new class 'NativeDbSequencer'
++ the operator 'BinaryOperator.NOT' is supported in the ORM module now
++ the PropertyModifier class is redesigned for a cleaner code and better performance
+
+release 1.41 (2013-12-03)
++ deprecated interface UjoProperty is removed and
++ many obsolete methods was removed too
++ the lazy-loading can be allowed using the parameter MetaParams.LAZY_LOADING on the closed session optionally
++ there is supported building new Criterion using a template: Order.ID.forSql("{0} > {1}", 0L)
++ the property separator character '.' can be enabled in the key/property name by the overriding the method: Property.isPropertySeparatorDisabled()
+
+release 1.40 (2013-09-09)
++ small bug-fixing is done
++ CSV parsing is extended
++ new sample web application is available on the link: http://hotels.ujorm.org/
+
+release 1.35 (2013-05-20
++ an API of the ValidatorFactory class is extended
++ the data type StringWrapper is supported in the XML serialization including Enum types
++ che class UjoCoder considers the value of 1 for the true value
++ new method ValidatorFactory.isReadOnly() checks if the validator is type of read-only
++ a Ujorm Key type of List is exported and parsed to the XML file as a collection separated tags, however the original solution is supported in a parsing time
++ the class AliasTable for building free SQL statements is extended
+
+release 1.34 (2013-05-11)
++ the new Ujorm TransactionManager implementation is ready to use
++ Criterion object is serializable now
++ new method Criterion.toStringFull() prints the condition including a domain name by example: Person(id EQ 3)
++ new method to print all information about the Key.toStringFull(true)
++ CSV parser and creator have got extended API
++ the AliasTable class supports building free SQL scripts using the Ujorm metamodel
++ new ORM parameter MetaParams.INITIALIZATION_BATCH can specify a user initicialization code
++ very much small changes, JavaDoc information and code cleaning is done
+
+release 1.33 (2013-04-28)
++ the release candidate
+
+release 1.32 (2013-01-20)
++ many Ujo Validators are available now in the CORE module for common use
++ the one database request loading for relations is supported using the database Query object API
++ lazy loading can be disabled by default for each Query now
++ CSV import tool can check a content of the header in the reading time
++ the RingBuffer tool was extended for new useful methods
++ more checkpoints, code cleaning and jUnit tests are done
++ documentation was extended
+
+release 1.31 (2012-12-09)
++ database statements UPDATE or DELETE supports entity relations in the Criterion - including batch mode
++ SQL entity and column names can be "quoted" optionally in the real SQL statements, for more information see the method: MetaParams.setQuotedSqlNames()
++ the one critical bug is fixed for some cases of the lazy loading
++ explicitly defined Key name created using a factory is fixed now
++ criterion for the NULL value with a relation Key is fixed.
++ there is fixed dependencies in the ujo-wicket module
++ new method Query.list(int depth) is implemented to easy fetch relation loading
++ an implementation of the Query.toString() method is improved
++ code cleaning is improved and new JavaDoc is written
++ there is available the new great plugging to NetBeans IDE to generate getters and setters easy for UJO - thanks to Martin Mahr
+
+release 1.30 (2012-10-21)
++ maven project GroupId is renamed to the Ujorm
++ the interface UjoProperty is renamed to the Key and the original interface is deprecated now
++ static factory methods for Key implementations does not contain original Class arument due the attribute is taken by a Java reflection now
++ new class KeyFactory for an altenative way to create new ujo keys
++ a lazy loading implementation of the ORM  is moved from domain objects to a new OrmProperty class
++ the new interface WeakKey without the generic domain type parameter is finished. It is the simplified Key
++ new class KeyRing intended to create a serializable and immutable Key collection
++ new method Key.getDomainType() inteded to return a related domain class
++ partial implementation of the java transaction API (JTA) is done
++ column widths type of VARCHAR for an Java Enym types are calculated now using maximal Enum value - by default
++ the class SpringKeyFactory is implemented to create a special Keys, see the new class ApplicationContextAdapter
++ the class TypeService is replaced with a new interface ITypeService for better type-safe specification by Java generics.
++ small bug-fix for the exception: SQLException: You cannot set autocommit during a managed transaction
++ the AroundServiceTransaction class calls a rollback for an exception event case
++ the implementaton of the method BinaryCriterion.toString() is fixed
++ new module called ujo-wicket to provide a model for the Wicket framework from Ujo objects
++ JavaDoc is fixed
++ impotant migration notes: replace all texts "UjoProperty" for the target "Key" in your project and fix all deprecated methods
+
+release 1.22 (2012-01-30)
++ the UjoProperty interface extends the CriterionMaker now for a simpler Criterion building
++ new annotation parameter called converter can be assigned for a special reading data from/to ResultSet.
++ new method UjoComparator.sort() is implemented and a better type safe using Java generics
++ solid database names of foreign columns name constrains is implemented
++ the default implementation toString() of the AbstractUjo object is improved
++ the new method is implemented in the Core module: Criterion.evaluate(Iterable);
++ the dialect MSSqlDialect.java is fixed for a DELETE statement with related tables
++ the right parameter of Criterion can be an indirect property too.
++ small bug fixing
++ tutorial is extended for new API
++ code cleaning is done
+
+
+release 1.21 (2011-11-06)
++ Java 7.0 is supported now
++ a native SQL query with parameters is supported using the class SqlParameters
++ new serializable property container PropertyGroup is implemented
++ new method of the API: UjoProperty.equalsName(CharSequence name)
++ PostgreSqlDialect supports the TEXT database type.
++ new BytesWrapper interface to store binary content to a BLOB is implemented in ORM.
++ Ujorm have got a native support for the "org.slf4j.Logger" framework
++ an expression ${SCHEMA} is replaced for a real schema name in the NATIVE SQL view.
++ The LIMIT and OFFSET parameters are implemented for the Native View query
++ DDL management is fixed for the multi schema structure in databases
++ the SQL parser for a Native View is improved
++ the OrmTableSynchronized class implementation is ready to use for the multi-thread environment.
++ the parameter NULL is allowed in the method Query.setCriterion(Criteron);
++ values of the multi column primary key can be assigned by application thank to a patch from Mr. Tomas Hampl.
++ class MetaParams API to more paramters is extended.
++ the cew API: UjoProperty.descending(boolean descending)
++ the common SqlDialect fixed for combimation SELECT DISTINCT COUNT
++ the ORM support for the Character value type is fixed.
++ dialect MSSqlDialect fixed and the blob is supported in MSSqlDialect.java
++ performance is improved
++ JavaDoc is extended
+
+
+release 1.20 (2011-05-29)
++ the project leaves the old domain org.ujoframework so all new Java packages are renamed to: org.ujorm
++ the database column is renamed from 'maxvalue' to the new value 'max_value' in the internal table 'ujorm_pk_support' due a new keyword in the MY-SQL.
+  See more information: http://dev.mysql.com/doc/refman/5.5/en/reserved-words.html
+  Please, modify your database by the SQL statement: ALTER TABLE ujorm_pk_support CHANGE maxvalue max_value BIGINT DEFAULT 0 NOT NULL;
++ the 'Sequence Table Model' is implemented to an optional customize of the 'ujorm_pk_support' table.
++ persistent objects with emulated inheritance can be inserted/updated/deleted using a one statement including its parent(s). This feature can be switched off by the parameter INHERITANCE_MODE=false
++ the batch INSERT for list of items usding a multi row SQL INSERT is implemented
++ the batch UPDATE is supoorted now, see documentation for more information
++ new method Query.setColumns(..) is implemented for the SQL SELECT performance optimization
++ select DISTINCT is supported now
++ each metamodel table can be marked like a READ-ONLY using a new parameter in annotation @Table
++ configuration supports the READ-ONLY mode for required table(s)
++ core class UjoComparator supports the Collator for comparation of the String items.
++ composite class UjoProperty have got implemented two new methods: equals() and hashCode() and the getName() method is optimized now
++ auto increment is supported for data type String now
++ the documentation Ujorm User Guide is extended and new samples are done
++ database commits are executed by order of assigning database models now
++ API of the class Criterion is extended for two methods: forAll() and forNone()
++ many Ujorm source code cleanings are finished
++ constructor new SortingProperty(..) is replaced for a factory method PathProperty.sort(..)
+- Ujorm configuration loading from XML file is fixed
+- SqlDialect is fixed for the null relation case by sample: Criterion.whereNull(Item.order)
+- the DDL update fixed in case a default value is any implementatione of the interface OrmUjo
+- Spring integration is fixed for annotations @Transactional in some cases
+- the core method PathProperty.equals(parameter) is fixed for the case the parameter have got the null value
+- implementation CommentPolicy.ON_ANY_CHANGE is fixed
+- log message for SQL values is fixed
+
+release 1.10 (2011-02-06)
++ dialect for the database MS-SQL is implemented thanks to Tomas Hampl from company Effectiva
++ new native Criterion is implemented with an SQL expression to use on Ujorm query
++ new annotation @Comment can be used to describe database tables or columns
++ correction the behavior Ujorm release 0.90 where the missing table 'ujorm_pk_support' was a sign to creating all the DB structure
++ there is possible to suppress the formation table 'ujorm_pk_support' by overriding the method UjoSequencer.isSequenceTableRequired() in case a different implementation of the ID generator is used
++ documentation Ujorm User Guide is extended
++ no major bug was discovered
+
+release 1.00 (2010-10-17)
++ the Ujorm User Guide is completed
++ new effective method for bulk loading of lazy attributes: OrmTools.loadLazyValuesAsBatch()
++ support for the Spring Framework to manage an ORM Session and Transactions
++ Criterion have got a native support for IN operator
++ UjoProperty default value reading is fixed in some cases
++ JavaDoc is improved
+
+release 0.94 (2010-05-02)
++ stored database procedures and functions are supported
++ the class Query implements the interface Iterable thanks to idea of Jiri Pejchal
++ mapping the Enum to VARCHAR - by interface ValueExportable
++ mapping any user object to VARCHAR - by interface ValueExportable
++ new method OrmTools.loadLazyValues(...) to load lazy values to required depth
++ new method session.reload(ujo) to reload properties from database
++ new method Criterion.whereNull(..) to simple comparison to the NULL literal
++ MetaParams supports the "set(..)" value to change values
++ checking an open Session is done
++ assembling the metamodel is synchronized now
++ parameter name 'Orm2ddlPolicy' is renamed to 'orm2ddlPolicy'
++ class MetaView is renamed to MetaSelect
++ JavaDoc and Tutorial in the class are improved
+
+release 0.93 (2010-03-07)
++ orm: the incremental database update by metamodel using DDL statements
++ orm: the LIMIT and OFFSET are supported by attributes of the Query
++ orm: database indexes are created by the metamodel, there are supported unique, non-unique indexes including a composed one
++ orm: new method to get a foreign key: OrmTable.readPK(property)
++ orm: checking the SQL keywords
++ orm: note: database table by the SQL statement: ALTER TABLE ormujo_pk_support RENAME TO ujorm_pk_support;
++ core: new method to copy value: UjoProperty.copy(from, to)
++ core: new method to create instance: Criterion.where(condition)
++ core: the Criterion visualization is improved by the method: Criterion.toString()
++ code cleaning
+
+release 0.92 (2010-01-03)
++ THE IMPORTANT CHANGE: the method UjoProperty.getValue() replaces the value of null for default - instead of the original method Ujo.readValue() in the previous release!
++ two UjoProperties can be easily concatenated using the new type safe method add(...)
++ the base UJO objects support the 'java.io.Serializable' feature - including the OrmTable
++ code cleaning, extended JavaDoc, small bug fixing
++ orm: Enum support is done by mapping to a numeric DB type
++ orm: custom Java type mapping is supported by extending the class TypeService
++ orm: the new method OrmHandler.findPropertiesByTypeClass(Class) for common use is done
++ orm: simplified SQL dialect implementations is done including the ORACLE support
++ orm: a new feature available by method Sesssion.isRollbackOnly()
++ orm: default value for parameter SEQUENCE_CACHE is 100 (instead of original 64)
+- orm: reading a null value from ResultSet is fixed
+- orm: the MySqlDialect if fixed, an explicit use of  the engine 'InnoDB' was implemented
+
+release 0.91 (2009-09-20)
++ pesimistic lock implementation for Ujorm
++ internal Ujorm sequence supports now: Long, Integer, BigInteger, Short, Char
++ two Criterion operators are done for a user customization in the SQL statement (Ujorm)
++ Hibernate support is fixed
++ new static method creates a ListProperty with the default property name
++ JavaDoc improvements including 'Tutorial in the class' is done
++ peformance tuning + new benchmark values are released
+
+release 0.90 (2009-08-29)
++ new ORM implementation for databases: PostgreSql, MySql, Derby, H2, HSQLDB, Firebird and Oracle
++ new implementation QuickUjo can take the Ujo property name from a class field name
++ new factory methods of UjoProperty implementation
++ refactoring of the source code
+
+release 0.85 (2009-04-20)
++ new interface UjoMiddle extends the Ujo interface in four methods (set, get, setText, getText)
++ the original UjoExt interface extends UjoMiddle now
++ the first Map & Ujo implementation is called MapImplUjo
++ new annotation @XmlElementBody supports a XML body value now
++ List serialization of the plain objects is supported (e.g. List<Integer>)
++ there is supported a text serialization of the list of simple objects (e.g. List<Integer>)
++ text serialization of the type java.sql.Date is supported
++ interface UjoProperty has new methods for a direction of sorting: isAscending(), descending()
++ new method UjoPropertyList.isItemTypeOf(Class) tests that property type is a type (or subtype) of the parameter
++ all 'Super' classes was renamed to the prefix 'Abstract' classes
++ class PropertyTextable is was renamed to ValueTextable
++ small bug fixing
++ JavaDoc completition
+
+release 0.84 (2009-03-08)
++ new method: UjoProperty.isDefault(UJO) indicates whether a parameter value of the ujo "equal to" the property default value
++ new method: UjoProperty.isTypeOf(Class) returns true if property type is a type (or subtype) of the parameter
++ new property UjoPropertyRow.P_INDEX shows a property index
++ method Ujo.readProperties(..) returns the result properties in a natural order in case the properties was builded by a default newProperty() method
++ text reading from a PathProperty is fixed
+
+
+release 0.831 (2009-01-31)
++ performance improving: for example a deserialization ArrayUjo is about 36% faster in compare to JAXB
+
+release 0.83 (2009-01-29)
++ UjoCriteria supports a searching for objects in the list
++ support or the Proxy pattern design of the BeanUjo class
++ SimpleDateFormat synchronization if fixed
+
+release 0.82 (2008-11-23)
++ there are three new Ujo implementations for different purposes:
++ FactoryUjo: a factory to creating new instances by a property type, the special parameter constructor is supported as well as no parameter constructor
++ RegistrarUjo: the implementation allows to register the PropertyChangeListener for selected property and an action (before or after) value change
++ FieldUjo: the solution provides an access to a private object fields by UjoProperty
++ all implementations are in a different package structure and they will not in the core in the future
+
+release 0.81 (2008-10-21)
++ new class PathProperty for a composition of several UjoProperties
++ Charset is supported by a UjoManager object
++ UjoProperty implements a CharSequence for an easy access to the property Name
++ new class ListProperty extending UjoPropertyList is created for property ArrayList implementations
++ new method is UjoPropertyList.removeItem(UJO, ITEM) is added
++ new method SuperUjoExt.remove(UjoPropertyList, ITEM) is added
++ small bug fixing and new JUnit tests
+
+release 0.80 (2008-09-07)
++ UJO actions are converted from a primitive type int to an new object UjoAction
++ all ACTION constants are moved to the interface UjoAction
++ serialization performance is improved
++ motivation tutorial in a "slide show" format is available on the home page
++ framework version is available in the manifest of JAR file
++ command line: "java -run ujo.jar" shows version number and some basic information about framework
++ class ZeroProviderImpl was removed, its function was replaced by UjoProperty.getDefault() feature
+- class UjoManagerXML is fixed for a multi thread access
+
+release 0.80.rc3 (2008-08-23)
++ new methods UjoExt.getText(...) and Ujo.setText(...) are available for a text processing
++ new method UjoExt.findProperty(String)
++ SingleUjoTabModel enhancements
++ PojoUjo class was renamed to a more comprehensible name BeanUjo (including properties and subclasses)
++ Properties *Rife was removed from the Ujorm core for simplification class model
+
+release 0.80.rc2 (2008-08-07)
++ some abstract implementations of UjoExt interface are slightly improved for better type safe features
++ there is created a new method to set columns to a UjoTableModel class
++ methods of UjoTextable interface was extended about the "context" parameter. The original methods is implemented in a SuperUjo class
++ method of UjoCloneable interface was extended about the "context" parameter.
+
+release 0.80.rc (2008-07-13)
++ UjoExt interface is significantly improved for better type safe features
++ documentation extensions
+
+release 0.80.beta (2008-06-23)
++ interface UjoExt offers a more conventional attribute access
++ chaining of properties is supported
++ default value management is just implemented by a new method getDefault() instead of an obsolete solution using an ACTION_ZERO_REPLACE constant
++ Java parameter -enableassertions switch on a value type checking in a method Ujo.writeProperty(...)
++ many documentation areas are supplemented including a JavaDoc
++ Internet home page is redesigned
+
+release 0.75 (2008-05-18)
++ API of PojoProperty class was extended for a better usability
+- bug of Resource Bundle data export was fixed
+
+release 0.74 (2008-05-11)
++ CSV persistence is supported now
++ XML performance was improved
++ new Ujo implementation called UjoPojo is done for a JavaBean class support
++ API of persistence tools was slightly changed for better extension features
+
+release 0.73 (2008-04-14)
++ attributes in a XML export file is supported now
++ performance tuning
++ XML persistence performance tests are completed and described in documentation
++ action constants are reevaluated (there is recommended to recompile your project)
+
+release 0.72 (2008-03-16)
++ UJO implementations have got extended API for easier PROPERTY building with a better type saving.
++ class UjoComparator have got new method: equals(UJO ujo1, UJO ujo2)
++ documentation was supplemented
+
+release 0.71 (2007-11-26)
++ code cleaning: a compilation with parameter "-Xlint:unchecked parameter" doesn't write any warning.
++ API cleaning: an obscure class names with a suffix "Easy" was replaced by a word "Rife"
++ documentation was improved
+
+release 0.70 (2007-11-16)
++ project documentation is translated into English
++ unnecessary class MapUjoTextable was removed
++ class SingleUjoTabModel is fixed
+
+release 0.70.beta2 (2007-10-19)
++ project documentation is fixed and significantly extended
++ method UjoTableModel.insertRow(..) is renamed to addRow(..)
+
+release 0.70.beta (2007-10-12)
++ the first public version
++ Ujo interface API is finished
++ XML export / import is working
++ Resource bundle export / import is working
++ a Zero provider is supported
++ project documentation version is available in a Czech language only
+
+--
+EOF
