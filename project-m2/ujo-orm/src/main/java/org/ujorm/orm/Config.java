@@ -29,7 +29,8 @@ public interface Config {
     /** Enable or disable the service of the {@link org.ujorm.orm.UjormServiceProvider} object. */
     boolean isEnabledUjormServiceProvider();
 
+    /** Build an immutable object with default arguments */
     static Config ofDefault() {
-        return new ConfigImpl();
+        return new ConfigImpl().lock();
     }
 }

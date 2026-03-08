@@ -38,8 +38,8 @@ public class ConfigImpl extends AbstractSnapshotable<ConfigImpl> implements Conf
     /** Object state stored in an array */
     private final Object[] values = new Object[p.keys.size()];
 
-    /** Write lock */
-    private boolean writeLock = false;
+    /** The object is locked and immutable. */
+    private boolean locked = false;
 
     public ConfigImpl() {
         Properties properties = loadProperties();
@@ -60,15 +60,16 @@ public class ConfigImpl extends AbstractSnapshotable<ConfigImpl> implements Conf
     /** General setter with lock check */
     /** General setter with lock check */
     public <V> void setValue(@NotNull Key<V> key, V value) {
-        if (writeLock) {
+        if (locked) {
             throw new IllegalStateException("The configuration is locked.");
         }
         key.setValue(value, values);
     }
 
     /** Lock the configuration for further writes */
-    public void makeReadOnly() {
-        this.writeLock = true;
+    public ConfigImpl lock() {
+        this.locked = true;
+        return this;
     }
 
     // --- Interface implementation ---
@@ -122,7 +123,7 @@ public class ConfigImpl extends AbstractSnapshotable<ConfigImpl> implements Conf
 
     @Override
     public String toString() {
-        return "ConfigImpl{count=" + p.keys.size() + ", locked=" + writeLock + "}";
+        return "ConfigImpl{count=" + p.keys.size() + ", locked=" + locked + "}";
     }
 
     /** Internal Key definition */
