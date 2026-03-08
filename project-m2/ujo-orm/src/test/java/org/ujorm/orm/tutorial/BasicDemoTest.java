@@ -95,16 +95,21 @@ public class BasicDemoTest extends AbstractDemo {
         var employeeCrud = EMPLOYEE_EM.crud(connection());
 
         var allEmployees = employeeCrud
-                .selectWhere("id > :id", builder -> builder
-                        .bind("id", 0L)
+                .selectWhere("id > :employeeId", builder -> builder
+                        .bind("employeeId", 0L)
                         .streamMap(EMPLOYEE_EM::map)
                         .sorted(Comparator.comparing(e -> e.getBoss() == null))
                         .toList());
 
         employeeCrud.delete(allEmployees.stream());
 
-        var count = employeeCrud.selectWhere("1=1", b -> b.streamMap(EMPLOYEE_EM::map).count());
-        assertEquals(0L, count);
+        var count = SqlParamBuilder.run(connection(), build -> build
+                .sql("SELECT COUNT(*) FROM employee WHERE id >= :employeeId")
+                .bind("employeeId", 0L)
+                .streamMap(rs -> rs.getInt(1))
+                .findFirst()
+                .orElseThrow());
+        assertEquals(0, count);
     }
 
     /** Create all database tables first */
