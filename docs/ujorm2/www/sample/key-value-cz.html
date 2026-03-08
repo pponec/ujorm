@@ -1,0 +1,492 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+      "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <title>Demo WEB aplikace s&nbsp;Ujorm a Wicket</title>
+  <meta name="keywords"
+  content="Ujorm, CRUD, WEB, application, demo-hotels, wicket, spring, framework"
+  />
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+  <link
+  href="http://fonts.googleapis.com/css?family=Titillium+Web:300,300italic,600&amp;subset=latin,latin-ext"
+  rel="stylesheet" type="text/css" />
+  <style type="text/css">
+	body {
+		margin: 0;
+		padding: 0;
+		font-family: "Titillium Web","Helvetica Neue",Helvetica,Arial,sans-serif;
+		font-size: 16px;
+		width: 710px;
+		padding: 15px;
+	}
+	h1, h2, h3 {
+		color: darkblue;
+		margin-bottom: 20px;
+	}
+	h2 {
+		font-size: 24px;
+		margin: 30px 0 10px
+	}
+	img {
+		border: 0;
+	}
+	div.img.code {
+		border: silver solid 1px;
+		border-radius: 10px;
+	}
+	.intro {
+		color: gray;
+		font-style: italic;
+		margin-left: 25px;
+	}
+	.intro a, .toc a {
+		text-decoration: none;
+	}
+	pre {
+		font-family: monospace;
+		font-size: 13px;
+		color: darkgray;
+	}
+	.dp-highlighter {
+		font-size: 13px;
+	}
+        </style>
+  <!-- SyntaxHighlighter -->
+  <link type="text/css" rel="stylesheet"
+  href="../orm/SyntaxHighlighter/Styles/SyntaxHighlighter.css" />
+  <script type="text/javascript"
+  src="../orm/SyntaxHighlighter/Scripts/shCore.js">
+        </script>
+  <script type="text/javascript"
+  src="../orm/SyntaxHighlighter/Scripts/shBrushJava.js">
+        </script>
+  <script type="text/javascript"
+  src="../orm/SyntaxHighlighter/Scripts/shBrushXml.js">
+        </script>
+  <script type="text/javascript">
+        window.onload = function () {
+            dp.SyntaxHighlighter.ClipboardSwf = 'SyntaxHighlighter/Scripts/clipboard.swf';
+            dp.SyntaxHighlighter.HighlightAll('code');
+        }
+        </script>
+</head>
+
+<body lang="cs">
+<h1>Key-value programování v jazyce Java <img alt="logo"
+                                              src="image-key-value/ujo128.png" style=" vertical-align: top; float: right"
+                                              width="80" height="80" /></h1>
+
+<div class="intro">
+Průvodce vzorovými příklady modulu <strong>ujo-core</strong> z frameworku
+<strong>Ujorm</strong><br />
+Autor: Pavel Ponec, <a href="mailto:help.ujorm@gmail.com">help.ujorm@gmail.com</a>, březen, 2014<br />
+Licence dokumentu: <a
+href="http://creativecommons.org/licenses/by-nd/3.0/">Creative Commons
+BY-ND</a></div>
+
+<h2 id="menu">Obsah</h2>
+
+<div class="toc">
+<ul>
+  <li><a href="#introduction">Úvod</a></li>
+  <li><a href="#reading">Zápis a čtení hodnot</a></li>
+  <li><a href="#default">Obnovení defaultních hodnot</a></li>
+  <li><a href="#copy">Mělká kopie objektu</a></li>
+  <li><a href="#validation">Validace atributů při zápisu</a></li>
+  <li><a href="#compositeKey">Kompozitní Klíče</a></li>
+  <li><a href="#criterionAsValidator">Criterion jako popis podmínky</a></li>
+  <li><a href="#criterionAsFilter">Criterion pro filtrování kolekce</a></li>
+  <li><a href="#ordering">Řazení kolekcí</a></li>
+  <li><a href="#serialization">Serializace klíčů</a></li>
+  <li><a href="#importCsv">Import CSV formátu</a></li>
+  <li><a href="#conclusion">Závěr</a></li>
+</ul>
+</div>
+
+<h2 id="introduction">Úvod</h2>
+
+<p>Ujorm je knihovna pro vývoj Java aplikací postavená na
+<strong>key-value</strong> architektuře doménových objektů, které
+přistupují ke svým atributům výhradně pomocí objektů zvaných Klíče.
+<a href="http://ujorm.org/javadoc/org/ujorm/Key.html">Klíč</a> tvoří
+neměnný statický objekt, který je součástí doménové třídy a který
+poskytuje různé služby. Klíč v Ujorm nikdy neobsahuje business data - na rozdíl
+ od podobného frameworku <a href="http://www.joda.org/joda-beans/">Joda Beans</a>,
+ kde atributy jsou obsaženy v objektu typu <a href="http://www.joda.org/joda-beans/apidocs/org/joda/beans/Property.html">Property</a>.</p>
+
+<p>Pro popis architektury <a href="http://ujorm.org/javadoc/org/ujorm/Ujo.html">Ujo</a> objektu doporučuji využít starší <a
+href="http://ujorm.org/javadoc/org/ujorm/package-summary.html#UJO">
+odkaz</a>, cílem tohoto článku bude spíše demonstrovat zajímavé využití  Ujo objektů na krátkých příkladech.
+Ukázky využívají modul <strong>ujo-core</strong> a nesouvisí přímo s dotazy na tabulky relačních databází ORM modulu.
+Modul <strong>core</strong> lze připojit do vlastního projektu pomocí Maven závislosti:</p>
+<pre name="code" class="xml">        &lt;dependency&gt;
+            &lt;groupId&gt;org.ujorm&lt;/groupId&gt;
+            &lt;artifactId&gt;ujo-core&lt;/artifactId&gt;
+            &lt;version&gt;1.45&lt;/version&gt;
+        &lt;/dependency&gt;</pre>
+
+<p>Použité ukázky kódu jsou postavené na dvou entitách
+<strong>Employee</strong> a <strong>Company</strong> typu <strong>Ujo</strong>,
+každá z nich obsahuje také (<a
+href="http://ujorm-cs.blogspot.cz/2012/12/generator-getteru-pro-netbeans.html">generované</a>)
+settery a gettery tak, aby objekt splňoval specifikaci
+<strong>JavaBeans</strong>. </p>
+
+<p><img alt="key-value-model" src="image-key-value/key-value-model.png"
+width="355" height="120" style="margin: 15px 80px; vertical-align: top" /></p>
+
+<h2 id="reading">Zápis a čtení hodnot</h2>
+
+<p>Popis čtení a zápisu atributů JavaBeans tady přeskočíme a pustíme
+se rovnou do čtení a zápisu hodnot pomocí API z frameworku Ujorm.</p>
+<pre name="code" class="java">        Employee person = new Employee();
+
+        // Write:
+        person.set(ID, 7L);
+        person.set(NAME, "Pavel");
+        person.set(WAGE, 20.00);
+        person.set(COMPANY, new Company());
+
+        // Read:
+        Long id = person.get(ID);
+        String name = person.get(NAME);
+        Double wage = person.get(WAGE);
+        Company company = person.get(COMPANY);
+
+        assert id == 7L;
+        assert name == "Pavel";
+        assert wage == 20.00;
+        assert company != null;</pre>
+
+<p>Pro zkrácení kódu uvedených příkladu byly v hlavičce třídy
+naimportované potřebné statické Klíče použitých Ujo objektů pomocí
+zápisu:</p>
+<pre name="code" class="java">        import static org.Company.CITY;
+        import static org.Employee.*;</pre>
+
+<p>Z předchozího příkladu by mělo být zřejmé použití Klíčů pro přístup k atributům objektu,
+zatím se však nezdá, že by Klíče přinášely nějakou přidanou hodnotu -  ve srovnání s&nbsp;POJO.
+O výhodách řešení se vás pokusím přesvědčit v následujících kapitolách, které popisují další vlastnosti Klíčů.
+</p>
+
+<h2 id="default">Obnovení defaultních hodnot</h2>
+
+<p>Každý Klíč obsahuje svoji defaultní hodnotu, kterou lze získat metodou
+Key.<a
+href="http://ujorm.org/javadoc/org/ujorm/Key.html#getDefault%28%29">getDefault</a>().
+Zajímavější však je chování klíče při čtení atributu s&nbsp;hodnotu
+NULL, protože klíč každou takovou hodnotu zaměňuje automaticky za svoji
+defaultní hodnotu. Pokud je defaultní hodnota Klíče také NULL, je záměna
+nevýznamná. Pro obnovu všech defaultních hodnot tedy stačí přiřadit
+každému atributu hodnotu NULL podle vzoru:</p>
+<pre name="code" class="java">        Employee employee = getEmployee();
+
+        for (Key key : employee.readKeys()) {
+            employee.set(key, null);
+        }
+
+        assert employee.getWage() == 0.0 : "Default value is zero";
+        assert employee.getWage() == WAGE.getDefault() : "Check the default value";</pre>
+
+<p>Jiná varianta předchozího příkladu obnovuje pouze defaultní hodnoty číselných atributů:</p>
+<pre name="code" class="java">        Employee employee = getEmployee();
+
+        for (Key key : employee.readKeys()) {
+            if (key.isTypeOf(Number.class)) {
+                employee.set(key, null);
+            }
+        }</pre>
+
+<p>Metoda <a
+href="http://ujorm.org/javadoc/org/ujorm/Ujo.html#readKeys%28%29">Ujo.readKeys</a>()
+vrací všechny přímé klíče i ode všech <strong>rodičů</strong> použité
+třídy, a tak se obnova výchozích hodnot bude týkat také atributů
+případných rodičů. Pro porovnání typu hodnoty Klíče je vhodná metoda <a
+href="http://ujorm.org/javadoc/org/ujorm/Key.html#isTypeOf%28java.lang.Class%29">Key.isTypeOf</a>(Class)
+ .</p>
+
+<h2 id="copy">Mělká kopie objektu</h2>
+
+<p>Protože už víme, jak z Ujo objektu získat seznam všech jeho
+<strong>přímých</strong> klíčů (popis kompozitních Klíčů bude následovat),
+tak můžeme záměnou těla cyklu vytvořit snadno mělkou kopii objektu:</p>
+
+<pre name="code" class="java">        Employee source = getEmployee();
+        Employee target = source.getClass().newInstance();
+
+        for (Key&lt;Ujo,?&gt; key : source.readKeys()) {
+            key.copy(source, target);
+        }
+
+        assert source.getId() == target.getId()</pre>
+
+<h2 id="validation">Validace atributů při zápisu</h2>
+
+<p>Validátory jsou neměnné objekty, které je možné spojovat operátorem
+AND/OR a které lze vkládat volitelně do Klíče při jeho sestavení.
+Pokud Klíč dostane jednou validátor, tak bude navždy kontrolovat každou
+hodnotu v době zápisu do Ujo objektu.
+</p>
+<pre name="code" class="java">        Key&lt;Employee, String&gt; NAME = keyFactory.newKey(length(7));</pre>
+
+<p>Do klíče NAME jsme teď vložili validátor, který povolí zápis jména zaměstnance s maximáln délkou 7&nbsp;znaků.
+Na následujícím příkladě vyzkoušíme zápis jednoho korektního jména a jednoho příliš dlouhého jména:</p>
+
+<pre name="code" class="java">        final String correctName = "1234567";
+        final String wrongName = "12345678";
+
+        Employee employee = new Employee();
+        employee.set(NAME, correctName);
+
+        try {
+            employee.set(NAME, wrongName);
+        } catch (ValidationException e) {
+            String expected
+                = "Text length for Employee.name must be between 0 and 7, "
+                + "but the input length is: 8";
+            assert expected.equals(e.getMessage());
+        }
+
+        assert employee.getName() == correctName;</pre>
+
+<p>API validátorů nabízí podporu lokalizovaných chybových zpráv pomocí
+tzv. <strong>šablon</strong>.</p>
+
+<pre name="code" class="java">        final ValidationException exception = getException();
+
+        String template = "The name can be up to ${MAX} characters long, not ${LENGTH}.";
+        String expected = "The name can be up to 7 characters long, not 8.";
+        String result = exception.getError().getMessage(template);
+
+        assert expected.equals(result);</pre>
+
+<p>Každý objekt typu <a
+href="http://ujorm.org/javadoc/org/ujorm/validator/ValidationError.html">ValidationError</a>
+má k dispozici jednu výchozí šablonu pro potřeby logování.
+Další příklady použití validátorů jsou k dispozici
+<a href="http://sourceforge.net/p/ujoframework/svn/HEAD/tree/trunk/project-m2/ujo-core/src/test/java/org/ujorm/validator/ValidatorTest.java#l25">tady</a>.</p>
+
+<p>Zvažuji použití anotací z <a
+href="http://beanvalidation.org/1.0/spec/">JSR 303</a> nad definicí Klíčů
+jako alternativu k přímému vkládání klíčů pomocí Java kódu - v některém z dalších verzí Ujorm.</p>
+
+<h2 id="compositeKey">Kompozitní Klíče</h2>
+
+<p>Dva na sebe logicky navazující Klíče mohou být spojeny metodou
+Key.<strong>and</strong>(key), přitom výsledkem je instance tzv.
+<strong>kompozitního</strong> (chcete-li složeného) Klíče typu <a
+href="http://ujorm.org/javadoc/org/ujorm/CompositeKey.html">CompositeKey</a>,
+který je potomkem i toho původního interface typu Key. S kompozitním
+Klíčem tedy lze pracovat stejně jako s&nbsp;Klíčem přímým - včetně zápisu
+a čtení hodnot doménových objektů či spojování s&nbsp;dalšími Klíči.
+Práce s&nbsp;kompozitním Klíčem nám přináší také nové,
+zajímavé vlastnosti při čtení a zápisu hodnot:</p>
+<ul>
+  <li>pokud je při čtení atributu některá <strong>relace</strong> NULL,
+    výsledkem je také hodnota NULL, nevzniká tedy výjimka
+    <strong>NullPointerException</strong> typická pro řetězení getterů JavaBeans. Toto pravidlo
+    se netýká výchozího objektu.</li>
+  <li>při zápisu hodnoty pomocí kompozitního Klíče se automaticky
+      <strong>vytvářejí</strong> všechny chybějící relační objekty. Pokud nám z nějakého
+    důvodu takové chování nevyhovuje, můžeme použít metodu:
+    CompositeKey.<strong>setValue</strong>(ujo, value, createRelations) s&nbsp;posledním parametrem
+    <strong>false</strong>.</li>
+</ul>
+
+<p>Ukázka použití:</p>
+
+<pre name="code" class="java">        Key&lt;Employee,String&gt; companyNameKey = Employee.COMPANY.add(Company.NAME);
+
+        Employee employee = new Employee();
+        String companyName = employee.get(companyNameKey); // !1
+        assert companyName == null;
+
+        employee.set(companyNameKey, "Prague"); // !2
+        companyName = employee.get(companyNameKey);
+
+        assert employee.getCompany() != null;
+        assert companyName == "Prague";</pre>
+
+<p>První řádek sestaví kompozitní klíč. Řádek označený prvním vykřičníkem nám vrátí název firmy
+zaměstnance jako hodnotu NULL, i když firma ještě nebyla vytvořena.
+Řádek označený druhým vykřičníkem nejdříve doplní chybějící instanci firmy a pak do ní zapíše její název.</p>
+
+<p>Pokud chování kompozitních Klíčů někoho zaujalo, je možné studovat další příklady na tomto <a
+href="http://sourceforge.net/p/ujoframework/svn/2205/tree//trunk/project-m2/ujo-core/src/test/java/samples/values/UsageTest.java#l27">TestCase</a>.</p>
+
+<h2 id="criterionAsValidator">Criterion jako popis podmínky</h2>
+
+<p>Pomocí Klíče, hodnoty a operátoru je možné popsat logickou podmínku
+Ujo objektu, pro kterou je určena třída <a href="http://ujorm.org/javadoc/org/ujorm/criterion/Criterion.html">Criterion</a>. Objekty typu Criterion
+jsou neměnné serializovatelné instance, které je možné spojovat
+operátorem AND/OR do binárního stromu. Objekt typu Criterion slouží také
+v ORM modulu jako předloha pro sestavení fráze WHERE v SQL příkazech,
+nicméně tento objekt je zcela autonomní a můžeme ho využívat i mimo
+oblast ORM - například pro validování objektů.</p>
+<pre name="code" class="java">        Criterion&lt;Employee&gt; validator = Employee.WAGE.whereGt(100.0);
+
+        try {
+            validator.validate(getEmployee()
+            , "Minimal WAGE is: %f."
+            , validator.getRightNode());
+        } catch (IllegalArgumentException e) {
+            assert e.getMessage() != null;
+        }</pre>
+
+<p>V této ukázce využíváme Criterion pro kontrolu, že zaměstnanec má
+vyšší mzdu jak 100 (jednotek).</p>
+
+<p>Hlavní význam Criterionu však zůstává v jeho schopnosti předat
+<strong>popis</strong> podmínky jiným modulům, které pak
+mohou nabízet nějakou vlastní implementaci řešení.</p>
+
+<h2 id="criterionAsFilter">Criterion pro filtrování kolekce</h2>
+
+<p>Další ukázka představuje jinou variantu předchozího příkladu a
+slouží pro filtrování kolekce zaměstnanců, jejichž firma má sídlo v
+Praze. Na ukázce vidíme, že do Criterionu mohou vstupovat také kompozitní
+Klíče:</p>
+<pre name="code" class="java">        List&lt;Employee&gt; employees = COMPANY.add(CITY)
+            .whereEq("Prague")
+            .evaluate(getEmployees());
+
+        for (Employee employee : employees) {
+            System.out.println(employee);
+        }
+
+        assert employees.size() == 4;</pre>
+
+<p>Je užitečné vědět, že hodnotu Criterionu může být také Klíč:</p>
+
+<pre name="code" class="java">        List&lt;Employee&gt; employees = COMPANY.add(CITY)
+            .whereEq(Employee.NAME)
+            .evaluate(getEmployees());
+
+        assert employee.size() == 1; </pre>
+
+<p>Druhý příklad filtruje všechny zaměstnance, jejichž jméno se shoduje
+s názvem města (sídla) jejich firmy. Jinak souhlasím s&nbsp;každým, kdo si
+myslí, že to není úplně typický příklad :).</p>
+
+<h2 id="ordering">Řazení kolekcí</h2>
+
+<p>Ujorm poskytuje užitečnou třídu pro řazení kolekcí zvanou <a
+href="http://ujorm.org/javadoc/org/ujorm/core/UjoComparator.html">UjoComparator</a>.
+Pro velkou skupinu požadavků není třeba implementovat novou třídu (na
+rozdíl od řazení kolekce JavaBenas i když v Java 8 přináší
+zjednodušení), stačí jen dodat tovární metodě požadovaný seznam
+klíčů spolu s&nbsp;informací o směru řazení, viz metoda <a
+href="http://ujorm.org/javadoc/org/ujorm/Key.html#descending%28%29">Key.descending</a>().
+Uvedená metoda vytváří vždy novou instanci Klíče s&nbsp;příznakem
+<strong>sestupného</strong> řazení.</p>
+<pre name="code" class="java">        List&lt;Employee&gt; employees = UjoComparator.of
+            ( COMPANY.add(CITY)
+            , NAME.descending())
+            .sort(getEmployees());
+
+        for (Employee employee : employees) {
+            System.out.println(employee);
+        }</pre>
+
+<p>Metoda <strong>descending</strong>() vytváří ve skutečnosti nový
+kompozitní Klíč s&nbsp;jediným členem, který poskytuje informaci o sestupném
+řazení. Modelování sestupného řazení se využívá také v ORM
+modulu.</p>
+
+<h2 id="serialization">Serializace klíčů</h2>
+
+<p>Každý <strong>přímý</strong> Klíč má v rámci class-loaderu svoji unikátní instanci podobně jako položka výčtového typu
+<a href="http://docs.oracle.com/javase/6/docs/api/java/lang/Enum.html">Enum</a>.
+Aby bylo možné klíče serializovat, je třeba je vložit do <strong>klíčenky</strong> reprezentované
+třídou <a href="http://ujorm.org/javadoc/org/ujorm/core/KeyRing.html">KeyRing</a>.
+Tyto klíčenky však nejsou pro nás úplně nové, protože výše použitá metoda
+<a href="http://ujorm.org/javadoc/org/ujorm/Ujo.html#readKeys()">Ujo.readKeys</a>()
+vrací (ve výchozí implementaci) právě tento typ.</p>
+
+<pre name="code" class="java">        final KeyRing&lt;Employee&gt; keyRing1, keyRing2;
+        keyRing1 = KeyRing.of(Employee.ID, Employee.COMPANY.add(Company.NAME));
+        keyRing2 = service.serialize(keyRing1);
+
+        assert keyRing1 != keyRing2 : "Different instances";
+        assert keyRing1.get(0) == keyRing2.get(0) : "The same direct keys";
+        assert keyRing1.get(1).equals(keyRing2.get(1)) : "The equal composite keys";
+        assert new Employee().readKeys() instanceof KeyRing : "readKeys() returns the KeyRing";</pre>
+
+<h2 id="importCsv">Import CSV formátu</h2>
+
+<p>Poslední ukázka popisuje import z textového formátu CSV (Coma Separated
+Value), kde se nabízí možnost importovat atributy i pomocí
+<strong>kompozitních</strong> Klíčů, a tak lze importovat také atributy
+relačních entit. Popis CSV sloupců se definuje výčtem Klíčů
+(importovaného) Ujo objektu. Obsah textového CSV souboru s&nbsp;hlavičkou
+následuje:</p>
+<pre name="code" class="xml">        id;name;companyId
+        1;Pavel;10
+        2;Petr;30
+        3;Kamil;50</pre>
+
+<p>Java kód pro import CSV souboru:</p>
+<pre name="code" class="java">        Scanner scanner = new Scanner(getClass().getResourceAsStream("employee.csv"), "utf-8");
+
+        UjoManagerCSV&lt;Employee&gt; manager = UjoManagerCSV.of
+            ( Employee.ID
+            , Employee.NAME
+            , Employee.COMPANY.add(Company.ID));
+
+        List&lt;Employee&gt; employes = manager.loadCSV(scanner, this);
+
+        assert employes.size() == 3;
+        assert employes.get(0).getId().equals(1L);
+        assert employes.get(0).getName().equals("Pavel");
+        assert employes.get(0).getCompany().getId().equals(10L);</pre>
+
+<p>Pokud na místo seznamu Klíčů použijeme třídu typu Ujo, importuje se
+obsah CSV souboru podle <strong>všech přímých</strong> Klíčů dané
+třídy. Pořadí statických Klíčů Ujo je ve frameworku Ujorm garantováno
+a je shodné s&nbsp;pořadím statických fieldů uvedených v doménové třídě -
+na rozdíl od <a
+href="http://docs.oracle.com/javase/7/docs/api/java/lang/Class.html#getDeclaredFields%28%29">nedefinovaného
+pořadí</a> fieldů z JavaBeans.</p>
+
+<h2 id="conclusion">Závěr</h2>
+
+<p>Modul <strong>ujo-core</strong> z frameworku Ujorm poskytuje různé další
+nástroje pro obecné použití, samostatným tématem je pak použití Ujo
+objetků v ORM. Jako motivační aplikace slouží <a
+href="hotels-cz.html">Demo Hotels</a>, která si zaslouží v budoucnu nějaký
+podrobnější popis vybraných částí. Snad se to podaří napravit v
+nějakém samostatném článku někdy příště.</p>
+
+<p>Všechny vzorové příklady jsou součástí projektu Ujorm a hlavní
+třída je k dispozici <a href="key-value-sample.html#l48">tady</a>.</p>
+
+<h3 id="links" style="margin-bottom: 2px;">Internetové odkazy</h3>
+<ul>
+  <li>domovská stránka <a href="http://ujorm.org/">Ujorm</a> </li>
+  <li>zdrojový <a href="key-value-sample.html#l48">kód příkladů</a> pod
+    licencí Apache License 2.0 včetně odkazu pro
+    <a href="http://sourceforge.net/projects/ujoframework/files/ujorm/1.45/Example-KeyValue-1.45.zip/">stažení projektu</a></li>
+  <li>popis demo <a href="hotels-cz.html">ORM aplikace</a></li>
+  <li>odkaz <a
+    href="http://ujorm-cs.blogspot.cz/2014/03/key-value-programovani-v-jazyce-java.html">na
+    blog</a> a případné komentáře</li>
+</ul>
+<!-- google analytics beg -->
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+try {
+var pageTracker = _gat._getTracker("UA-9284194-1");
+pageTracker._trackPageview();
+} catch(err) {}</script>
+<!-- google analytics end -->
+
+<div style="display: none;">
+<script src="http://c1.navrcholu.cz/code?site=111542;t=lb14" type="text/javascript"></script><noscript><div><a href="http://navrcholu.cz/"><img width="14" alt="NAVRCHOLU.cz" style="border:none" src="http://c1.navrcholu.cz/hit?site=111542;t=lb14;ref=;jss=0" height="14"/></a></div></noscript>
+</div>
+
+</body>
+</html>
