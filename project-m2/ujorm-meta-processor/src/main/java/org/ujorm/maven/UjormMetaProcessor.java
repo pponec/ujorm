@@ -135,9 +135,10 @@ public class UjormMetaProcessor extends AbstractProcessor {
         /** Checks for valid getter and setter methods, including Lombok annotations support. */
         private boolean hasValidGetterAndSetter(TypeElement classElement, VariableElement field) {
             var fieldSuffix = capitalize(field.getSimpleName().toString());
-            var hasGetter = false;
-            var hasSetter = false;
+            var hasExplicitGetter = false;
+            var hasExplicitSetter = false;
 
+            // 1. Check explicitly written methods
             var isBoolean = field.asType().getKind() == TypeKind.BOOLEAN;
             var getterName1 = "get" + fieldSuffix;
             var getterName2 = isBoolean ? "is" + fieldSuffix : getterName1;
@@ -147,26 +148,43 @@ public class UjormMetaProcessor extends AbstractProcessor {
             for (var method : methods) {
                 var name = method.getSimpleName().toString();
                 if ((name.equals(getterName1) || name.equals(getterName2)) && method.getParameters().isEmpty()) {
-                    hasGetter = true;
+                    hasExplicitGetter = true;
                 }
                 if (name.equals(setterName) && method.getParameters().size() == 1) {
-                    hasSetter = true;
+                    hasExplicitSetter = true;
                 }
             }
 
+            // 2. Check Lombok annotations on the CLASS level (@Getter, @Setter, @Data)
+            var classHasGetter = false;
+            var classHasSetter = false;
             for (var am : classElement.getAnnotationMirrors()) {
                 var annoName = am.getAnnotationType().asElement().getSimpleName().toString();
-                if (annoName.equals("Getter") || annoName.equals("Data")) hasGetter = true;
-                if (annoName.equals("Setter") || annoName.equals("Data")) hasSetter = true;
+                if (annoName.equals("Getter") || annoName.equals("Data")) classHasGetter = true;
+                if (annoName.equals("Setter") || annoName.equals("Data")) classHasSetter = true;
             }
 
+            // 3. Check Lombok annotations on the FIELD level (overrides class level)
+            var hasLombokGetter = classHasGetter;
+            var hasLombokSetter = classHasSetter;
             for (var am : field.getAnnotationMirrors()) {
                 var annoName = am.getAnnotationType().asElement().getSimpleName().toString();
-                if (annoName.equals("Getter")) hasGetter = true;
-                if (annoName.equals("Setter")) hasSetter = true;
+
+                // Safe and exact way to read annotation values in APT
+                var isNone = false;
+                for (var entry : am.getElementValues().entrySet()) {
+                    // entry.getValue() represents the actual set value, e.g., lombok.AccessLevel.NONE
+                    if (entry.getValue().toString().contains("NONE")) {
+                        isNone = true;
+                        break;
+                    }
+                }
+
+                if (annoName.equals("Getter")) hasLombokGetter = !isNone;
+                if (annoName.equals("Setter")) hasLombokSetter = !isNone;
             }
 
-            return hasGetter && hasSetter;
+            return (hasExplicitGetter || hasLombokGetter) && (hasExplicitSetter || hasLombokSetter);
         }
 
         /** Formats the type name and handles primitive boxing for generics. */
