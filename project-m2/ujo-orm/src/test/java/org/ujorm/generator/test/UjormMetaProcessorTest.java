@@ -11,33 +11,34 @@ public class UjormMetaProcessorTest {
 
     private final String packageName = StandardEntity.class.getPackageName() + ".";
 
-    @Test
+    /** parameter 'false' prevents static initialization and Ujorm runtime crash on invalid entitie */
+     @Test
     public void testStandardOuterEntity() throws ClassNotFoundException {
-        var metaClass = Class.forName(packageName + "MetaStandardEntity");
+        var metaClass = Class.forName(packageName + "MetaStandardEntity", false, getClass().getClassLoader());
         assertMetaFields(metaClass);
     }
 
     @Test
     public void testStandardInnerEntity() throws ClassNotFoundException {
-        var metaClass = Class.forName(packageName + "MetaInnerEntity");
+        var metaClass = Class.forName(packageName + "MetaInnerEntity", false, getClass().getClassLoader());
         assertMetaFields(metaClass);
     }
 
     @Test
     public void testLombokOuterEntity() throws ClassNotFoundException {
-        var metaClass = Class.forName(packageName + "MetaLombokEntity");
+        var metaClass = Class.forName(packageName + "MetaLombokEntity", false, getClass().getClassLoader());
         assertMetaFields(metaClass);
     }
 
     @Test
     public void testLombokInnerEntity() throws ClassNotFoundException {
-        var metaClass = Class.forName(packageName + "MetaInnerLombok");
+        var metaClass = Class.forName(packageName + "MetaInnerLombok", false, getClass().getClassLoader());
         assertMetaFields(metaClass);
     }
 
     @Test
     public void testRecordEntity() throws ClassNotFoundException {
-        var metaClass = Class.forName(packageName + "MetaRecordEntity");
+        var metaClass = Class.forName(packageName + "MetaRecordEntity", false, getClass().getClassLoader());
 
         // Record fields should be present
         assertNotNull(getField(metaClass, "id"), "Field 'id' should be generated");
