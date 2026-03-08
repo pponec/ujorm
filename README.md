@@ -1,68 +1,290 @@
-# Ujorm Framework
-The Ujorm is an open source Java small library which provides non-traditional objects based on the key-value architecture to open up new exciting opportunities for writing efficient code. This library offers a unique ORM module designed for rapid Java development with great performance and a small footprint. The key features are type safe database queries, relation mapping by Java code, no entity states and a memory overloading protection cache.
+# <img src="docs/images/ujorm-logo.png" align="right" height="150" hspace="20"> Ujorm&nbsp;3 Framework
 
-## Why a new ORM mapping?
-The Ujorm (original name was UJO Framework) is designed primarily for the rapid Java development based on a relation database.
-*    java compiler can discover a syntax error of Ujorm database query similar like 4GL database languages
-*    easy to configure the ORM model by java source code, optionally by annotations and a XML file
-*    great performance, some types of SELECT query are very fast in comparison to its competitors
-*    lazy loading or the one request data loading of relations are supported optionally as a fetch strategy
-*    database tables, columns and indexes can be optionally updated according to Java metamodel in the run-time
-*    no confusing proxy or binary modified business objects
-*    very lightweight framework with no library dependencies in the run-time
+*<span style="color: grey;">The original Ujorm 2 homepage has moved [here](docs/ujorm2).</span>*
 
-## Some other features
+> *"Do the simplest thing that could possibly work."*  
+> — Kent Beck, creator of Extreme Programming and pioneer of Test-Driven Development.
 
-*    batch SQL statements for more rows like INSERT, UPDATE and DELETE are supported
-*    features LIMIT and OFFSET are available from the API
-*    nested transactions are supported using the partially implemented JTA
-*    resources for ORM mapping can be a database table, view or native SQL SELECT
-*    subset of table columns on SELECT can be specified for the SQL statement
-*    JDBC query parameters are passed by a 'question mark' notation to the PreparedStatement for a high security
-*    stored database procedures and functions are supported
-*    all persistent objects are based on the interface OrmUjo, namely on the implementation OrmTable
-*    internal object cache is based on the WeakHashMap class so that large transactions does not cause any OutOfMemoryException
-*    database indexes are created by the metamodel, added support for unique, non-unique indexes including the composed one
+Ujorm 3 is a lightweight Object-Relational Mapping (ORM) library designed for efficient relational database development with minimalist code and a straightforward API. It supports mapping database rows to standard Java objects (both mutable JavaBeans and immutable Records), including M:1 relations.
 
-## Home Pages
-1. [https://ujorm.org/](https://ujorm.org/)
-2. [https://pponec.github.io/ujorm/](https://pponec.github.io/ujorm/)
+To achieve data manipulation speeds comparable to hand-written JDBC code, Ujorm compiles its own bytecode at runtime in memory. Java reflection is strictly limited to the initial loading of domain object metadata. At its core, the library heavily utilizes the **Typed Key Pattern**—a technique introduced in Ujorm in 2007 (a year before Joshua Bloch formally published the similar *Typesafe Heterogeneous Container* pattern in *Effective Java*). Keys act as typed descriptors, providing type safety without casting and allowing bulk operations without reflection.
 
-## JavaDoc
+### Design Philosophy & Constraints
+To maintain a high utility-to-code ratio and minimize bugs, Ujorm 3 intentionally limits its scope:
+*   **No Lazy-Loading:** To prevent hidden performance costs and the N+1 query problem, relationships are not lazily fetched.
+*   **M:1 Relations Only:** Collection attributes (1:M) are not supported. The recommended approach is to query from the "many" side or use a secondary SQL query.
+*   **No Magic / No Stateful Lifecycle:** The library does not manage object lifecycles, database transactions, or entity data caching. Entities are treated as stateless data carriers.
+*   **No SQL Dialects:** Advanced queries are written in native SQL. While this ties you to a specific database syntax, it unlocks the full performance and feature set of your underlying database engine.
 
-* [Module ujo-orm](https://ujorm.org/javadoc/org/ujorm/orm/package-summary.html),
-* [Module ujo-tools](https://pponec.github.io/ujorm/javadoc/1.88/ujo-tools/),
-* [Module ujo-web](https://pponec.github.io/ujorm/javadoc/2.05/ujo-web/), look at the [sample use](https://jbook-samples-free.ponec.net/sample?src=net.ponec.jbook.s05_table.TableRandomData).
+---
 
-## Maven Repository
+## Menu
+* [Basic CRUD Operations](#basic-crud-operations)
+    * [SELECT](#select)
+    * [INSERT](#insert)
+    * [UPDATE](#update)
+    * [DELETE](#delete)
+* [Dependencies & Setup](#dependencies--setup)
+* [Code Generation (Meta Classes)](#code-generation-meta-classes)
+* [Architecture & Caching](#architecture--caching)
+* [Benchmarks](#benchmarks)
+* [FAQ](#faq)
+* [Feedback & Contributions](#feedback--contributions)
 
- The ORM module:
+---
 
+## Basic CRUD Operations
+
+Basic mapping utilizes standard Jakarta annotations (`@Table`, `@Column`). Advanced SELECT queries with JOINs use a dot-notation alias format (e.g., `city.name`) directly in the native SQL. Entities do not need to be registered beforehand, and multiple classes can map to the same database table.
+
+### SELECT
+
+The framework allows you to write native SQL queries while maintaining type safety. By using the generated `Meta` classes for aliases (`${...}`), you prevent SQL typos and ensure safe mapping. The conversion from the `ResultSet` to the domain object is entirely explicit, effectively eliminating the dreaded N+1 query problem.
+
+```java
+private static final EntityManager<City, Long> CITY_EM = EntityManager.of(City.class);
+private static final EntityManager<Employee, Long> EMPLOYEE_EM = EntityManager.of(Employee.class);
+
+void select() {
+    var sql = """
+            SELECT e.id      AS ${e.id}
+            , e.name         AS ${e.name}
+            , c.name         AS ${c.name}
+            , c.country_code AS ${c.country_code}
+            , b.name         AS ${b.name}
+            FROM employee e
+            JOIN city c ON c.id = e.city_id
+            LEFT JOIN employee b ON b.id = e.boss_id
+            WHERE e.id > :employeeId
+            """;
+
+    List<Employee> employees = SqlParamBuilder.run(connection(), builder -> builder
+            .sql(sql)
+            .label("e.id", MetaEmployee.id)
+            .label("e.name", MetaEmployee.name)
+            .label("c.name", MetaEmployee.city, MetaCity.name)
+            .label("c.country_code", MetaEmployee.city, MetaCity.countryCode)
+            .label("b.name", MetaEmployee.boss, MetaEmployee.name)
+            .bind("employeeId", 0L)
+            .streamMap(EMPLOYEE_EM::map)
+            .toList());
+}
+```
+
+### INSERT
+
+Ujorm seamlessly handles auto-assigned primary keys. When inserting an immutable Java Record (like `City`), the library creates and returns a new instance with the generated ID. For mutable JavaBeans (like `Employee`), the ID is simply injected into the existing object. For high-performance scenarios, batch operations are explicitly supported.
+
+```java
+void insert() {
+    var employeeCrud = EMPLOYEE_EM.crud(connection());
+    var cityCrud = CITY_EM.crud(connection());
+
+    var cityOttawa = cityCrud.insert(new City(null, "Ottawa", "CA"));
+    
+    var emplIngird = Employee.of("Ingrid", cityOttawa, null);
+    var emplDave = Employee.of("Dave", cityOttawa, emplIngird);
+    var emplCarol = Employee.of("Carol", cityOttawa, emplIngird);
+
+    employeeCrud.insert(emplIngird);
+    employeeCrud.insertBatch(emplDave, emplCarol);
+}
+```
+
+### UPDATE
+
+To prevent accidental data overwrites and optimize database traffic, Ujorm supports partial updates. You can modify the state of your JavaBean and explicitly pass the specific columns (using the `Meta` model) to the `update` method. Only the specified columns will be modified in the database.
+
+```java
+void update() {
+    var employeeCrud = EMPLOYEE_EM.crud(connection());
+
+    var emplIngird = employeeCrud.findById(1L).orElseThrow();
+    var emplDave = employeeCrud.findById(2L).orElseThrow();
+    var emplCarol = employeeCrud.findById(3L).orElseThrow();
+
+    emplIngird.setBoss(emplDave);
+    emplDave.setBoss(null);
+    emplCarol.setBoss(emplDave);
+
+    employeeCrud.update(Stream.of(emplIngird, emplDave, emplCarol), MetaEmployee.boss);
+}
+```
+
+### DELETE
+
+Because Ujorm avoids hidden magic, you have full, explicit control over the deletion process. When removing entities with dependencies, you can query and sort them manually to safely respect Foreign Key constraints without relying on complex, implicit framework logic.
+
+```java
+void delete() {
+    var employeeCrud = EMPLOYEE_EM.crud(connection());
+
+    var allEmployees = employeeCrud
+            .selectWhere("id > :id", builder -> builder
+                    .bind("id", 0L)
+                    .streamMap(EMPLOYEE_EM::map)
+                    .sorted(Comparator.comparing(e -> e.getBoss() == null))
+                    .toList());
+
+    employeeCrud.delete(allEmployees.stream());
+}
+```
+
+---
+
+## Dependencies & Setup
+
+Ujorm requires **Java 17 or higher**.
+
+```xml
+<dependency>
+    <groupId>org.ujorm</groupId>
+    <artifactId>ujorm-core</artifactId>
+    <version>3.0.0-BETA</version>
+</dependency>
+```
+
+---
+
+## Code Generation (Meta Classes)
+
+To ensure type safety without relying on string literals, Ujorm provides an Annotation Processor that generates `Meta` classes at compile time.
+
+### Maven Configuration
+
+Add the Ujorm core dependency and configure the `maven-compiler-plugin` to include the Ujorm Meta Processor:
+
+```xml
+<dependencies>
+    <!-- 1. Ujorm Core Dependencies -->
     <dependency>
         <groupId>org.ujorm</groupId>
-        <artifactId>ujo-orm</artifactId>
-        <version>${ujorm.version}</version>
+        <artifactId>ujorm-core</artifactId>
+        <version>3.0.0-BETA</version>
     </dependency>
-
- Module for [Apache Wicket](http://wicket.apache.org/) integration:
-
     <dependency>
         <groupId>org.ujorm</groupId>
-        <artifactId>ujo-wicket</artifactId>
-        <version>${ujorm.version}</version>
+        <artifactId>ujorm-orm</artifactId>
+        <version>3.0.0-BETA</version>
     </dependency>
+</dependencies>
 
-## How to open the Ujorm project
+<build>
+    <plugins>
+        <!-- 2. Compiler Plugin Setup -->
+        <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-compiler-plugin</artifactId>
+            <version>3.14.1</version>
+            <configuration>
+                <annotationProcessorPaths>
+                    <!-- Optional: APT configuration for Lombok -->
+                    <path>
+                        <groupId>org.projectlombok</groupId>
+                        <artifactId>lombok</artifactId>
+                        <version>${lombok.version}</version>
+                    </path>
+                    <!-- APT configuration for Ujorm -->
+                    <path>
+                        <groupId>org.ujorm</groupId>
+                        <artifactId>ujorm-meta-processor</artifactId>
+                        <version>3.0.0-BETA</version>
+                    </path>
+                </annotationProcessorPaths>
+                <compilerArgs>
+                    <!-- Optional attributes for APT Ujorm -->
+                    <arg>-Aujorm.prefix=Meta</arg>
+                    <arg>-Aujorm.suffix=</arg>
+                </compilerArgs>
+            </configuration>
+        </plugin>
+    </plugins>
+</build>
+```
 
-The Java 7.0 is required to compile of the project souces, the Java 6+ is required to runtime.
-Use a one of the preferred tools to open the project:
+### Generated Output Example
 
-  *  NetBeans IDE,
-  *  InteliJ IDEA,
-  *  Eclipse with some Maven pluggin, or use the,
-  *  Maven toolkit if you like a console command line.
+The processor automatically generates classes mapping your entity properties:
 
+```java
+package org.ujorm.orm.tutorial.domains;
 
+import org.ujorm.Key;
+import org.ujorm.DomainHandler;
+import org.ujorm.core.DomainHandlerProvider;
 
+/** Auto-generated metamodel for Employee */
+public class MetaEmployee {
+    public static final DomainHandler<Employee> meta = DomainHandlerProvider.getHandler(Employee.class);
 
+    public static final Key<Employee, Long> id = meta.getKey("id");
+    public static final Key<Employee, String> name = meta.getKey("name");
+    public static final Key<Employee, City> city = meta.getKey("city");
+    public static final Key<Employee, Employee> boss = meta.getKey("boss");
+}
+```
 
+---
+
+## Architecture & Caching
+
+The ORM implementation is divided into three decoupled parts:
+
+1.  **SQL Builder:** Constructs parameterized SQL SELECT statements and returns a `Stream<ResultSet>`.
+2.  **Converter:** Maps the `ResultSet` into domain objects using dot-notation.
+3.  **CrudManager:** Handles PK-based entity management.
+
+### Caching Strategy
+
+There is **no data caching** for user queries. However, to maximize speed, Ujorm caches metadata:
+
+* **ResultSetMapper:** Caches column mapping structures to avoid repeatedly analyzing dot-notation labels or querying JDBC metadata. If the cache exceeds the limit (default 512 distinct queries), it clears itself to prevent memory leaks.
+* **EntityManager:** Retains the database table metamodel for each entity. It is recommended to use the `EntityManagerService` to retrieve shared singleton instances.
+
+### Under the Hood
+
+The original `Ujo` key-value architecture is now hidden entirely within the module's internal implementation. The bytecode generation happens purely in RAM, requiring no temporary disk space.
+
+*Acknowledgments:* The concept of mapping SQL columns to JavaBeans via column names was heavily inspired by the SimpleFlatMapper project, which traces its lineage back to iBATIS (2001) and NeXT's Enterprise Objects Framework (1994). Runtime bytecode generation was inspired by CGLIB (2000).
+
+---
+
+## Benchmarks
+
+Performance tests comparing Ujorm 3 to popular modern ORM frameworks were executed using an in-memory database. While performance differences may blur on slower production databases, Ujorm's lightweight nature significantly reduces the deployment footprint and maintenance overhead.
+
+**Version tested:** `3.0.0-BETA`  
+**Full benchmark source and results:** [GitHub: orm-benchmarks](https://github.com/pponec/orm-benchmarks?tab=readme-ov-file#orm-benchmark)
+
+| Framework | Operations / sec | JAR Size Profile |
+| :--- | :--- | :--- |
+| **Ujorm 3** | Highly Competitive | **Ultra-lightweight** (\< 500 KB) |
+| Hibernate / JPA | Baseline | Heavy (Megabytes) |
+| Spring Data JDBC | Competitive | Medium |
+| Exposed (Kotlin) | Competitive | Heavy (with Kotlin core) |
+
+*Note: The final JAR size column reflects the packaged test with all dependencies included. A smaller compiled footprint promises a gentler learning curve and a reduced risk of bugs, beneficial even for embedded devices.*
+
+---
+
+## FAQ
+
+**Will Ujorm 2 still be supported?**  
+No, support for Ujorm 2 has ended and no further versions will be released. The original module remains available in the Git repository.
+
+**Do domain objects need to implement `Serializable`?**  
+No. Ujorm works purely with stateless data structures and does not require serialization.
+
+**Is `@JoinColumn` required for relations?**  
+No, the use of `@JoinColumn` is optional. The library resolves relations automatically based on the object graph.
+
+---
+
+## Feedback & Contributions
+
+We are excited to share Ujorm 3 and would love to hear your thoughts!
+Whether you want to provide feedback, report a bug, suggest a feature, or just chat about the framework's minimalist approach, please join the conversation on our GitHub page:
+
+👉 **[Join the Discussion / Open an Issue on GitHub](https://github.com/pponec/ujorm)**
+
+Your input is crucial in shaping the future of this lightweight ORM.
