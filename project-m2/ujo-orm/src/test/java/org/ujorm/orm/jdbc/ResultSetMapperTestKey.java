@@ -37,8 +37,8 @@ public class ResultSetMapperTestKey {
         var src = new JavaSourceGenerator().getSourceCode(meta, className);
         if (printResult) System.out.println(src);
 
-        assertTrue(src.contains("static final class Key_city extends AbstractKey<Employee, org.ujorm.mapper.jdbc.ResultSetMapperTestKey.City> {"));
-        assertTrue(src.contains("public org.ujorm.mapper.jdbc.ResultSetMapperTestKey.City getValue( final Employee bean) {"));
+        assertTrue(src.contains("static final class Key_city extends AbstractKey<Employee, org.ujorm.orm.jdbc.ResultSetMapperTestKey.City> {"));
+        assertTrue(src.contains("public org.ujorm.orm.jdbc.ResultSetMapperTestKey.City getValue( final Employee bean) {"));
     }
 
     @Test @Order(200)

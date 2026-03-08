@@ -1,6 +1,6 @@
 package org.ujorm.orm.jdbc.generated;
 //--- GENERATED ---
-// package org.ujorm.gen_.org.ujorm.mapper.jdbc.ResultSetTreeMapperTest;
+// package org.ujorm.gen_.org.ujorm.orm.jdbc.ResultSetTreeMapperTest;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.ujorm.core.impl.AbstractDomainHandler;
