@@ -50,6 +50,15 @@ public class UjormMetaProcessor extends AbstractProcessor {
         return SourceVersion.latestSupported();
     }
 
+    /**
+     * Explicitly declares supported options to prevent javac warnings.
+     * This is more reliable than the @SupportedOptions annotation.
+     */
+    @Override
+    public Set<String> getSupportedOptions() {
+        return Set.of("ujorm.prefix", "ujorm.suffix");
+    }
+
     @Override
     public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
         for (var element : roundEnv.getRootElements()) {
