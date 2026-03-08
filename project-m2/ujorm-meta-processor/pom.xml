@@ -3,10 +3,8 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>org.ujorm</groupId>
-    <!-- Změnil jsem název z plugin na processor, protože to už není Maven Plugin -->
     <artifactId>ujorm-meta-processor</artifactId>
     <version>3.0.0-SNAPSHOT</version>
-    <!-- Změna: už to není maven-plugin, ale standardní jar -->
     <packaging>jar</packaging>
 
     <properties>
@@ -21,7 +19,7 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.11.0</version>
                 <configuration>
-                    <!-- Zabrání chybě při kompilaci samotného APT -->
+                    <!-- Prevents an error when compiling APT itself -->
                     <compilerArgument>-proc:none</compilerArgument>
                 </configuration>
             </plugin>
