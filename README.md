@@ -211,7 +211,7 @@ import org.ujorm.core.DomainHandlerProvider;
 
 /** Auto-generated metamodel for Employee */
 public class MetaEmployee {
-    public static final DomainHandler<Employee> meta = DomainHandlerProvider.getHandler(Employee.class);
+    private static final DomainHandler<Employee> meta = DomainHandlerProvider.getHandler(Employee.class);
 
     public static final Key<Employee, Long> id = meta.getKey("id");
     public static final Key<Employee, String> name = meta.getKey("name");

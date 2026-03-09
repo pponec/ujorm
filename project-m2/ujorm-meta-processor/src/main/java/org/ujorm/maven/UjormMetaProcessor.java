@@ -255,7 +255,7 @@ public class UjormMetaProcessor extends AbstractProcessor {
             result.append("/** Auto-generated metamodel for ").append(originalName).append(" */\n");
             result.append("public class ").append(newClassName).append(" {\n\n");
 
-            result.append("    public static final DomainHandler<").append(originalName)
+            result.append("    private static final DomainHandler<").append(originalName)
                     .append("> meta = DomainHandlerProvider.getHandler(").append(originalName).append(".class);\n\n");
 
             var validFields = new ArrayList<VariableElement>();
