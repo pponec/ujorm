@@ -5,11 +5,17 @@
 > *"Do the simplest thing that could possibly work."*  
 > — Kent Beck, creator of Extreme Programming and pioneer of Test-Driven Development.
 
-Ujorm3 is a lightweight Object-Relational Mapping (ORM) library designed for efficient relational database development with minimalist code and a straightforward API. It supports mapping database rows to standard Java objects (both mutable JavaBeans and immutable Records), including M:1 relations.
+Ujorm3 is a lightweight Object-Relational Mapping (ORM) library designed for efficient relational database development with minimalist code and a straightforward API.
+The library maps database rows to standard Java objects using clean SQL without unnecessary abstraction.
+It supports mapping to both mutable JavaBeans and immutable Records, including M:1 relations.
 
-To achieve data manipulation speeds comparable to hand-written JDBC code, Ujorm3 compiles its own bytecode at runtime in memory. Java reflection is strictly limited to the initial loading of domain object metadata. At its core, the library heavily utilizes the **Typed Key Pattern**—a technique introduced in Ujorm in 2007 (a year before Joshua Bloch formally published the similar *Typesafe Heterogeneous Container* pattern in *Effective Java*). Keys act as typed descriptors, providing type safety without casting and allowing bulk operations without reflection.
+To achieve data manipulation speeds comparable to hand-written JDBC code, Ujorm3 compiles its own bytecode at runtime.
+At its core, the library is built around the **Typed Key Pattern** to handle domain objects efficiently.
+These keys act as typed descriptors, providing compile-time safety without casting and enabling fast bulk operations.
+Consequently, the overhead of Java reflection is strictly limited to the initial loading of object metadata.
 
 ### Design Philosophy & Constraints
+
 To maintain a high utility-to-code ratio and minimize bugs, Ujorm3 intentionally limits its scope:
 *   **No Lazy-Loading:** To prevent hidden performance costs and the N+1 query problem, relationships are not lazily fetched.
 *   **M:1 Relations Only:** Collection attributes (1:M) are not supported. The recommended approach is to query from the "many" side or use a secondary SQL query.
@@ -26,8 +32,8 @@ To maintain a high utility-to-code ratio and minimize bugs, Ujorm3 intentionally
     * [DELETE](#delete)
     * [All Examples](#all-examples)
 * [Class Diagram](#class-diagram)
-* [Dependencies & Setup](#dependencies--setup)
-* [Code Generation (Meta Classes)](#code-generation-meta-classes)
+* [Generated Meta Models](#generated-meta-models)
+* [Maven Dependencies & Setup](#maven-dependencies--setup)
 * [Benchmarks](#benchmarks)
 * [FAQ](#faq)
 * [Feedback & Contributions](#feedback--contributions)
@@ -36,11 +42,15 @@ To maintain a high utility-to-code ratio and minimize bugs, Ujorm3 intentionally
 
 ## Basic CRUD Operations
 
-Basic mapping utilizes standard Jakarta annotations (`@Table`, `@Column`). Advanced SELECT queries with JOINs use a dot-notation alias format (e.g., `city.name`) directly in the native SQL. Entities do not need to be registered beforehand, and multiple classes can map to the same database table.
+Basic mapping utilizes standard Jakarta annotations (`@Table`, `@Column`).
+Advanced SELECT queries with JOINs use a dot-notation alias format (e.g., `city.name`) directly in the native SQL.
+Entities do not need to be registered beforehand, and multiple classes can map to the same database table.
 
 ### SELECT
 
-The framework allows you to write native SQL queries while maintaining type safety. By using the generated `Meta` classes for aliases (`${...}`), you prevent SQL typos and ensure safe mapping. The conversion from the `ResultSet` to the domain object is entirely explicit, effectively eliminating the dreaded N+1 query problem.
+The library allows you to write native SQL queries while maintaining type safety.
+By using the generated `Meta` classes for aliases (`${...}`), you prevent SQL typos and ensure safe mapping.
+The conversion from the `ResultSet` to the domain object is entirely explicit, effectively eliminating the dreaded N+1 query problem.
 
 ```java
 private static final EntityManager<City, Long> CITY_EM = EntityManager.of(City.class);
@@ -72,9 +82,16 @@ void select() {
 }
 ```
 
+Database columns can also be mapped without using metamodel keys.
+In this case, simply use dot-notation for property names within the SQL command (e.g., `"city.name"`).
+Note that these expressions must be enclosed in quotes, using the specific character required by your database vendor.
+
 ### INSERT
 
-Ujorm3 seamlessly handles auto-assigned primary keys. When inserting an immutable Java Record (like `City`), the library creates and returns a new instance with the generated ID. For mutable JavaBeans (like `Employee`), the ID is simply injected into the existing object. For high-performance scenarios, batch operations are explicitly supported.
+Ujorm3 seamlessly handles auto-assigned primary keys.
+When inserting an immutable Java Record (like `City`), the library creates and returns a new instance with the generated ID.
+For mutable JavaBeans (like `Employee`), the ID is simply injected into the existing object.
+For high-performance scenarios, batch operations are explicitly supported.
 
 ```java
 void insert() {
@@ -94,7 +111,10 @@ void insert() {
 
 ### UPDATE
 
-To prevent accidental data overwrites and optimize database traffic, Ujorm3 supports partial updates. You can modify the state of your JavaBean and explicitly pass the specific columns (using the `Meta` model) to the `update` method. Only the specified columns will be modified in the database.
+In the UPDATE example, notice the subtle argument at the very end of the `update` method call.
+This vararg parameter empowers developers to explicitly define which entity attributes should be used to update the database table.
+The example demonstrates passing a type-safe key from the auto-generated metamodel.
+However, if necessary, you can also provide an array of Strings instead.
 
 ```java
 void update() {
@@ -108,13 +128,20 @@ void update() {
     emplDave.setBoss(null);
     emplCarol.setBoss(emplDave);
 
-    employeeCrud.update(Stream.of(emplIngird, emplDave, emplCarol), MetaEmployee.boss);
+    employeeCrud.update(Stream.of(emplIngird, emplDave, emplCarol), 
+                        MetaEmployee.boss);
 }
 ```
 
+Furthermore, if a developer provides the original version of the domain object during an update operation, the library automatically detects the changes.
+It creates a set of keys representing the modified attributes and subsequently calls the update method shown above.
+
 ### DELETE
 
-Because Ujorm3 avoids hidden magic, you have full, explicit control over the deletion process. When removing entities with dependencies, you can query and sort them manually to safely respect Foreign Key constraints without relying on complex, implicit framework logic.
+The deletion method itself probably won't surprise you.
+What is more interesting is the process of retrieving a collection of entities without explicitly listing individual columns in the SELECT statement.
+This is achieved by calling the `selectWhere` method, which utilizes an inner class or lambda expression to configure the query.
+Within this block, the library provides an `SqlParamBuilder` instance, allowing you to seamlessly map the result set using the `streamMap` method.
 
 ```java
 void delete() {
@@ -134,12 +161,11 @@ void delete() {
 ### All Examples
 
 To see the complete picture, all the code snippets shown above are extracted from a single, sequential JUnit test suite.
-This test class demonstrates the full lifecycle of entities within the framework, from database initialization to final cleanup.
+This test class demonstrates the full lifecycle of entities within the library, from database initialization to final cleanup.
 Please note that a database commit is performed automatically by the parent class after each test method finishes.
 Feel free to run and modify this test locally to get a hands-on feel for the API.
 
-Explore the full source code here: [BasicDemoTest.java in the Ujorm3 project](https://github.com/pponec/ujorm/blob/release/2026-03-08/3.0.0-BETA/project-m2/ujo-orm/src/test/java/org/ujorm/orm/tutorial/BasicDemoTest.java).
-
+Explore the full source code here: [BasicDemoTest.java in the Ujorm3 project](project-m2/ujo-orm/src/test/java/org/ujorm/orm/tutorial/TutorialTest.java).
 
 ## Class Diagram
 
@@ -166,36 +192,51 @@ This object provides all standard database operations of the **CRUD** type.
 
 ### Caching Strategy
 
-There is **no data caching** for user queries. However, to maximize speed, Ujorm3 caches metadata:
+There is **no data caching** for user queries.
+However, to maximize speed, Ujorm3 caches metadata:
 
 * **ResultSetMapper:** Caches column mapping structures to avoid repeatedly analyzing dot-notation labels or querying JDBC metadata. If the cache exceeds the limit (default 512 distinct queries), it clears itself to prevent memory leaks.
 * **EntityManager:** Retains the database table metamodel for each entity. It is recommended to use the `EntityManagerService` to retrieve shared singleton instances.
 
-### Under the Hood
-
-The original `Ujo` key-value architecture is now hidden entirely within the module's internal implementation. The bytecode generation happens purely in RAM, requiring no temporary disk space.
-
-## Dependencies & Setup
-
-Ujorm3 requires **Java 17 or higher**.
-
-```xml
-<dependency>
-    <groupId>org.ujorm</groupId>
-    <artifactId>ujorm-core</artifactId>
-    <version>3.0.0-SNAPSHOT</version>
-</dependency>
-```
-
----
-
-## Code Generation (Meta Classes)
+### Generated Meta Models
 
 To ensure type safety without relying on string literals, Ujorm3 provides an Annotation Processor that generates `Meta` classes at compile time.
 
-### Maven Configuration
+```java
+package org.ujorm.orm.tutorial.domains;
 
-Add the Ujorm3 core dependency and configure the `maven-compiler-plugin` to include the Ujorm3 Meta Processor:
+import org.ujorm.Key;
+import org.ujorm.DomainHandler;
+import org.ujorm.core.DomainHandlerProvider;
+
+/** Auto-generated metamodel for Employee */
+public class MetaEmployee {
+    public static final DomainHandler<Employee> meta = DomainHandlerProvider.getHandler(Employee.class);
+
+    public static final Key<Employee, Long> id = meta.getKey("id");
+    public static final Key<Employee, String> name = meta.getKey("name");
+    public static final Key<Employee, City> city = meta.getKey("city");
+    public static final Key<Employee, Employee> boss = meta.getKey("boss");
+}
+```
+
+Metamodel keys are a core asset of this library.
+The `DomainHandler` object prepares these keys upon the first request and consistently returns the exact same instances thereafter, effectively making them singletons within the entity context.
+Consequently, using these objects in a `HashMap` is exceptionally fast, as mismatches are instantly eliminated by the hash and matches are confirmed through simple reference comparison rather than complex content evaluation.
+Additionally, the key implementation includes precompiled methods for lightning-fast reading and writing of values directly from the domain object.
+The keys also implement the `CharSequence` interface, which significantly expands their versatility across the API.
+This means they can be used in many places just like standard text, since the `String` class implements the very same interface.
+Furthermore, relying on two generic types allows the keys to be chained in a strictly type-safe manner right at compile time.
+This precise capability is leveraged by the `SqlParamBuilder` API to safely map and assign labels within SQL statements.
+
+You can find the source code for the interface [here](project-m2/ujo-tools/src/main/java/org/ujorm/Key.java).
+
+## Maven Dependencies & Setup
+
+Ujorm3 requires **Java 17 or higher**.
+To get started, simply add the core Ujorm3 dependencies to your Maven project.
+By default, you can write database queries using standard text literals.
+However, if you prefer a safer, strongly-typed coding style, you can optionally configure the `maven-compiler-plugin` to include the Ujorm3 Meta Processor.
 
 ```xml
 <dependencies>
@@ -203,12 +244,12 @@ Add the Ujorm3 core dependency and configure the `maven-compiler-plugin` to incl
     <dependency>
         <groupId>org.ujorm</groupId>
         <artifactId>ujorm-core</artifactId>
-        <version>3.0.0-SNAPSHOT</version>
+        <version>3.0.0-BETA</version>
     </dependency>
     <dependency>
         <groupId>org.ujorm</groupId>
         <artifactId>ujorm-orm</artifactId>
-        <version>3.0.0-SNAPSHOT</version>
+        <version>3.0.0-BETA</version>
     </dependency>
 </dependencies>
 
@@ -231,7 +272,7 @@ Add the Ujorm3 core dependency and configure the `maven-compiler-plugin` to incl
                 <path>
                     <groupId>org.ujorm</groupId>
                     <artifactId>ujorm-meta-processor</artifactId>
-                    <version>3.0.0-SNAPSHOT</version>
+                    <version>3.0.0-BETA</version>
                 </path>
             </annotationProcessorPaths>
             <compilerArgs>
@@ -245,35 +286,14 @@ Add the Ujorm3 core dependency and configure the `maven-compiler-plugin` to incl
 </build>
 ```
 
-### Generated Output Example
-
-The processor automatically generates classes mapping your entity properties:
-
-```java
-package org.ujorm.orm.tutorial.domains;
-
-import org.ujorm.Key;
-import org.ujorm.DomainHandler;
-import org.ujorm.core.DomainHandlerProvider;
-
-/** Auto-generated metamodel for Employee */
-public class MetaEmployee {
-    public static final DomainHandler<Employee> meta = DomainHandlerProvider.getHandler(Employee.class);
-
-    public static final Key<Employee, Long> id = meta.getKey("id");
-    public static final Key<Employee, String> name = meta.getKey("name");
-    public static final Key<Employee, City> city = meta.getKey("city");
-    public static final Key<Employee, Employee> boss = meta.getKey("boss");
-}
-```
-
 ---
 
 ## Benchmarks
 
-Performance tests comparing Ujorm3 to popular modern ORM frameworks were executed using an in-memory database. While performance differences may blur on slower production databases, Ujorm's lightweight nature significantly reduces the deployment footprint and maintenance overhead.
+Performance tests comparing Ujorm3 to popular modern ORM frameworks were executed using an in-memory database.
+While performance differences may blur on slower production databases, Ujorm's lightweight nature significantly reduces the deployment footprint and maintenance overhead.
 
-**Version tested:** `3.0.0-SNAPSHOT`  
+**Version tested:** `3.0.0-BETA`  
 **Full benchmark source and results:** [GitHub: orm-benchmarks](https://github.com/pponec/orm-benchmarks?tab=readme-ov-file#orm-benchmark)
 
 | Framework | Operations / sec | JAR Size Profile |
@@ -283,27 +303,40 @@ Performance tests comparing Ujorm3 to popular modern ORM frameworks were execute
 | Spring Data JDBC | Competitive | Medium |
 | Exposed (Kotlin) | Competitive | Heavy (with Kotlin core) |
 
-*Note: The final JAR size column reflects the packaged test with all dependencies included. A smaller compiled footprint promises a gentler learning curve and a reduced risk of bugs, beneficial even for embedded devices.*
+*Note: The final JAR size column reflects the packaged test with all dependencies included.*
+*A smaller compiled footprint promises a gentler learning curve and a reduced risk of bugs, beneficial even for embedded devices.*
 
 ---
 
 ## FAQ
 
-**Will Ujorm v2 still be supported?**  
-No, support for Ujorm v2 has ended and no further versions will be released. The original module remains available in the Git repository.
+**Will Ujorm v2 still be supported?**<br/>
+No, support for Ujorm v2 has ended and no further versions will be released.
+The original module remains available in the Git repository.
 
-**Do domain objects need to implement `Serializable`?**  
-No. Ujorm3 works purely with stateless data structures and does not require serialization.
+**Do domain objects need to implement `Serializable`?**<br/>
+No.
+Ujorm3 works purely with stateless data structures and does not require serialization.
 
-**Is `@JoinColumn` required for relations?**  
-No, the use of `@JoinColumn` is optional. The library resolves relations automatically based on the object graph.
+**Is `@JoinColumn` required for relations?**<br/>
+No, the use of `@JoinColumn` is optional.
+The library automatically recognizes a relationship whenever the attribute's type is a class annotated with `@Table`, seamlessly supporting self-referencing entities as well.
+
+**Does Ujorm3 create temporary files during runtime compilation?**<br/>
+No, the bytecode generation happens purely in RAM.
+This process requires no temporary disk space, which avoids potential file system permission issues and maximizes performance.
+
+**Are the core components like `EntityManager` thread-safe?**<br/>
+Yes, core components such as `EntityManager` and the generated `Meta` classes are strictly stateless and completely thread-safe.
+They are designed to be shared across your entire application as singletons.
+Conversely, objects that wrap a database connection, like the `Crud` instance or `SqlParamBuilder`, are stateful and must be scoped to a single thread or request.
 
 ---
 
 ## Feedback & Contributions
 
 We are excited to share Ujorm3 and would love to hear your thoughts!
-Whether you want to provide feedback, report a bug, suggest a feature, or just chat about the framework's minimalist approach, please join the conversation on our GitHub page:
+Whether you want to provide feedback, report a bug, suggest a feature, or just chat about the library's minimalist approach, please join the conversation on our GitHub page:
 
 👉 **[Join the Discussion / Open an Issue on GitHub](https://github.com/pponec/ujorm)**
 

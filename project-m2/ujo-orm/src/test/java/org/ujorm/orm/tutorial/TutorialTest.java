@@ -17,14 +17,14 @@ import static org.junit.jupiter.api.Assertions.assertNull;
  * Note: These tests run sequentially to demonstrate an entity lifecycle.
  */
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-public class BasicDemoTest extends AbstractDemo {
+public class TutorialTest extends AbstractDemo {
 
     private static final EntityManager<Employee, Long> EMPLOYEE_EM = EntityManager.of(Employee.class);
     private static final EntityManager<City, Long> CITY_EM = EntityManager.of(City.class);
 
     @Test
     @Order(100)
-    void insertEntities() {
+    void insert() {
         var employeeCrud = EMPLOYEE_EM.crud(connection());
         var cityCrud = CITY_EM.crud(connection());
 
@@ -41,7 +41,7 @@ public class BasicDemoTest extends AbstractDemo {
     /** Safe aliasing using generated Meta classes prevents SQL typos */
     @Test
     @Order(200)
-    void selectWithTypeSafeLabels() {
+    void select() {
         var sql = """
                  SELECT e.id      AS ${e.id}
                  , e.name         AS ${e.name}
@@ -72,7 +72,7 @@ public class BasicDemoTest extends AbstractDemo {
 
     @Test
     @Order(300)
-    void partialUpdate() {
+    void update() {
         var employeeCrud = EMPLOYEE_EM.crud(connection());
 
         var emplIngird = employeeCrud.findById(1L).orElseThrow();
@@ -91,7 +91,7 @@ public class BasicDemoTest extends AbstractDemo {
 
     @Test
     @Order(400)
-    void deleteWithDependencies() {
+    void delete() {
         var employeeCrud = EMPLOYEE_EM.crud(connection());
 
         var allEmployees = employeeCrud
