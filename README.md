@@ -294,7 +294,7 @@ Performance tests comparing Ujorm3 to popular modern ORM frameworks were execute
 While performance differences may blur on slower production databases, Ujorm's lightweight nature significantly reduces the deployment footprint and maintenance overhead.
 
 **Version tested:** `3.0.0-BETA`  
-**Full benchmark source and results:** [GitHub: orm-benchmarks](https://github.com/pponec/orm-benchmarks?tab=readme-ov-file#orm-benchmark)
+**Full benchmark source and results:** [GitHub: orm-benchmarks](https://github.com/pponec/orm-bencharks?tab=readme-ov-file#orm-benchmark)
 
 | Framework | Operations / sec | JAR Size Profile |
 | :--- | :--- | :--- |
