@@ -5,10 +5,17 @@ import org.ujorm.orm.impl.ConfigImpl;
 /** Configuration parameters */
 public interface Config {
 
-    /** The first key in the sequence represents the primary key. */
+    /**
+     * Determines the default strategy for identifying the primary key of an entity.
+     * <p>
+     * If this parameter is enabled ({@code true}), the framework automatically assumes
+     * that the first declared field in the JavaBean or Record is the identifier.
+     * Otherwise, or if you need to specify a different field as the primary key,
+     * you must explicitly annotate the field using the JPA {@code @Id} annotation.
+     */
     boolean isFirstPropertyIsIdentifier();
 
-    /** Maximum size of the cache in the ResultSet Mapper */
+    /** Maximum size of the cache in the {@link org.ujorm.orm.jdbc.ResultSetMapper} */
     int getMaxCacheSize();
 
     /** Batch size for the INSERT */

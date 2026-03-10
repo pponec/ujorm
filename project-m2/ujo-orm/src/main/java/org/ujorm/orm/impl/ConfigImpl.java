@@ -21,19 +21,46 @@ public class ConfigImpl extends AbstractSnapshotable<ConfigImpl> implements Conf
     private static final String PREFIX = "org.ujorm.";
     private static final String CONFIG_FILE = "ujorm-config.properties";
     private static final Map<Class<?>, Function<String, ?>> funMap = Map.copyOf(CsvConfig.initConverterMap());
-
-    // --- Key Constants ---
-
     private static KeyProvider p = new KeyProvider();
+
+    // --- Start the public list of the configuration parameters ---
+
+    /**
+     * Determines the default strategy for identifying the primary key of an entity.
+     * <p>
+     * If this parameter is enabled ({@code true}), the framework automatically assumes
+     * that the first declared field in the JavaBean or Record is the identifier.
+     * Otherwise, or if you need to specify a different field as the primary key,
+     * you must explicitly annotate the field using the JPA {@code @Id} annotation.
+     */
     public static final Key<Boolean> firstPropertyIsIdentifier = p.key("firstPropertyIsIdentifier", true);
+
+    /** Maximum size of the cache in the {@link org.ujorm.orm.jdbc.ResultSetMapper} */
     public static final Key<Integer> maxCacheSize = p.key("maxCacheSize", 512);
+
+    /** Batch size for the INSERT */
     public static final Key<Integer> batchSize = p.key("batchSize", 512);
+
+    /** Prints all SQL templates to the log. */
     public static final Key<Boolean> printSql = p.key("printSql", true);
+
+    /** Enable quoting the SQL columns */
     public static final Key<Boolean> enableSqlQuoting = p.key("enableSqlQuoting", true);
+
+    /** Write a warning if the column is not a relation and has no JDBC mapping. */
     public static final Key<Boolean> columnMappingWarning = p.key("columnMappingWarning", true);
+
+    /** Print warnings, if Connection autocommit is true in batch operations. */
     public static final Key<Boolean> autoCommitWarned = p.key("autoCommitWarned", true);
+
+    /** Enable or disable the service of the {@link org.ujorm.orm.UjormServiceProvider} object. */
     public static final Key<Boolean> enabledUjormServiceProvider = p.key("enabledUjormServiceProvider", true);
+
+    // --- End of the list ---
+
+    /** A technical parameter for the jUnit test only */
     public static final Key<String> testOnly = p.key("testOnly", "");
+
 
     /** Object state stored in an array */
     private final Object[] values = new Object[p.keys.size()];
@@ -57,7 +84,6 @@ public class ConfigImpl extends AbstractSnapshotable<ConfigImpl> implements Conf
         return (value != null) ? value : key.defaultValue();
     }
 
-    /** General setter with lock check */
     /** General setter with lock check */
     public <V> void setValue(@NotNull Key<V> key, V value) {
         if (locked) {
@@ -131,13 +157,19 @@ public class ConfigImpl extends AbstractSnapshotable<ConfigImpl> implements Conf
         public Class<V> getType() {
             return (Class<V>) defaultValue.getClass();
         }
-        public V getValue(Object[] objects) {
+        private V getValue(Object[] objects) {
             var result = objects[index];
             return result != null ? (V) result : defaultValue;
         }
-        public void setValue(V value, Object[] objects) {
+        private void setValue(V value, Object[] objects) {
             if (value == null) throw new IllegalArgumentException("Value is required");
             objects[index] = value;
+        }
+
+        /** Returns full name of the parameters */
+        @Override
+        public String toString() {
+            return PREFIX + name;
         }
     }
 

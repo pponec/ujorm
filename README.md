@@ -8,7 +8,6 @@
 Ujorm3 is a lightweight Object-Relational Mapping (ORM) library designed for efficient relational database development with minimalist code and a straightforward API.
 The library maps database rows to standard Java objects using clean SQL without unnecessary abstraction.
 It supports mapping to both mutable JavaBeans and immutable Records, including M:1 relations.
-
 To achieve data manipulation speeds comparable to hand-written JDBC code, Ujorm3 compiles its own bytecode at runtime.
 At its core, the library is built around the **Typed Key Pattern** to handle domain objects efficiently.
 These keys act as typed descriptors, providing compile-time safety without casting and enabling fast bulk operations.
@@ -18,9 +17,12 @@ Consequently, the overhead of Java reflection is strictly limited to the initial
 
 To maintain a high utility-to-code ratio and minimize bugs, Ujorm3 intentionally limits its scope:
 *   **No Lazy-Loading:** To prevent hidden performance costs and the N+1 query problem, relationships are not lazily fetched.
-*   **M:1 Relations Only:** Collection attributes (1:M) are not supported. The recommended approach is to query from the "many" side or use a secondary SQL query.
-*   **No Magic / No Stateful Lifecycle:** The library does not manage object lifecycles, database transactions, or entity data caching. Entities are treated as stateless data carriers.
-*   **No SQL Dialects:** Advanced queries are written in native SQL. While this ties you to a specific database syntax, it unlocks the full performance and feature set of your underlying database engine.
+*   **M:1 Relations Only:** Collection attributes (1:M) are not supported.
+The recommended approach is to query from the "many" side or use a secondary SQL query.
+*   **No Magic / No Stateful Lifecycle:** The library does not manage object lifecycles, database transactions, or entity data caching.
+Entities are treated as stateless data carriers.
+*   **No SQL Dialects:** Advanced queries are written in native SQL.
+While this ties you to a specific database syntax, it unlocks the full performance and feature set of your underlying database engine.
 
 ---
 
@@ -33,6 +35,7 @@ To maintain a high utility-to-code ratio and minimize bugs, Ujorm3 intentionally
     * [All Examples](#all-examples)
 * [Class Diagram](#class-diagram)
 * [Generated Meta Models](#generated-meta-models)
+* [Configuration](#configuration)
 * [Maven Dependencies & Setup](#maven-dependencies--setup)
 * [Benchmarks](#benchmarks)
 * [FAQ](#faq)
@@ -195,8 +198,10 @@ This object provides all standard database operations of the **CRUD** type.
 There is **no data caching** for user queries.
 However, to maximize speed, Ujorm3 caches metadata:
 
-* **ResultSetMapper:** Caches column mapping structures to avoid repeatedly analyzing dot-notation labels or querying JDBC metadata. If the cache exceeds the limit (default 512 distinct queries), it clears itself to prevent memory leaks.
-* **EntityManager:** Retains the database table metamodel for each entity. It is recommended to use the `EntityManagerService` to retrieve shared singleton instances.
+* **ResultSetMapper:** Caches column mapping structures to avoid repeatedly analyzing dot-notation labels or querying JDBC metadata.
+If the cache exceeds the limit (default 512 distinct queries), it clears itself to prevent memory leaks.
+* **EntityManager:** Retains the database table metamodel for each entity.
+It is recommended to use the `EntityManagerService` to retrieve shared singleton instances.
 
 ### Generated Meta Models
 
@@ -230,6 +235,18 @@ Furthermore, relying on two generic types allows the keys to be chained in a str
 This precise capability is leveraged by the `SqlParamBuilder` API to safely map and assign labels within SQL statements.
 
 You can find the source code for the interface [here](project-m2/ujo-tools/src/main/java/org/ujorm/Key.java).
+
+## Configuration
+
+The behavior of the Ujorm3 library can be customized using a configuration mechanism that loads data from various sources.
+Manually assigning values to a `ConfigImpl` instance carries the highest priority, allowing you to assign distinct configurations to different components.
+To prevent late modifications, it is recommended to close the configuration before use by calling the `lock()` method.
+Otherwise, the library falls back to default values, which are applied according to the priority of their source.
+Java system properties hold the highest precedence, followed by the `ujorm-config.properties` file located at the root of the classpath.
+The internal defaults defined within the `ConfigImpl` class have the lowest priority.
+Any attempt at a later modification of a parameter value will result in an exception.
+
+For a comprehensive list of all available parameters, please refer directly to the [source code](project-m2/ujo-orm/src/main/java/org/ujorm/orm/impl/ConfigImpl.java).
 
 ## Maven Dependencies & Setup
 
