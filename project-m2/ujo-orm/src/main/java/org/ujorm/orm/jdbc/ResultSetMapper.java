@@ -1,6 +1,5 @@
 package org.ujorm.orm.jdbc;
 
-
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.ujorm.DomainHandler;
@@ -9,20 +8,21 @@ import org.ujorm.core.DomainHandlerProvider;
 import org.ujorm.core.DomainHandlerService;
 import org.ujorm.Key;
 import org.ujorm.core.csv.CsvLineSplitter;
+import org.ujorm.core.impl.AbstractUjo;
 import org.ujorm.orm.Config;
 import org.ujorm.tools.common.Primitive;
 import org.ujorm.tools.jdbc.JdbcUtils;
-import org.ujorm.tools.jdbc.SQLExceptionBuilder;
+import org.ujorm.tools.jdbc.SqlParamBuilder.SqlFunction;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.IdentityHashMap;
 import java.util.List;
-import java.util.NoSuchElementException;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
-import java.util.function.Function;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Stream;
@@ -37,35 +37,6 @@ import java.util.stream.Stream;
  * the flat column definitions into an internal {@code MappingNode} tree structure. This tree is
  * cached and reused for subsequent result sets that share the exact same column layout.
  * </p>
- * <h3>Relation Instantiation</h3>
- * <p>
- * When mapping hierarchical relations, the mapper evaluates data availability from the bottom up.
- * A child domain object is instantiated and assigned to its parent if and only if the {@code ResultSet}
- * provides at least one non-null value for any of the child's mapped properties. If all columns mapped
- * to a specific relation return {@code null}, the property in the parent object will simply remain {@code null}.
- * </p>
- * <h3>Default Behavior</h3>
- * <p>
- * By default, the mapper dynamically reads {@link java.sql.ResultSetMetaData} to extract column labels
- * and detect database column markers. The constructed mapping trees are stored in an internal
- * concurrent cache with a default maximum capacity of 512 entries.
- * </p>
- * <h3>Customizing Behavior &amp; Performance Impact</h3>
- * <ul>
- * <li><b>Explicit Column Labels:</b> You can provide explicit column labels or {@link Key}s
- * via the {@code convert} methods.
- * <i>Speed:</i> This completely bypasses the JDBC metadata query. Since extracting metadata can
- * be a heavy network or processing operation depending on the JDBC driver, providing explicit labels
- * significantly speeds up the initialization phase.
- * <i>Memory:</i> Reduces temporary object allocations by avoiding metadata instantiation.</li>
- * <li><b>Cache Size:</b> The cache size can be adjusted using the {@code ujorm.mapper.cache.size}
- * system property or the specific factory method {@code of(Class, DomainHandlerService, int)}.
- * <i>Speed:</i> A properly sized cache prevents the costly repetitive parsing of dot-notation paths
- * and rebuilding of mapping trees. If the application executes more unique queries than the cache
- * capacity, the entire cache is cleared, causing a temporary performance degradation.
- * <i>Memory:</i> Larger caches hold more mapping structures in the heap. Tuning this value allows
- * you to balance between fast mapping execution and memory consumption.</li>
- * </ul>
  *
  * @param <D> the root domain type
  */
@@ -87,10 +58,6 @@ public final class ResultSetMapper<D> {
 
     /**
      * Constructs the mapper.
-     *
-     * @param domainClass the class of the root domain object
-     * @param service the domain handler service for instance creation
-     * @param maxCacheSize the maximum number of cached mapping trees
      */
     private ResultSetMapper(
             @NotNull Class<D> domainClass,
@@ -103,47 +70,30 @@ public final class ResultSetMapper<D> {
         this.cache = new MappingCache<>(maxCacheSize);
     }
 
-    /**
-     * Converts the given Stream of ResultSets into a stream of domain objects.
-     *
-     * @param rs the Stream of ResultSets to process
-     * @param columnLabels optional explicitly defined column labels
-     * @return a stream of populated domain objects
-     * @throws NoSuchElementException if explicit columns don't match the ResultSet metadata
+    /** Creates a stateful mapping function for efficient stream processing.
+     * Returns SqlFunction to be compatible with SqlParamBuilder.
      */
-    public @NotNull Stream<D> convert(@NotNull Stream<ResultSet> rs, @Nullable CharSequence... columnLabels) {
-        return rs.map(resultSet -> map(resultSet, columnLabels));
+    public @NotNull SqlFunction<ResultSet, D> map(@Nullable CharSequence... columnLabels) {
+        return new RowContext(columnLabels)::map;
+    }
+
+    /**
+     * Maps a single row of a ResultSet.
+     */
+    public @NotNull D mapSingle(@NotNull ResultSet resultSet, @Nullable CharSequence... columnLabels) {
+        return this.map(columnLabels).apply(resultSet);
     }
 
     /**
      * Converts the given Stream of ResultSets into a stream of domain objects.
-     *
-     * @param resultSet the Stream of ResultSets to process
-     * @param columnLabels optional explicitly defined column labels
-     * @return a stream of populated domain objects
-     * @throws NoSuchElementException if explicit columns don't match the ResultSet metadata
      */
-    public @NotNull D map(@NotNull ResultSet resultSet, @Nullable CharSequence... columnLabels) {
-        try {
-            var extracted = getLabelColumns(resultSet, columnLabels);
-            var key = new CacheKey(extracted);
-            var node = cache.getOrCreate(key, k ->
-                    buildMappingTree(k.columns()));
-            var result = rootHandler.newUjoDomain();
-            populateNode(node, result, resultSet);
-            return result.buildDomain();
-        } catch (SQLException ex) {
-            var msg = "Failed to map ResultSet row to %s".formatted(domainClass.getSimpleName());
-            throw SQLExceptionBuilder.build(msg, ex);
-        }
+    public @NotNull Stream<D> convert(@NotNull Stream<ResultSet> rs, @Nullable CharSequence... columnLabels) {
+        var mapper = this.map(columnLabels);
+        return rs.map(mapper::apply);
     }
 
     /**
      * Converts the given ResultSet into a stream of domain objects.
-     *
-     * @param rs the ResultSet to process
-     * @param columnLabels optional explicitly defined column labels
-     * @return a stream of populated domain objects
      */
     public @NotNull Stream<D> convert(@NotNull ResultSet rs, @Nullable CharSequence... columnLabels) {
         return convert(JdbcUtils.stream(rs), columnLabels);
@@ -151,10 +101,6 @@ public final class ResultSetMapper<D> {
 
     /**
      * Type-safe mapping using Keys for a selection without relations.
-     *
-     * @param rs A stream of ResultSets to process
-     * @param columnLabels Explicitly defined column keys (labels)
-     * @return A stream of populated domain objects
      */
     @SafeVarargs
     public final @NotNull Stream<D> convertFlat(@NotNull Stream<ResultSet> rs, @NotNull Key<D, ?>... columnLabels) {
@@ -170,7 +116,12 @@ public final class ResultSetMapper<D> {
      * Recursively populates the target Ujo wrapper and its relations.
      * @return true if at least one non-null value was set in this node or its children
      */
-    private <D2> boolean populateNode(MappingNode<D2> node, Ujo<D2> target, ResultSet rs) throws SQLException {
+    private <D2> boolean populateNode(
+            MappingNode<D2> node,
+            Ujo<D2> target,
+            ResultSet rs,
+            Map<MappingNode<?>, AbstractUjo<?>> relationCache
+    ) throws SQLException {
         var hasData = false;
         for (var mapping : node.directMappings()) {
             var objectType = Primitive.wrapPrimitive(mapping.key().type());
@@ -182,10 +133,19 @@ public final class ResultSetMapper<D> {
         }
         for (var relation : node.relations()) {
             var childKey = relation.childKey();
-            var childHandler = service.getHandler(childKey.type());
-            var childTarget = childHandler.newUjoDomain();
+            var childNode = relation.childNode();
 
-            if (populateNode(relation.childNode(), childTarget, rs)) {
+            @SuppressWarnings("unchecked")
+            var childTarget = (AbstractUjo<Object>) relationCache.get(childNode);
+            if (childTarget == null) {
+                var childHandler = service.getHandler(childKey.type());
+                childTarget = AbstractUjo.of(childHandler);
+                relationCache.put(childNode, childTarget);
+            } else {
+                childTarget.reset();
+            }
+
+            if (populateNode(childNode, childTarget, rs, relationCache)) {
                 target.setValue(childKey, childTarget.buildDomain());
                 hasData = true;
             }
@@ -193,9 +153,7 @@ public final class ResultSetMapper<D> {
         return hasData;
     }
 
-    /**
-     * Builds the internal tree structure from the flat column definitions.
-     */
+    /** Builds the internal tree structure from the flat column definitions. */
     private MappingNode<D> buildMappingTree(@NotNull List<ColumnMetadata> columns) {
         var result = new MappingNode<D>();
         for (var i = 0; i < columns.size(); i++) {
@@ -206,9 +164,7 @@ public final class ResultSetMapper<D> {
         return result;
     }
 
-    /**
-     * Internal method to build a path for a single column.
-     */
+    /** Internal method to build a path for a single column. */
     @SuppressWarnings({"unchecked", "rawtypes"})
     private void buildPath(MappingNode node, Class<?> currentClass, String[] parts, int colIdx, boolean byColumn) {
         var currentNode = node;
@@ -218,25 +174,20 @@ public final class ResultSetMapper<D> {
             var isLast = (i == parts.length - 1);
             var key = findKey(clazz, parts[i], byColumn);
 
-            if (isLast) {
-                if (key.foreignKey()) {
-                    var relationNode = currentNode.getOrCreateRelation(key);
-                    var targetClass = key.type();
-                    var pkKey = findPrimaryKey(targetClass);
-                    relationNode.addMapping(pkKey, colIdx);
-                } else {
-                    currentNode.addMapping(key, colIdx);
-                }
+            if (isLast && !key.foreignKey()) {
+                currentNode.addMapping(key, colIdx);
             } else {
                 currentNode = currentNode.getOrCreateRelation(key);
-                clazz = key.type();
+                if (isLast) {
+                    currentNode.addMapping(findPrimaryKey(key.type()), colIdx);
+                } else {
+                    clazz = key.type();
+                }
             }
         }
     }
 
-    /**
-     * Finds a property Key by its name within the given domain class.
-     */
+    /** Finds a property Key by its name within the given domain class. */
     private <D2> Key<D2, Object> findKey(Class<D2> domainType, String keyName, boolean byColumn) {
         var handler = service.getHandler(domainType);
         if (byColumn) {
@@ -248,14 +199,7 @@ public final class ResultSetMapper<D> {
         return handler.getKey(keyName);
     }
 
-    /**
-     * Finds the primary key for the given domain class.
-     *
-     * @param domainType The domain class to find the primary key for
-     * @param <D2> The domain type
-     * @return The primary key of the domain object
-     * @throws IllegalStateException If the primary key is not found
-     */
+    /** Finds the primary key for the given domain class. */
     @SuppressWarnings("unchecked")
     private <D2> Key<D2, Object> findPrimaryKey(Class<D2> domainType) {
         var handler = service.getHandler(domainType);
@@ -269,7 +213,6 @@ public final class ResultSetMapper<D> {
 
     // --- Inner classes ---
 
-    /** Cache manager for mapping trees. */
     private static final class MappingCache<D> {
         private final int maxCacheSize;
         private final ConcurrentMap<CacheKey, MappingNode<D>> data = new ConcurrentHashMap<>();
@@ -279,55 +222,39 @@ public final class ResultSetMapper<D> {
             this.maxCacheSize = maxCacheSize;
         }
 
-        /** Returns a cached node or creates a new one. */
-        public MappingNode<D> getOrCreate(CacheKey key, Function<CacheKey, MappingNode<D>> builder) {
+        public MappingNode<D> getOrCreate(CacheKey key, java.util.function.Function<CacheKey, MappingNode<D>> builder) {
             if (data.size() >= maxCacheSize) {
                 checkAndClear();
             }
             return data.computeIfAbsent(key, builder);
         }
 
-        /** Clears the cache if the limit is exceeded. */
         private synchronized void checkAndClear() {
             if (data.size() >= maxCacheSize) {
-                var msg = String.join(" ",
-                        "Mapping cache exceeded the limit of %s, clearing.",
-                        "Consider increasing '%s' parameter to avoid performance degradation."
-                ).formatted(maxCacheSize, "maxCacheSize");
-                LOGGER.log(Level.WARNING, msg);
+                LOGGER.log(Level.WARNING, "Mapping cache exceeded limit, clearing.");
                 data.clear();
                 lastCleared = Instant.now();
             }
         }
 
-        /** Returns the last clear timestamp. */
         public Instant getLastCleared() {
             return lastCleared;
         }
     }
 
-    /**
-     * Represents a node in the mapping tree structure.
-     * @param <D2> Domain type
-     */
     private record MappingNode<D2>(
-            /** Gets the list of direct column mappings for the current node. */
             List<DirectMapping<D2, Object>> directMappings,
-
-            /** Gets the list of relation mappings to child nodes. */
             List<RelationMapping<D2, Object>> relations
     ) {
         public MappingNode() {
             this(new ArrayList<>(), new ArrayList<>());
         }
 
-        /** Adds a direct mapping to this node. */
         public void addMapping(Key<D2, Object> key, int columnIndex) {
             directMappings.add(new DirectMapping<>(key, columnIndex));
         }
 
-        /** Gets an existing relation or creates a new one. */
-        @SuppressWarnings("unchecked")
+        @SuppressWarnings({"unchecked", "rawtypes"})
         public <C> MappingNode<C> getOrCreateRelation(Key<D2, C> key) {
             for (var rel : relations) {
                 if (rel.childKey().name().equals(key.name())) {
@@ -335,7 +262,7 @@ public final class ResultSetMapper<D> {
                 }
             }
             var childNode = new MappingNode<C>();
-            relations.add(new RelationMapping(key, childNode));
+            ((List) relations).add(new RelationMapping<>(key, childNode));
             return childNode;
         }
     }
@@ -362,7 +289,6 @@ public final class ResultSetMapper<D> {
     private record RelationMapping<D2, CHILD>(
             /** Gets the key for the child relation. */
             Key<D2, CHILD> childKey,
-
             /** Gets the mapping node for the child. */
             MappingNode<CHILD> childNode
     ) {}
@@ -371,7 +297,6 @@ public final class ResultSetMapper<D> {
     private record ColumnMetadata(
             /** Gets the column label. */
             String label,
-
             /** Gets whether it is a database column name. */
             boolean isDbColumn
     ) {}
@@ -382,24 +307,43 @@ public final class ResultSetMapper<D> {
             List<ColumnMetadata> columns
     ) {}
 
+    private final class RowContext {
+        private final CharSequence[] columnLabels;
+        private MappingNode<D> rootNode;
+        private AbstractUjo<D> rootUjo;
+        private final Map<MappingNode<?>, AbstractUjo<?>> relationCache = new IdentityHashMap<>();
+
+        RowContext(CharSequence[] columnLabels) {
+            this.columnLabels = columnLabels;
+        }
+
+        public D map(ResultSet resultSet) throws SQLException {
+            if (rootNode == null) {
+                var extracted = getLabelColumns(resultSet, columnLabels);
+                var key = new CacheKey(extracted);
+                rootNode = cache.getOrCreate(key, k -> buildMappingTree(k.columns()));
+                rootUjo = AbstractUjo.of(rootHandler);
+            } else {
+                rootUjo.reset();
+            }
+            populateNode(rootNode, rootUjo, resultSet, relationCache);
+            return rootUjo.buildDomain();
+        }
+    }
+
     // --- Static methods ---
 
-    /** Extracts column labels and markers from the ResultSet metadata or uses explicit ones. */
     private static List<ColumnMetadata> getLabelColumns(ResultSet rs, CharSequence... explicitLabels) throws SQLException {
-        var result = new ArrayList<ColumnMetadata>();
         if (explicitLabels != null && explicitLabels.length > 0) {
-            var metaCount = rs.getMetaData().getColumnCount();
-            if (explicitLabels.length != metaCount) {
-                throw new IllegalArgumentException("Column count mismatch between labels and ResultSet.");
-            }
+            var result = new ArrayList<ColumnMetadata>(explicitLabels.length);
             for (var label : explicitLabels) {
                 result.add(new ColumnMetadata(label.toString(), false));
             }
             return result;
         }
-
         var metaData = rs.getMetaData();
         var columnCount = metaData.getColumnCount();
+        var result = new ArrayList<ColumnMetadata>(columnCount);
         for (var i = 1; i <= columnCount; i++) {
             var label = metaData.getColumnLabel(i);
             var name = metaData.getColumnName(i);
@@ -409,23 +353,15 @@ public final class ResultSetMapper<D> {
         return result;
     }
 
-    /** Factory method to create a new instance with a custom cache size. */
     public static <D> ResultSetMapper<D> of(@NotNull Class<D> domainClass, @NotNull DomainHandlerService service, int maxCacheSize) {
         return new ResultSetMapper<>(domainClass, service, maxCacheSize);
     }
 
-    /** Factory method to create a new instance with default cache size. */
     public static <D> ResultSetMapper<D> of(@NotNull Class<D> domainClass, @NotNull DomainHandlerService service) {
-        return of(domainClass, service, Config.ofDefault());
+        return of(domainClass, service, Config.ofDefault().getMaxCacheSize());
     }
 
-    /** Factory method to create a new instance with default cache size. */
-    public static <D> ResultSetMapper<D> of(@NotNull Class<D> domainClass, @NotNull DomainHandlerService service, Config config) {
-        return of(domainClass, service, config.getMaxCacheSize());
-    }
-
-    /** Factory method to create a new instance with default service and cache size. */
     public static <D> ResultSetMapper<D> of(@NotNull Class<D> domainClass, Config config) {
-        return of(domainClass, DomainHandlerProvider.provider(), config);
+        return of(domainClass, DomainHandlerProvider.provider(), config.getMaxCacheSize());
     }
 }

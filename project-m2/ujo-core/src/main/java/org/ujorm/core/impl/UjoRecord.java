@@ -5,6 +5,8 @@ import org.jetbrains.annotations.Nullable;
 import org.ujorm.DomainHandler;
 import org.ujorm.Key;
 
+import java.util.Arrays;
+
 /** Ujo implementation for classes type of the Java Record */
 public final class UjoRecord<D> extends AbstractUjo<D> {
 
@@ -22,6 +24,11 @@ public final class UjoRecord<D> extends AbstractUjo<D> {
         for (var key : domainHandler.getKeyList()) {
             values[key.index()] = key.getValue(domain);
         }
+    }
+
+    @Override
+    public void reset() {
+        Arrays.fill(values, null);
     }
 
     @Override

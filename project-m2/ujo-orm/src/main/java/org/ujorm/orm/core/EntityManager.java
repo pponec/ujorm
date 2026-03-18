@@ -33,6 +33,7 @@ import org.ujorm.orm.utils.Tools;
 import org.ujorm.tools.common.StringUtils;
 import org.ujorm.tools.jdbc.SQLExceptionBuilder;
 import org.ujorm.tools.jdbc.SqlParamBuilder;
+import org.ujorm.tools.jdbc.SqlParamBuilder.SqlFunction;
 
 import java.sql.*;
 import java.util.*;
@@ -73,9 +74,47 @@ public final class EntityManager<D, V> {
         this.utilities = new Utilities();
     }
 
-    /** Map a ResultSet to the Domain object. */
+    /**
+     * Maps a single {@link ResultSet} row to the Domain object.
+     * <p>
+     * <strong>Usage:</strong> Best suited for isolated, single-row mappings where you only
+     * need to process a specific, individual record without iterating through a large dataset.
+     * <p>
+     * <strong>Relationship:</strong> This is a convenience wrapper that internally creates
+     * a mapping function (similar to calling {@link #mapper(CharSequence...)}) and applies it immediately.
+     * Because it resolves the mapping function and column metadata on every single call, it is less
+     * efficient for processing large result sets in a loop compared to reusing the function
+     * provided directly by {@link #mapper(CharSequence...)}.
+     *
+     * @param rs The ResultSet positioned at the current row.
+     * @param columnLabels Optional custom column labels to map.
+     * @return A newly instantiated Domain object mapped from the ResultSet.
+     */
     public D map(@NotNull ResultSet rs, @Nullable CharSequence... columnLabels) {
-        return resultSetMapper.map(rs, columnLabels);
+        try {
+            return resultSetMapper.map(columnLabels).applyFunction(rs);
+        } catch (SQLException e) {
+            throw SQLExceptionBuilder.build(e);
+        }
+    }
+
+    /**
+     * Returns a stateful mapper (mapping function) for efficient processing of multiple rows.
+     * <p>
+     * <strong>Usage:</strong> Highly recommended for stream processing (e.g., {@code .streamMap(entityManager.mapper())})
+     * or manual {@code while(rs.next())} loops. By instantiating the mapper exactly once outside
+     * the loop, column metadata is resolved upfront. This makes it significantly more efficient
+     * for bulk operations.
+     * <p>
+     * <strong>Relationship:</strong> Acts as the core mapping mechanism. While {@link #map(ResultSet, CharSequence...)}
+     * creates and consumes this function on the fly for a single use, this method exposes the reusable
+     * function for high-performance, repeated iteration.
+     *
+     * @param columnLabels Optional custom column labels to map.
+     * @return A reusable mapping function.
+     */
+    public @NotNull SqlFunction<ResultSet, D> mapper(@Nullable CharSequence... columnLabels) {
+        return resultSetMapper.map(columnLabels);
     }
 
     /** Initializes TableModel if not already done. */
@@ -216,9 +255,7 @@ public final class EntityManager<D, V> {
                     .append(" (");
             write(sql, columns, ", ", q);
             sql.append(") VALUES (?");
-            for (var j = columns.size() - 1; j > 0; j--) {
-                sql.append(",?");
-            }
+            sql.append(",?".repeat(columns.size() - 1));
             sql.append(")");
             return sql.toString();
         }
@@ -317,11 +354,11 @@ public final class EntityManager<D, V> {
          *
          * @param domains Stream of entities to be inserted.
          * @param onInserted Optional callback invoked for each successfully inserted entity.
-         *                   Useful for retrieving assigned generated primary keys.
+         * Useful for retrieving assigned generated primary keys.
          * @return The total number of rows inserted.
          */
         @Override
-        public final long insert(@NotNull Stream<D> domains, @Nullable Consumer<D> onInserted) {
+        public long insert(@NotNull Stream<D> domains, @Nullable Consumer<D> onInserted) {
             var result = 0L;
             if (domains == null) return result;
             var safeStream = domains.isParallel() ? domains.sequential() : domains;
@@ -347,12 +384,12 @@ public final class EntityManager<D, V> {
          *
          * @param domains Stream of entities to be processed.
          * @param onInserted Optional callback invoked specifically for entities that were INSERTED.
-         *                   Useful for retrieving assigned generated primary keys.
+         * Useful for retrieving assigned generated primary keys.
          * @param properties Optional list of property names to update for the UPDATE operations.
-         *                   If empty, all properties are updated.
+         * If empty, all properties are updated.
          * @return The total number of rows affected (inserted + updated).
          */
-        public final long insertOrUpdate(@NotNull Stream<D> domains, @Nullable Consumer<D> onInserted, CharSequence... properties) {
+        public long insertOrUpdate(@NotNull Stream<D> domains, @Nullable Consumer<D> onInserted, CharSequence... properties) {
             var result = 0L;
             if (domains == null) return result;
             var safeStream = domains.isParallel() ? domains.sequential() : domains;
@@ -438,7 +475,11 @@ public final class EntityManager<D, V> {
             return utilities.run(false, dbconnection, sql, false, ps -> {
                 ps.setObject(1, id);
                 try (var rs = ps.executeQuery()) {
-                    return resultSetMapper.convert(rs, labels).findFirst();
+                    var mapFunction = resultSetMapper.map(labels);
+                    if (rs.next()) {
+                        return Optional.of(mapFunction.applyFunction(rs));
+                    }
+                    return Optional.empty();
                 }
             });
         }
@@ -712,11 +753,10 @@ public final class EntityManager<D, V> {
             @Nullable
             private final Consumer<D> onInserted;
             private final List<D> domains = new ArrayList<>(utilities.getBatchLimit());
-
+            private final Key<D,V> pk = pk();
             private PreparedStatement ps = null;
             private Boolean genKeys = null;
             private List<ColumnModel<D, Object>> cols = null;
-            private Key<D,V> pk = pk();
 
             /**
              * Adds a domain entity to the current batch.

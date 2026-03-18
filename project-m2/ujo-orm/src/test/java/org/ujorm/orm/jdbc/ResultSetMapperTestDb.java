@@ -69,6 +69,51 @@ public class ResultSetMapperTestDb extends AbstractDaoTest {
         Assertions.assertEquals(2L, employee.get().getCity().id());
     }
 
+    @Test
+    void entityManagerMapTest() throws SQLException {
+        var sql = """
+            SELECT
+              id AS "id"
+            , name AS "name"
+            , city_id AS "city.id"
+             FROM employee 
+             WHERE id = ?
+            """;
+        var resultSet = getEmployeeResultSet(sql, 1L);
+        var entityManager = EntityManager.of(Employee.class, Long.class);
+
+        Assertions.assertTrue(resultSet.next(), "ResultSet should contain at least one row");
+        var employee = entityManager.map(resultSet);
+
+        Assertions.assertNotNull(employee);
+        Assertions.assertEquals(1L, employee.getId());
+        Assertions.assertEquals("EmplA", employee.getName());
+        Assertions.assertEquals(2L, employee.getCity().id());
+    }
+
+    @Test
+    void entityManagerMapperTest() throws SQLException {
+        var sql = """
+            SELECT
+              id AS "id"
+            , name AS "name"
+            , city_id AS "city.id"
+             FROM employee 
+             WHERE id = ?
+            """;
+        var resultSet = getEmployeeResultSet(sql, 1L);
+        var entityManager = EntityManager.of(Employee.class, Long.class);
+        var mapper = entityManager.mapper();
+
+        Assertions.assertTrue(resultSet.next(), "ResultSet should contain at least one row");
+        var employee = mapper.applyFunction(resultSet);
+
+        Assertions.assertNotNull(employee);
+        Assertions.assertEquals(1L, employee.getId());
+        Assertions.assertEquals("EmplA", employee.getName());
+        Assertions.assertEquals(2L, employee.getCity().id());
+    }
+
     /** Gets the ResultSet for the employee with ID 1 */
     private ResultSet getEmployeeResultSet(String sql, Long id) throws SQLException {
         var statement = dbConnection.prepareStatement(sql);

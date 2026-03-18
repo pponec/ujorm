@@ -9,11 +9,16 @@ import org.ujorm.Key;
 public final class UjoBean<D> extends AbstractUjo<D> {
 
     @NotNull
-    private final D values;
+    private D values;
 
     public UjoBean(@Nullable D values, @NotNull DomainHandler<D> domainHandler) {
         super(domainHandler);
         this.values = values != null ? values : domainHandler.newDomain();
+    }
+
+    @Override
+    public void reset() {
+        values = domainHandler.newDomain();
     }
 
     @Override

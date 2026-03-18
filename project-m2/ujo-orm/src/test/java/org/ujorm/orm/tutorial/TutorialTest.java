@@ -62,7 +62,7 @@ public class TutorialTest extends AbstractDemo {
                 .label("c.country_code", MetaEmployee.city, MetaCity.countryCode)
                 .label("b.name", MetaEmployee.boss, MetaEmployee.name)
                 .bind("employeeId", 0L)
-                .streamMap(EMPLOYEE_EM::map)
+                .streamMap(EMPLOYEE_EM.mapper())
                 .toList());
 
         assertEquals(3, employees.size());
@@ -97,7 +97,7 @@ public class TutorialTest extends AbstractDemo {
         var allEmployees = employeeCrud
                 .selectWhere("id > :employeeId", builder -> builder
                         .bind("employeeId", 0L)
-                        .streamMap(EMPLOYEE_EM::map)
+                        .streamMap(EMPLOYEE_EM.mapper())
                         .sorted(Comparator.comparing(e -> e.getBoss() == null))
                         .toList());
 

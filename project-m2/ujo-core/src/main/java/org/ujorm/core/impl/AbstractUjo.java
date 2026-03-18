@@ -20,6 +20,9 @@ public abstract class AbstractUjo<D> implements Ujo<D> {
     /** Provides an original domain object. */
     public abstract D buildDomain();
 
+    /** Reset object data */
+    public abstract void reset();
+
     /** Create a logical empty instance of the UJO */
     public static <D> AbstractUjo<D> of(@NotNull DomainHandler<D> handler) {
         return of(null, handler);
