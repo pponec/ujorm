@@ -5,7 +5,6 @@ import org.jetbrains.annotations.NotNull;
 import org.ujorm.core.DomainHandlerProvider;
 import org.ujorm.core.DomainHandlerService;
 import org.ujorm.orm.Config;
-import org.ujorm.orm.impl.ConfigImpl;
 
 import java.util.concurrent.ConcurrentHashMap;
 

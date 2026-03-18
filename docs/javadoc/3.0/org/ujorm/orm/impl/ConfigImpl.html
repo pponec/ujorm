@@ -75,7 +75,7 @@ loadScripts(document, 'script');</script>
 </div>
 <div class="inheritance" title="Inheritance Tree"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">java.lang.Object</a>
 <div class="inheritance"><a href="../../core/AbstractSnapshotable.html" title="class in org.ujorm.core">org.ujorm.core.AbstractSnapshotable</a>&lt;<a href="ConfigImpl.html" title="class in org.ujorm.orm.impl">ConfigImpl</a>&gt;
-<div class="inheritance">org.ujorm.orm.impl.ConfigImpl</div>
+<div class="inheritance">org.ujorm.orm.Config</div>
 </div>
 </div>
 <section class="class-description" id="class-description">
@@ -181,7 +181,7 @@ implements <a href="../Config.html" title="interface in org.ujorm.orm">Config</a
 <div class="block">Maximum size of the cache in the ResultSet Mapper</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>&lt;V&gt;&nbsp;V</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getValue(org.ujorm.orm.impl.ConfigImpl.Key)" class="member-name-link">getValue</a><wbr>(@NotNull <a href="ConfigImpl.Key.html" title="class in org.ujorm.orm.impl">ConfigImpl.Key</a>&lt;V&gt;&nbsp;key)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getValue(org.ujorm.orm.Config.Key)" class="member-name-link">getValue</a><wbr>(@NotNull <a href="ConfigImpl.Key.html" title="class in org.ujorm.orm.impl">ConfigImpl.Key</a>&lt;V&gt;&nbsp;key)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">General getter returning value by key index or default value</div>
 </div>
@@ -221,7 +221,7 @@ implements <a href="../Config.html" title="interface in org.ujorm.orm">Config</a
 <div class="block">Lock the configuration for further writes</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>&lt;V&gt;&nbsp;void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setValue(org.ujorm.orm.impl.ConfigImpl.Key,V)" class="member-name-link">setValue</a><wbr>(@NotNull <a href="ConfigImpl.Key.html" title="class in org.ujorm.orm.impl">ConfigImpl.Key</a>&lt;V&gt;&nbsp;key,
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setValue(org.ujorm.orm.Config.Key,V)" class="member-name-link">setValue</a><wbr>(@NotNull <a href="ConfigImpl.Key.html" title="class in org.ujorm.orm.impl">ConfigImpl.Key</a>&lt;V&gt;&nbsp;key,
  V&nbsp;value)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">General setter with lock check</div>
@@ -326,7 +326,7 @@ implements <a href="../Config.html" title="interface in org.ujorm.orm">Config</a
 <h2>Method Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="getValue(org.ujorm.orm.impl.ConfigImpl.Key)">
+<section class="detail" id="getValue(org.ujorm.orm.Config.Key)">
 <h3>getValue</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="type-parameters">&lt;V&gt;</span>&nbsp;<span class="return-type">V</span>&nbsp;<span class="element-name">getValue</span><wbr><span class="parameters">(@NotNull
  @NotNull <a href="ConfigImpl.Key.html" title="class in org.ujorm.orm.impl">ConfigImpl.Key</a>&lt;V&gt;&nbsp;key)</span></div>
@@ -334,8 +334,8 @@ implements <a href="../Config.html" title="interface in org.ujorm.orm">Config</a
 </section>
 </li>
 <li>
-<section class="detail" id="setValue(org.ujorm.orm.impl.ConfigImpl.Key,V)">
-<h3 id="setValue(org.ujorm.orm.impl.ConfigImpl.Key,java.lang.Object)">setValue</h3>
+<section class="detail" id="setValue(org.ujorm.orm.Config.Key,V)">
+<h3 id="setValue(org.ujorm.orm.Config.Key,java.lang.Object)">setValue</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="type-parameters">&lt;V&gt;</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setValue</span><wbr><span class="parameters">(@NotNull
  @NotNull <a href="ConfigImpl.Key.html" title="class in org.ujorm.orm.impl">ConfigImpl.Key</a>&lt;V&gt;&nbsp;key,
  V&nbsp;value)</span></div>
