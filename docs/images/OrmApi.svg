@@ -69,27 +69,27 @@
       <rect x="566" y="391" clip-path="url(#clipPath2)" fill="rgb(178,142,0)" width="1" height="328" stroke="none"/>
     </g>
     <g font-size="13px" stroke-linecap="butt" transform="matrix(1,0,0,1,-286,-266)" text-rendering="geometricPrecision" font-family="sans-serif" shape-rendering="geometricPrecision" font-weight="bold" stroke-miterlimit="1.45">
-      <text x="379.703" xml:space="preserve" y="409.977" clip-path="url(#clipPath5)" stroke="none">SqlParamBuilder</text>
+      <text x="379.703" xml:space="preserve" y="409.977" clip-path="url(#clipPath5)" stroke="none">SqlQuery</text>
     </g>
     <g text-rendering="geometricPrecision" shape-rendering="geometricPrecision" transform="matrix(1,0,0,1,-286,-266)">
       <line y2="418" fill="none" x1="302" clip-path="url(#clipPath5)" x2="566" y1="418"/>
       <line y2="428" fill="none" x1="302" clip-path="url(#clipPath5)" x2="566" y1="428"/>
       <text stroke-linecap="butt" x="306.16" y="446.6141" clip-path="url(#clipPath5)" font-family="sans-serif" stroke="none" stroke-miterlimit="1.45" xml:space="preserve">sql(sqlLines: String[*])</text>
-      <text stroke-linecap="butt" x="306.16" y="462.9582" clip-path="url(#clipPath5)" font-family="sans-serif" stroke="none" stroke-miterlimit="1.45" xml:space="preserve">    : SqlParamBuilder</text>
+      <text stroke-linecap="butt" x="306.16" y="462.9582" clip-path="url(#clipPath5)" font-family="sans-serif" stroke="none" stroke-miterlimit="1.45" xml:space="preserve">    : SqlQuery</text>
       <text stroke-linecap="butt" x="306.16" y="479.3023" clip-path="url(#clipPath5)" font-family="sans-serif" stroke="none" stroke-miterlimit="1.45" xml:space="preserve">bind(key: String, values: Boolean[*])</text>
-      <text stroke-linecap="butt" x="306.16" y="495.6465" clip-path="url(#clipPath5)" font-family="sans-serif" stroke="none" stroke-miterlimit="1.45" xml:space="preserve">    : SqlParamBuilder</text>
+      <text stroke-linecap="butt" x="306.16" y="495.6465" clip-path="url(#clipPath5)" font-family="sans-serif" stroke="none" stroke-miterlimit="1.45" xml:space="preserve">    : SqlQuery</text>
       <text stroke-linecap="butt" x="306.16" y="511.9906" clip-path="url(#clipPath5)" font-family="sans-serif" stroke="none" stroke-miterlimit="1.45" xml:space="preserve">bind(key: String, values: Integer[*])</text>
-      <text stroke-linecap="butt" x="306.16" y="528.3347" clip-path="url(#clipPath5)" font-family="sans-serif" stroke="none" stroke-miterlimit="1.45" xml:space="preserve">    : SqlParamBuilder</text>
+      <text stroke-linecap="butt" x="306.16" y="528.3347" clip-path="url(#clipPath5)" font-family="sans-serif" stroke="none" stroke-miterlimit="1.45" xml:space="preserve">    : SqlQuery</text>
       <text stroke-linecap="butt" x="306.16" y="544.6788" clip-path="url(#clipPath5)" font-family="sans-serif" stroke="none" stroke-miterlimit="1.45" xml:space="preserve">bind(key: String, values: String[*])</text>
-      <text stroke-linecap="butt" x="306.16" y="561.0229" clip-path="url(#clipPath5)" font-family="sans-serif" stroke="none" stroke-miterlimit="1.45" xml:space="preserve">    : SqlParamBuilder</text>
+      <text stroke-linecap="butt" x="306.16" y="561.0229" clip-path="url(#clipPath5)" font-family="sans-serif" stroke="none" stroke-miterlimit="1.45" xml:space="preserve">    : SqlQuery</text>
       <text stroke-linecap="butt" x="306.16" y="577.367" clip-path="url(#clipPath5)" font-family="sans-serif" stroke="none" stroke-miterlimit="1.45" xml:space="preserve">label(placeholder: String, label: Key[*])</text>
-      <text stroke-linecap="butt" x="306.16" y="593.7111" clip-path="url(#clipPath5)" font-family="sans-serif" stroke="none" stroke-miterlimit="1.45" xml:space="preserve">    : SqlParamBuilder</text>
+      <text stroke-linecap="butt" x="306.16" y="593.7111" clip-path="url(#clipPath5)" font-family="sans-serif" stroke="none" stroke-miterlimit="1.45" xml:space="preserve">    : SqlQuery</text>
       <text stroke-linecap="butt" x="306.16" y="610.0552" clip-path="url(#clipPath5)" font-family="sans-serif" stroke="none" stroke-miterlimit="1.45" xml:space="preserve">forEach(consumer: SqlConsumer)</text>
       <text stroke-linecap="butt" x="306.16" y="626.3994" clip-path="url(#clipPath5)" font-family="sans-serif" stroke="none" stroke-miterlimit="1.45" xml:space="preserve">    : void</text>
       <text stroke-linecap="butt" x="306.16" y="642.7435" clip-path="url(#clipPath5)" font-family="sans-serif" stroke="none" stroke-miterlimit="1.45" xml:space="preserve">streamMap(mapper: SqlFunction)</text>
       <text stroke-linecap="butt" x="306.16" y="659.0876" clip-path="url(#clipPath5)" font-family="sans-serif" stroke="none" stroke-miterlimit="1.45" xml:space="preserve">    : Stream&lt;ResultSet&gt;</text>
       <text stroke-linecap="butt" x="306.16" y="675.4317" clip-path="url(#clipPath5)" font-family="sans-serif" stroke="none" stroke-miterlimit="1.45" xml:space="preserve">«static» &lt;R&gt; run(connection: Connection, </text>
-      <text stroke-linecap="butt" x="306.16" y="691.7758" clip-path="url(#clipPath5)" font-family="sans-serif" stroke="none" stroke-miterlimit="1.45" xml:space="preserve">    fun: SqlFunction&lt;SqlParamBuilder, R&gt;) : R</text>
+      <text stroke-linecap="butt" x="306.16" y="691.7758" clip-path="url(#clipPath5)" font-family="sans-serif" stroke="none" stroke-miterlimit="1.45" xml:space="preserve">    fun: SqlFunction&lt;SqlQuery, R&gt;) : R</text>
       <text stroke-linecap="butt" x="306.16" y="708.1199" clip-path="url(#clipPath5)" font-family="sans-serif" stroke="none" stroke-miterlimit="1.45" xml:space="preserve">execute(): int</text>
       <rect x="342" y="282" clip-path="url(#clipPath2)" fill="rgb(255,255,153)" width="170" height="59" stroke="none"/>
       <rect x="341" y="281" clip-path="url(#clipPath2)" fill="rgb(255,255,218)" width="1" height="61" stroke="none"/>

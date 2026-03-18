@@ -39,7 +39,7 @@
           <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="13" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="21.706016540527344" horizontalTextPosition="center" iconTextGap="4" modelName="custom" textColor="#000000" verticalTextPosition="bottom" visible="true" width="140.006103515625" x="53.9969482421875" xml:space="preserve" y="3.0">ResultSetMapper&lt;D&gt;<y:LabelModel><y:SmartNodeLabelModel distance="4.0"/></y:LabelModel><y:ModelParameter><y:SmartNodeLabelModelParameter labelRatioX="0.0" labelRatioY="0.0" nodeRatioX="0.0" nodeRatioY="0.0" offsetX="0.0" offsetY="0.0" upX="0.0" upY="-1.0"/></y:ModelParameter></y:NodeLabel>
           <y:UML clipContent="true" constraint="" hasDetailsColor="false" omitDetails="false" stereotype="" use3DEffect="true">
             <y:AttributeLabel xml:space="preserve"/>
-            <y:MethodLabel xml:space="preserve">map(resultSet: ResultSet, 
+            <y:MethodLabel xml:space="preserve">map(resultSet: ResultSet,
     columnLabels: CharSequence[*]): D</y:MethodLabel>
           </y:UML>
         </y:UMLClassNode>
@@ -52,25 +52,25 @@
           <y:Geometry height="329.15999999999985" width="266.0" x="301.16000000000014" y="391.08000000000015"/>
           <y:Fill color="#FFCC00" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="13" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="21.706016540527344" horizontalTextPosition="center" iconTextGap="4" modelName="custom" textColor="#000000" verticalTextPosition="bottom" visible="true" width="112.9140625" x="76.54296875" xml:space="preserve" y="3.0">SqlParamBuilder<y:LabelModel><y:SmartNodeLabelModel distance="4.0"/></y:LabelModel><y:ModelParameter><y:SmartNodeLabelModelParameter labelRatioX="0.0" labelRatioY="0.0" nodeRatioX="0.0" nodeRatioY="0.0" offsetX="0.0" offsetY="0.0" upX="0.0" upY="-1.0"/></y:ModelParameter></y:NodeLabel>
+          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="13" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="21.706016540527344" horizontalTextPosition="center" iconTextGap="4" modelName="custom" textColor="#000000" verticalTextPosition="bottom" visible="true" width="112.9140625" x="76.54296875" xml:space="preserve" y="3.0">SqlQuery<y:LabelModel><y:SmartNodeLabelModel distance="4.0"/></y:LabelModel><y:ModelParameter><y:SmartNodeLabelModelParameter labelRatioX="0.0" labelRatioY="0.0" nodeRatioX="0.0" nodeRatioY="0.0" offsetX="0.0" offsetY="0.0" upX="0.0" upY="-1.0"/></y:ModelParameter></y:NodeLabel>
           <y:UML clipContent="true" constraint="" hasDetailsColor="false" omitDetails="false" stereotype="" use3DEffect="true">
             <y:AttributeLabel xml:space="preserve"/>
             <y:MethodLabel xml:space="preserve">sql(sqlLines: String[*])
-    : SqlParamBuilder
+    : SqlQuery
 bind(key: String, values: Boolean[*])
-    : SqlParamBuilder
+    : SqlQuery
 bind(key: String, values: Integer[*])
-    : SqlParamBuilder
+    : SqlQuery
 bind(key: String, values: String[*])
-    : SqlParamBuilder
+    : SqlQuery
 label(placeholder: String, label: Key[*])
-    : SqlParamBuilder
+    : SqlQuery
 forEach(consumer: SqlConsumer)
     : void
 streamMap(mapper: SqlFunction)
     : Stream&lt;ResultSet&gt;
-«static» &lt;R&gt; run(connection: Connection, 
-    fun: SqlFunction&lt;SqlParamBuilder, R&gt;) : R
+«static» &lt;R&gt; run(connection: Connection,
+    fun: SqlFunction&lt;SqlQuery, R&gt;) : R
 execute(): int</y:MethodLabel>
           </y:UML>
         </y:UMLClassNode>

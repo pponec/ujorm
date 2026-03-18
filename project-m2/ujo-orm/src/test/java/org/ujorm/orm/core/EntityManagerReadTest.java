@@ -31,7 +31,7 @@ class EntityManagerReadTest extends AbstractDaoTest {
         return Employee.of(id, name, null, city, LocalDate.of(2020, 1, 1), true);
     }
 
-    /** Tests the generation of SqlParamBuilder using the select method. */
+    /** Tests the generation of SqlQuery using the select method. */
     @Test
     void testSelectBuilder() {
         var cityDao = EntityManager.of(City.class, Long.class).crud(dbConnection);

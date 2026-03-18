@@ -11,7 +11,7 @@ import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-class SqlParamBuilderLabelTest {
+class SqlQueryLabelTest {
 
     private Connection connectionMock;
 
@@ -23,7 +23,7 @@ class SqlParamBuilderLabelTest {
 
     @Test
     void testSingleLabel() {
-        try (var builder = new SqlParamBuilder(connectionMock)) {
+        try (var builder = new SqlQuery(connectionMock)) {
             builder.sql("""
                     SELECT a AS ${col1} FROM table""");
             builder.label("col1", mockKey("first_name"));
@@ -35,7 +35,7 @@ class SqlParamBuilderLabelTest {
 
     @Test
     void testTwoLabels() {
-        try (var builder = new SqlParamBuilder(connectionMock)) {
+        try (var builder = new SqlQuery(connectionMock)) {
             builder.sql("""
                     SELECT a AS ${col1}, b AS ${col2} FROM table""");
             builder.label("col1", mockKey("user"), mockKey("name"))
@@ -48,7 +48,7 @@ class SqlParamBuilderLabelTest {
 
     @Test
     void testMultipleLabelsVarargs() {
-        try (var builder = new SqlParamBuilder(connectionMock)) {
+        try (var builder = new SqlQuery(connectionMock)) {
             builder.sql("""
                     SELECT c AS ${complex_col} FROM table""");
             builder.label("complex_col",
@@ -62,7 +62,7 @@ class SqlParamBuilderLabelTest {
 
     @Test
     void testLabelsWithBoundParameters() {
-        try (var builder = new SqlParamBuilder(connectionMock)) {
+        try (var builder = new SqlQuery(connectionMock)) {
             // Combination of labels and standard parameters
             // We can now comfortably format the SQL on multiple lines
             builder.sql("""

@@ -6,7 +6,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -18,8 +18,6 @@ package org.ujorm.tools.jdbc;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.ujorm.Key;
-import org.ujorm.tools.msg.MessageService;
 import java.math.BigDecimal;
 import java.sql.*;
 import java.sql.SQLException;
@@ -33,43 +31,15 @@ import java.util.regex.Pattern;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
-/**
- * A fluent wrapper over {@link PreparedStatement}
- * that manages named parameters and ensures automatic resource cleanup
- * of both statements and result sets.
- * The SqlParamBuilder class is now independent of other classes, excluding only annotations and SQLException.
- *
- * <h4>Sample of usage</h4>
- * <pre>
- *  List&lt;Employee&gt; employees = SqlParamBuilder.run(dbConnection, build -> build.sql("""
- *         SELECT t.id, t.name, t.created
- *         FROM employee t
- *         WHERE t.id > :id
- *           AND t.code IN (:code)
- *         ORDER BY t.id
- *         """)
- *         .bind("id", 10)
- *         .bind("code", "T", "V")
- *         .streamMap(rs -> new Employee(
- *                 rs.getInt("id"),
- *                 rs.getString("name"),
- *                 rs.getObject("created", LocalDate.class)))
- *         .toList()
- * }
- * </pre>
- * Licence: Apache License, Version 2.0
- * Original source: <a href="https://github.com/pponec/PPScriptsForJava/blob/development/src/main/java/net/ponec/script/SqlExecutor.java">GitHub</a>
- * @author Pavel Ponec, https://github.com/pponec
- * @since 2.26
- */
-public class SqlParamBuilder implements AutoCloseable {
+/** Abstract base class for SqlQuery containing internal JDBC execution logic. */
+public abstract class AbstractSqlQuery<T extends AbstractSqlQuery<T>> implements AutoCloseable {
 
     /** SQL parameter mark type of {@code :param} */
     static final Pattern SQL_MARK = Pattern.compile(":(\\w+)");
 
     @NotNull
     private final Connection dbConnection;
-    @Nullable
+    @NotNull
     protected String sqlTemplate = "";
     @NotNull
     private final Map<String, ParamValue> params = new HashMap<>();
@@ -79,162 +49,126 @@ public class SqlParamBuilder implements AutoCloseable {
     private ResultSet resultSet = null;
     @Nullable
     private Integer fetchSize = null;
+
     @Nullable
-    private Map<String, Object> labels;
-    /** Label quoter */
-    private char q;
+    protected StringBuilder _builder = null;
 
-    public SqlParamBuilder(@NotNull Connection dbConnection) {
-        this(dbConnection, '"');
-    }
-
-    public SqlParamBuilder(@NotNull Connection dbConnection, char quoter) {
+    public AbstractSqlQuery(@NotNull Connection dbConnection) {
         this.dbConnection = dbConnection;
-        this.q = quoter;
     }
 
-    /** Sets a new SQL template and resets current parameters.
-     * Any existing resources are closed. */
-    public SqlParamBuilder sql(@NotNull String... sqlLines) {
+    /** Returns this instance cast to the generic type T for fluent API. */
+    @SuppressWarnings("unchecked")
+    protected final T self() {
+        return (T) this;
+    }
+
+    /** Init builder */
+    protected StringBuilder initBuilder() {
+        if (_builder == null) {
+            _builder = new StringBuilder(64);
+        } else {
+            _builder.setLength(0);
+        }
+        return _builder;
+    }
+
+    /** Sets a new SQL template and resets current parameters. Any existing resources are closed. */
+    public T sql(@NotNull String... sqlLines) {
         close();
         sqlTemplate = sqlLines.length == 1 ? sqlLines[0] : String.join("\n", sqlLines);
-        return this;
+        return self();
     }
 
     /** Sets the fetch size for the prepared statement */
-    public SqlParamBuilder fetchSize(int fetchSize) {
+    public T fetchSize(int fetchSize) {
         this.fetchSize = fetchSize;
-        return this;
+        return self();
     }
 
-    public SqlParamBuilder bind(@NotNull final String key, final Boolean... values) {
+    public T bind(@NotNull final String key, final Boolean... values) {
         return bind(true, key, values);
     }
 
-    public SqlParamBuilder bind(final boolean enabled, @NotNull final String key, final Boolean... values) {
+    public T bind(final boolean enabled, @NotNull final String key, final Boolean... values) {
         return bindObject(enabled, key, JDBCType.BOOLEAN, (Object[]) values);
     }
 
     /** Bind Bytes */
-    public SqlParamBuilder bind(@NotNull final String key, final Byte... values) {
+    public T bind(@NotNull final String key, final Byte... values) {
         return bind(true, key, values);
     }
-    public SqlParamBuilder bind(final boolean enabled, @NotNull final String key, final Byte... values) {
+    public T bind(final boolean enabled, @NotNull final String key, final Byte... values) {
         return bindObject(enabled, key, JDBCType.TINYINT, (Object[]) values);
     }
 
     /** Bind Shorts */
-    public SqlParamBuilder bind(@NotNull final String key, final Short... values) {
+    public T bind(@NotNull final String key, final Short... values) {
         return bind(true, key, values);
     }
-    public SqlParamBuilder bind(final boolean enabled, @NotNull final String key, final Short... values) {
+    public T bind(final boolean enabled, @NotNull final String key, final Short... values) {
         return bindObject(enabled, key, JDBCType.SMALLINT, (Object[]) values);
     }
 
     /** Bind Integers */
-    public SqlParamBuilder bind(@NotNull final String key, final Integer... values) {
+    public T bind(@NotNull final String key, final Integer... values) {
         return bind(true, key, values);
     }
-    public SqlParamBuilder bind(final boolean enabled, @NotNull final String key, final Integer... values) {
+    public T bind(final boolean enabled, @NotNull final String key, final Integer... values) {
         return bindObject(enabled, key, JDBCType.BIGINT, (Object[]) values);
     }
 
     /** Bind Longs */
-    public SqlParamBuilder bind(@NotNull final String key, final Long... values) {
+    public T bind(@NotNull final String key, final Long... values) {
         return bind(true, key, values);
     }
-    public SqlParamBuilder bind(final boolean enabled, @NotNull final String key, final Long... values) {
+    public T bind(final boolean enabled, @NotNull final String key, final Long... values) {
         return bindObject(enabled, key, JDBCType.BIGINT, (Object[]) values);
     }
 
     /** Bind BigDecimal */
-    public SqlParamBuilder bind(@NotNull final String key, final BigDecimal... values) {
+    public T bind(@NotNull final String key, final BigDecimal... values) {
         return bind(true, key, values);
     }
-    public SqlParamBuilder bind(final boolean enabled, @NotNull final String key, final BigDecimal... values) {
+    public T bind(final boolean enabled, @NotNull final String key, final BigDecimal... values) {
         return bindObject(enabled, key, JDBCType.NUMERIC, (Object[]) values);
     }
 
     /** Bind String */
-    public SqlParamBuilder bind(@NotNull final String key, final String... values) {
+    public T bind(@NotNull final String key, final String... values) {
         return bind(true, key, values);
     }
-    public SqlParamBuilder bind(final boolean enabled, @NotNull final String key, final String... values) {
+    public T bind(final boolean enabled, @NotNull final String key, final String... values) {
         return bindObject(enabled, key, JDBCType.VARCHAR, (Object[]) values);
     }
 
     /** Bind LocalDates */
-    public SqlParamBuilder bind(@NotNull final String key, final LocalDate... values) {
+    public T bind(@NotNull final String key, final LocalDate... values) {
         return bind(true, key, values);
     }
-    public SqlParamBuilder bind(final boolean enabled, @NotNull final String key, final LocalDate... values) {
+    public T bind(final boolean enabled, @NotNull final String key, final LocalDate... values) {
         return bindObject(enabled, key, JDBCType.DATE, (Object[]) values);
     }
 
     /** Bind LocalDateTimes */
-    public SqlParamBuilder bind(@NotNull final String key, final LocalDateTime... values) {
+    public T bind(@NotNull final String key, final LocalDateTime... values) {
         return bind(true, key, values);
     }
-    public SqlParamBuilder bind(final boolean enabled, @NotNull final String key, final LocalDateTime... values) {
+    public T bind(final boolean enabled, @NotNull final String key, final LocalDateTime... values) {
         return bindObject(enabled, key, JDBCType.TIMESTAMP, (Object[]) values);
     }
 
     /** Bind Objects */
-    public SqlParamBuilder bindObject(@NotNull final String key, final Object... values) {
+    public T bindObject(@NotNull final String key, final Object... values) {
         return bindObject(true, key, JDBCType.OTHER, values);
     }
 
-    /** Add a column label to the placeholder in the format {@code ${placeholder} } */
-    public SqlParamBuilder label(@NotNull String placeholder, @NotNull Key<?,?> label) {
-        return putLabel(placeholder, "" + q + label + q);
-    }
-
-    /** Add a column label to the placeholder in the format {@code ${placeholder} } */
-    public <V1> SqlParamBuilder label(@NotNull String placeholder,
-                                      @NotNull Key<?,V1> label1,
-                                      @NotNull Key<V1,?> label2) {
-        return putLabel(placeholder, "" + q + label1 + '.' + label2 + q);
-    }
-
-    /** Add a column label to the placeholder in the format {@code ${placeholder} } */
-    public <V1,V2> SqlParamBuilder label(@NotNull String placeholder,
-                                      @NotNull Key<?,V1> label1,
-                                      @NotNull Key<V1,V2> label2,
-                                      @NotNull Key<V2,?> label3) {
-        return putLabel(placeholder, "" + q + label1 + '.' + label2 + '.' + label3 + q);
-    }
-
-    /** Add a column label to the placeholder in the format {@code ${placeholder} } */
-    public <V1,V2,V3> SqlParamBuilder label(@NotNull String placeholder,
-                                         @NotNull Key<?,V1> label1,
-                                         @NotNull Key<V1,V2> label2,
-                                         @NotNull Key<V2,V3> label3,
-                                         @NotNull Key<V3,?> label4,
-                                         @NotNull Key<?,?>... labels) {
-        var sb = new StringBuilder()
-                .append(q).append(label1)
-                .append('.').append(label2)
-                .append('.').append(label3)
-                .append('.').append(label4);
-        for (var lab : labels) {
-            sb.append('.').append(lab);
-        }
-        return putLabel(placeholder, sb.append(q).toString());
-    }
-
-    private SqlParamBuilder putLabel(String placeholder, String columnLabel) {
-        if (columnLabel.length() < 3) throw new IllegalArgumentException("Key label is required");
-        if (labels == null) labels = new HashMap<>();
-        labels.put(placeholder, columnLabel);
-        return this;
-    }
-
     /** Assigns SQL parameter values. If reusing a statement, ensure the same number of parameters is set. */
-    public SqlParamBuilder bindObject(final boolean enabled, @NotNull final String key, final JDBCType jdbcType, final Object... values) {
+    public T bindObject(final boolean enabled, @NotNull final String key, final JDBCType jdbcType, final Object... values) {
         if (enabled) {
             params.put(key, new ParamValue(jdbcType, values));
         }
-        return this;
+        return self();
     }
 
     public int execute() {
@@ -263,8 +197,6 @@ public class SqlParamBuilder implements AutoCloseable {
         }
     }
 
-    /** Creates a Stream from the ResultSet. The Stream ensures the ResultSet is closed when finished. <br/>
-     * Prefer {@link #streamMap(SqlFunction)} or {@link #forEach(SqlConsumer)}. */
     /** Creates a Stream from the ResultSet. The Stream ensures the ResultSet is closed when finished. */
     @NotNull
     private Stream<ResultSet> stream(final ResultSet rs) {
@@ -307,8 +239,12 @@ public class SqlParamBuilder implements AutoCloseable {
         return stream(executeSelect()).map(mapper);
     }
 
-    /** Closes the PreparedStatement and any active ResultSet.
-     * The database connection remains open. */
+    /**
+     * Closes the PreparedStatement and any active ResultSet.
+     * External JDBC resources are released, but the internal StringBuilder
+     * is intentionally preserved to avoid memory reallocation overhead
+     * when the instance is reused for subsequent SQL commands.
+     */
     @Override
     public void close() {
         try (var ps = preparedStatement; var rs = resultSet) {
@@ -319,26 +255,25 @@ public class SqlParamBuilder implements AutoCloseable {
             preparedStatement = null;
             fetchSize = null;
             params.clear();
-            if (labels != null) labels.clear();
         }
     }
 
-    /** Builds or reuses a PreparedStatement and binds current parameters.
-     * @param autoGeneratedKeys For example: {@code Statement.RETURN_GENERATED_KEYS} */
+    /** Builds or reuses a PreparedStatement and binds current parameters. */
     @NotNull
     public PreparedStatement prepareStatement(int autoGeneratedKeys) {
         try {
             final var sqlValues = new ArrayList<ParamValue>(params.size());
             final var sql = buildSql(sqlValues, false);
-            final var result = preparedStatement != null
+            var result = preparedStatement != null
                     ? preparedStatement
                     : dbConnection.prepareStatement(sql, autoGeneratedKeys);
+
             if (fetchSize != null) {
                 result.setFetchSize(fetchSize);
             }
             for (int i = 0, max = sqlValues.size(); i < max; i++) {
                 var sqlValue = sqlValues.get(i);
-                result.setObject(i + 1, sqlValue.first(), sqlValue.jdbcType);
+                result.setObject(i + 1, sqlValue.first(), sqlValue.jdbcType());
             }
             preparedStatement = result;
             return result;
@@ -357,8 +292,10 @@ public class SqlParamBuilder implements AutoCloseable {
         }
     }
 
-    /** Method for retrieving the primary keys of an INSERT statement. Only one call per INSERT is allowed. <br>
-     * Usage: {@code builder.generatedKeys(rs -> rs.getInt(1)).findFirst()} */
+    /**
+     * Method for retrieving the primary keys of an INSERT statement.
+     * Only one call per INSERT is allowed.
+     */
     @NotNull
     public <R> Stream<R> generatedKeys(SqlFunction<ResultSet, ? extends R> mapper) {
         final var generatedKeysRs = generatedKeysRs();
@@ -367,10 +304,7 @@ public class SqlParamBuilder implements AutoCloseable {
                 : Stream.of();
     }
 
-    /** Method returns the last inserted key of the last INSERT statement.
-     * Only one call per INSERT is allowed. <br>
-     * Usage: {@code builder.LastKey(rs -> rs.getInt(1))}
-     * @throws NoSuchElementException If no key found */
+    /** Method returns the last inserted key of the last INSERT statement. */
     @NotNull
     public <R> R generatedLastKey(SqlFunction<ResultSet, ? extends R> mapper) throws NoSuchElementException {
         return generatedKeys(mapper).reduce((first, second) -> second)
@@ -379,32 +313,37 @@ public class SqlParamBuilder implements AutoCloseable {
 
     @NotNull
     protected String buildSql(List<ParamValue> sqlValues, boolean toLog) {
-        final var result = new StringBuffer(256);
+        final var sqlBuffer = initBuilder();
         final var matcher = SQL_MARK.matcher(sqlTemplate);
-        final var missingKeys = new HashSet<>();
+        final var missingKeys = new HashSet<String>();
+
         while (matcher.find()) {
             final var key = matcher.group(1);
             final var param = params.get(key);
             if (param != null) {
-                matcher.appendReplacement(result, "");
-                for (int i = 0; i < param.values.length; i++) {
-                    if (i > 0) result.append(',');
-                    result.append(toLog ? "[" + param.values[i] + "]" : "?");
-                    sqlValues.add(i == 0 ? param : new ParamValue(param.jdbcType, param.values[i]));
+                matcher.appendReplacement(sqlBuffer, "");
+                for (int i = 0; i < param.values().length; i++) {
+                    if (i > 0) sqlBuffer.append(',');
+                    sqlBuffer.append(toLog ? "[" + param.values()[i] + "]" : "?");
+                    sqlValues.add(i == 0 ? param : new ParamValue(param.jdbcType(), param.values()[i]));
                 }
             } else {
-                matcher.appendReplacement(result, Matcher.quoteReplacement(matcher.group()));
+                matcher.appendReplacement(sqlBuffer, Matcher.quoteReplacement(matcher.group()));
                 missingKeys.add(key);
             }
         }
         if (!toLog && !missingKeys.isEmpty()) {
             throw new SqlException(null, "Missing SQL parameter: " + missingKeys);
         }
-        matcher.appendTail(result);
-        if (labels != null && !labels.isEmpty()) {
-            return MessageService.formatMsg(result.toString(), labels);
-        }
-        return result.toString();
+        matcher.appendTail(sqlBuffer);
+
+        return buildColumns(sqlBuffer.toString());
+    }
+
+    /** Hook for subclasses to append column mappings or formats. */
+    @NotNull
+    protected String buildColumns(@NotNull String sql) {
+        return sql;
     }
 
     @NotNull
@@ -422,8 +361,17 @@ public class SqlParamBuilder implements AutoCloseable {
         return toString().replaceAll("\\s*\\R+\\s*", " ");
     }
 
-    /** SQL parameter values */
-    record ParamValue(JDBCType jdbcType, Object... values) {
+    /**
+     * SQL parameter values
+     *
+     * @param jdbcType The JDBC Type
+     * @param values   The parameter values
+     */
+    record ParamValue(
+            JDBCType jdbcType,
+            Object... values
+    ) {
+        /** Returns the first value from the values array */
         public Object first() {
             return values.length > 0 ? values[0] : null;
         }
@@ -431,6 +379,7 @@ public class SqlParamBuilder implements AutoCloseable {
 
     @FunctionalInterface
     public interface SqlFunction<T, R> extends Function<T, R> {
+        @Override
         default R apply(T resultSet) {
             try {
                 return applyFunction(resultSet);
@@ -457,19 +406,10 @@ public class SqlParamBuilder implements AutoCloseable {
 
     /** A subclass of the undeclared exception class {@link IllegalStateException}. */
     public static final class SqlException extends org.ujorm.tools.jdbc.SQLException {
-        private SqlException(Throwable cause, String... messages) {
+        public SqlException(Throwable cause, String... messages) {
             super((messages.length > 0 || cause == null)
                     ? String.join(" ", messages)
                     : cause.getMessage(), cause);
-        }
-    }
-
-    /** Run a builder statement */
-    public static <R> R run(Connection connection, final SqlFunction<SqlParamBuilder, R> fun) {
-        try (var builder = new SqlParamBuilder(connection)) {
-            return fun.applyFunction(builder);
-        } catch (Exception ex) {
-            throw (ex instanceof RuntimeException re) ? re : new SqlException(ex);
         }
     }
 }

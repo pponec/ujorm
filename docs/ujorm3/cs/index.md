@@ -13,7 +13,7 @@ Celé řešení stojí na třech nezávislých, ale vzájemně spolupracujícíc
 
 * **EntityManager (a rozhraní Crud):** Slouží ke správě entit. Rozhraní `Crud` poskytuje metody pro standardní databázové operace (Insert, Read, Update, Delete) a pro svůj běh vyžaduje databázové spojení (`Connection`).
 * **ResultSetMapper:** Autonomní třída, která mapuje výsledky z databáze (`Stream<ResultSet>`) přímo na doménové objekty. Zvládá i komplexní hierarchické mapování pomocí tečkové notace (např. `city.id`). Nepotřebuje k běhu `EntityManager`, ale `EntityManager` ji využívá interně.
-* **SqlParamBuilder:** Zcela nezávislý nástroj pro bezpečné a pohodlné ruční sestavování SQL dotazů s podporou pojmenovaných parametrů. Může vracet `Stream<ResultSet>`, který pak snadno zpracujete pomocí `ResultSetMapperu`.
+* **SqlQuery:** Zcela nezávislý nástroj pro bezpečné a pohodlné ruční sestavování SQL dotazů s podporou pojmenovaných parametrů. Může vracet `Stream<ResultSet>`, který pak snadno zpracujete pomocí `ResultSetMapperu`.
 
 ---
 
@@ -162,12 +162,12 @@ public class UjormTutorial {
 
 ---
 
-## 3. Vlastní SQL dotazy a mapování (SqlParamBuilder + ResultSetMapper)
+## 3. Vlastní SQL dotazy a mapování (SqlQuery + ResultSetMapper)
 
-Pokud potřebujete provádět složitější dotazy, které přesahují základní CRUD, využijete `SqlParamBuilder` v kombinaci s `ResultSetMapper`.
+Pokud potřebujete provádět složitější dotazy, které přesahují základní CRUD, využijete `SqlQuery` v kombinaci s `ResultSetMapper`.
 
 import org.ujorm.orm.jdbc.ResultSetMapper;
-import org.ujorm.tools.jdbc.SqlParamBuilder;
+import org.ujorm.tools.jdbc.SqlQuery;
 import java.sql.Connection;
 import java.util.List;
 
@@ -192,7 +192,7 @@ public class CustomQueryTutorial {
               AND e.is_active = :activeStatus
             """;
 
-        try (var builder = new SqlParamBuilder(dbConnection)) {
+        try (var builder = new SqlQuery(dbConnection)) {
             return builder.sql(sql)
                 .bind("cityName", cityName)
                 .bind("activeStatus", true)

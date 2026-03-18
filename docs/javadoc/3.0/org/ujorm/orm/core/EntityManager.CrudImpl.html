@@ -167,10 +167,10 @@ implements <a href="../Crud.html" title="interface in org.ujorm.orm">Crud</a>&lt
  based on the state of its primary key.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>&lt;R&gt;&nbsp;R</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#selectWhere(java.lang.String,org.ujorm.tools.jdbc.SqlParamBuilder.SqlFunction)" class="member-name-link">selectWhere</a><wbr>(@Nullable <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;whereCondition,
- <a href="../../tools/jdbc/SqlParamBuilder.SqlFunction.html" title="interface in org.ujorm.tools.jdbc">SqlParamBuilder.SqlFunction</a>&lt;<a href="../../tools/jdbc/SqlParamBuilder.html" title="class in org.ujorm.tools.jdbc">SqlParamBuilder</a>,<wbr>R&gt;&nbsp;fun)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#selectWhere(java.lang.String,org.ujorm.tools.jdbc.SqlQuery.SqlFunction)" class="member-name-link">selectWhere</a><wbr>(@Nullable <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;whereCondition,
+ <a href="../../tools/jdbc/SqlQuery.SqlFunction.html" title="interface in org.ujorm.tools.jdbc">SqlQuery.SqlFunction</a>&lt;<a href="../../tools/jdbc/SqlQuery.html" title="class in org.ujorm.tools.jdbc">SqlQuery</a>,<wbr>R&gt;&nbsp;fun)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Creates an instance of SqlParamBuilder to bind parameters and execute SELECT.</div>
+<div class="block">Creates an instance of SqlQuery to bind parameters and execute SELECT.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>long</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#update(java.util.stream.Stream,java.lang.CharSequence...)" class="member-name-link">update</a><wbr>(@NotNull <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/stream/Stream.html" title="class or interface in java.util.stream" class="external-link">Stream</a>&lt;<a href="EntityManager.html" title="type parameter in EntityManager">D</a>&gt;&nbsp;domains,
@@ -354,18 +354,18 @@ implements <a href="../Crud.html" title="interface in org.ujorm.orm">Crud</a>&lt
 </section>
 </li>
 <li>
-<section class="detail" id="selectWhere(java.lang.String,org.ujorm.tools.jdbc.SqlParamBuilder.SqlFunction)">
+<section class="detail" id="selectWhere(java.lang.String,org.ujorm.tools.jdbc.SqlQuery.SqlFunction)">
 <h3>selectWhere</h3>
 <div class="member-signature"><span class="annotations">@NotNull
 </span><span class="modifiers">public</span>&nbsp;<span class="type-parameters">&lt;R&gt;</span>&nbsp;<span class="return-type">R</span>&nbsp;<span class="element-name">selectWhere</span><wbr><span class="parameters">(@Nullable
  @Nullable <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;whereCondition,
  @NotNull
- <a href="../../tools/jdbc/SqlParamBuilder.SqlFunction.html" title="interface in org.ujorm.tools.jdbc">SqlParamBuilder.SqlFunction</a>&lt;<a href="../../tools/jdbc/SqlParamBuilder.html" title="class in org.ujorm.tools.jdbc">SqlParamBuilder</a>,<wbr>R&gt;&nbsp;fun)</span></div>
-<div class="block">Creates an instance of SqlParamBuilder to bind parameters and execute SELECT.
+ <a href="../../tools/jdbc/SqlQuery.SqlFunction.html" title="interface in org.ujorm.tools.jdbc">SqlQuery.SqlFunction</a>&lt;<a href="../../tools/jdbc/SqlQuery.html" title="class in org.ujorm.tools.jdbc">SqlQuery</a>,<wbr>R&gt;&nbsp;fun)</span></div>
+<div class="block">Creates an instance of SqlQuery to bind parameters and execute SELECT.
  The builder shares the database connection with this object.</div>
 <dl class="notes">
 <dt>Specified by:</dt>
-<dd><code><a href="../Crud.html#selectWhere(java.lang.String,org.ujorm.tools.jdbc.SqlParamBuilder.SqlFunction)">selectWhere</a></code>&nbsp;in interface&nbsp;<code><a href="../Crud.html" title="interface in org.ujorm.orm">Crud</a>&lt;<a href="EntityManager.html" title="type parameter in EntityManager">D</a>,<wbr><a href="EntityManager.html" title="type parameter in EntityManager">V</a>&gt;</code></dd>
+<dd><code><a href="../Crud.html#selectWhere(java.lang.String,org.ujorm.tools.jdbc.SqlQuery.SqlFunction)">selectWhere</a></code>&nbsp;in interface&nbsp;<code><a href="../Crud.html" title="interface in org.ujorm.orm">Crud</a>&lt;<a href="EntityManager.html" title="type parameter in EntityManager">D</a>,<wbr><a href="EntityManager.html" title="type parameter in EntityManager">V</a>&gt;</code></dd>
 <dt>Parameters:</dt>
 <dd><code>whereCondition</code> - Undefined or empty value returns all records.</dd>
 <dt>Returns:</dt>

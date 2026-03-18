@@ -3,7 +3,7 @@ package org.ujorm.orm.core;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
-import org.ujorm.tools.sql.SqlParamBuilder;
+import org.ujorm.tools.sql.SqlQuery;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -43,8 +43,8 @@ abstract public class AbstractDaoTest {
         throw new IllegalStateException("TODO");
     }
 
-    protected SqlParamBuilder sqlBuilder() {
-        return new SqlParamBuilder(dbConnection);
+    protected SqlQuery sqlQuery() {
+        return new SqlQuery(dbConnection);
     }
 
     /**

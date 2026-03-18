@@ -18,7 +18,7 @@ package org.ujorm.orm;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.ujorm.core.SnapshotProvider;
-import org.ujorm.tools.jdbc.SqlParamBuilder;
+import org.ujorm.tools.jdbc.SqlQuery;
 
 import java.util.Objects;
 import java.util.Optional;
@@ -118,7 +118,7 @@ public interface Crud<D, V> {
     Optional<D> findById(@NotNull V id);
 
     /**
-     * Creates an instance of {@link SqlParamBuilder} to safely construct and execute SELECT queries
+     * Creates an instance of {@link SqlQuery} to safely construct and execute SELECT queries
      * with bound parameters. The builder shares the database connection and configuration with this Crud instance.
      *
      * @param whereCondition The SQL WHERE clause (without the 'WHERE' keyword).
@@ -128,7 +128,7 @@ public interface Crud<D, V> {
     @NotNull
         public <R> R selectWhere(
                 @Nullable String whereCondition,
-                @NotNull SqlParamBuilder.SqlFunction<SqlParamBuilder, R> fun);
+                @NotNull SqlQuery.SqlFunction<SqlQuery, R> fun);
 
     /**
      * Updates a single domain object in the database.

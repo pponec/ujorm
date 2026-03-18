@@ -37,10 +37,10 @@ import java.util.stream.Collectors;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * Testing the SqlParamBuilder class
+ * Testing the SqlQuery class
  * @author Pavel Ponec
  */
-public class SqlParamBuilderTest extends AbstractJdbcConnector {
+public class SqlQueryTest extends AbstractJdbcConnector {
 
     private final String newLine = "\n";
 
@@ -85,34 +85,34 @@ public class SqlParamBuilderTest extends AbstractJdbcConnector {
     @Test
     void regexpTest() {
         // Test pro :hello
-        var matcher = SqlParamBuilder.SQL_MARK.matcher(":hello");
+        var matcher = SqlQuery.SQL_MARK.matcher(":hello");
         assertEquals("hello", matcher.find() ? matcher.group(1) : "");
 
         // Test pro :abc123
-        matcher = SqlParamBuilder.SQL_MARK.matcher(":abc123");
+        matcher = SqlQuery.SQL_MARK.matcher(":abc123");
         assertEquals("abc123", matcher.find() ? matcher.group(1) : "");
 
         // Test pro :test_
-        matcher = SqlParamBuilder.SQL_MARK.matcher(":test_");
+        matcher = SqlQuery.SQL_MARK.matcher(":test_");
         assertEquals("test_", matcher.find() ? matcher.group(1) : "");
 
         // Test pro :test%
-        matcher = SqlParamBuilder.SQL_MARK.matcher(":test%");
+        matcher = SqlQuery.SQL_MARK.matcher(":test%");
         assertEquals("test", matcher.find() ? matcher.group(1) : "");
 
         // Test pro text bez shody
-        matcher = SqlParamBuilder.SQL_MARK.matcher("hello");
+        matcher = SqlQuery.SQL_MARK.matcher("hello");
         assertEquals("", matcher.find() ? matcher.group(1) : "");
 
         // Test pro text s dvojtečkou, ale bez \w+
-        matcher = SqlParamBuilder.SQL_MARK.matcher(":");
+        matcher = SqlQuery.SQL_MARK.matcher(":");
         assertEquals("", matcher.find() ? matcher.group(1) : "");
     }
 
     /** Example of SQL statement INSERT. */
     void runSqlStatements(Connection dbConnection) throws SQLException {
 
-        try (var builder = new SqlParamBuilder(dbConnection)) {
+        try (var builder = new SqlQuery(dbConnection)) {
             System.out.println("CREATE TABLE");
             builder.sql("CREATE TABLE employee",
                             "( id INTEGER PRIMARY KEY AUTO_INCREMENT",
@@ -190,7 +190,7 @@ public class SqlParamBuilderTest extends AbstractJdbcConnector {
     }
 
     private void newDemo(Connection dbConnection) {
-        List<Employee> employees = SqlParamBuilder.run(dbConnection, build -> build.sql("""
+        List<Employee> employees = SqlQuery.run(dbConnection, build -> build.sql("""
                 SELECT t.id, t.name, t.created
                 FROM employee t
                 WHERE t.id > :id
@@ -207,7 +207,7 @@ public class SqlParamBuilderTest extends AbstractJdbcConnector {
         );
     }
 
-    private void runSqlStatementsLike(SqlParamBuilder builder) {
+    private void runSqlStatementsLike(SqlQuery builder) {
         System.out.println("SELECT 3a");
         var employees = builder.sql("SELECT t.id, t.name, t.created",
                         "FROM employee t",
@@ -242,7 +242,7 @@ public class SqlParamBuilderTest extends AbstractJdbcConnector {
     @Test
     void loggingSql() throws SQLException {
         var dbConnection = Mockito.mock(Connection.class);
-        try (var builder = new SqlParamBuilder(dbConnection)) {
+        try (var builder = new SqlQuery(dbConnection)) {
 
             System.out.println("MISSING PARAMS");
             builder.sql("SELECT t.id, t.name",
@@ -274,7 +274,7 @@ public class SqlParamBuilderTest extends AbstractJdbcConnector {
     @Test
     void testAllBindMethodsAndToStringLine() {
         var dbConnection = Mockito.mock(Connection.class);
-        try (var builder = new SqlParamBuilder(dbConnection)) {
+        try (var builder = new SqlQuery(dbConnection)) {
             builder.sql(
                     "SELECT :b1, :b2, :b3, :b4, :b5,",
                     ":b6, :b7, :b8, :b9, :b10, :b11"
@@ -321,7 +321,7 @@ public class SqlParamBuilderTest extends AbstractJdbcConnector {
         Mockito.when(preparedStatement.getGeneratedKeys())
                 .thenReturn(null);
 
-        try (var builder = new SqlParamBuilder(dbConnection)) {
+        try (var builder = new SqlQuery(dbConnection)) {
             builder.sql("INSERT INTO test (id) VALUES (:id)").bind("id", 1);
             builder.prepareStatement(Statement.RETURN_GENERATED_KEYS);
 
@@ -339,7 +339,7 @@ public class SqlParamBuilderTest extends AbstractJdbcConnector {
     /** Check that autoclosing works correctly also on NULL objects. */
     @Test
     void autoCloseTest() {
-        try (SqlParamBuilder builder = null) {
+        try (SqlQuery builder = null) {
         }
     }
 

@@ -32,8 +32,8 @@ import org.ujorm.orm.utils.StatementCache;
 import org.ujorm.orm.utils.Tools;
 import org.ujorm.tools.common.StringUtils;
 import org.ujorm.tools.jdbc.SQLExceptionBuilder;
-import org.ujorm.tools.jdbc.SqlParamBuilder;
-import org.ujorm.tools.jdbc.SqlParamBuilder.SqlFunction;
+import org.ujorm.tools.jdbc.SqlQuery;
+import org.ujorm.tools.jdbc.AbstractSqlQuery.SqlFunction;
 
 import java.sql.*;
 import java.util.*;
@@ -287,7 +287,7 @@ public final class EntityManager<D, V> {
         }
 
         /** Logs and executes the SQL statement using the provided connection. */
-        public <R> R run(boolean batch, @NotNull Connection connection, final CharSequence sql, final boolean returnGeneratedKeys, final SqlParamBuilder.SqlFunction<PreparedStatement, R> fun) {
+        public <R> R run(boolean batch, @NotNull Connection connection, final CharSequence sql, final boolean returnGeneratedKeys, final SqlQuery.SqlFunction<PreparedStatement, R> fun) {
             try (var ps = !returnGeneratedKeys
                     ? connection.prepareStatement(sql.toString())
                     : tableModel().jdbc().isOracleDb()
@@ -485,7 +485,7 @@ public final class EntityManager<D, V> {
         }
 
         /**
-         * Creates an instance of SqlParamBuilder to bind parameters and execute SELECT.
+         * Creates an instance of SqlQuery to bind parameters and execute SELECT.
          * The builder shares the database connection with this object.
          *
          * @param whereCondition Undefined or empty value returns all records.
@@ -495,13 +495,13 @@ public final class EntityManager<D, V> {
         @NotNull
         public <R> R selectWhere(
                 @Nullable String whereCondition,
-                @NotNull SqlParamBuilder.SqlFunction<SqlParamBuilder, R> fun
+                @NotNull SqlQuery.SqlFunction<SqlQuery, R> fun
         ) {
             var sql = new StringBuilder(256);
             buildSelectSql(true, sql);
             sql.append(" WHERE ");
             sql.append(StringUtils.isFilled(whereCondition) ? whereCondition : "1=1");
-            try (var builder = new SqlParamBuilder(dbconnection)) {
+            try (var builder = new SqlQuery(dbconnection)) {
                 builder.sql(sql.toString());
                 return fun.applyFunction(builder);
             } catch (Exception ex) {

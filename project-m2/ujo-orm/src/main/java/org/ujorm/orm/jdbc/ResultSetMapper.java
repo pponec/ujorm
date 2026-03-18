@@ -12,7 +12,7 @@ import org.ujorm.core.impl.AbstractUjo;
 import org.ujorm.orm.Config;
 import org.ujorm.tools.common.Primitive;
 import org.ujorm.tools.jdbc.JdbcUtils;
-import org.ujorm.tools.jdbc.SqlParamBuilder.SqlFunction;
+import org.ujorm.tools.jdbc.AbstractSqlQuery.SqlFunction;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -71,7 +71,7 @@ public final class ResultSetMapper<D> {
     }
 
     /** Creates a stateful mapping function for efficient stream processing.
-     * Returns SqlFunction to be compatible with SqlParamBuilder.
+     * Returns SqlFunction to be compatible with SqlQuery.
      */
     public @NotNull SqlFunction<ResultSet, D> map(@Nullable CharSequence... columnLabels) {
         return new RowContext(columnLabels)::map;

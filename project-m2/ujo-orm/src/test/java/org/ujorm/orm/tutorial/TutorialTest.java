@@ -3,7 +3,7 @@ package org.ujorm.orm.tutorial;
 import org.junit.jupiter.api.*;
 import org.ujorm.orm.core.EntityManager;
 import org.ujorm.orm.tutorial.domains.*;
-import org.ujorm.tools.jdbc.SqlParamBuilder;
+import org.ujorm.tools.jdbc.SqlQuery;
 
 import java.util.Comparator;
 import java.util.stream.Stream;
@@ -43,24 +43,20 @@ public class TutorialTest extends AbstractDemo {
     @Order(200)
     void select() {
         var sql = """
-                 SELECT e.id      AS ${e.id}
-                 , e.name         AS ${e.name}
-                 , c.name         AS ${c.name}
-                 , c.country_code AS ${c.country_code}
-                 , b.name         AS ${b.name}
+                 SELECT ${COLUMNS}
                  FROM employee e
                  JOIN city c ON c.id = e.city_id
                  LEFT JOIN employee b ON b.id = e.boss_id
                  WHERE e.id > :employeeId
                  """;
 
-        var employees = SqlParamBuilder.run(connection(), builder -> builder
+        var employees = SqlQuery.run(connection(), builder -> builder
                 .sql(sql)
-                .label("e.id", MetaEmployee.id)
-                .label("e.name", MetaEmployee.name)
-                .label("c.name", MetaEmployee.city, MetaCity.name)
-                .label("c.country_code", MetaEmployee.city, MetaCity.countryCode)
-                .label("b.name", MetaEmployee.boss, MetaEmployee.name)
+                .column("e.id", MetaEmployee.id)
+                .column("e.name", MetaEmployee.name)
+                .column("c.name", MetaEmployee.city, MetaCity.name)
+                .column("c.country_code", MetaEmployee.city, MetaCity.countryCode)
+                .column("b.name", MetaEmployee.boss, MetaEmployee.name)
                 .bind("employeeId", 0L)
                 .streamMap(EMPLOYEE_EM.mapper())
                 .toList());
@@ -103,7 +99,7 @@ public class TutorialTest extends AbstractDemo {
 
         employeeCrud.delete(allEmployees.stream());
 
-        var count = SqlParamBuilder.run(connection(), build -> build
+        var count = SqlQuery.run(connection(), build -> build
                 .sql("SELECT COUNT(*) FROM employee WHERE id >= :employeeId")
                 .bind("employeeId", 0L)
                 .streamMap(rs -> rs.getInt(1))
@@ -115,7 +111,7 @@ public class TutorialTest extends AbstractDemo {
     /** Create all database tables first */
     @Override
     void init() {
-        try (var builder = new SqlParamBuilder(connection())) {
+        try (var builder = new SqlQuery(connection())) {
             builder.sql("""
                     CREATE TABLE city
                     ( id BIGINT AUTO_INCREMENT PRIMARY KEY

@@ -2,7 +2,7 @@ package org.ujorm.orm.core;
 
 import lombok.RequiredArgsConstructor;
 import org.ujorm.tools.jdbc.SQLExceptionBuilder;
-import org.ujorm.tools.sql.SqlParamBuilder;
+import org.ujorm.tools.sql.SqlQuery;
 
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
@@ -45,7 +45,7 @@ public class CommonDao {
                       REFERENCES city(id)
                       ON DELETE RESTRICT ON UPDATE RESTRICT;
                 """;
-        try (var builder = new SqlParamBuilder(dbConnection)) {
+        try (var builder = new SqlQuery(dbConnection)) {
             Stream.of(sqlStatements.split(";"))
                     .filter(sql -> !sql.trim().isEmpty())
                     .forEach(sql -> {

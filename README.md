@@ -72,7 +72,7 @@ void select() {
             WHERE e.id > :employeeId
             """;
 
-    List<Employee> employees = SqlParamBuilder.run(connection(), builder -> builder
+    List<Employee> employees = SqlQuery.run(connection(), builder -> builder
             .sql(sql)
             .label("e.id", MetaEmployee.id)
             .label("e.name", MetaEmployee.name)
@@ -144,7 +144,7 @@ It creates a set of keys representing the modified attributes and subsequently c
 The deletion method itself probably won't surprise you.
 What is more interesting is the process of retrieving a collection of entities without explicitly listing individual columns in the SELECT statement.
 This is achieved by calling the `selectWhere` method, which utilizes an inner class or lambda expression to configure the query.
-Within this block, the library provides an `SqlParamBuilder` instance, allowing you to seamlessly map the result set using the `streamMap` method.
+Within this block, the library provides an `SqlQuery` instance, allowing you to seamlessly map the result set using the `streamMap` method.
 
 ```java
 void delete() {
@@ -178,7 +178,7 @@ Explore the full source code here: [BasicDemoTest.java in the Ujorm3 project](pr
 
 The image shows a simplified class diagram describing the API for working with the **Ujorm3** library.
 All depicted methods are public.
-The `SqlParamBuilder` class is an autonomous class with a database connection and no other dependencies.
+The `SqlQuery` class is an autonomous class with a database connection and no other dependencies.
 It acts as a facade over an internal `PreparedStatement` object.
 Calling a `SELECT` statement leads to the creation of a `Stream<ResultSet>` object, which is efficiently converted to objects by the `ResultSetMapper` class.
 This is the second autonomous class that requires no other dependencies.
@@ -232,7 +232,7 @@ Additionally, the key implementation includes precompiled methods for lightning-
 The keys also implement the `CharSequence` interface, which significantly expands their versatility across the API.
 This means they can be used in many places just like standard text, since the `String` class implements the very same interface.
 Furthermore, relying on two generic types allows the keys to be chained in a strictly type-safe manner right at compile time.
-This precise capability is leveraged by the `SqlParamBuilder` API to safely map and assign labels within SQL statements.
+This precise capability is leveraged by the `SqlQuery` API to safely map and assign labels within SQL statements.
 
 You can find the source code for the interface [here](project-m2/ujo-tools/src/main/java/org/ujorm/Key.java).
 
@@ -346,7 +346,7 @@ This process requires no temporary disk space, which avoids potential file syste
 **Are the core components like `EntityManager` thread-safe?**<br/>
 Yes, core components such as `EntityManager` and the generated `Meta` classes are strictly stateless and completely thread-safe.
 They are designed to be shared across your entire application as singletons.
-Conversely, objects that wrap a database connection, like the `Crud` instance or `SqlParamBuilder`, are stateful and must be scoped to a single thread or request.
+Conversely, objects that wrap a database connection, like the `Crud` instance or `SqlQuery`, are stateful and must be scoped to a single thread or request.
 
 ---
 
