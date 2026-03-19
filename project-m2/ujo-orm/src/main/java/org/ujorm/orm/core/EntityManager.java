@@ -503,6 +503,8 @@ public final class EntityManager<D, V> {
             sql.append(StringUtils.isFilled(whereCondition) ? whereCondition : "1=1");
             try (var query = new SqlQuery(dbconnection)) {
                 query.sql(sql.toString());
+                query.fetchSize(context.config().getBatchSize());
+                query.log(context.config().isPrintSql() ? Level.INFO : null, false);
                 return fun.applyFunction(query);
             } catch (Exception ex) {
                 throw (ex instanceof RuntimeException re) ? re : SQLExceptionBuilder.build(ex);

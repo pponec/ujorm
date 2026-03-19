@@ -40,6 +40,7 @@ public class CsvManager<D> {
         }
     }
 
+    /** Only direct mapping for data without headers */
     public Stream<D> convertByOrder(Stream<String> lines) {
         return lines.map( line -> {
             var result = AbstractUjo.of(domainHandler);
@@ -58,6 +59,7 @@ public class CsvManager<D> {
         });
     }
 
+    /** Mapping by header including relations */
     @Deprecated
     public Stream<D> convertByName(Stream<String> line) {
         throw new IllegalArgumentException("TODO");

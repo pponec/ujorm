@@ -21,11 +21,8 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 import java.math.BigDecimal;
-import java.sql.Connection;
-import java.sql.JDBCType;
-import java.sql.PreparedStatement;
+import java.sql.*;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -33,6 +30,12 @@ import java.util.NoSuchElementException;
 import java.util.UUID;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+
+import java.util.ArrayList;
+import java.util.logging.Handler;
+import java.util.logging.Level;
+import java.util.logging.LogRecord;
+import java.util.logging.Logger;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -382,4 +385,158 @@ public class BasicSqlQueryTest extends AbstractJdbcConnector {
         }
     }
 
+    /** Test that stream operations properly close the underlying ResultSet */
+    @Test
+    void testStreamClosesResultSet() throws SQLException {
+        var dbConnection = Mockito.mock(Connection.class);
+        var preparedStatement = Mockito.mock(PreparedStatement.class);
+        var resultSet = Mockito.mock(ResultSet.class);
+
+        Mockito.when(dbConnection.prepareStatement(Mockito.anyString(), Mockito.anyInt()))
+                .thenReturn(preparedStatement);
+        Mockito.when(preparedStatement.executeQuery())
+                .thenReturn(resultSet);
+        Mockito.when(resultSet.next())
+                .thenReturn(true, false);
+        Mockito.when(resultSet.getString(1))
+                .thenReturn("test_value");
+
+        try (var query = new BasicSqlQuery(dbConnection)) {
+            var stream = query.sql("SELECT name FROM employee")
+                    .streamMap(rs -> rs.getString(1));
+
+            // Short-circuit operation
+            var result = stream.findFirst().orElse(null);
+            Assertions.assertEquals("test_value", result);
+
+            // Closing the stream should trigger switchResultSet(null)
+            stream.close();
+        }
+
+        // Verify that the ResultSet was actually closed
+        Mockito.verify(resultSet, Mockito.atLeastOnce()).close();
+    }
+
+    /** Test that JDBC SQLExceptions are properly wrapped in the custom unchecked SqlException */
+    @Test
+    void testSqlExceptionWrapping() throws SQLException {
+        var dbConnection = Mockito.mock(Connection.class);
+        var preparedStatement = Mockito.mock(PreparedStatement.class);
+
+        Mockito.when(dbConnection.prepareStatement(Mockito.anyString(), Mockito.anyInt()))
+                .thenReturn(preparedStatement);
+        Mockito.when(preparedStatement.executeQuery())
+                .thenThrow(new SQLException("Simulated database connection error"));
+
+        try (var query = new BasicSqlQuery(dbConnection)) {
+            var ex = assertThrows(BasicSqlQuery.SqlException.class, () -> {
+                query.sql("SELECT * FROM non_existing_table").forEach(rs -> {});
+            });
+
+            Assertions.assertTrue(ex.getCause() instanceof SQLException);
+            Assertions.assertEquals("Simulated database connection error", ex.getCause().getMessage());
+        }
+    }
+
+    /** Test that setting a new SQL template clears previous parameters and resources */
+    @Test
+    void testSqlMethodResetsState() throws SQLException {
+        var dbConnection = Mockito.mock(Connection.class);
+        var preparedStatement = Mockito.mock(PreparedStatement.class);
+        Mockito.when(dbConnection.prepareStatement(Mockito.anyString(), Mockito.anyInt()))
+                .thenReturn(preparedStatement);
+
+        try (var query = new BasicSqlQuery(dbConnection)) {
+            // First query setup
+            query.sql("SELECT * FROM employee WHERE id = :id")
+                    .bind("id", 1)
+                    .prepareStatement(Statement.NO_GENERATED_KEYS);
+
+            var sql1 = query.toString();
+            Assertions.assertTrue(sql1.contains("[1]"));
+
+            // Setting new SQL should clear bindings and close old statement
+            query.sql("SELECT * FROM employee WHERE code = :code");
+
+            // Calling prepareStatement requires all bound parameters. It will trigger validation.
+            var ex = assertThrows(BasicSqlQuery.SqlException.class, () -> {
+                query.prepareStatement(Statement.NO_GENERATED_KEYS);
+            });
+            Assertions.assertTrue(ex.getMessage().contains("Missing SQL parameter: [code]"));
+        }
+    }
+
+    /** Test SQL execution logging functionality */
+    @Test
+    void testExecutionLogging() throws SQLException {
+        var dbConnection = Mockito.mock(Connection.class);
+        var preparedStatement = Mockito.mock(PreparedStatement.class);
+        Mockito.when(dbConnection.prepareStatement(Mockito.anyString(), Mockito.anyInt()))
+                .thenReturn(preparedStatement);
+
+        var logRecords = new ArrayList<LogRecord>();
+        var handler = new Handler() {
+            @Override
+            public void publish(LogRecord record) {
+                logRecords.add(record);
+            }
+            @Override
+            public void flush() {}
+            @Override
+            public void close() {}
+        };
+
+        var logger = Logger.getLogger(AbstractSqlQuery.class.getName());
+        logger.addHandler(handler);
+        var originalLevel = logger.getLevel();
+        logger.setLevel(Level.INFO);
+
+        try {
+            // 1. Test without logging
+            try (var query = new BasicSqlQuery(dbConnection)) {
+                query.sql("SELECT * FROM employee WHERE id = :id")
+                        .bind("id", 1)
+                        .prepareStatement(Statement.NO_GENERATED_KEYS);
+            }
+            Assertions.assertEquals(0, logRecords.size());
+
+            // 2. Test logging without parameters
+            try (var query = new BasicSqlQuery(dbConnection)) {
+                query.sql("SELECT * FROM employee WHERE id = :id")
+                        .bind("id", 2)
+                        .log(Level.INFO, false)
+                        .prepareStatement(Statement.NO_GENERATED_KEYS);
+            }
+            Assertions.assertEquals(1, logRecords.size());
+            Assertions.assertTrue(logRecords.get(0).getMessage().contains("?"));
+            Assertions.assertFalse(logRecords.get(0).getMessage().contains("[2]"));
+            logRecords.clear();
+
+            // 3. Test logging with parameters (single line check)
+            try (var query = new BasicSqlQuery(dbConnection)) {
+                query.sql("SELECT * FROM employee", "WHERE id = :id")
+                        .bind("id", 3)
+                        .log(Level.INFO, true)
+                        .prepareStatement(Statement.NO_GENERATED_KEYS);
+            }
+            Assertions.assertEquals(1, logRecords.size());
+            Assertions.assertTrue(logRecords.get(0).getMessage().contains("[3]"));
+            Assertions.assertFalse(logRecords.get(0).getMessage().contains(newLine));
+            logRecords.clear();
+
+            // 4. Test turning off logging explicitly
+            try (var query = new BasicSqlQuery(dbConnection)) {
+                query.sql("SELECT * FROM employee WHERE id = :id")
+                        .bind("id", 4)
+                        .log(Level.INFO, true)
+                        .log(null, true) // Disabled
+                        .prepareStatement(Statement.NO_GENERATED_KEYS);
+            }
+            Assertions.assertEquals(0, logRecords.size());
+
+        } finally {
+            logger.removeHandler(handler);
+            logger.setLevel(originalLevel);
+        }
+    }
 }
