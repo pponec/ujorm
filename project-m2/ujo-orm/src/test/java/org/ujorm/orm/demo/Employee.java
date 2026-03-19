@@ -16,6 +16,7 @@ public class Employee extends UserSnapshotable<Employee> {
     @Column(name = "contract_day", nullable = false)
     private LocalDate contractDay;
 
+    /** Example of an unsupported relation. */
     @Nullable
     @JoinColumn(name = "superior_id")
     private UserSnapshotable superior;

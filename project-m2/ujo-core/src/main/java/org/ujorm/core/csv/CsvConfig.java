@@ -16,9 +16,6 @@ import java.util.UUID;
 import java.util.function.Function;
 
 public record CsvConfig(
-        /** Optional CSV header (not implemented yet) */
-        @Nullable
-        String header,
         Map<Class<?>, Function<String, ?>> converterMap,
         /** Line splitter */
         CsvLineSplitter splitter
@@ -27,17 +24,16 @@ public record CsvConfig(
     /** The default delimiter is a pipe {@code '|'}
      * and the quote character is a double quote {@code '"'}. */
     public static CsvConfig ofDefault() {
-        return of('|', '"', "");
+        return of('|', '"');
     }
 
     /**
      * Create configuration
      * @param delimiter Delimeter character
-     * @param header Optional CSV header is not implemented yet.
-     * @return
+     * @param quoteChar Quote character
      */
-    public static CsvConfig of(char delimiter, char quoteChar, @Nullable String header) {
-        return new CsvConfig(header, initConverterMap(), CsvLineSplitter.ofQuoted(delimiter, quoteChar));
+    public static CsvConfig of(char delimiter, char quoteChar) {
+        return new CsvConfig(initConverterMap(), CsvLineSplitter.ofQuoted(delimiter, quoteChar));
     }
 
     public static Map<Class<?>, Function<String, ?>> initConverterMap() {

@@ -59,12 +59,6 @@ public class CsvManager<D> {
         });
     }
 
-    /** Mapping by header including relations */
-    @Deprecated
-    public Stream<D> convertByName(Stream<String> line) {
-        throw new IllegalArgumentException("TODO");
-    }
-
     record KeyFun<D, V> (Key<D,V> key, Function<String, V> fun) {}
 
     public static <D> CsvManager<D> of(Class<D> domainClass) {
