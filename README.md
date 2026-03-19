@@ -81,6 +81,12 @@ void select() {
 }
 ```
 
+In addition to the `column()` method shown above, the API also provides a more general `label()` method.
+While `column()` is used in combination with the `${COLUMNS}` placeholder dynamically replaced at runtime, `label()` requires you to explicitly place individual aliases in your query using placeholders (e.g., `SELECT e.id AS ${e.id}`).
+Although these placeholders are resolved and properly quoted by the library at runtime (ensuring safe mapping and protection against database reserved keywords), this approach keeps your query structure highly transparent. The raw SQL string from your Java code closely resembles the final command, making it much easier to adapt and test in a database client compared to queries built with `column()`, which typically need to be extracted from application logs.
+Furthermore, `label()`is suitable for mapping custom SQL column labels, aggregate functions, or computed expressions.
+Please note that these two approaches cannot be combined within a single query; you must exclusively use either `column()` or `label()`.
+
 Database columns can also be mapped without using metamodel keys.
 In this case, simply use dot-notation for property names within the SQL command (e.g., `"city.name"`).
 Note that these expressions must be enclosed in quotes, using the specific character required by your database vendor.
@@ -308,11 +314,11 @@ The benchmarks focused not only on execution speed across various CRUD scenarios
 
 **General Conclusions:**
 * **Execution Speed:** Ujorm3 consistently ranks at the top, delivering the fastest execution times across all tested database operations.
-* **Memory Efficiency:** The library exhibits the lowest memory allocation rate (Bytes per operation). 
-   This significantly reduces Garbage Collector pressure, prevents latency spikes, and contributes to better overall application performance.
-* **Minimal Footprint:** With a compiled JAR size under 3 MB, Ujorm3 remains ultra-lightweight compared to other frameworks. 
-   A smaller compiled footprint promises a gentler learning curve and a reduced risk of bugs. 
-   Additionally, this compact size is highly beneficial even for embedded devices.
+* **Memory Efficiency:** The library exhibits the lowest memory allocation rate (Bytes per operation).
+  This significantly reduces Garbage Collector pressure, prevents latency spikes, and contributes to better overall application performance.
+* **Minimal Footprint:** With a compiled JAR size under 3 MB, Ujorm3 remains ultra-lightweight compared to other frameworks.
+  A smaller compiled footprint promises a gentler learning curve and a reduced risk of bugs.
+  Additionally, this compact size is highly beneficial even for embedded devices.
 
 While performance differences may blur on slower production databases, Ujorm3's lightweight nature and optimized memory usage significantly reduce the deployment footprint and maintenance overhead.
 
