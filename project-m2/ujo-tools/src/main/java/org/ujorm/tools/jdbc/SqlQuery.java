@@ -264,8 +264,8 @@ public class SqlQuery extends AbstractSqlQuery<SqlQuery> {
 
     /** Run a builder statement */
     public static <R> R run(Connection connection, final SqlFunction<SqlQuery, R> fun) {
-        try (var builder = new SqlQuery(connection)) {
-            return fun.applyFunction(builder);
+        try (var query = new SqlQuery(connection)) {
+            return fun.applyFunction(query);
         } catch (Exception ex) {
             throw (ex instanceof RuntimeException re) ? re : new SqlException(ex);
         }

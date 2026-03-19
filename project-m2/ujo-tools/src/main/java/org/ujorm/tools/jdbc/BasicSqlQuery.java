@@ -58,10 +58,10 @@ public class BasicSqlQuery extends AbstractSqlQuery<BasicSqlQuery> {
         super(dbConnection);
     }
 
-    /** Run a builder statement */
+    /** Run a query statement */
     public static <R> R run(Connection connection, final SqlFunction<BasicSqlQuery, R> fun) {
-        try (var builder = new BasicSqlQuery(connection)) {
-            return fun.applyFunction(builder);
+        try (var query = new BasicSqlQuery(connection)) {
+            return fun.applyFunction(query);
         } catch (Exception ex) {
             throw (ex instanceof RuntimeException re) ? re : new SqlException(ex);
         }

@@ -45,11 +45,11 @@ public class CommonDao {
                       REFERENCES city(id)
                       ON DELETE RESTRICT ON UPDATE RESTRICT;
                 """;
-        try (var builder = new SqlQuery(dbConnection)) {
+        try (var query = new SqlQuery(dbConnection)) {
             Stream.of(sqlStatements.split(";"))
                     .filter(sql -> !sql.trim().isEmpty())
                     .forEach(sql -> {
-                        builder.sql(sql).execute();
+                        query.sql(sql).execute();
                     });
             dbConnection.commit();
         } catch (SQLException ex1) {

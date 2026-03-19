@@ -501,9 +501,9 @@ public final class EntityManager<D, V> {
             buildSelectSql(true, sql);
             sql.append(" WHERE ");
             sql.append(StringUtils.isFilled(whereCondition) ? whereCondition : "1=1");
-            try (var builder = new SqlQuery(dbconnection)) {
-                builder.sql(sql.toString());
-                return fun.applyFunction(builder);
+            try (var query = new SqlQuery(dbconnection)) {
+                query.sql(sql.toString());
+                return fun.applyFunction(query);
             } catch (Exception ex) {
                 throw (ex instanceof RuntimeException re) ? re : SQLExceptionBuilder.build(ex);
             }

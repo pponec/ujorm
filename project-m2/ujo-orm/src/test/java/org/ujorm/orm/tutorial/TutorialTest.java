@@ -50,7 +50,7 @@ public class TutorialTest extends AbstractDemo {
                  WHERE e.id > :employeeId
                  """;
 
-        var employees = SqlQuery.run(connection(), builder -> builder
+        var employees = SqlQuery.run(connection(), query -> query
                 .sql(sql)
                 .column("e.id", MetaEmployee.id)
                 .column("e.name", MetaEmployee.name)
@@ -91,7 +91,7 @@ public class TutorialTest extends AbstractDemo {
         var employeeCrud = EMPLOYEE_EM.crud(connection());
 
         var allEmployees = employeeCrud
-                .selectWhere("id > :employeeId", builder -> builder
+                .selectWhere("id > :employeeId", query -> query
                         .bind("employeeId", 0L)
                         .streamMap(EMPLOYEE_EM.mapper())
                         .sorted(Comparator.comparing(e -> e.getBoss() == null))
@@ -99,7 +99,7 @@ public class TutorialTest extends AbstractDemo {
 
         employeeCrud.delete(allEmployees.stream());
 
-        var count = SqlQuery.run(connection(), build -> build
+        var count = SqlQuery.run(connection(), query -> query
                 .sql("SELECT COUNT(*) FROM employee WHERE id >= :employeeId")
                 .bind("employeeId", 0L)
                 .streamMap(rs -> rs.getInt(1))
@@ -111,15 +111,15 @@ public class TutorialTest extends AbstractDemo {
     /** Create all database tables first */
     @Override
     void init() {
-        try (var builder = new SqlQuery(connection())) {
-            builder.sql("""
+        try (var query = new SqlQuery(connection())) {
+            query.sql("""
                     CREATE TABLE city
                     ( id BIGINT AUTO_INCREMENT PRIMARY KEY
                     , name VARCHAR(50) NOT NULL
                     , country_code VARCHAR(2) NOT NULL
                     )
                     """).execute();
-            builder.sql("""
+            query.sql("""
                     CREATE TABLE employee
                     ( id BIGINT AUTO_INCREMENT PRIMARY KEY
                     , name VARCHAR(50) NOT NULL
@@ -127,13 +127,13 @@ public class TutorialTest extends AbstractDemo {
                     , city_id BIGINT NOT NULL
                     )
                     """).execute();
-            builder.sql("""
+            query.sql("""
                     ALTER TABLE employee ADD CONSTRAINT fk_employee_boss_id__id
                     FOREIGN KEY (boss_id)
                     REFERENCES employee(id)
                     ON DELETE RESTRICT ON UPDATE RESTRICT;
                     """).execute();
-            builder.sql("""
+            query.sql("""
                     ALTER TABLE employee ADD CONSTRAINT fk_employee_city_id__id
                     FOREIGN KEY (city_id)
                     REFERENCES city(id)
