@@ -64,7 +64,7 @@
     <g text-rendering="geometricPrecision" shape-rendering="geometricPrecision" transform="matrix(1,0,0,1,-328,-266)">
       <line y2="670" fill="none" x1="685" clip-path="url(#clipPath4)" x2="917" y1="670"/>
       <line y2="680" fill="none" x1="685" clip-path="url(#clipPath4)" x2="917" y1="680"/>
-      <text stroke-linecap="butt" x="689.34" y="698.5641" clip-path="url(#clipPath4)" font-family="sans-serif" stroke="none" stroke-miterlimit="1.45" xml:space="preserve">map(CharSequence... columnLabels)</text>
+      <text stroke-linecap="butt" x="689.34" y="698.5641" clip-path="url(#clipPath4)" font-family="sans-serif" stroke="none" stroke-miterlimit="1.45" xml:space="preserve">mapper(CharSequence... columnLabels)</text>
       <text stroke-linecap="butt" x="689.34" y="714.9082" clip-path="url(#clipPath4)" font-family="sans-serif" stroke="none" stroke-miterlimit="1.45" xml:space="preserve">    : SqlFunction&lt;ResultSet, D&gt;</text>
       <rect x="344" y="374" clip-path="url(#clipPath2)" fill="rgb(255,255,153)" width="331" height="201" stroke="none"/>
       <rect x="343" y="373" clip-path="url(#clipPath2)" fill="rgb(255,255,218)" width="1" height="203" stroke="none"/>

@@ -1,4 +1,4 @@
-# <img src="docs/images/ujorm-logo.png" align="right" height="150" hspace="20"> Ujorm3 Framework
+# <img src="docs/images/ujorm-logo.png" align="right" height="150" hspace="20"> Ujorm3 Library
 
 *<span style="color: grey;">The original Ujorm v2 homepage has moved [here](docs/ujorm2).</span>*
 
@@ -16,13 +16,13 @@ Consequently, the overhead of Java reflection is strictly limited to the initial
 ### Design Philosophy & Constraints
 
 To maintain a high utility-to-code ratio and minimize bugs, Ujorm3 intentionally limits its scope:
-*   **No Lazy-Loading:** To prevent hidden performance costs and the N+1 query problem, relationships are not lazily fetched.
-*   **M:1 Relations Only:** Collection attributes (1:M) are not supported.
-The recommended approach is to query from the "many" side or use a secondary SQL query.
-*   **No Magic / No Stateful Lifecycle:** The library does not manage object lifecycles, database transactions, or entity data caching.
-Entities are treated as stateless data carriers.
-*   **No SQL Dialects:** Advanced queries are written in native SQL.
-While this ties you to a specific database syntax, it unlocks the full performance and feature set of your underlying database engine.
+* **No Lazy-Loading:** To prevent hidden performance costs and the N+1 query problem, relationships are not lazily fetched.
+* **M:1 Relations Only:** Collection attributes (1:M) are not supported.
+  The recommended approach is to query from the "many" side or use a secondary SQL query.
+* **No Magic / No Stateful Lifecycle:** The library does not manage object lifecycles, database transactions, or entity data caching.
+  Entities are treated as stateless data carriers.
+* **No SQL Dialects:** Advanced queries are written in native SQL.
+  While this ties you to a specific database syntax, it unlocks the full performance and feature set of your underlying database engine.
 
 ---
 
@@ -61,26 +61,22 @@ private static final EntityManager<Employee, Long> EMPLOYEE_EM = EntityManager.o
 
 void select() {
     var sql = """
-            SELECT e.id      AS ${e.id}
-            , e.name         AS ${e.name}
-            , c.name         AS ${c.name}
-            , c.country_code AS ${c.country_code}
-            , b.name         AS ${b.name}
+            SELECT ${COLUMNS}
             FROM employee e
             JOIN city c ON c.id = e.city_id
             LEFT JOIN employee b ON b.id = e.boss_id
             WHERE e.id > :employeeId
             """;
 
-    List<Employee> employees = SqlQuery.run(connection(), builder -> builder
+    var employees = SqlQuery.run(connection(), query -> query
             .sql(sql)
-            .label("e.id", MetaEmployee.id)
-            .label("e.name", MetaEmployee.name)
-            .label("c.name", MetaEmployee.city, MetaCity.name)
-            .label("c.country_code", MetaEmployee.city, MetaCity.countryCode)
-            .label("b.name", MetaEmployee.boss, MetaEmployee.name)
+            .column("e.id", MetaEmployee.id)
+            .column("e.name", MetaEmployee.name)
+            .column("c.name", MetaEmployee.city, MetaCity.name)
+            .column("c.country_code", MetaEmployee.city, MetaCity.countryCode)
+            .column("b.name", MetaEmployee.boss, MetaEmployee.name)
             .bind("employeeId", 0L)
-            .streamMap(EMPLOYEE_EM::map)
+            .streamMap(EMPLOYEE_EM.mapper())
             .toList());
 }
 ```
@@ -100,15 +96,15 @@ For high-performance scenarios, batch operations are explicitly supported.
 void insert() {
     var employeeCrud = EMPLOYEE_EM.crud(connection());
     var cityCrud = CITY_EM.crud(connection());
-
+    
     var cityOttawa = cityCrud.insert(new City(null, "Ottawa", "CA"));
-
+    
     var emplIngird = Employee.of("Ingrid", cityOttawa, null);
     var emplDave = Employee.of("Dave", cityOttawa, emplIngird);
     var emplCarol = Employee.of("Carol", cityOttawa, emplIngird);
 
     employeeCrud.insert(emplIngird);
-    employeeCrud.insertBatch(emplDave, emplCarol);
+    employeeCrud.insert(emplDave, emplCarol);
 }
 ```
 
@@ -131,7 +127,7 @@ void update() {
     emplDave.setBoss(null);
     emplCarol.setBoss(emplDave);
 
-    employeeCrud.update(Stream.of(emplIngird, emplDave, emplCarol), 
+    employeeCrud.update(Stream.of(emplIngird, emplDave, emplCarol),
                         MetaEmployee.boss);
 }
 ```
@@ -199,9 +195,9 @@ There is **no data caching** for user queries.
 However, to maximize speed, Ujorm3 caches metadata:
 
 * **ResultSetMapper:** Caches column mapping structures to avoid repeatedly analyzing dot-notation labels or querying JDBC metadata.
-If the cache exceeds the limit (default 512 distinct queries), it clears itself to prevent memory leaks.
+  If the cache exceeds the limit (default 512 distinct queries), it clears itself to prevent memory leaks.
 * **EntityManager:** Retains the database table metamodel for each entity.
-It is recommended to use the `EntityManagerService` to retrieve shared singleton instances.
+  It is recommended to use the `EntityManagerService` to retrieve shared singleton instances.
 
 ### Generated Meta Models
 
@@ -257,16 +253,15 @@ However, if you prefer a safer, strongly-typed coding style, you can optionally 
 
 ```xml
 <dependencies>
-    <!-- 1. Ujorm3 Core Dependencies -->
     <dependency>
         <groupId>org.ujorm</groupId>
         <artifactId>ujorm-core</artifactId>
-        <version>3.0.0-BETA</version>
+        <version>3.0.0-RC1</version>
     </dependency>
     <dependency>
         <groupId>org.ujorm</groupId>
         <artifactId>ujorm-orm</artifactId>
-        <version>3.0.0-BETA</version>
+        <version>3.0.0-RC1</version>
     </dependency>
 </dependencies>
 
@@ -285,15 +280,15 @@ However, if you prefer a safer, strongly-typed coding style, you can optionally 
                     <artifactId>lombok</artifactId>
                     <version>${lombok.version}</version>
                 </path>
-                <!-- APT configuration for Ujorm3 -->
+                <!-- Optional: APT configuration for Ujorm3 -->
                 <path>
                     <groupId>org.ujorm</groupId>
                     <artifactId>ujorm-meta-processor</artifactId>
-                    <version>3.0.0-BETA</version>
+                    <version>3.0.0-RC1</version>
                 </path>
             </annotationProcessorPaths>
             <compilerArgs>
-                <!-- Optional attributes for APT Ujorm3 -->
+                <!-- Optional: attributes for APT Ujorm3 -->
                 <arg>-Aujorm.prefix=Meta</arg>
                 <arg>-Aujorm.suffix=</arg>
             </compilerArgs>
@@ -307,21 +302,22 @@ However, if you prefer a safer, strongly-typed coding style, you can optionally 
 
 ## Benchmarks
 
-Performance tests comparing Ujorm3 to popular modern ORM frameworks were executed using an in-memory database.
-While performance differences may blur on slower production databases, Ujorm's lightweight nature significantly reduces the deployment footprint and maintenance overhead.
+Performance tests comparing Ujorm3 to popular modern ORM frameworks (such as Hibernate, Jdbi, Exposed, and MyBatis) were executed using an in-memory database (H2 Database) running on Java 25.
+To ensure an objective and independent evaluation methodology, the benchmark scenarios and their implementations were designed by the **Gemini Pro** AI model.
+The benchmarks focused not only on execution speed across various CRUD scenarios (batch inserts, specific and random updates, relational reads) but also on memory allocation rates and deployment footprint.
 
-**Version tested:** `3.0.0-BETA`  
-**Full benchmark source and results:** [GitHub: orm-benchmarks](https://github.com/pponec/orm-bencharks?tab=readme-ov-file#orm-benchmark)
+**General Conclusions:**
+* **Execution Speed:** Ujorm3 consistently ranks at the top, delivering the fastest execution times across all tested database operations.
+* **Memory Efficiency:** The library exhibits the lowest memory allocation rate (Bytes per operation). 
+   This significantly reduces Garbage Collector pressure, prevents latency spikes, and contributes to better overall application performance.
+* **Minimal Footprint:** With a compiled JAR size under 3 MB, Ujorm3 remains ultra-lightweight compared to other frameworks. 
+   A smaller compiled footprint promises a gentler learning curve and a reduced risk of bugs. 
+   Additionally, this compact size is highly beneficial even for embedded devices.
 
-| Framework | Operations / sec | JAR Size Profile |
-| :--- | :--- | :--- |
-| **Ujorm3** | Highly Competitive | **Ultra-lightweight** (\< 500 KB) |
-| Hibernate / JPA | Baseline | Heavy (Megabytes) |
-| Spring Data JDBC | Competitive | Medium |
-| Exposed (Kotlin) | Competitive | Heavy (with Kotlin core) |
+While performance differences may blur on slower production databases, Ujorm3's lightweight nature and optimized memory usage significantly reduce the deployment footprint and maintenance overhead.
 
-*Note: The final JAR size column reflects the packaged test with all dependencies included.*
-*A smaller compiled footprint promises a gentler learning curve and a reduced risk of bugs, beneficial even for embedded devices.*
+**Version tested:** `3.0.0-RC1`  
+**Full benchmark source, detailed metrics, and results:** 👉 [GitHub: orm-benchmarks](https://github.com/pponec/orm-benchmarks?tab=readme-ov-file#orm-benchmark)
 
 ---
 

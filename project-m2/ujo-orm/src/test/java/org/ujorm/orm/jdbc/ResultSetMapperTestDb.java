@@ -130,7 +130,7 @@ public class ResultSetMapperTestDb extends AbstractDaoTest {
         var mapper = ResultSetMapper.of(Employee.class, service);
 
         Assertions.assertTrue(resultSet.next(), "ResultSet should contain at least one row");
-        var employee = mapper.mapSingle(resultSet);
+        var employee = mapper.map(resultSet);
 
         Assertions.assertNotNull(employee);
         Assertions.assertEquals(1L, employee.getId());
@@ -148,7 +148,7 @@ public class ResultSetMapperTestDb extends AbstractDaoTest {
 
         Assertions.assertTrue(resultSet.next(), "ResultSet should contain at least one row");
         // Mapping explicit column labels to match the ResultSet structure
-        var employee = mapper.mapSingle(resultSet, "id", "name", "city.id");
+        var employee = mapper.map(resultSet, "id", "name", "city.id");
 
         Assertions.assertNotNull(employee);
         Assertions.assertEquals(1L, employee.getId());

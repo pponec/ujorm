@@ -73,22 +73,22 @@ public final class ResultSetMapper<D> {
     /** Creates a stateful mapping function for efficient stream processing.
      * Returns SqlFunction to be compatible with SqlQuery.
      */
-    public @NotNull SqlFunction<ResultSet, D> map(@Nullable CharSequence... columnLabels) {
+    public @NotNull SqlFunction<ResultSet, D> mapper(@Nullable CharSequence... columnLabels) {
         return new RowContext(columnLabels)::map;
     }
 
     /**
      * Maps a single row of a ResultSet.
      */
-    public @NotNull D mapSingle(@NotNull ResultSet resultSet, @Nullable CharSequence... columnLabels) {
-        return this.map(columnLabels).apply(resultSet);
+    public @NotNull D map(@NotNull ResultSet resultSet, @Nullable CharSequence... columnLabels) {
+        return this.mapper(columnLabels).apply(resultSet);
     }
 
     /**
      * Converts the given Stream of ResultSets into a stream of domain objects.
      */
     public @NotNull Stream<D> convert(@NotNull Stream<ResultSet> rs, @Nullable CharSequence... columnLabels) {
-        var mapper = this.map(columnLabels);
+        var mapper = this.mapper(columnLabels);
         return rs.map(mapper::apply);
     }
 

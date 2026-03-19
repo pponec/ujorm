@@ -74,13 +74,13 @@ public class TutorialTest extends AbstractDemo {
         var emplIngird = employeeCrud.findById(1L).orElseThrow();
         var emplDave = employeeCrud.findById(2L).orElseThrow();
         var emplCarol = employeeCrud.findById(3L).orElseThrow();
-        var newBoss = emplDave;
 
-        emplIngird.setBoss(newBoss);
+        emplIngird.setBoss(emplDave);
         emplDave.setBoss(null);
-        emplCarol.setBoss(newBoss);
+        emplCarol.setBoss(emplDave);
 
-        employeeCrud.update(Stream.of(emplIngird, emplDave, emplCarol), MetaEmployee.boss);
+        employeeCrud.update(Stream.of(emplIngird, emplDave, emplCarol),
+                            MetaEmployee.boss);
 
         assertNull(employeeCrud.findByIdNullable(2L).getBoss());
     }
@@ -91,8 +91,8 @@ public class TutorialTest extends AbstractDemo {
         var employeeCrud = EMPLOYEE_EM.crud(connection());
 
         var allEmployees = employeeCrud
-                .selectWhere("id > :employeeId", query -> query
-                        .bind("employeeId", 0L)
+                .selectWhere("id > :id", query -> query
+                        .bind("id", 0L)
                         .streamMap(EMPLOYEE_EM.mapper())
                         .sorted(Comparator.comparing(e -> e.getBoss() == null))
                         .toList());
@@ -100,8 +100,8 @@ public class TutorialTest extends AbstractDemo {
         employeeCrud.delete(allEmployees.stream());
 
         var count = SqlQuery.run(connection(), query -> query
-                .sql("SELECT COUNT(*) FROM employee WHERE id >= :employeeId")
-                .bind("employeeId", 0L)
+                .sql("SELECT COUNT(*) FROM employee WHERE id >= :id")
+                .bind("id", 0L)
                 .streamMap(rs -> rs.getInt(1))
                 .findFirst()
                 .orElseThrow());

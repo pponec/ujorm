@@ -75,6 +75,15 @@ public final class EntityManager<D, V> {
     }
 
     /**
+     * Returns a stateful mapper (mapping function) for efficient processing of multiple rows.
+     * This variant uses default column mapping from the ResultSet metadata.
+     * @return A reusable mapping function.
+     */
+    public @NotNull SqlFunction<ResultSet, D> mapper() {
+        return resultSetMapper.mapper();
+    }
+
+    /**
      * Maps a single {@link ResultSet} row to the Domain object.
      * <p>
      * <strong>Usage:</strong> Best suited for isolated, single-row mappings where you only
@@ -92,7 +101,7 @@ public final class EntityManager<D, V> {
      */
     public D map(@NotNull ResultSet rs, @Nullable CharSequence... columnLabels) {
         try {
-            return resultSetMapper.map(columnLabels).applyFunction(rs);
+            return resultSetMapper.mapper(columnLabels).applyFunction(rs);
         } catch (SQLException e) {
             throw SQLExceptionBuilder.build(e);
         }
@@ -114,7 +123,7 @@ public final class EntityManager<D, V> {
      * @return A reusable mapping function.
      */
     public @NotNull SqlFunction<ResultSet, D> mapper(@Nullable CharSequence... columnLabels) {
-        return resultSetMapper.map(columnLabels);
+        return resultSetMapper.mapper(columnLabels);
     }
 
     /** Initializes TableModel if not already done. */
@@ -475,7 +484,7 @@ public final class EntityManager<D, V> {
             return utilities.run(false, dbconnection, sql, false, ps -> {
                 ps.setObject(1, id);
                 try (var rs = ps.executeQuery()) {
-                    var mapFunction = resultSetMapper.map(labels);
+                    var mapFunction = resultSetMapper.mapper(labels);
                     if (rs.next()) {
                         return Optional.of(mapFunction.applyFunction(rs));
                     }
