@@ -24,7 +24,7 @@ public abstract class AbstractKey<D, V> implements Key<D, V> {
     );
 
     /** Order of the key, starting at zero. */
-    final int order;
+    final short index;
     /** Simple name of the key has a canonical instance. */
     @NotNull
     final String name;
@@ -44,14 +44,14 @@ public abstract class AbstractKey<D, V> implements Key<D, V> {
     protected final V defaultValue;
 
     public AbstractKey(
-            final int order,
+            final int index,
             @NotNull final String name,
             @NotNull final Class<V> type,
             @NotNull final String columnLabel,
             final boolean primaryKey,
             final boolean foreignKey,
             final boolean required) {
-        this.order = order;
+        this.index = toShortIndex(index, name);
         this.name = name.intern();
         this.type = type;
         this.columnLabel = columnLabel.intern();
@@ -61,9 +61,18 @@ public abstract class AbstractKey<D, V> implements Key<D, V> {
         this.defaultValue = getDefaultValue(type);
     }
 
+    /** Convert int to short index. */
+    private short toShortIndex(int index, @NotNull String attribute) {
+        if (index < 0 || index > Short.MAX_VALUE) {
+            var msg = "Index %s of %s is out of bounds [0, %d]".formatted(index, attribute, Short.MAX_VALUE);
+            throw new IllegalArgumentException(msg);
+        }
+        return (short) index;
+    }
+
     @Override
-    public final int index() {
-        return order;
+    public final short index() {
+        return index;
     }
 
     @Override

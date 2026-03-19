@@ -88,7 +88,7 @@ public interface Key<UJO, VALUE> extends CharSequence, Comparable<Key> {
      */
     VALUE getValue(@NotNull UJO bean);
 
-    /** * Returns a default value used when the current property value is null.
+    /** Returns a default value used when the current property value is null.
      * This feature is only relevant if the default value is not null.
      */
     @Nullable VALUE getDefaultValue();
@@ -103,17 +103,16 @@ public interface Key<UJO, VALUE> extends CharSequence, Comparable<Key> {
         return getValue(ujo);
     }
 
-    /** * Returns the index of the key.
-     * The index is useful for {@code ArrayUjo} implementations and for sorting
-     * keys in {@code UjoManager.readProperties(Class)}.
+    /** Returns the index of the key.
+     * The index is useful for sorting keys in {@code UjoManager.readProperties(Class)}.
      */
-    int index();
+    short index();
 
     /** Returns a name of the key. */
     @Override
     String toString();
 
-    /** * Returns a default value for substitution.
+    /** Returns a default value for substitution.
      * Defaults to {@code null} unless overridden.
      * @see #getDefaultValue()
      */
