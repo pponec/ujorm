@@ -114,6 +114,48 @@ public class ResultSetMapperTestDb extends AbstractDaoTest {
         Assertions.assertEquals(2L, employee.getCity().id());
     }
 
+    /** Tests mapping of a single row using the mapSingle method */
+    @Test
+    void mapSingleTest() throws SQLException {
+        var sql = """
+            SELECT
+              id AS "id"
+            , name AS "name"
+            , city_id AS "city.id"
+             FROM employee 
+             WHERE id = ?
+            """;
+        var resultSet = getEmployeeResultSet(sql, 1L);
+        var service = DomainHandlerProvider.provider();
+        var mapper = ResultSetMapper.of(Employee.class, service);
+
+        Assertions.assertTrue(resultSet.next(), "ResultSet should contain at least one row");
+        var employee = mapper.mapSingle(resultSet);
+
+        Assertions.assertNotNull(employee);
+        Assertions.assertEquals(1L, employee.getId());
+        Assertions.assertEquals("EmplA", employee.getName());
+        Assertions.assertEquals(2L, employee.getCity().id());
+    }
+
+    /** Tests mapping of a single row using the mapSingle method with explicit column labels */
+    @Test
+    void mapSingleWithLabelsTest() throws SQLException {
+        var sql = "SELECT id, name, city_id FROM employee WHERE id = ?";
+        var resultSet = getEmployeeResultSet(sql, 1L);
+        var service = DomainHandlerProvider.provider();
+        var mapper = ResultSetMapper.of(Employee.class, service);
+
+        Assertions.assertTrue(resultSet.next(), "ResultSet should contain at least one row");
+        // Mapping explicit column labels to match the ResultSet structure
+        var employee = mapper.mapSingle(resultSet, "id", "name", "city.id");
+
+        Assertions.assertNotNull(employee);
+        Assertions.assertEquals(1L, employee.getId());
+        Assertions.assertEquals("EmplA", employee.getName());
+        Assertions.assertEquals(2L, employee.getCity().id());
+    }
+
     /** Gets the ResultSet for the employee with ID 1 */
     private ResultSet getEmployeeResultSet(String sql, Long id) throws SQLException {
         var statement = dbConnection.prepareStatement(sql);
