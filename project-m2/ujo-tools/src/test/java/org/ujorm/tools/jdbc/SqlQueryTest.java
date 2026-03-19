@@ -106,15 +106,20 @@ class SqlQueryTest {
     @Test
     void testDynamicColumns() {
         try (var query = new SqlQuery(connectionMock)) {
-            query.sql("SELECT ${COLUMNS} FROM employee t");
+            query.sql("""
+                    SELECT ${COLUMNS}
+                    FROM employee t
+                    """);
             query.column("t.id", mockKey("id"))
-                    .column("t.name", mockKey("name"))
-                    .column("t.created", mockKey("created"));
+                 .column("t.name", mockKey("name"))
+                 .column("t.created", mockKey("created"));
 
             var expected = """
-                    SELECT t.id AS "id",
-                           t.name AS "name",
-                           t.created AS "created" FROM employee t""";
+                    SELECT t.id AS "id"
+                    , t.name AS "name"
+                    , t.created AS "created"
+                    FROM employee t
+                    """;
             assertEquals(expected, query.toString());
         }
     }

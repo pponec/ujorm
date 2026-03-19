@@ -96,11 +96,12 @@ public class SqlQuery extends AbstractSqlQuery<SqlQuery> {
     protected String buildColumns(@NotNull String sql) {
         if (hasColumnsMode) {
             if (columnLabels == null || columnLabels.isEmpty()) {
-                throw new IllegalStateException("Placeholder ${COLUMNS} found but no columns defined.");
+                var msg = "Placeholder ${%s} found but no columns defined.".formatted(COLUMNS_MARK);
+                throw new IllegalStateException(msg);
             }
             var columnsStr = columnLabels.values().stream()
                     .map(Object::toString)
-                    .collect(Collectors.joining(",\n       "));
+                    .collect(Collectors.joining("\n, "));
 
             return sql.replace("${" + COLUMNS_MARK + "}", columnsStr);
         } else if (columnLabels != null && !columnLabels.isEmpty()) {
