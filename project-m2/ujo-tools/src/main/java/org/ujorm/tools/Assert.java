@@ -26,28 +26,28 @@ import org.ujorm.tools.msg.MsgFormatter;
 import static org.ujorm.tools.msg.MsgFormatter.format;
 
 /**
- * Assertion utils, where all method can throw the {@code IllegalArgumentException} exception only.
+ * Assertion utils, where all methods can throw the {@code IllegalArgumentException} exception only.
  * For a message format see the {@link MsgFormatter#format(Object[])}} method description.
  * <h4>See the next correct asserts</h4>
  * <pre class="pre">
- *  Assert.isTrue(true, "TEST:{}{}", "A", "B");
- *  Assert.isTrue(30, (x) -> x > 20, "Wrong No");
- *  Assert.required("ABC");
- *  Assert.hasLength("ABC");
- *  Assert.hasLength(new char[]{'A','B','C'});
- *  Assert.hasLength(new StringBuilder().append("ABC"));
- *  Assert.hasLength(Arrays.asList("A", "B", "C"));
+ * Assert.isTrue(true, "TEST:{}{}", "A", "B");
+ * Assert.isTrue(30, (x) -> x > 20, "Wrong No");
+ * Assert.required("ABC");
+ * Assert.hasLength("ABC");
+ * Assert.hasLength(new char[]{'A','B','C'});
+ * Assert.hasLength(new StringBuilder().append("ABC"));
+ * Assert.hasLength(Arrays.asList("A", "B", "C"));
  *
- *  Assert.isFalse(false);
- *  Assert.isFalse(15, (x) -> x > 20);
- *  Assert.isNull (null);
- *  Assert.isEmpty("");
- *  Assert.isEmpty(new char[0]);
- *  Assert.isEmpty(new StringBuilder());
- *  Assert.isEmpty((List) null);
+ * Assert.isFalse(false);
+ * Assert.isFalse(15, (x) -> x > 20);
+ * Assert.isNull (null);
+ * Assert.isEmpty("");
+ * Assert.isEmpty(new char[0]);
+ * Assert.isEmpty(new StringBuilder());
+ * Assert.isEmpty((List) null);
  *
- *  Assert.isTrue(true, m -> m.format ("TEST:{}{}", "A", "B"));
- *  Assert.isTrue(true, m -> m.sformat("TEST:%s%s", "A", "B"));
+ * Assert.isTrue(true, m -> m.format ("TEST:{}{}", "A", "B"));
+ * Assert.isTrue(true, m -> m.sformat("TEST:%s%s", "A", "B"));
  * </pre>
  * @see <a href="https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/util/Assert.html">...</a>
  * @see <a href="https://commons.apache.org/proper/commons-lang/javadocs/api-3.1/org/apache/commons/lang3/Validate.html">...</a>
@@ -57,12 +57,12 @@ import static org.ujorm.tools.msg.MsgFormatter.format;
  */
 public abstract class Assert {
 
-    /** Static methods are available only */
+    /** Only static methods are available. */
     private Assert() {
     }
 
-    /** If the value Checks if the argument is {@code true}.
-     * @throws IllegalStateException When the condtion is false */
+    /** Checks if the condition is {@code true}.
+     * @throws IllegalStateException When the condition is false */
     public static <M> void state(final boolean condition, @Nullable final M... message)
             throws IllegalStateException {
         if (!condition) {
@@ -92,9 +92,9 @@ public abstract class Assert {
     /** Checks if the value is not {@code null} and the predicate is valid
      * <a href="https://docs.oracle.com/javase/8/docs/api/java/util/function/Predicate.html#test-T-">Predicate.test()</a> is {@code true}. */
     public static <V,M> void isTrueRequired
-        ( @Nullable final V condition
-        , @NotNull final Predicate<V> predicate
-        , @Nullable final M... message)
+    ( @Nullable final V condition
+    , @NotNull final Predicate<V> predicate
+    , @Nullable final M... message)
     {
         if (condition == null || !predicate.test(condition)) {
             throw new IllegalArgumentException(format(message));
@@ -105,9 +105,9 @@ public abstract class Assert {
      * <a href="https://docs.oracle.com/javase/8/docs/api/java/util/function/Predicate.html#test-T-">Predicate.test()</a> is {@code true}.
      * An argument of the {@code Predicable#test()} method can be {@code null}. */
     public static <V,M> void isTrue
-        ( @Nullable final V value
-        , @NotNull  final Predicate<V> predicate
-        , @Nullable final M... message)
+    ( @Nullable final V value
+    , @NotNull  final Predicate<V> predicate
+    , @Nullable final M... message)
     {
         if (!predicate.test(value)) {
             throw new IllegalArgumentException(format(message));
@@ -133,7 +133,7 @@ public abstract class Assert {
         return value;
     }
 
-    /** Checks if the value of a supplier is not {@code null} without exception..
+    /** Checks if the value of a supplier is not {@code null} without exception.
      * @return The original value */
     @NotNull
     public static <V,M> V requiredValue(
@@ -148,7 +148,6 @@ public abstract class Assert {
         }
         return required(result, message);
     }
-
 
     /** Checks if the argument is not empty, nor {@code null}.
      * @return The original value */
@@ -235,9 +234,9 @@ public abstract class Assert {
     /** Checks if the argument is not {@code null} and the predicate is invalid
      * <a href="https://docs.oracle.com/javase/8/docs/api/java/util/function/Predicate.html#test-T-">Predicate.test()</a> is {@code false}. */
     public static <V,M> void isFalseRequired
-        ( @Nullable final V value
-        , @NotNull  final Predicate<V> predicate
-        , @Nullable final M... message)
+    ( @Nullable final V value
+    , @NotNull  final Predicate<V> predicate
+    , @Nullable final M... message)
     {
         if (value == null || predicate.test(value)) {
             throw new IllegalArgumentException(format(message));
@@ -249,9 +248,9 @@ public abstract class Assert {
      * An argument of the {@code Predicable#test()} method can be {@code null}.
      */
     public static <V,M> void isFalse
-        ( @Nullable final V value
-        , @NotNull  final Predicate<V> predicate
-        , @Nullable final M... message)
+    ( @Nullable final V value
+    , @NotNull  final Predicate<V> predicate
+    , @Nullable final M... message)
     {
         if (predicate.test(value)) {
             throw new IllegalArgumentException(format(message));
