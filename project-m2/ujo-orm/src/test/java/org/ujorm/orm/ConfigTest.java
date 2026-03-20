@@ -1,9 +1,8 @@
-package org.ujorm.orm.impl;
+package org.ujorm.orm;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.ujorm.orm.Config;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -21,11 +20,12 @@ class ConfigTest {
     }
 
     @Test
+    @SuppressWarnings("deprecation")
     void testDefaultAndFileValues() {
         var config = new Config();
 
         // Verifies fallback to defaults or file properties
-        assertNotNull(config.getValue(Config.testOnly));
+        assertNotNull(config._testOnly());
         assertTrue(config.isFirstPropertyIsIdentifier());
     }
 
@@ -59,6 +59,7 @@ class ConfigTest {
     }
 
     @Test
+    @SuppressWarnings("deprecation")
     void testKeySetters() {
         // Verifies the Typed Key Pattern setters
         var config = new Config();
@@ -69,7 +70,7 @@ class ConfigTest {
 
         assertEquals(9999, config.getMaxCacheSize());
         assertFalse(config.isPrintSql());
-        assertEquals("BUILDER_TEST", config.getValue(Config.testOnly));
+        assertEquals("BUILDER_TEST", config._testOnly());
         assertTrue(config.isFirstPropertyIsIdentifier());
     }
 

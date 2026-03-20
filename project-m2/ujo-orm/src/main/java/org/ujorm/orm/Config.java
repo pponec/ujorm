@@ -1,7 +1,6 @@
 package org.ujorm.orm;
 
 import org.jetbrains.annotations.NotNull;
-import org.ujorm.core.AbstractSnapshotable;
 import org.ujorm.core.csv.CsvConfig;
 import org.ujorm.tools.common.Primitive;
 import java.io.InputStreamReader;
@@ -14,12 +13,11 @@ import java.util.function.Function;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public final class Config extends AbstractSnapshotable<Config> {
+public class Config {
 
     private static final Logger LOGGER = Logger.getLogger(Config.class.getName());
     private static final String PREFIX = "org.ujorm.";
     private static final String CONFIG_FILE = "ujorm-config.properties";
-    private static final Map<Class<?>, Function<String, ?>> funMap = Map.copyOf(CsvConfig.initConverterMap());
     private static final KeyProvider meta = new KeyProvider();
 
     // --- Start the public list of the configuration parameters ---
@@ -64,21 +62,17 @@ public final class Config extends AbstractSnapshotable<Config> {
     /** The object is locked and immutable. */
     private boolean locked = false;
 
+    /** Temporary Map of functions */
+    private Map<Class<?>, Function<String, ?>> funMap = Map.copyOf(CsvConfig.initConverterMap());
+
     public Config() {
-        Properties properties = loadProperties();
-        for(var key : meta.keys) {
+        var properties = loadProperties();
+        for (var key : meta.keys) {
             loadKey(key, properties);
         }
     }
 
     // --- Core Accessors ---
-
-    /** General getter returning value by key index or default value */
-    @SuppressWarnings("unchecked")
-    public <V> V getValue(@NotNull Key<V> key) {
-        V value = (V) values[key.index()];
-        return (value != null) ? value : key.defaultValue();
-    }
 
     /** General setter with lock check */
     public <V> void setValue(@NotNull Key<V> key, V value) {
@@ -91,38 +85,44 @@ public final class Config extends AbstractSnapshotable<Config> {
     /** Lock the configuration for further writes */
     public Config lock() {
         this.locked = true;
+        this.funMap = null;
         return this;
     }
 
     // --- Getters ---
 
     public boolean isFirstPropertyIsIdentifier() { return firstPropertyIsIdentifier.getValue(values); }
-    public int getMaxCacheSize() { return getValue(maxCacheSize); }
-    public int getBatchSize() { return getValue(batchSize); }
-    public boolean isPrintSql() { return getValue(printSql); }
-    public boolean isEnableSqlQuoting() { return getValue(enableSqlQuoting); }
-    public boolean isAutoCommitWarned() { return getValue(autoCommitWarned); }
-    public boolean isEnabledUjormServiceProvider() { return getValue(enabledUjormServiceProvider); }
+    public int getMaxCacheSize() { return maxCacheSize.getValue(values); }
+    public int getBatchSize() { return batchSize.getValue(values); }
+    public boolean isPrintSql() { return printSql.getValue(values); }
+    public boolean isEnableSqlQuoting() { return enableSqlQuoting.getValue(values); }
+    public boolean isAutoCommitWarned() { return autoCommitWarned.getValue(values); }
+    public boolean isEnabledUjormServiceProvider() { return enabledUjormServiceProvider.getValue(values); }
+    /** @deprecated For jUnit test only */
+    @Deprecated
+    String _testOnly() { return testOnly.getValue(values); }
+
 
     // --- Loading and conversion logic ---
 
     /** Loads value from System properties or file properties */
     private <V> void loadKey(Key<V> key, Properties props) {
-        String fullKey = PREFIX + key.name();
-        String val = System.getProperty(fullKey);
-        if (val == null) {
-            val = props.getProperty(fullKey);
+        var fullKey = PREFIX + key.name();
+        var result = System.getProperty(fullKey);
+
+        if (result == null) {
+            result = props.getProperty(fullKey);
         }
-        if (val != null) {
-            setValue(key, convertValue(val, key.defaultValue()));
+        if (result != null) {
+            setValue(key, convertValue(result, key.defaultValue()));
         }
     }
 
     /** Converts string to the type of the default value */
     @SuppressWarnings("unchecked")
     private <T> T convertValue(String value, T defaultValue) {
-        Class<?> type = Primitive.wrapPrimitive(defaultValue.getClass());
-        Function<String, ?> converter = funMap.get(type);
+        var type = Primitive.wrapPrimitive(defaultValue.getClass());
+        var converter = (Function<String, ?>) funMap.get(type);
         if (converter == null) {
             throw new IllegalStateException("No converter found for type: " + type);
         }
@@ -131,7 +131,7 @@ public final class Config extends AbstractSnapshotable<Config> {
 
     /** Loads properties from the classpath */
     private Properties loadProperties() {
-        Properties result = new Properties();
+        var result = new Properties();
         try (var stream = getClass().getResourceAsStream("/" + CONFIG_FILE)) {
             if (stream != null) {
                 result.load(new InputStreamReader(stream, StandardCharsets.UTF_8));
@@ -148,16 +148,30 @@ public final class Config extends AbstractSnapshotable<Config> {
     }
 
     /** Internal Key definition */
-    public record Key<V>(String name, int index, V defaultValue) {
+    @SuppressWarnings("unchecked")
+    public record Key<V>(
+            /** Name of the key */
+            String name,
+
+            /** Index of the key */
+            int index,
+
+            /** Default value */
+            V defaultValue
+    ) {
         public Class<V> getType() {
             return (Class<V>) defaultValue.getClass();
         }
-        private V getValue(Object[] objects) {
+
+        private V getValue(final @NotNull Object[] objects) {
             var result = objects[index];
             return result != null ? (V) result : defaultValue;
         }
-        private void setValue(V value, Object[] objects) {
-            if (value == null) throw new IllegalArgumentException("Value is required");
+
+        private void setValue(@NotNull final V value, @NotNull final Object[] objects) {
+            if (value == null) {
+                throw new IllegalArgumentException("Value is required");
+            }
             objects[index] = value;
         }
 
@@ -168,9 +182,11 @@ public final class Config extends AbstractSnapshotable<Config> {
         }
     }
 
+    /** Provider of configuration keys */
     private static class KeyProvider {
-        List<Key<?>> keys = new ArrayList();
-        <V> Key key(String name, V defaultValue) {
+        private final List<Key<?>> keys = new ArrayList<>(10);
+
+        <V> Key<V> key(String name, V defaultValue) {
             var result = new Key<V>(name, keys.size(), defaultValue);
             keys.add(result);
             return result;
