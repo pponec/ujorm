@@ -276,15 +276,4 @@ public class StringUtils {
         symbols.setGroupingSeparator(NARROW_NBSP);
         return new DecimalFormat(pattern, symbols);
     }
-
-    /** Value is not null and not empty */
-    public static boolean hasLength(@Nullable final String text) {
-        return text != null && !text.isEmpty();
-    }
-
-    /** Value is not null and not empty */
-    public static boolean isEmpty(@Nullable final String text) {
-        return !hasLength(text);
-    }
-
 }

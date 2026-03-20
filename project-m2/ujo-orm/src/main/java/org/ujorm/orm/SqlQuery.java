@@ -20,9 +20,10 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.ujorm.core.Key;
 import org.ujorm.orm.model.QuotePair;
-import org.ujorm.tools.common.StringUtils;
+import org.ujorm.tools.Check;
 import org.ujorm.tools.jdbc.AbstractSqlQuery;
 import org.ujorm.tools.msg.MessageService;
+
 import java.sql.Connection;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -123,7 +124,7 @@ public class SqlQuery extends AbstractSqlQuery<SqlQuery> {
                     .formatted(COLUMNS_MARK);
             throw new IllegalStateException(msg);
         }
-        if (StringUtils.isEmpty(placeholder)) {
+        if (Check.isEmpty(placeholder)) {
             throw new IllegalArgumentException("Key placeholder is required");
         }
         if (columnLabels == null) {

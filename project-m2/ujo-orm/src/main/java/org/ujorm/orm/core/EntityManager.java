@@ -23,6 +23,7 @@ import org.ujorm.core.Key;
 import org.ujorm.core.SnapshotProvider;
 import org.ujorm.core.impl.AbstractUjo;
 import org.ujorm.orm.Crud;
+import org.ujorm.orm.SqlQuery;
 import org.ujorm.orm.impl.Context;
 import org.ujorm.orm.jdbc.ResultSetMapper;
 import org.ujorm.orm.model.ColumnModel;
@@ -31,10 +32,9 @@ import org.ujorm.orm.model.TableModel;
 import org.ujorm.orm.model.TableModelBuilder;
 import org.ujorm.orm.utils.StatementCache;
 import org.ujorm.orm.utils.Tools;
-import org.ujorm.tools.common.StringUtils;
-import org.ujorm.tools.jdbc.SQLExceptionBuilder;
-import org.ujorm.orm.SqlQuery;
+import org.ujorm.tools.Check;
 import org.ujorm.tools.jdbc.AbstractSqlQuery.SqlFunction;
+import org.ujorm.tools.jdbc.SQLExceptionBuilder;
 
 import java.sql.*;
 import java.util.*;
@@ -517,7 +517,7 @@ public final class EntityManager<D, V> {
             var sql = new StringBuilder(256);
             buildSelectSql(true, sql);
             sql.append(" WHERE ");
-            sql.append(StringUtils.hasLength(whereCondition) ? whereCondition : "1=1");
+            sql.append(Check.hasLength(whereCondition) ? whereCondition : "1=1");
             try (var query = new SqlQuery(dbconnection, getQuote())) {
                 query.sql(sql.toString());
                 query.fetchSize(context.config().getBatchSize());

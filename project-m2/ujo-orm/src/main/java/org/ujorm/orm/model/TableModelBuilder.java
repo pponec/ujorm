@@ -23,8 +23,8 @@ import org.ujorm.core.generator.TableIdentifier;
 import org.ujorm.orm.Config;
 import org.ujorm.orm.impl.Context;
 import org.ujorm.orm.utils.JdbcTypeProvider;
+import org.ujorm.tools.Check;
 import org.ujorm.tools.common.StreamUtils;
-import org.ujorm.tools.common.StringUtils;
 import org.ujorm.tools.jdbc.SQLExceptionBuilder;
 
 import java.sql.Connection;
@@ -74,8 +74,8 @@ public class TableModelBuilder<D> {
      * @return result - The real table identifier.
      */
     protected TableIdentifier createTableIdentifier(TableIdentifier table, Connection initConnection) {
-        var catalog = StringUtils.hasLength(table.catalog()) ? table.catalog() : null;
-        var schema = StringUtils.hasLength(table.schema()) ? table.schema() : null;
+        var catalog = Check.hasLength(table.catalog()) ? table.catalog() : null;
+        var schema = Check.hasLength(table.schema()) ? table.schema() : null;
         var tableName = table.table();
 
         try {
@@ -124,8 +124,8 @@ public class TableModelBuilder<D> {
         var result = new ArrayList<String>();
         try {
             var metaData = initConnection.getMetaData();
-            var catalog = StringUtils.hasLength(table.catalog()) ? table.catalog() : null;
-            var schema = StringUtils.hasLength(table.schema()) ? table.schema() : null;
+            var catalog = Check.hasLength(table.catalog()) ? table.catalog() : null;
+            var schema = Check.hasLength(table.schema()) ? table.schema() : null;
 
             try (var resultSet = metaData.getColumns(catalog, schema, table.table(), null)) {
                 while (resultSet.next()) {
@@ -179,7 +179,7 @@ public class TableModelBuilder<D> {
         try {
             var metaData = connection.getMetaData();
             var dbName = metaData.getDatabaseProductName();
-            if (StringUtils.hasLength(dbName)) {
+            if (Check.hasLength(dbName)) {
                 if (dbName.contains("Microsoft SQL Server")) {
                     return QuotePair.ofSqlServer();
                 } else if (dbName.contains("MySQL") || dbName.contains("MariaDB")) {
@@ -212,7 +212,7 @@ public class TableModelBuilder<D> {
             jdbcType = jdbcTypeProvider.findJdbcType(key);
         }
         var columnName = dbColumMapLowerCase.get(key.columnLabel().toLowerCase(Locale.ENGLISH));
-        if (StringUtils.isEmpty(columnName)) {
+        if (Check.isEmpty(columnName)) {
             var msg = "Property %s mapped to column '%s' not found in database."
                     .formatted(key.fullName(), key.columnLabel());
             throw new IllegalStateException(msg);

@@ -18,6 +18,7 @@ package org.ujorm.tools.common;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.ujorm.tools.Check;
 
 import java.math.BigDecimal;
 import java.util.stream.Stream;
@@ -99,8 +100,8 @@ public class StringUtilsTest {
         var text = "Hello";
         var space = " ";
 
-        assertTrue(StringUtils.hasLength(text), "Should return true for 'Hello'");
-        assertTrue(StringUtils.hasLength(space), "Should return true for space");
+        assertTrue(Check.hasLength(text), "Should return true for 'Hello'");
+        assertTrue(Check.hasLength(space), "Should return true for space");
     }
 
     @Test
@@ -108,7 +109,7 @@ public class StringUtilsTest {
     void hasLength_ShouldReturnFalseForEmptyString() {
         var empty = "";
 
-        assertFalse(StringUtils.hasLength(empty), "Should return false for empty string");
+        assertFalse(Check.hasLength(empty), "Should return false for empty string");
     }
 
     @Test
@@ -116,7 +117,7 @@ public class StringUtilsTest {
     void isEmpty_ShouldReturnTrueForEmptyString() {
         var empty = "";
 
-        assertTrue(StringUtils.isEmpty(empty), "Should return true for empty string");
+        assertTrue(Check.isEmpty(empty), "Should return true for empty string");
     }
 
     @Test
@@ -125,17 +126,17 @@ public class StringUtilsTest {
         var text = "text";
         var tab = "\t";
 
-        assertFalse(StringUtils.isEmpty(text), "Should return false for text");
-        assertFalse(StringUtils.isEmpty(tab), "Should return false for tab");
+        assertFalse(Check.isEmpty(text), "Should return false for text");
+        assertFalse(Check.isEmpty(tab), "Should return false for tab");
     }
 
     @Test
     @DisplayName("Methods should be inverse")
     void methodsShouldBeInverse() {
         var testData = "test";
-        var result = StringUtils.hasLength(testData);
+        var result = Check.hasLength(testData);
 
-        assertEquals(result, !StringUtils.isEmpty(testData), "Methods isFilled and isEmpty must return opposite values");
+        assertEquals(result, !Check.isEmpty(testData), "Methods isFilled and isEmpty must return opposite values");
     }
 
 
