@@ -132,7 +132,7 @@ public class DefaultXmlConfig implements XmlConfig {
      * @param charset the charset to set
      */
     public DefaultXmlConfig setCharset(@NotNull final Charset charset) {
-        this.charset = Assert.notNull(charset, REQUIRED_MSG, "charset");
+        this.charset = Assert.required(charset, REQUIRED_MSG, "charset");
         return this;
     }
 
@@ -194,7 +194,7 @@ public class DefaultXmlConfig implements XmlConfig {
     /** An indentation space for elements of the next level,
      * where default value is an empty `String` */
     public DefaultXmlConfig setIndentationSpace(@NotNull CharSequence indentation) {
-        this.indentation = Assert.notNull(indentation, REQUIRED_MSG, "indentation");
+        this.indentation = Assert.required(indentation, REQUIRED_MSG, "indentation");
         return this;
     }
 
@@ -216,7 +216,7 @@ public class DefaultXmlConfig implements XmlConfig {
 
     /** A replacement text instead of the {@code null} value */
     public DefaultXmlConfig setDefaultValue(@NotNull String defaultValue) {
-        this.defaultValue = Assert.notNull(defaultValue, "defaultValue");
+        this.defaultValue = Assert.required(defaultValue, "defaultValue");
         return this;
     }
 
@@ -238,13 +238,13 @@ public class DefaultXmlConfig implements XmlConfig {
 
     /** A new line sequence */
     public DefaultXmlConfig setNewLine(@NotNull final CharSequence newLine) {
-        this.newLine = Assert.notNull(newLine, "newLine");
+        this.newLine = Assert.required(newLine, "newLine");
         return this;
     }
 
     /** A default value formatter is implemented by the method {@code String.valueOf(value)} */
     public DefaultXmlConfig setFormatter(@NotNull Formatter formatter) {
-        this.formatter = Assert.notNull(formatter, "formatter");
+        this.formatter = Assert.required(formatter, "formatter");
         return this;
     }
 

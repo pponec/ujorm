@@ -211,31 +211,31 @@ public class ReportBuilder<D> {
 
     @NotNull
     public ReportBuilder<D> setAjaxRequestParam(@NotNull HttpParameter ajaxRequestParam) {
-        this.ajaxRequestParam = Assert.notNull(ajaxRequestParam, "ajaxRequestParam");
+        this.ajaxRequestParam = Assert.required(ajaxRequestParam, "ajaxRequestParam");
         return this;
     }
 
     @NotNull
     public ReportBuilder<D> setHtmlHeader(@NotNull Injector htmlHeader) {
-        this.htmlHeader = Assert.notNull(htmlHeader, "htmlHeader");
+        this.htmlHeader = Assert.required(htmlHeader, "htmlHeader");
         return this;
     }
 
     @NotNull
     public ReportBuilder<D> setHeader(@NotNull Injector header) {
-        this.header = Assert.notNull(header, "header");
+        this.header = Assert.required(header, "header");
         return this;
     }
 
     @NotNull
     public ReportBuilder<D> setFooter(@NotNull Injector footer) {
-        this.footer = Assert.notNull(footer, "footer");
+        this.footer = Assert.required(footer, "footer");
         return this;
     }
 
     @NotNull
     public ReportBuilder<D> setFormItem(@NotNull Injector formItem) {
-        this.formAdditions = Assert.notNull(formItem, "formAdditions");
+        this.formAdditions = Assert.required(formItem, "formAdditions");
         return this;
     }
 
@@ -246,7 +246,7 @@ public class ReportBuilder<D> {
     }
 
     public ReportBuilder<D> setJavascritWriter(@NotNull Supplier<Injector> javascritWriter) {
-        this.javascritWriter = Assert.notNull(javascritWriter, "javascritWriter");
+        this.javascritWriter = Assert.required(javascritWriter, "javascritWriter");
         return this;
     }
 
@@ -302,9 +302,9 @@ public class ReportBuilder<D> {
             @NotNull final HtmlElement html,
             @NotNull final Function<GridBuilder<D>, Stream<D>> resource
     ) {
-        Assert.notNull(context, "context");
-        Assert.notNull(html, "html");
-        Assert.notNull(resource, "resource");
+        Assert.required(context, "context");
+        Assert.required(html, "html");
+        Assert.required(resource, "resource");
 
         if (Check.hasLength(config.getJavascriptLink())) {
             html.addJavascriptLink(false, config.getJavascriptLink());

@@ -119,7 +119,7 @@ public class XmlModel implements ApiElement<XmlModel>, Serializable {
      * @return The argument type of XmlElement! */
     @NotNull
     public final XmlModel addElement(@NotNull final XmlModel element) {
-        addChild(Assert.notNull(element, REQUIRED_MSG, "element"));
+        addChild(Assert.required(element, REQUIRED_MSG, "element"));
         return element;
     }
 

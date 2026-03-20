@@ -34,7 +34,7 @@ public final class JsonWriter implements Appendable {
     private final Appendable writer;
 
     JsonWriter(@NotNull final Appendable writer) {
-        this.writer = Assert.notNull(writer, "writer");
+        this.writer = Assert.required(writer, "writer");
     }
 
     @Override

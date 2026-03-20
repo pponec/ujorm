@@ -96,8 +96,8 @@ public class StringUtils {
     }
 
     public StringUtils(@NotNull final Charset charset, @NotNull final Class<?> classOfLoader) {
-        this.charset = Assert.notNull(charset, "charset");
-        this.classOfLoader = Assert.notNull(classOfLoader, "classOfLoader");
+        this.charset = Assert.required(charset, "charset");
+        this.classOfLoader = Assert.required(classOfLoader, "classOfLoader");
     }
 
     /** Read a content of the resource encoded by UTF-8.

@@ -122,8 +122,8 @@ public abstract class AbstractWriter {
      * @param config XML configuration
      */
     public AbstractWriter(@NotNull final Appendable out, @NotNull final XmlConfig config) {
-        this.out = Assert.notNull(out, "out");
-        this.config = Assert.notNull(config, "config");
+        this.out = Assert.required(out, "out");
+        this.config = Assert.required(config, "config");
         this.formatter = config.getFormatter();
         this.newLine = config.getNewLine().toString();
         this.indentationEnabled = Check.hasLength(config.getIndentation());

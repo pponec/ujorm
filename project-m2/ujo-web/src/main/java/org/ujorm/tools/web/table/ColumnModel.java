@@ -60,8 +60,8 @@ public class ColumnModel<D, V> {
                        @NotNull final CharSequence title,
                        @Nullable final HttpParameter param) {
         this.index = index;
-        this.column = Assert.notNull(column, "column");
-        this.title = Assert.notNull(title, "title");
+        this.column = Assert.required(column, "column");
+        this.title = Assert.required(title, "title");
         this.param = param;
     }
 
@@ -108,7 +108,7 @@ public class ColumnModel<D, V> {
     }
 
     public final void setDirection(@NotNull final Direction direction) {
-        this.direction = Assert.notNull(direction, "direction");
+        this.direction = Assert.required(direction, "direction");
     }
 
     /**

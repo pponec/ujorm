@@ -41,7 +41,7 @@ public class AssertTest {
     public void testDemo() {
         Assert.isTrue(true, "TEST:{}{}", "A", "B");
         Assert.isTrue(10, (x) -> x < 20, "Wrong No");
-        Assert.notNull("ABC");
+        Assert.required("ABC");
         Assert.hasLength("ABC");
         Assert.hasLength(new char[]{'A', 'B', 'C'});
         Assert.hasLength(new StringBuilder().append("ABC"));
@@ -135,7 +135,7 @@ public class AssertTest {
     public void testNotNull_Object_ok() {
         System.out.println("notNull");
         Object value = new Object();
-        Assert.notNull(value);
+        Assert.required(value);
     }
 
     /**
@@ -145,7 +145,7 @@ public class AssertTest {
     public void testNotNull_Object_ObjectArr_ok() {
         System.out.println("notNull");
         Object value = new Object();
-        Assert.notNull(value, TEST_MESSAGE);
+        Assert.required(value, TEST_MESSAGE);
     }
 
     /**
@@ -400,7 +400,7 @@ public class AssertTest {
         CharSequence value = null;
         String expResult = "MESSAGE:ABC";
         try {
-            Assert.notNull(value, TEST_MESSAGE);
+            Assert.required(value, TEST_MESSAGE);
             fail();
         } catch (IllegalArgumentException e) {
             assertEquals(expResult, e.getMessage());
@@ -426,7 +426,7 @@ public class AssertTest {
         CharSequence value = null;
         String expResult = null;
         try {
-            Assert.notNull(value, NO_MESSAGE);
+            Assert.required(value, NO_MESSAGE);
             fail();
         } catch (IllegalArgumentException e) {
             assertEquals(expResult, e.getMessage());
@@ -479,7 +479,7 @@ public class AssertTest {
         System.out.println("notNull");
         Object value = null;
         assertThrows(IllegalArgumentException.class, () ->
-           Assert.notNull(value)
+           Assert.required(value)
         );
     }
 
@@ -491,7 +491,7 @@ public class AssertTest {
         System.out.println("notNull");
         Object value = null;
         assertThrows(IllegalArgumentException.class, () ->
-          Assert.notNull(value, TEST_MESSAGE)
+          Assert.required(value, TEST_MESSAGE)
         );
     }
 

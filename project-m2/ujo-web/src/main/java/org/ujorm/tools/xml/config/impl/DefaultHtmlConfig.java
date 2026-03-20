@@ -175,12 +175,12 @@ public class DefaultHtmlConfig extends DefaultXmlConfig implements HtmlConfig {
 
     /** Title is a required element by HTML 5 */
     public DefaultHtmlConfig setTitle(@NotNull CharSequence title) {
-        this.title = Assert.notNull(title, "title");
+        this.title = Assert.required(title, "title");
         return this;
     }
 
     public DefaultHtmlConfig setCssLinks(@NotNull CharSequence... cssLinks) {
-        this.cssLinks = Assert.notNull(cssLinks, REQUIRED_MSG, "cssLinks");
+        this.cssLinks = Assert.required(cssLinks, REQUIRED_MSG, "cssLinks");
         return this;
     }
 
@@ -190,7 +190,7 @@ public class DefaultHtmlConfig extends DefaultXmlConfig implements HtmlConfig {
     }
 
     public DefaultHtmlConfig setContentType(@NotNull String contentType) {
-        this.contentType = Assert.notNull(contentType, REQUIRED_MSG, "contentType");
+        this.contentType = Assert.required(contentType, REQUIRED_MSG, "contentType");
         return this;
     }
 
@@ -226,7 +226,7 @@ public class DefaultHtmlConfig extends DefaultXmlConfig implements HtmlConfig {
 
     /** Set Unpair element names */
     public void setUnpairElements(@NotNull Set<String> unpairElements) {
-        this.unpairElements = Assert.notNull(unpairElements, REQUIRED_MSG, "unpairElements");
+        this.unpairElements = Assert.required(unpairElements, REQUIRED_MSG, "unpairElements");
     }
 
     /**
@@ -237,13 +237,13 @@ public class DefaultHtmlConfig extends DefaultXmlConfig implements HtmlConfig {
      */
     @Deprecated
     public DefaultHtmlConfig setRawHedaderCode(@Nullable String rawHeaderText) {
-        this.rawHeaderText = Assert.notNull(rawHeaderText, REQUIRED_MSG, "rawHeaderText");
+        this.rawHeaderText = Assert.required(rawHeaderText, REQUIRED_MSG, "rawHeaderText");
         return this;
     }
 
     /** Assign a new header injector */
     public DefaultHtmlConfig setHeaderInjector(@NotNull ApiInjector headerInjector) {
-        this.headerInjector = Assert.notNull(headerInjector, REQUIRED_MSG, "headerInjector");
+        this.headerInjector = Assert.required(headerInjector, REQUIRED_MSG, "headerInjector");
         return this;
     }
 }

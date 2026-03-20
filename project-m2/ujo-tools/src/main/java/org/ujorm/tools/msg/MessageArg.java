@@ -62,7 +62,7 @@ public final class MessageArg<T> implements Serializable, CharSequence {
      * <a href="https://docs.oracle.com/javase/7/docs/api/java/util/Formatter.html">java.util.Formatter</a>
      */
     public MessageArg(@NotNull final String name, @Nullable final String format) {
-        Assert.notNull(name, "Name is required", name);
+        Assert.required(name, "Name is required", name);
         Assert.isTrue(name.indexOf(PARAM_END) < 0  , "Forbidden character {} in argument {}", PARAM_END, name);
         Assert.isTrue(format == null
                    || format.indexOf(PARAM_END) < 0, "Forbidden character {} in argument {}", PARAM_END, format);

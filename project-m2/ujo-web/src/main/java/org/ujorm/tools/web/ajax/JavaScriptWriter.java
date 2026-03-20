@@ -98,14 +98,14 @@ public class JavaScriptWriter implements Injector {
             @NotNull HttpParameter ajaxRequestParam,
             @NotNull HttpParameter sortRequestParam,
             @NotNull CharSequence... inputSelectors) {
-        this.idleDelay = Assert.notNull(idleDelay, "idleDelay");
-        this.ajaxRequestParam = Assert.notNull(ajaxRequestParam, "ajaxRequestParam");
-        this.sortRequestParam = Assert.notNull(sortRequestParam, "sortRequestParam");
+        this.idleDelay = Assert.required(idleDelay, "idleDelay");
+        this.ajaxRequestParam = Assert.required(ajaxRequestParam, "ajaxRequestParam");
+        this.sortRequestParam = Assert.required(sortRequestParam, "sortRequestParam");
         this.inputCssSelectors = Assert.hasLength(inputSelectors, "inputSelectors");
     }
 
     public JavaScriptWriter setFormSelector(String formSelector) {
-        this.formCssSelector = Assert.notNull(formSelector, "formSelector");
+        this.formCssSelector = Assert.required(formSelector, "formSelector");
         return this;
     }
 
@@ -115,7 +115,7 @@ public class JavaScriptWriter implements Injector {
     }
 
     public JavaScriptWriter setNewLine(@NotNull CharSequence newLine) {
-        this.newLine = Assert.notNull(newLine, "newLine");
+        this.newLine = Assert.required(newLine, "newLine");
         return this;
     }
 
@@ -133,13 +133,13 @@ public class JavaScriptWriter implements Injector {
 
     /** An AJAX timeout to get a response  */
     public JavaScriptWriter setAjaxTimeout(@NotNull Duration ajaxTimeout) {
-        this.ajaxTimeout = Assert.notNull(ajaxTimeout, "ajaxTimeout");
+        this.ajaxTimeout = Assert.required(ajaxTimeout, "ajaxTimeout");
         return this;
     }
 
     /** An AJAX delay to the input request */
     public JavaScriptWriter setIdleDelay(@NotNull Duration idleDelay) {
-        this.idleDelay = Assert.notNull(idleDelay, "idleDelay");
+        this.idleDelay = Assert.required(idleDelay, "idleDelay");
         return this;
     }
 

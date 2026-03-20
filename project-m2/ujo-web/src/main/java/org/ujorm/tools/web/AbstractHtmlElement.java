@@ -261,7 +261,7 @@ public abstract class AbstractHtmlElement implements ApiElement<Element>, Html {
      * @return New script element
      */
     public Element addJavascriptLink(final boolean defer, @NotNull final CharSequence javascriptLink) {
-        Assert.notNull(javascriptLink, REQUIRED_MSG, "javascriptLink");
+        Assert.required(javascriptLink, REQUIRED_MSG, "javascriptLink");
         return getHead().addElement(Html.SCRIPT)
                 .setAttribute(Html.A_SRC, javascriptLink)
                 .setAttribute("defer", defer ? "defer" : null);
@@ -298,7 +298,7 @@ public abstract class AbstractHtmlElement implements ApiElement<Element>, Html {
      * @return New CSS element
      */
     public Element addCssLink(@NotNull final CharSequence css) {
-        Assert.notNull(css, REQUIRED_MSG, "css");
+        Assert.required(css, REQUIRED_MSG, "css");
         return getHead().addElement(Html.LINK)
                 .setAttribute(Html.A_HREF, css)
                 .setAttribute(Html.A_REL, "stylesheet");
@@ -309,7 +309,7 @@ public abstract class AbstractHtmlElement implements ApiElement<Element>, Html {
      * @return New CSS element
      */
     public Element addCssBody(@NotNull final CharSequence css) {
-        Assert.notNull(css, REQUIRED_MSG, "css");
+        Assert.required(css, REQUIRED_MSG, "css");
         return getHead().addElement(Html.STYLE).addRawText(css);
     }
 

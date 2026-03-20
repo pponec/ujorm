@@ -85,7 +85,7 @@ public class MessageService {
             @NotNull final Locale defaultLocale) {
         this.begTag = Assert.hasLength(begTag, "begTag");
         this.endTag = endTag;
-        this.defaultLocale = Assert.notNull(defaultLocale, "defaultLocale");
+        this.defaultLocale = Assert.required(defaultLocale, "defaultLocale");
     }
 
     /** Create a map from man pairs key-value

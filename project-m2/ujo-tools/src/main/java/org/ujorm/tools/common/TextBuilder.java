@@ -46,7 +46,7 @@ public class TextBuilder implements CharSequence {
     }
 
     public TextBuilder(final StringBuilder builder) {
-        this.builder = Assert.notNull(builder, "builder");
+        this.builder = Assert.required(builder, "builder");
     }
 
     public TextBuilder add(@NotNull final CharSequence... items) {

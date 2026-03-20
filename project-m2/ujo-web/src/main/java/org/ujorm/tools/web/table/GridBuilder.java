@@ -162,7 +162,7 @@ public class GridBuilder<D> {
      */
     @NotNull
     public <V> GridBuilder<D> sortable(@NotNull final Direction direction) {
-        Assert.notNull(direction, "direction");
+        Assert.required(direction, "direction");
         Assert.hasLength(columns, "No column is available");
         columns.get(columns.size() - 1).setSortable(direction);
         return this;
@@ -199,7 +199,7 @@ public class GridBuilder<D> {
             @NotNull final Function<GridBuilder<D>, Stream<D>> resource) {
 
         // An original code: setSort(ColumnModel.ofCode(config.getSortRequestParam().of(input)));
-        setSort(Assert.notNull(sortedColumn, "sortedColumn"));
+        setSort(Assert.required(sortedColumn, "sortedColumn"));
         printTable(Element.of(parent), resource);
     }
 

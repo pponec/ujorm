@@ -169,27 +169,27 @@ public class ReportBuilderConfigImpl<D> implements ReportBuilderConfig<D> {
     }
 
     public ReportBuilderConfigImpl<D> setCssLink(@NotNull final String cssLink) {
-        this.cssLink = Assert.notNull(cssLink, "cssLink");
+        this.cssLink = Assert.required(cssLink, "cssLink");
         return this;
     }
 
     public ReportBuilderConfigImpl<D> setJqueryLink(@NotNull final String jqueryLink) {
-        this.jqueryLink = Assert.notNull(jqueryLink, "jqueryLink");
+        this.jqueryLink = Assert.required(jqueryLink, "jqueryLink");
         return this;
     }
 
     public ReportBuilderConfigImpl<D> setIdleDelay(@NotNull final Duration idleDelay) {
-        this.idleDelay = Assert.notNull(idleDelay, "idleDelay");
+        this.idleDelay = Assert.required(idleDelay, "idleDelay");
         return this;
     }
 
     public ReportBuilderConfigImpl<D> setAjaxRequestParam(@NotNull final HttpParameter ajaxRequestParam) {
-        this.ajaxRequestParam = Assert.notNull(ajaxRequestParam, "ajaxRequestParam");
+        this.ajaxRequestParam = Assert.required(ajaxRequestParam, "ajaxRequestParam");
         return this;
     }
 
     public ReportBuilderConfigImpl<D> setSortRequestParam(@NotNull final HttpParameter sortRequestParam) {
-        this.sortRequestParam = Assert.notNull(sortRequestParam, "sortRequestParam");
+        this.sortRequestParam = Assert.required(sortRequestParam, "sortRequestParam");
         return this;
     }
 
@@ -214,12 +214,12 @@ public class ReportBuilderConfigImpl<D> implements ReportBuilderConfig<D> {
     }
 
     public ReportBuilderConfigImpl<D> setTableSelector(@NotNull final CharSequence tableSelector) {
-        this.tableSelector = Assert.notNull(tableSelector, "tableSelector");
+        this.tableSelector = Assert.required(tableSelector, "tableSelector");
         return this;
     }
 
     public ReportBuilderConfigImpl<D> setTableCssClass(@NotNull final List<CharSequence> tableCssClass) {
-        this.tableCssClass = Assert.notNull(tableCssClass, "tableCssClass");
+        this.tableCssClass = Assert.required(tableCssClass, "tableCssClass");
         return this;
     }
 

@@ -120,7 +120,7 @@ public class XmlBuilder implements ApiElement<XmlBuilder> {
     ) {
         this.name = name;
         this.lastText = name == XmlBuilder.HIDDEN_NAME;
-        this.writer = Assert.notNull(writer, REQUIRED_MSG, "writer");
+        this.writer = Assert.required(writer, REQUIRED_MSG, "writer");
         this.level = level;
 
         if (printName) try {

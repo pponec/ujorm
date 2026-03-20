@@ -32,7 +32,7 @@ import static org.ujorm.tools.msg.MsgFormatter.format;
  * <pre class="pre">
  *  Assert.isTrue(true, "TEST:{}{}", "A", "B");
  *  Assert.isTrue(30, (x) -> x > 20, "Wrong No");
- *  Assert.notNull("ABC");
+ *  Assert.required("ABC");
  *  Assert.hasLength("ABC");
  *  Assert.hasLength(new char[]{'A','B','C'});
  *  Assert.hasLength(new StringBuilder().append("ABC"));
@@ -73,7 +73,7 @@ public abstract class Assert {
     /** Checks if the argument is not {@code null}.
      * @return The original value */
     @NotNull
-    public static <V,M> V notNullState(@Nullable final V value, @Nullable final M... message)
+    public static <V,M> V requiredState(@Nullable final V value, @Nullable final M... message)
             throws IllegalStateException {
         if (value == null) {
             throw new IllegalStateException(format(message), new NullPointerException());
@@ -119,13 +119,13 @@ public abstract class Assert {
     @NotNull
     public static <V,M> Optional<V> isPresented(@Nullable final V value, @Nullable final M... message)
             throws IllegalArgumentException {
-        return Optional.of(notNull(value, message));
+        return Optional.of(required(value, message));
     }
 
     /** Checks if the argument is not {@code null}.
      * @return The original value */
     @NotNull
-    public static <V,M> V notNull(@Nullable final V value, @Nullable final M... message)
+    public static <V,M> V required(@Nullable final V value, @Nullable final M... message)
             throws IllegalArgumentException {
         if (value == null) {
             throw new IllegalArgumentException(format(message), new NullPointerException());
@@ -136,7 +136,7 @@ public abstract class Assert {
     /** Checks if the value of a supplier is not {@code null} without exception..
      * @return The original value */
     @NotNull
-    public static <V,M> V notNullValue(
+    public static <V,M> V requiredValue(
             @NotNull final Supplier<V> supplier,
             @Nullable final M... message)
             throws IllegalArgumentException {
@@ -146,7 +146,7 @@ public abstract class Assert {
         } catch (Exception e) {
             throw new IllegalArgumentException(format(message), new NullPointerException());
         }
-        return notNull(result, message);
+        return required(result, message);
     }
 
 

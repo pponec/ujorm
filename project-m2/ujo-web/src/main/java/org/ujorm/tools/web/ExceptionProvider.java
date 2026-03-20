@@ -64,7 +64,7 @@ public final class ExceptionProvider {
     /** A factory method */
     @NotNull
     public static ExceptionProvider of(@NotNull final Throwable e) {
-        return new ExceptionProvider(Assert.notNull(e, "Exception is required"));
+        return new ExceptionProvider(Assert.required(e, "Exception is required"));
     }
 
     /** A factory method */
