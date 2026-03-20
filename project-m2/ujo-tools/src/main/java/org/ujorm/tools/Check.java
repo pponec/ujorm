@@ -18,6 +18,7 @@ package org.ujorm.tools;
 import java.util.Collection;
 import java.util.Map;
 import java.util.Objects;
+
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -36,7 +37,7 @@ import org.jetbrains.annotations.Nullable;
  * @author Pavel Ponec
  * @since 1.73
  */
-    public abstract class Check {
+public abstract class Check {
 
     /** Only static method are implemented */
     private Check() {
@@ -63,7 +64,7 @@ import org.jetbrains.annotations.Nullable;
     }
 
     /** Checks if the argument is not empty, nor {@code null}. */
-    public static boolean hasLength(@Nullable final Map<?,?> values) {
+    public static boolean hasLength(@Nullable final Map<?, ?> values) {
         return values != null && values.size() > 0;
     }
 
@@ -93,7 +94,7 @@ import org.jetbrains.annotations.Nullable;
     }
 
     /** Checks if the argument is empty or {@code null}. */
-    public static boolean isEmpty(@Nullable final Map<?,?> value) {
+    public static boolean isEmpty(@Nullable final Map<?, ?> value) {
         return !hasLength(value);
     }
 
