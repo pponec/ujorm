@@ -56,8 +56,7 @@ By using the generated `Meta` classes for aliases (`${...}`), you prevent SQL ty
 The conversion from the `ResultSet` to the domain object is entirely explicit, effectively eliminating the dreaded N+1 query problem.
 
 ```java
-private static final EntityManager<City, Long> CITY_EM = EntityManager.of(City.class);
-private static final EntityManager<Employee, Long> EMPLOYEE_EM = EntityManager.of(Employee.class);
+static final ResultSetMapper<Employee> EMPLOYEE_MAPPER = ResultSetMapper.of(Employee.class);
 
 void select() {
     var sql = """
@@ -76,7 +75,7 @@ void select() {
             .column("c.country_code", MetaEmployee.city, MetaCity.countryCode)
             .column("b.name", MetaEmployee.boss, MetaEmployee.name)
             .bind("employeeId", 0L)
-            .streamMap(EMPLOYEE_EM.mapper())
+            .streamMap(EMPLOYEE_MAPPER.mapper())
             .toList());
 }
 ```
@@ -84,7 +83,7 @@ void select() {
 In addition to the `column()` method shown above, the API also provides a more general `label()` method.
 While `column()` is used in combination with the `${COLUMNS}` placeholder dynamically replaced at runtime, `label()` requires you to explicitly place individual aliases in your query using placeholders (e.g., `SELECT e.id AS ${e.id}`).
 Although these placeholders are resolved and properly quoted by the library at runtime (ensuring safe mapping and protection against database reserved keywords), this approach keeps your query structure highly transparent. The raw SQL string from your Java code closely resembles the final command, making it much easier to adapt and test in a database client compared to queries built with `column()`, which typically need to be extracted from application logs.
-Furthermore, `label()`is suitable for mapping custom SQL column labels, aggregate functions, or computed expressions.
+Furthermore, `label()` is suitable for mapping custom SQL column labels, aggregate functions, or computed expressions.
 Please note that these two approaches cannot be combined within a single query; you must exclusively use either `column()` or `label()`.
 
 Database columns can also be mapped without using metamodel keys.
@@ -99,17 +98,20 @@ For mutable JavaBeans (like `Employee`), the ID is simply injected into the exis
 For high-performance scenarios, batch operations are explicitly supported.
 
 ```java
+static final EntityManager<City, Long> CITY_EM = EntityManager.of(City.class);
+static final EntityManager<Employee, Long> EMPLOYEE_EM = EntityManager.of(Employee.class);
+
 void insert() {
     var employeeCrud = EMPLOYEE_EM.crud(connection());
     var cityCrud = CITY_EM.crud(connection());
     
     var cityOttawa = cityCrud.insert(new City(null, "Ottawa", "CA"));
     
-    var emplIngird = Employee.of("Ingrid", cityOttawa, null);
-    var emplDave = Employee.of("Dave", cityOttawa, emplIngird);
-    var emplCarol = Employee.of("Carol", cityOttawa, emplIngird);
+    var emplIngrid = Employee.of("Ingrid", cityOttawa, null);
+    var emplDave = Employee.of("Dave", cityOttawa, emplIngrid);
+    var emplCarol = Employee.of("Carol", cityOttawa, emplIngrid);
 
-    employeeCrud.insert(emplIngird);
+    employeeCrud.insert(emplIngrid);
     employeeCrud.insert(emplDave, emplCarol);
 }
 ```
@@ -125,15 +127,15 @@ However, if necessary, you can also provide an array of Strings instead.
 void update() {
     var employeeCrud = EMPLOYEE_EM.crud(connection());
 
-    var emplIngird = employeeCrud.findById(1L).orElseThrow();
+    var emplIngrid = employeeCrud.findById(1L).orElseThrow();
     var emplDave = employeeCrud.findById(2L).orElseThrow();
     var emplCarol = employeeCrud.findById(3L).orElseThrow();
 
-    emplIngird.setBoss(emplDave);
+    emplIngrid.setBoss(emplDave);
     emplDave.setBoss(null);
     emplCarol.setBoss(emplDave);
 
-    employeeCrud.update(Stream.of(emplIngird, emplDave, emplCarol),
+    employeeCrud.update(Stream.of(emplIngrid, emplDave, emplCarol),
                         MetaEmployee.boss);
 }
 ```
@@ -170,7 +172,7 @@ This test class demonstrates the full lifecycle of entities within the library, 
 Please note that a database commit is performed automatically by the parent class after each test method finishes.
 Feel free to run and modify this test locally to get a hands-on feel for the API.
 
-Explore the full source code here: [BasicDemoTest.java in the Ujorm3 project](project-m2/ujo-orm/src/test/java/org/ujorm/orm/tutorial/TutorialTest.java).
+Explore the full source code here: [TutorialTest.java of the Ujorm3 project](project-m2/ujo-orm/src/test/java/org/ujorm/orm/tutorial/TutorialTest.java).
 
 ## Class Diagram
 
@@ -248,61 +250,62 @@ Java system properties hold the highest precedence, followed by the `ujorm-confi
 The internal defaults defined within the `ConfigImpl` class have the lowest priority.
 Any attempt at a later modification of a parameter value will result in an exception.
 
-For a comprehensive list of all available parameters, please refer directly to the [source code](project-m2/ujo-orm/src/main/java/org/ujorm/orm/impl/ConfigImpl.java).
+For a comprehensive list of all available parameters, please refer directly to the [source code](project-m2/ujo-orm/src/main/java/org/ujorm/orm/Config.java).
 
 ## Maven Dependencies & Setup
 
 Ujorm3 requires **Java 17 or higher**.
-To get started, simply add the core Ujorm3 dependencies to your Maven project.
+To get started, simply add the core Ujorm3 dependency to your Maven project.
 By default, you can write database queries using standard text literals.
-However, if you prefer a safer, strongly-typed coding style, you can optionally configure the `maven-compiler-plugin` to include the Ujorm3 Meta Processor.
 
 ```xml
 <dependencies>
-    <dependency>
-        <groupId>org.ujorm</groupId>
-        <artifactId>ujorm-core</artifactId>
-        <version>3.0.0-RC1</version>
-    </dependency>
     <dependency>
         <groupId>org.ujorm</groupId>
         <artifactId>ujorm-orm</artifactId>
         <version>3.0.0-RC1</version>
     </dependency>
 </dependencies>
+```
 
+However, if you prefer a safer, strongly-typed coding style, you can optionally configure the `maven-compiler-plugin` to include the Ujorm3 Meta Processor.
+
+```xml
 <build>
-<plugins>
-    <!-- 2. Compiler Plugin Setup -->
-    <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-compiler-plugin</artifactId>
-        <version>3.14.1</version>
-        <configuration>
-            <annotationProcessorPaths>
-                <!-- Optional: APT configuration for Lombok -->
-                <path>
-                    <groupId>org.projectlombok</groupId>
-                    <artifactId>lombok</artifactId>
-                    <version>${lombok.version}</version>
-                </path>
-                <!-- Optional: APT configuration for Ujorm3 -->
-                <path>
-                    <groupId>org.ujorm</groupId>
-                    <artifactId>ujorm-meta-processor</artifactId>
-                    <version>3.0.0-RC1</version>
-                </path>
-            </annotationProcessorPaths>
-            <compilerArgs>
-                <!-- Optional: attributes for APT Ujorm3 -->
-                <arg>-Aujorm.prefix=Meta</arg>
-                <arg>-Aujorm.suffix=</arg>
-            </compilerArgs>
-        </configuration>
-    </plugin>
-</plugins>
+    <plugins>
+        <!-- 2. Compiler Plugin Setup -->
+        <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-compiler-plugin</artifactId>
+            <version>3.14.1</version>
+            <configuration>
+                <annotationProcessorPaths>
+                    <!-- Optional: APT configuration for Lombok -->
+                    <path>
+                        <groupId>org.projectlombok</groupId>
+                        <artifactId>lombok</artifactId>
+                        <version>${lombok.version}</version>
+                    </path>
+                    <!-- Optional: APT configuration for Ujorm3 -->
+                    <path>
+                        <groupId>org.ujorm</groupId>
+                        <artifactId>ujorm-meta-processor</artifactId>
+                        <version>3.0.0-RC1</version>
+                    </path>
+                </annotationProcessorPaths>
+                <compilerArgs>
+                    <!-- Optional: attributes for APT Ujorm3 -->
+                    <arg>-Aujorm.prefix=Meta</arg>
+                    <arg>-Aujorm.suffix=</arg>
+                </compilerArgs>
+            </configuration>
+        </plugin>
+    </plugins>
 </build>
 ```
+
+Currently, the library's codebase is fully covered by JUnit tests utilizing an in-memory H2 database.
+Before the final release, integration tests for PostgreSQL, MySQL, Oracle, and MS SQL Server will be added.
 
 ---
 
@@ -316,9 +319,9 @@ The benchmarks focused not only on execution speed across various CRUD scenarios
 * **Execution Speed:** Ujorm3 consistently ranks at the top, delivering the fastest execution times across all tested database operations.
 * **Memory Efficiency:** The library exhibits the lowest memory allocation rate (Bytes per operation).
   This significantly reduces Garbage Collector pressure, prevents latency spikes, and contributes to better overall application performance.
-* **Minimal Footprint:** With a compiled JAR size under 3 MB, Ujorm3 remains ultra-lightweight compared to other frameworks.
-  A smaller compiled footprint promises a gentler learning curve and a reduced risk of bugs.
-  Additionally, this compact size is highly beneficial even for embedded devices.
+* **Minimal Footprint:** The library has zero external dependencies.
+  The entire compiled benchmark module, including the Ujorm3 library itself, is under 3 MB.
+  This ultra-lightweight footprint promises a gentler learning curve, reduces the risk of bugs, and makes it highly beneficial for microservices and embedded devices.
 
 While performance differences may blur on slower production databases, Ujorm3's lightweight nature and optimized memory usage significantly reduce the deployment footprint and maintenance overhead.
 

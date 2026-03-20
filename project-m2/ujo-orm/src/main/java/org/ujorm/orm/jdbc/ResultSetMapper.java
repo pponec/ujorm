@@ -364,4 +364,8 @@ public final class ResultSetMapper<D> {
     public static <D> ResultSetMapper<D> of(@NotNull Class<D> domainClass, Config config) {
         return of(domainClass, DomainHandlerProvider.provider(), config.getMaxCacheSize());
     }
+
+    public static <D> ResultSetMapper<D> of(@NotNull Class<D> domainClass) {
+        return of(domainClass, Config.ofDefault().lock());
+    }
 }

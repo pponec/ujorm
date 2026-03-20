@@ -2,6 +2,8 @@ package org.ujorm.orm.tutorial;
 
 import org.junit.jupiter.api.*;
 import org.ujorm.orm.core.EntityManager;
+import org.ujorm.orm.jdbc.ResultSetMapper;
+import org.ujorm.orm.jdbc.ResultSetMapperService;
 import org.ujorm.orm.tutorial.domains.*;
 import org.ujorm.orm.SqlQuery;
 
@@ -19,8 +21,10 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class TutorialTest extends AbstractDemo {
 
+    private static final ResultSetMapper<Employee> EMPLOYEE_MAPPER = ResultSetMapper.of(Employee.class);
     private static final EntityManager<Employee, Long> EMPLOYEE_EM = EntityManager.of(Employee.class);
     private static final EntityManager<City, Long> CITY_EM = EntityManager.of(City.class);
+
 
     @Test
     @Order(100)
@@ -30,11 +34,11 @@ public class TutorialTest extends AbstractDemo {
 
         // City is an immutable Record, Employee is a mutable JavaBean
         var cityOttawa = cityCrud.insert(new City(null, "Ottawa", "CA"));
-        var emplIngird = Employee.of("Ingrid", cityOttawa, null);
-        var emplDave = Employee.of("Dave", cityOttawa, emplIngird);
-        var emplCarol = Employee.of("Carol", cityOttawa, emplIngird);
+        var emplIngrid = Employee.of("Ingrid", cityOttawa, null);
+        var emplDave = Employee.of("Dave", cityOttawa, emplIngrid);
+        var emplCarol = Employee.of("Carol", cityOttawa, emplIngrid);
 
-        employeeCrud.insert(emplIngird);
+        employeeCrud.insert(emplIngrid);
         employeeCrud.insert(emplDave, emplCarol);
     }
 
@@ -58,7 +62,7 @@ public class TutorialTest extends AbstractDemo {
                 .column("c.country_code", MetaEmployee.city, MetaCity.countryCode)
                 .column("b.name", MetaEmployee.boss, MetaEmployee.name)
                 .bind("employeeId", 0L)
-                .streamMap(EMPLOYEE_EM.mapper())
+                .streamMap(EMPLOYEE_MAPPER.mapper())
                 .toList());
 
         assertEquals(3, employees.size());
@@ -71,15 +75,15 @@ public class TutorialTest extends AbstractDemo {
     void update() {
         var employeeCrud = EMPLOYEE_EM.crud(connection());
 
-        var emplIngird = employeeCrud.findById(1L).orElseThrow();
+        var emplIngrid = employeeCrud.findById(1L).orElseThrow();
         var emplDave = employeeCrud.findById(2L).orElseThrow();
         var emplCarol = employeeCrud.findById(3L).orElseThrow();
 
-        emplIngird.setBoss(emplDave);
+        emplIngrid.setBoss(emplDave);
         emplDave.setBoss(null);
         emplCarol.setBoss(emplDave);
 
-        employeeCrud.update(Stream.of(emplIngird, emplDave, emplCarol),
+        employeeCrud.update(Stream.of(emplIngrid, emplDave, emplCarol),
                             MetaEmployee.boss);
 
         assertNull(employeeCrud.findByIdNullable(2L).getBoss());
