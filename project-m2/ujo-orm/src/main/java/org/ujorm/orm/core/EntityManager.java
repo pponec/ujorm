@@ -26,6 +26,7 @@ import org.ujorm.orm.Crud;
 import org.ujorm.orm.impl.Context;
 import org.ujorm.orm.jdbc.ResultSetMapper;
 import org.ujorm.orm.model.ColumnModel;
+import org.ujorm.orm.model.QuotePair;
 import org.ujorm.orm.model.TableModel;
 import org.ujorm.orm.model.TableModelBuilder;
 import org.ujorm.orm.utils.StatementCache;
@@ -172,8 +173,8 @@ public final class EntityManager<D, V> {
         return pkColumn().key();
     }
 
-    private char getQuote() {
-        return tableModel().jdbc().quoteChar();
+    private QuotePair getQuote() {
+        return tableModel().jdbc().quote();
     }
 
     /** Utilities for EntityManager */
@@ -260,7 +261,7 @@ public final class EntityManager<D, V> {
             var tableName = tableModel().tableName();
             var sql = new StringBuilder(256)
                     .append("INSERT INTO ")
-                    .append(q).append(tableName).append(q)
+                    .append(q.open()).append(tableName).append(q.close())
                     .append(" (");
             write(sql, columns, ", ", q);
             sql.append(") VALUES (?");
@@ -275,13 +276,13 @@ public final class EntityManager<D, V> {
             var tableName = tableModel().tableName();
             var sql = new StringBuilder(256)
                     .append("UPDATE ")
-                    .append(q).append(tableName).append(q);
+                    .append(q.open()).append(tableName).append(q.close());
             for (var i = 0; i < columns.size(); i++) {
                 var column = columns.get(i);
                 sql.append(i == 0 ? " SET " : ", ");
-                sql.append(q).append(column.name()).append(q).append(" = ?");
+                sql.append(q.open()).append(column.name()).append(q.close()).append(" = ?");
             }
-            sql.append(" WHERE ").append(q).append(pkColumn().name()).append(q).append(" = ?");
+            sql.append(" WHERE ").append(q.open()).append(pkColumn().name()).append(q.close()).append(" = ?");
             return sql.toString();
         }
 
@@ -318,12 +319,19 @@ public final class EntityManager<D, V> {
         }
 
         /** Write column name. */
-        public void write(final StringBuilder writer, final List<ColumnModel<D,Object>> columns, final String separator, final char q) {
-            for (var i = 0; i < columns.size(); i++) {
+        public void write(
+                final StringBuilder writer,
+                final List<ColumnModel<D,Object>> columns,
+                final String separator,
+                final QuotePair q
+        ) {
+            for (int i = 0, max = columns.size(); i < max; i++) {
                 if (i > 0) {
                     writer.append(separator);
                 }
-                writer.append(q).append(columns.get(i).name()).append(q);
+                writer.append(q.open())
+                        .append(columns.get(i).name())
+                        .append(q.close());
             }
         }
     }
@@ -479,7 +487,7 @@ public final class EntityManager<D, V> {
             var sql = new StringBuilder(128);
             var labels = buildSelectSql(false, sql);
             var q = getQuote();
-            sql.append(" WHERE ").append(q).append(pkColumn().name()).append(q).append(" = ?");
+            sql.append(" WHERE ").append(q.open()).append(pkColumn().name()).append(q.close()).append(" = ?");
 
             return utilities.run(false, dbconnection, sql, false, ps -> {
                 ps.setObject(1, id);
@@ -509,8 +517,8 @@ public final class EntityManager<D, V> {
             var sql = new StringBuilder(256);
             buildSelectSql(true, sql);
             sql.append(" WHERE ");
-            sql.append(StringUtils.isFilled(whereCondition) ? whereCondition : "1=1");
-            try (var query = new SqlQuery(dbconnection)) {
+            sql.append(StringUtils.hasLength(whereCondition) ? whereCondition : "1=1");
+            try (var query = new SqlQuery(dbconnection, getQuote())) {
                 query.sql(sql.toString());
                 query.fetchSize(context.config().getBatchSize());
                 query.log(context.config().isPrintSql() ? Level.INFO : null, false);
@@ -538,15 +546,15 @@ public final class EntityManager<D, V> {
             for (var i = 0; i < columns.size(); i++) {
                 var column = columns.get(i);
                 if (i > 0) sql.append(", ");
-                sql.append(q).append(column.name()).append(q);
+                sql.append(q.open()).append(column.name()).append(q.close());
 
                 if (includeAliases) {
-                    sql.append(" AS ").append(q).append(column.key()).append(q);
+                    sql.append(" AS ").append(q.open()).append(column.key()).append(q.close());
                 } else {
                     labels[i] = column.key();
                 }
             }
-            sql.append(" FROM ").append(q).append(tableName).append(q);
+            sql.append(" FROM ").append(q.open()).append(tableName).append(q.close());
             return labels;
         }
 
@@ -709,8 +717,8 @@ public final class EntityManager<D, V> {
             var q = getQuote();
             var tableName = tableModel().tableName();
             var sql = new StringBuilder(64)
-                    .append("DELETE FROM ").append(q).append(tableName).append(q)
-                    .append(" WHERE ").append(q).append(pkColumn().name()).append(q).append(" = ?");
+                    .append("DELETE FROM ").append(q.open()).append(tableName).append(q.close())
+                    .append(" WHERE ").append(q.open()).append(pkColumn().name()).append(q.close()).append(" = ?");
             return utilities.run(false, dbconnection, sql, false, ps -> {
                 ps.setObject(1, id);
                 return ps.executeUpdate();
@@ -723,8 +731,8 @@ public final class EntityManager<D, V> {
             var q = getQuote();
             var tableName = tableModel().tableName();
             var sql = new StringBuilder(64)
-                    .append("DELETE FROM ").append(q).append(tableName).append(q)
-                    .append(" WHERE ").append(q).append(pkColumn().name()).append(q).append(" = ?");
+                    .append("DELETE FROM ").append(q.open()).append(tableName).append(q.close())
+                    .append(" WHERE ").append(q.open()).append(pkColumn().name()).append(q.close()).append(" = ?");
 
             var limit = utilities.getBatchLimit();
 

@@ -19,6 +19,7 @@ package org.ujorm.orm;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.ujorm.Key;
+import org.ujorm.orm.model.QuotePair;
 import org.ujorm.tools.common.StringUtils;
 import org.ujorm.tools.jdbc.AbstractSqlQuery;
 import org.ujorm.tools.msg.MessageService;
@@ -66,13 +67,13 @@ public class SqlQuery extends AbstractSqlQuery<SqlQuery> {
     private Map<String, Object> columnLabels;
     private boolean hasColumnsMode = false;
     /** Label quoter */
-    private final char q;
+    private final QuotePair q;
 
     public SqlQuery(@NotNull Connection dbConnection) {
-        this(dbConnection, '"');
+        this(dbConnection, QuotePair.ofDefault());
     }
 
-    public SqlQuery(@NotNull Connection dbConnection, char quoter) {
+    public SqlQuery(@NotNull Connection dbConnection, QuotePair quoter) {
         super(dbConnection);
         this.q = quoter;
     }
@@ -137,12 +138,12 @@ public class SqlQuery extends AbstractSqlQuery<SqlQuery> {
             labelOffset = builder.length();
         }
 
-        builder.append(q);
+        builder.append(q.open());
         for (int i = 0; i < attrs.length; i++) {
             if (i > 0) builder.append('.');
             builder.append(attrs[i]);
         }
-        builder.append(q);
+        builder.append(q.close());
 
         var mapValue = builder.toString();
         var labelStr = labelOffset == 0 ? mapValue : builder.substring(labelOffset);

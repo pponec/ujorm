@@ -95,20 +95,20 @@ public class StringUtilsTest {
 
     @Test
     @DisplayName("isFilled should return true for non-empty string")
-    void isFilled_ShouldReturnTrueForNonEmptyString() {
+    void hasLength_ShouldReturnTrueForNonEmptyString() {
         var text = "Hello";
         var space = " ";
 
-        assertTrue(StringUtils.isFilled(text), "Should return true for 'Hello'");
-        assertTrue(StringUtils.isFilled(space), "Should return true for space");
+        assertTrue(StringUtils.hasLength(text), "Should return true for 'Hello'");
+        assertTrue(StringUtils.hasLength(space), "Should return true for space");
     }
 
     @Test
     @DisplayName("isFilled should return false for empty string")
-    void isFilled_ShouldReturnFalseForEmptyString() {
+    void hasLength_ShouldReturnFalseForEmptyString() {
         var empty = "";
 
-        assertFalse(StringUtils.isFilled(empty), "Should return false for empty string");
+        assertFalse(StringUtils.hasLength(empty), "Should return false for empty string");
     }
 
     @Test
@@ -133,7 +133,7 @@ public class StringUtilsTest {
     @DisplayName("Methods should be inverse")
     void methodsShouldBeInverse() {
         var testData = "test";
-        var result = StringUtils.isFilled(testData);
+        var result = StringUtils.hasLength(testData);
 
         assertEquals(result, !StringUtils.isEmpty(testData), "Methods isFilled and isEmpty must return opposite values");
     }

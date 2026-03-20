@@ -20,7 +20,7 @@ public final class Config extends AbstractSnapshotable<Config> {
     private static final String PREFIX = "org.ujorm.";
     private static final String CONFIG_FILE = "ujorm-config.properties";
     private static final Map<Class<?>, Function<String, ?>> funMap = Map.copyOf(CsvConfig.initConverterMap());
-    private static KeyProvider p = new KeyProvider();
+    private static KeyProvider meta = new KeyProvider();
 
     // --- Start the public list of the configuration parameters ---
 
@@ -32,41 +32,41 @@ public final class Config extends AbstractSnapshotable<Config> {
      * Otherwise, or if you need to specify a different field as the primary key,
      * you must explicitly annotate the field using the JPA {@code @Id} annotation.
      */
-    public static final Key<Boolean> firstPropertyIsIdentifier = p.key("firstPropertyIsIdentifier", true);
+    public static final Key<Boolean> firstPropertyIsIdentifier = meta.key("firstPropertyIsIdentifier", true);
 
     /** Maximum size of the cache in the {@link org.ujorm.orm.jdbc.ResultSetMapper} */
-    public static final Key<Integer> maxCacheSize = p.key("maxCacheSize", 512);
+    public static final Key<Integer> maxCacheSize = meta.key("maxCacheSize", 512);
 
     /** Batch size for the INSERT */
-    public static final Key<Integer> batchSize = p.key("batchSize", 512);
+    public static final Key<Integer> batchSize = meta.key("batchSize", 512);
 
     /** Prints all SQL templates to the log. */
-    public static final Key<Boolean> printSql = p.key("printSql", true);
+    public static final Key<Boolean> printSql = meta.key("printSql", true);
 
     /** Enable quoting the SQL columns */
-    public static final Key<Boolean> enableSqlQuoting = p.key("enableSqlQuoting", true);
+    public static final Key<Boolean> enableSqlQuoting = meta.key("enableSqlQuoting", true);
 
     /** Print warnings, if Connection autocommit is true in batch operations. */
-    public static final Key<Boolean> autoCommitWarned = p.key("autoCommitWarned", true);
+    public static final Key<Boolean> autoCommitWarned = meta.key("autoCommitWarned", true);
 
     /** Enable or disable the service of the {@link org.ujorm.orm.UjormServiceProvider} object. */
-    public static final Key<Boolean> enabledUjormServiceProvider = p.key("enabledUjormServiceProvider", true);
+    public static final Key<Boolean> enabledUjormServiceProvider = meta.key("enabledUjormServiceProvider", true);
 
     // --- End of the list ---
 
     /** A technical parameter for the jUnit test only */
-    public static final Key<String> testOnly = p.key("testOnly", "");
+    public static final Key<String> testOnly = meta.key("testOnly", "");
 
 
     /** Object state stored in an array */
-    private final Object[] values = new Object[p.keys.size()];
+    private final Object[] values = new Object[meta.keys.size()];
 
     /** The object is locked and immutable. */
     private boolean locked = false;
 
     public Config() {
         Properties properties = loadProperties();
-        for(var key : p.keys) {
+        for(var key : meta.keys) {
             loadKey(key, properties);
         }
     }
@@ -144,7 +144,7 @@ public final class Config extends AbstractSnapshotable<Config> {
 
     @Override
     public String toString() {
-        return "ConfigImpl{count=" + p.keys.size() + ", locked=" + locked + "}";
+        return "ConfigImpl{count=" + meta.keys.size() + ", locked=" + locked + "}";
     }
 
     /** Internal Key definition */

@@ -60,8 +60,8 @@ public class TableModelBuilder<D> {
                 .filter(c -> c != pk)
                 .toList();
         var isOracleDb = isOracle(initConnection);
-        var quoteChar = getIdentifierQuoteChar(initConnection, ctx.config());
-        var jdbc = new Jdbc(isOracleDb, quoteChar);
+        var sqlQuote = getSqlQuote(initConnection, ctx.config());
+        var jdbc = new Jdbc(isOracleDb, sqlQuote);
         var tableName = softTableModel.merge(realTableModel).getQualifiedName();
         return new TableModel(handler, pk, columns, tableName, insertedColumns, jdbc);
     }
@@ -74,8 +74,8 @@ public class TableModelBuilder<D> {
      * @return result - The real table identifier.
      */
     protected TableIdentifier createTableIdentifier(TableIdentifier table, Connection initConnection) {
-        var catalog = StringUtils.isFilled(table.catalog()) ? table.catalog() : null;
-        var schema = StringUtils.isFilled(table.schema()) ? table.schema() : null;
+        var catalog = StringUtils.hasLength(table.catalog()) ? table.catalog() : null;
+        var schema = StringUtils.hasLength(table.schema()) ? table.schema() : null;
         var tableName = table.table();
 
         try {
@@ -124,8 +124,8 @@ public class TableModelBuilder<D> {
         var result = new ArrayList<String>();
         try {
             var metaData = initConnection.getMetaData();
-            var catalog = StringUtils.isFilled(table.catalog()) ? table.catalog() : null;
-            var schema = StringUtils.isFilled(table.schema()) ? table.schema() : null;
+            var catalog = StringUtils.hasLength(table.catalog()) ? table.catalog() : null;
+            var schema = StringUtils.hasLength(table.schema()) ? table.schema() : null;
 
             try (var resultSet = metaData.getColumns(catalog, schema, table.table(), null)) {
                 while (resultSet.next()) {
@@ -166,21 +166,37 @@ public class TableModelBuilder<D> {
     }
 
     /**
-     * Retrieves the identifier quote character used by the database connection.
+     * Retrieves the identifier quote character configuration used by the database connection.
      *
      * @param connection The database connection to check.
      * @param config The current configuration context.
-     * @return The identifier quote char.
+     * @return The identifier quote configuration.
      */
-    protected char getIdentifierQuoteChar(Connection connection, Config config) {
+    protected QuotePair getSqlQuote(Connection connection, Config config) {
         if (!config.isEnableSqlQuoting()) {
-            return ' ';
+            return QuotePair.ofNone();
         }
         try {
-            var quoteString = connection.getMetaData().getIdentifierQuoteString();
-            return (quoteString != null && !quoteString.isBlank()) ? quoteString.charAt(0) : '"';
+            var metaData = connection.getMetaData();
+            var dbName = metaData.getDatabaseProductName();
+            if (StringUtils.hasLength(dbName)) {
+                if (dbName.contains("Microsoft SQL Server")) {
+                    return QuotePair.ofSqlServer();
+                } else if (dbName.contains("MySQL") || dbName.contains("MariaDB")) {
+                    return QuotePair.ofMySql();
+                }
+            }
+
+            var doubleQuote = '"';
+            var quoteString = metaData.getIdentifierQuoteString();
+            var quoteChar = (quoteString == null || quoteString.isBlank())
+                    ? doubleQuote
+                    : quoteString.charAt(0);
+            return quoteChar == doubleQuote
+                    ? QuotePair.ofDefault()
+                    : new QuotePair(quoteChar, quoteChar);
         } catch (SQLException ex) {
-            throw SQLExceptionBuilder.build("Failed to retrieve identifier quote string from metadata", ex);
+            throw SQLExceptionBuilder.build("Cannot read DB metadata", ex);
         }
     }
 

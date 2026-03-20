@@ -75,7 +75,7 @@ public record TableIdentifier(
                         catalog,
                         schema,
                         table)
-                .filter(s -> StringUtils.isFilled(s))
+                .filter(s -> StringUtils.hasLength(s))
                 .collect(Collectors.joining("."));
     }
 

@@ -278,13 +278,13 @@ public class StringUtils {
     }
 
     /** Value is not null and not empty */
-    public static boolean isFilled(@Nullable final String text) {
+    public static boolean hasLength(@Nullable final String text) {
         return text != null && !text.isEmpty();
     }
 
     /** Value is not null and not empty */
     public static boolean isEmpty(@Nullable final String text) {
-        return !isFilled(text);
+        return !hasLength(text);
     }
 
 }
