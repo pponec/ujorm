@@ -127,7 +127,7 @@ extends <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/ja
 <div class="block">Returns the name of the database column label.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5"><code>default int</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5"><code><a href="#compareTo(org.ujorm.Key)" class="member-name-link">compareTo</a><wbr>(@NotNull <a href="Key.html" title="interface in org.ujorm">Key</a>&nbsp;o)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5"><code><a href="#compareTo(org.ujorm.core.Key)" class="member-name-link">compareTo</a><wbr>(@NotNull <a href="Key.html" title="interface in org.ujorm">Key</a>&nbsp;o)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code>@NotNull <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;<a href="Key.html" title="type parameter in Key">UJO</a>&gt;</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#domainClass()" class="member-name-link">domainClass</a>()</code></div>
@@ -181,13 +181,13 @@ extends <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/ja
 <div class="block">Returns true if the key type is a subtype of, or equal to, the specified class.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5"><code>default &lt;V2&gt;&nbsp;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5"><code><a href="#join(org.ujorm.Key)" class="member-name-link">join</a><wbr>(@NotNull <a href="Key.html" title="interface in org.ujorm">Key</a>&lt;<a href="Key.html" title="type parameter in Key">VALUE</a>,<wbr>V2&gt;&nbsp;key2)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5"><code><a href="#join(org.ujorm.core.Key)" class="member-name-link">join</a><wbr>(@NotNull <a href="Key.html" title="interface in org.ujorm">Key</a>&lt;<a href="Key.html" title="type parameter in Key">VALUE</a>,<wbr>V2&gt;&nbsp;key2)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5">
 <div class="block">Joins all key names using a dot delimiter.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5"><code>default &lt;V2,<wbr>
 V3&gt;&nbsp;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5"><code><a href="#join(org.ujorm.Key,org.ujorm.Key)" class="member-name-link">join</a><wbr>(@NotNull <a href="Key.html" title="interface in org.ujorm">Key</a>&lt;<a href="Key.html" title="type parameter in Key">VALUE</a>,<wbr>V2&gt;&nbsp;key2,
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5"><code><a href="#join(org.ujorm.core.Key,org.ujorm.core.Key)" class="member-name-link">join</a><wbr>(@NotNull <a href="Key.html" title="interface in org.ujorm">Key</a>&lt;<a href="Key.html" title="type parameter in Key">VALUE</a>,<wbr>V2&gt;&nbsp;key2,
  @NotNull <a href="Key.html" title="interface in org.ujorm">Key</a>&lt;V2,<wbr>V3&gt;&nbsp;key3)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5">
 <div class="block">Joins all key names using a dot delimiter.</div>
@@ -195,7 +195,7 @@ V3&gt;&nbsp;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.bas
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5"><code>default &lt;V2,<wbr>
 V3,<wbr>
 V4&gt;&nbsp;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5"><code><a href="#join(org.ujorm.Key,org.ujorm.Key,org.ujorm.Key,org.ujorm.Key...)" class="member-name-link">join</a><wbr>(@NotNull <a href="Key.html" title="interface in org.ujorm">Key</a>&lt;<a href="Key.html" title="type parameter in Key">VALUE</a>,<wbr>V2&gt;&nbsp;key2,
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5"><code><a href="#join(org.ujorm.core.Key,org.ujorm.core.Key,org.ujorm.core.Key,org.ujorm.core.Key...)" class="member-name-link">join</a><wbr>(@NotNull <a href="Key.html" title="interface in org.ujorm">Key</a>&lt;<a href="Key.html" title="type parameter in Key">VALUE</a>,<wbr>V2&gt;&nbsp;key2,
  @NotNull <a href="Key.html" title="interface in org.ujorm">Key</a>&lt;V2,<wbr>V3&gt;&nbsp;key3,
  @NotNull <a href="Key.html" title="interface in org.ujorm">Key</a>&lt;V3,<wbr>V4&gt;&nbsp;key4,
  @NotNull <a href="Key.html" title="interface in org.ujorm">Key</a>&lt;?,<wbr>?&gt;...&nbsp;keys)</code></div>
@@ -345,7 +345,7 @@ V4&gt;&nbsp;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.bas
  <a href="Key.html" title="type parameter in Key">VALUE</a>&nbsp;value)</span>
        throws <span class="exceptions"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/UnsupportedOperationException.html" title="class or interface in java.lang" class="external-link">UnsupportedOperationException</a></span></div>
 <div class="block">Sets a type-safe value to the specified Ujo object.
- This method always calls <a href="Ujo.html#setValue(org.ujorm.Key,V)"><code>Ujo.setValue(Key, Object)</code></a>.</div>
+ This method always calls <a href="Ujo.html#setValue(org.ujorm.core.Key,V)"><code>Ujo.setValue(Key, Object)</code></a>.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>bean</code> - The target Ujo object.</dd>
@@ -355,7 +355,7 @@ V4&gt;&nbsp;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.bas
 <dt>See Also:</dt>
 <dd>
 <ul class="see-list-long">
-<li><a href="Ujo.html#setValue(org.ujorm.Key,V)"><code>Ujo.setValue(Key, Object)</code></a></li>
+<li><a href="Ujo.html#setValue(org.ujorm.core.Key,V)"><code>Ujo.setValue(Key, Object)</code></a></li>
 </ul>
 </dd>
 </dl>
@@ -377,7 +377,7 @@ V4&gt;&nbsp;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.bas
 <dt>See Also:</dt>
 <dd>
 <ul class="see-list">
-<li><a href="Ujo.html#getValue(org.ujorm.Key)"><code>Ujo.getValue(Key)</code></a></li>
+<li><a href="Ujo.html#getValue(org.ujorm.core.Key)"><code>Ujo.getValue(Key)</code></a></li>
 <li><a href="#of(UJO)"><code>of(Object)</code></a></li>
 </ul>
 </dd>
@@ -496,7 +496,7 @@ V4&gt;&nbsp;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.bas
 </section>
 </li>
 <li>
-<section class="detail" id="compareTo(org.ujorm.Key)">
+<section class="detail" id="compareTo(org.ujorm.core.Key)">
 <h3>compareTo</h3>
 <div class="member-signature"><span class="modifiers">default</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">compareTo</span><wbr><span class="parameters">(@NotNull
  @NotNull <a href="Key.html" title="interface in org.ujorm">Key</a>&nbsp;o)</span></div>
@@ -507,7 +507,7 @@ V4&gt;&nbsp;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.bas
 </section>
 </li>
 <li>
-<section class="detail" id="join(org.ujorm.Key)">
+<section class="detail" id="join(org.ujorm.core.Key)">
 <h3>join</h3>
 <div class="member-signature"><span class="modifiers">default</span>&nbsp;<span class="type-parameters">&lt;V2&gt;</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">join</span><wbr><span class="parameters">(@NotNull
  @NotNull <a href="Key.html" title="interface in org.ujorm">Key</a>&lt;<a href="Key.html" title="type parameter in Key">VALUE</a>,<wbr>V2&gt;&nbsp;key2)</span></div>
@@ -515,7 +515,7 @@ V4&gt;&nbsp;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.bas
 </section>
 </li>
 <li>
-<section class="detail" id="join(org.ujorm.Key,org.ujorm.Key)">
+<section class="detail" id="join(org.ujorm.core.Key,org.ujorm.core.Key)">
 <h3>join</h3>
 <div class="member-signature"><span class="modifiers">default</span>&nbsp;<span class="type-parameters">&lt;V2,<wbr>
 V3&gt;</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">join</span><wbr><span class="parameters">(@NotNull
@@ -526,7 +526,7 @@ V3&gt;</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en
 </section>
 </li>
 <li>
-<section class="detail" id="join(org.ujorm.Key,org.ujorm.Key,org.ujorm.Key,org.ujorm.Key...)">
+<section class="detail" id="join(org.ujorm.core.Key,org.ujorm.core.Key,org.ujorm.core.Key,org.ujorm.core.Key...)">
 <h3>join</h3>
 <div class="member-signature"><span class="modifiers">default</span>&nbsp;<span class="type-parameters">&lt;V2,<wbr>
 V3,<wbr>

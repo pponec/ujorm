@@ -1,7 +1,6 @@
 package org.ujorm.core;
 
 import org.jetbrains.annotations.NotNull;
-import org.ujorm.DomainHandler;
 import org.ujorm.core.generator.*;
 import org.ujorm.core.impl.AbstractUjo;
 import java.util.Arrays;

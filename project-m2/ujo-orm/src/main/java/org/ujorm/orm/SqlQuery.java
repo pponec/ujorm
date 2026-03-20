@@ -18,7 +18,7 @@ package org.ujorm.orm;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.ujorm.Key;
+import org.ujorm.core.Key;
 import org.ujorm.orm.model.QuotePair;
 import org.ujorm.tools.common.StringUtils;
 import org.ujorm.tools.jdbc.AbstractSqlQuery;

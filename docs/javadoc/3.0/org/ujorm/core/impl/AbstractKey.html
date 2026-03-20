@@ -150,7 +150,7 @@ implements <a href="../../Key.html" title="interface in org.ujorm">Key</a>&lt;D,
 <div class="block">Returns the name of the database column label.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>final int</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#compareTo(org.ujorm.Key)" class="member-name-link">compareTo</a><wbr>(@NotNull <a href="../../Key.html" title="interface in org.ujorm">Key</a>&nbsp;o)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#compareTo(org.ujorm.core.Key)" class="member-name-link">compareTo</a><wbr>(@NotNull <a href="../../Key.html" title="interface in org.ujorm">Key</a>&nbsp;o)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>final boolean</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#equals(java.lang.Object)" class="member-name-link">equals</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&nbsp;object)</code></div>
@@ -246,7 +246,7 @@ implements <a href="../../Key.html" title="interface in org.ujorm">Key</a>&lt;D,
 <div class="block">Returns the type of the value associated with this key.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/UnsupportedOperationException.html" title="class or interface in java.lang" class="external-link">UnsupportedOperationException</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#unsupportedSetter(org.ujorm.Key)" class="member-name-link">unsupportedSetter</a><wbr>(@NotNull <a href="../../Key.html" title="interface in org.ujorm">Key</a>&lt;?,<wbr>?&gt;&nbsp;key)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#unsupportedSetter(org.ujorm.core.Key)" class="member-name-link">unsupportedSetter</a><wbr>(@NotNull <a href="../../Key.html" title="interface in org.ujorm">Key</a>&lt;?,<wbr>?&gt;&nbsp;key)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Creates a new exception for missing setters.</div>
 </div>
@@ -260,8 +260,8 @@ implements <a href="../../Key.html" title="interface in org.ujorm">Key</a>&lt;D,
 <h3 id="methods-inherited-from-class-java.lang.CharSequence">Methods inherited from interface&nbsp;java.lang.<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/CharSequence.html" title="class or interface in java.lang" class="external-link">CharSequence</a></h3>
 <code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/CharSequence.html#chars()" title="class or interface in java.lang" class="external-link">chars</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/CharSequence.html#codePoints()" title="class or interface in java.lang" class="external-link">codePoints</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/CharSequence.html#isEmpty()" title="class or interface in java.lang" class="external-link">isEmpty</a></code></div>
 <div class="inherited-list">
-<h3 id="methods-inherited-from-class-org.ujorm.Key">Methods inherited from interface&nbsp;org.ujorm.<a href="../../Key.html" title="interface in org.ujorm">Key</a></h3>
-<code><a href="../../Key.html#domainClass()">domainClass</a>, <a href="../../Key.html#getValue(UJO)">getValue</a>, <a href="../../Key.html#join(org.ujorm.Key)">join</a>, <a href="../../Key.html#join(org.ujorm.Key,org.ujorm.Key)">join</a>, <a href="../../Key.html#join(org.ujorm.Key,org.ujorm.Key,org.ujorm.Key,org.ujorm.Key...)">join</a>, <a href="../../Key.html#setValue(UJO,VALUE)">setValue</a></code></div>
+<h3 id="methods-inherited-from-class-org.ujorm.core.Key">Methods inherited from interface&nbsp;org.ujorm.<a href="../../Key.html" title="interface in org.ujorm">Key</a></h3>
+<code><a href="../../Key.html#domainClass()">domainClass</a>, <a href="../../Key.html#getValue(UJO)">getValue</a>, <a href="../../Key.html#join(org.ujorm.core.Key)">join</a>, <a href="../../Key.html#join(org.ujorm.core.Key,org.ujorm.core.Key)">join</a>, <a href="../../Key.html#join(org.ujorm.core.Key,org.ujorm.core.Key,org.ujorm.core.Key,org.ujorm.core.Key...)">join</a>, <a href="../../Key.html#setValue(UJO,VALUE)">setValue</a></code></div>
 </section>
 </li>
 </ul>
@@ -522,7 +522,7 @@ implements <a href="../../Key.html" title="interface in org.ujorm">Key</a>&lt;D,
 </section>
 </li>
 <li>
-<section class="detail" id="compareTo(org.ujorm.Key)">
+<section class="detail" id="compareTo(org.ujorm.core.Key)">
 <h3>compareTo</h3>
 <div class="member-signature"><span class="modifiers">public final</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">compareTo</span><wbr><span class="parameters">(@NotNull
  @NotNull <a href="../../Key.html" title="interface in org.ujorm">Key</a>&nbsp;o)</span></div>
@@ -530,7 +530,7 @@ implements <a href="../../Key.html" title="interface in org.ujorm">Key</a>&lt;D,
 <dt>Specified by:</dt>
 <dd><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Comparable.html#compareTo(T)" title="class or interface in java.lang" class="external-link">compareTo</a></code>&nbsp;in interface&nbsp;<code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Comparable.html" title="class or interface in java.lang" class="external-link">Comparable</a>&lt;<a href="AbstractKey.html" title="type parameter in AbstractKey">D</a>&gt;</code></dd>
 <dt>Specified by:</dt>
-<dd><code><a href="../../Key.html#compareTo(org.ujorm.Key)">compareTo</a></code>&nbsp;in interface&nbsp;<code><a href="../../Key.html" title="interface in org.ujorm">Key</a>&lt;<a href="AbstractKey.html" title="type parameter in AbstractKey">D</a>,<wbr><a href="AbstractKey.html" title="type parameter in AbstractKey">V</a>&gt;</code></dd>
+<dd><code><a href="../../Key.html#compareTo(org.ujorm.core.Key)">compareTo</a></code>&nbsp;in interface&nbsp;<code><a href="../../Key.html" title="interface in org.ujorm">Key</a>&lt;<a href="AbstractKey.html" title="type parameter in AbstractKey">D</a>,<wbr><a href="AbstractKey.html" title="type parameter in AbstractKey">V</a>&gt;</code></dd>
 </dl>
 </section>
 </li>
@@ -600,7 +600,7 @@ implements <a href="../../Key.html" title="interface in org.ujorm">Key</a>&lt;D,
 </section>
 </li>
 <li>
-<section class="detail" id="unsupportedSetter(org.ujorm.Key)">
+<section class="detail" id="unsupportedSetter(org.ujorm.core.Key)">
 <h3>unsupportedSetter</h3>
 <div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/UnsupportedOperationException.html" title="class or interface in java.lang" class="external-link">UnsupportedOperationException</a></span>&nbsp;<span class="element-name">unsupportedSetter</span><wbr><span class="parameters">(@NotNull
  @NotNull <a href="../../Key.html" title="interface in org.ujorm">Key</a>&lt;?,<wbr>?&gt;&nbsp;key)</span></div>

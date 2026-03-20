@@ -3,8 +3,8 @@ package org.ujorm.core.impl;
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.ujorm.DomainHandler;
-import org.ujorm.Ujo;
+import org.ujorm.core.DomainHandler;
+import org.ujorm.core.Ujo;
 
 /** Extended API */
 @RequiredArgsConstructor

@@ -1,7 +1,6 @@
 package org.ujorm.core;
 
 import org.jetbrains.annotations.NotNull;
-import org.ujorm.DomainHandler;
 
 /**
  * Singleton to provide Domain handlers.

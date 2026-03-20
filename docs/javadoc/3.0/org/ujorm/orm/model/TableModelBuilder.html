@@ -112,14 +112,14 @@ loadScripts(document, 'script');</script>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#build(java.sql.Connection)" class="member-name-link">build</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.sql/java/sql/Connection.html" title="class or interface in java.sql" class="external-link">Connection</a>&nbsp;initConnection)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static &lt;D&gt;&nbsp;<a href="TableModel.html" title="class in org.ujorm.orm.model">TableModel</a>&lt;D&gt;</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#build(org.ujorm.DomainHandler,org.ujorm.orm.impl.Context,java.sql.Connection)" class="member-name-link">build</a><wbr>(<a href="../../DomainHandler.html" title="interface in org.ujorm">DomainHandler</a>&lt;D&gt;&nbsp;handler,
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#build(org.ujorm.core.DomainHandler,org.ujorm.orm.impl.Context,java.sql.Connection)" class="member-name-link">build</a><wbr>(<a href="../../DomainHandler.html" title="interface in org.ujorm">DomainHandler</a>&lt;D&gt;&nbsp;handler,
  <a href="../impl/Context.html" title="class in org.ujorm.orm.impl">Context</a>&nbsp;ctx,
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.sql/java/sql/Connection.html" title="class or interface in java.sql" class="external-link">Connection</a>&nbsp;initConnection)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Static builder</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected &lt;V&gt;&nbsp;<a href="ColumnModel.html" title="class in org.ujorm.orm.model">ColumnModel</a>&lt;<a href="TableModelBuilder.html" title="type parameter in TableModelBuilder">D</a>,<wbr>V&gt;</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#column(org.ujorm.Key)" class="member-name-link">column</a><wbr>(<a href="../../Key.html" title="interface in org.ujorm">Key</a>&lt;<a href="TableModelBuilder.html" title="type parameter in TableModelBuilder">D</a>,<wbr>V&gt;&nbsp;key)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#column(org.ujorm.core.Key)" class="member-name-link">column</a><wbr>(<a href="../../Key.html" title="interface in org.ujorm">Key</a>&lt;<a href="TableModelBuilder.html" title="type parameter in TableModelBuilder">D</a>,<wbr>V&gt;&nbsp;key)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Find real column name from database.</div>
 </div>
@@ -224,7 +224,7 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
-<section class="detail" id="column(org.ujorm.Key)">
+<section class="detail" id="column(org.ujorm.core.Key)">
 <h3>column</h3>
 <div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="type-parameters">&lt;V&gt;</span>&nbsp;<span class="return-type"><a href="ColumnModel.html" title="class in org.ujorm.orm.model">ColumnModel</a>&lt;<a href="TableModelBuilder.html" title="type parameter in TableModelBuilder">D</a>,<wbr>V&gt;</span>&nbsp;<span class="element-name">column</span><wbr><span class="parameters">(<a href="../../Key.html" title="interface in org.ujorm">Key</a>&lt;<a href="TableModelBuilder.html" title="type parameter in TableModelBuilder">D</a>,<wbr>V&gt;&nbsp;key)</span></div>
 <div class="block">Find real column name from database.</div>
@@ -237,7 +237,7 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
-<section class="detail" id="build(org.ujorm.DomainHandler,org.ujorm.orm.impl.Context,java.sql.Connection)">
+<section class="detail" id="build(org.ujorm.core.DomainHandler,org.ujorm.orm.impl.Context,java.sql.Connection)">
 <h3>build</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="type-parameters">&lt;D&gt;</span>&nbsp;<span class="return-type"><a href="TableModel.html" title="class in org.ujorm.orm.model">TableModel</a>&lt;D&gt;</span>&nbsp;<span class="element-name">build</span><wbr><span class="parameters">(<a href="../../DomainHandler.html" title="interface in org.ujorm">DomainHandler</a>&lt;D&gt;&nbsp;handler,
  <a href="../impl/Context.html" title="class in org.ujorm.orm.impl">Context</a>&nbsp;ctx,

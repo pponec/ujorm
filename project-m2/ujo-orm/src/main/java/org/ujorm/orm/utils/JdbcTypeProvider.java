@@ -17,7 +17,7 @@ package org.ujorm.orm.utils;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.ujorm.Key;
+import org.ujorm.core.Key;
 import org.ujorm.tools.common.Primitive;
 
 import java.math.BigDecimal;

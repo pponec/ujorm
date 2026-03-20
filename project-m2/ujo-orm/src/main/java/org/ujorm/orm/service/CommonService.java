@@ -16,7 +16,7 @@
 package org.ujorm.orm.service;
 
 import org.jetbrains.annotations.NotNull;
-import org.ujorm.Key;
+import org.ujorm.core.Key;
 import org.ujorm.orm.impl.Context;
 
 import java.util.HashSet;

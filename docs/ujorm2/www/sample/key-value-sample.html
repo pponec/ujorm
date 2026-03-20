@@ -873,8 +873,8 @@
 </div><div id="l25" class="code_block"><span class="kn">import</span> <span class="nn">java.util.*</span><span class="o">;</span>
 </div><div id="l26" class="code_block"><span class="kn">import</span> <span class="nn">java.util.logging.Level</span><span class="o">;</span>
 </div><div id="l27" class="code_block"><span class="kn">import</span> <span class="nn">java.util.logging.Logger</span><span class="o">;</span>
-</div><div id="l28" class="code_block"><span class="kn">import</span> <span class="nn">org.ujorm.Key</span><span class="o">;</span>
-</div><div id="l29" class="code_block"><span class="kn">import</span> <span class="nn">org.ujorm.Ujo</span><span class="o">;</span>
+</div><div id="l28" class="code_block"><span class="kn">import</span> <span class="nn">org.ujorm.core.Key</span><span class="o">;</span>
+</div><div id="l29" class="code_block"><span class="kn">import</span> <span class="nn">org.ujorm.core.Ujo</span><span class="o">;</span>
 </div><div id="l30" class="code_block"><span class="kn">import</span> <span class="nn">org.ujorm.Validator</span><span class="o">;</span>
 </div><div id="l31" class="code_block"><span class="kn">import</span> <span class="nn">org.ujorm.core.KeyRing</span><span class="o">;</span>
 </div><div id="l32" class="code_block"><span class="kn">import</span> <span class="nn">org.ujorm.core.UjoComparator</span><span class="o">;</span>
@@ -1021,7 +1021,7 @@
 </div><div id="l173" class="code_block">    <span class="o">}</span>
 </div><div id="l174" class="code_block">
 </div><div id="l175" class="code_block">    <span class="cm">/** There is a {@link Validator} class which checks an input data using the method</span>
-</div><div id="l176" class="code_block"><span class="cm">     * {@link Validator#checkValue(java.lang.Object, org.ujorm.Key, org.ujorm.Ujo) checkValue(value ...)}</span>
+</div><div id="l176" class="code_block"><span class="cm">     * {@link Validator#checkValue(java.lang.Object, org.ujorm.core.Key, org.ujorm.core.Ujo) checkValue(value ...)}</span>
 </div><div id="l177" class="code_block"><span class="cm">     * to ensure an integration.</span>
 </div><div id="l178" class="code_block"><span class="cm">     * &lt;h3&gt;Features:&lt;/h3&gt;</span>
 </div><div id="l179" class="code_block"><span class="cm">     * &lt;ul&gt;</span>
@@ -1068,7 +1068,7 @@
 </div><div id="l220" class="code_block">        <span class="k">assert</span> <span class="n">expected</span><span class="o">.</span><span class="na">equals</span><span class="o">(</span><span class="n">result</span><span class="o">);</span>
 </div><div id="l221" class="code_block">    <span class="o">}</span>
 </div><div id="l222" class="code_block">
-</div><div id="l223" class="code_block">    <span class="cm">/** Two related keys can be joined to the new {@link Key} instance by the method {@link Key#add(org.ujorm.Key)}.</span>
+</div><div id="l223" class="code_block">    <span class="cm">/** Two related keys can be joined to the new {@link Key} instance by the method {@link Key#add(org.ujorm.core.Key)}.</span>
 </div><div id="l224" class="code_block"><span class="cm">     * A CompositeKey can be used to reading and writing attributes of related domain objects,</span>
 </div><div id="l225" class="code_block"><span class="cm">     * however the setter with the CompositeKey &lt;create&gt;creates&lt;/create&gt; missing domain relations automatically.</span>
 </div><div id="l226" class="code_block"><span class="cm">     */</span>

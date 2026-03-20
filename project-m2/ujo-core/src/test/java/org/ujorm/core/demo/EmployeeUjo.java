@@ -1,9 +1,9 @@
 package org.ujorm.core.demo;
 
 import org.ujorm.core.DomainHandlerProvider;
-import org.ujorm.DomainHandler;
-import org.ujorm.Key;
-import org.ujorm.Ujo;
+import org.ujorm.core.DomainHandler;
+import org.ujorm.core.Key;
+import org.ujorm.core.Ujo;
 import org.ujorm.core.demo.generated.Employee_;
 
 import java.time.LocalDate;

@@ -16,7 +16,7 @@
 package org.ujorm.orm.utils;
 
 import org.jetbrains.annotations.NotNull;
-import org.ujorm.DomainHandler;
+import org.ujorm.core.DomainHandler;
 
 import java.util.Arrays;
 import java.util.Objects;

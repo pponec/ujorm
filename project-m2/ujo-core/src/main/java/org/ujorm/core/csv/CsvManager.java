@@ -1,8 +1,8 @@
 package org.ujorm.core.csv;
 
-import org.ujorm.DomainHandler;
+import org.ujorm.core.DomainHandler;
 import org.ujorm.core.DomainHandlerProvider;
-import org.ujorm.Key;
+import org.ujorm.core.Key;
 import org.ujorm.core.impl.AbstractUjo;
 import org.ujorm.tools.common.Primitive;
 

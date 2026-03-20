@@ -2,7 +2,7 @@ package org.ujorm.orm;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.ujorm.Key;
+import org.ujorm.core.Key;
 
 import java.sql.Connection;
 

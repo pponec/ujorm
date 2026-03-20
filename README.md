@@ -212,8 +212,8 @@ To ensure type safety without relying on string literals, Ujorm3 provides an Ann
 ```java
 package org.ujorm.orm.tutorial.domains;
 
-import org.ujorm.Key;
-import org.ujorm.DomainHandler;
+import org.ujorm.core.Key;
+import org.ujorm.core.DomainHandler;
 import org.ujorm.core.DomainHandlerProvider;
 
 /** Auto-generated metamodel for Employee */

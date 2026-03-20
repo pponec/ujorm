@@ -1,7 +1,7 @@
 package org.ujorm.orm.utils;
 
 import org.junit.jupiter.api.Test;
-import org.ujorm.DomainHandler;
+import org.ujorm.core.DomainHandler;
 import org.ujorm.core.DomainHandlerProvider;
 import org.ujorm.orm.demo.Employee;
 import org.ujorm.orm.demo.UserSnapshotable;

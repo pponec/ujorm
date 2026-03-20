@@ -248,8 +248,8 @@ public class UjormMetaProcessor extends AbstractProcessor {
                 result.append("import ").append(canonicalName).append(";\n");
             }
 
-            result.append("import org.ujorm.Key;\n");
-            result.append("import org.ujorm.DomainHandler;\n");
+            result.append("import org.ujorm.core.Key;\n");
+            result.append("import org.ujorm.core.DomainHandler;\n");
             result.append("import org.ujorm.core.DomainHandlerProvider;\n\n");
 
             result.append("/** Auto-generated metamodel for ").append(originalName).append(" */\n");

@@ -17,8 +17,8 @@ package org.ujorm.orm.model;
 
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
-import org.ujorm.DomainHandler;
-import org.ujorm.Key;
+import org.ujorm.core.DomainHandler;
+import org.ujorm.core.Key;
 import org.ujorm.core.generator.TableIdentifier;
 import org.ujorm.orm.Config;
 import org.ujorm.orm.impl.Context;

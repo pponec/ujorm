@@ -2,11 +2,11 @@ package org.ujorm.orm.jdbc;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.ujorm.DomainHandler;
-import org.ujorm.Ujo;
+import org.ujorm.core.DomainHandler;
+import org.ujorm.core.Ujo;
 import org.ujorm.core.DomainHandlerProvider;
 import org.ujorm.core.DomainHandlerService;
-import org.ujorm.Key;
+import org.ujorm.core.Key;
 import org.ujorm.core.csv.CsvLineSplitter;
 import org.ujorm.core.impl.AbstractUjo;
 import org.ujorm.orm.Config;

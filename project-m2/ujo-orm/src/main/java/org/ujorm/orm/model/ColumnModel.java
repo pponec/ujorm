@@ -16,7 +16,7 @@
 package org.ujorm.orm.model;
 
 import org.jetbrains.annotations.Nullable;
-import org.ujorm.Key;
+import org.ujorm.core.Key;
 import org.ujorm.tools.common.Primitive;
 
 import java.sql.JDBCType;
