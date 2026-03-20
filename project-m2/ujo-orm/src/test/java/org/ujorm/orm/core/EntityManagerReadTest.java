@@ -43,7 +43,7 @@ class EntityManagerReadTest extends AbstractDaoTest {
                 , "LONGITUDE" AS "longitude" FROM "CITY" WHERE name = :name
                 """.trim();
         var sql = cityDao.selectWhere("name = :name", b -> b.toString());
-        var resultSql = sql.toString().replace(", ", "\n, ");
+        var resultSql = sql.replace(", ", "\n, ");
         Assertions.assertEquals(expectedSql, resultSql);
     }
 }

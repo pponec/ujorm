@@ -119,17 +119,10 @@ public class UjormMetaProcessor extends AbstractProcessor {
     }
 
     /** Inner class for generating the source code text using an object-oriented approach. */
-    private static class SourceGenerator {
-
-        private final ProcessingEnvironment env;
-        private final String prefix;
-        private final String suffix;
-
-        public SourceGenerator(ProcessingEnvironment env, String prefix, String suffix) {
-            this.env = env;
-            this.prefix = prefix;
-            this.suffix = suffix;
-        }
+    private record SourceGenerator(
+            ProcessingEnvironment env,
+            String prefix,
+            String suffix) {
 
         /** Checks if the element has a @Transient annotation. */
         private boolean hasTransientAnnotation(Element element) {

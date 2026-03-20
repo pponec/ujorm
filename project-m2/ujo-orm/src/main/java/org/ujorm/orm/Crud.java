@@ -124,10 +124,9 @@ public interface Crud<D, V> {
      *                       If undefined or empty, the query will target all records.
      * @return A fluent query builder for fetching data.
      */
-    @NotNull
-        public <R> R selectWhere(
-                @Nullable String whereCondition,
-                @NotNull SqlQuery.SqlFunction<SqlQuery, R> fun);
+    @NotNull <R> R selectWhere(
+            @Nullable String whereCondition,
+            @NotNull SqlQuery.SqlFunction<SqlQuery, R> fun);
 
     /**
      * Updates a single domain object in the database.

@@ -48,7 +48,7 @@ public interface Ujo<D extends Object> {
      * @param keyName Property must be a direct type only!
      */
     default <V> V getValue(@NotNull String keyName) {
-        return (V) getValue(domainHandler().getKey(keyName));
+        return getValue(domainHandler().getKey(keyName));
     }
 
     /** Common method to assign object value by the keyName.

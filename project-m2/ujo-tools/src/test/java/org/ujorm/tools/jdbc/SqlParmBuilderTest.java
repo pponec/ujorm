@@ -433,7 +433,7 @@ public class SqlParmBuilderTest extends AbstractJdbcConnector {
                 query.sql("SELECT * FROM non_existing_table").forEach(rs -> {});
             });
 
-            Assertions.assertTrue(ex.getCause() instanceof SQLException);
+            assertInstanceOf(SQLException.class, ex.getCause());
             Assertions.assertEquals("Simulated database connection error", ex.getCause().getMessage());
         }
     }

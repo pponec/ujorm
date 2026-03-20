@@ -20,7 +20,7 @@ public final class Config extends AbstractSnapshotable<Config> {
     private static final String PREFIX = "org.ujorm.";
     private static final String CONFIG_FILE = "ujorm-config.properties";
     private static final Map<Class<?>, Function<String, ?>> funMap = Map.copyOf(CsvConfig.initConverterMap());
-    private static KeyProvider meta = new KeyProvider();
+    private static final KeyProvider meta = new KeyProvider();
 
     // --- Start the public list of the configuration parameters ---
 

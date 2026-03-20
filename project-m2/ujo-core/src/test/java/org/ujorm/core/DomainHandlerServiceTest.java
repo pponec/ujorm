@@ -71,7 +71,7 @@ public class DomainHandlerServiceTest {
         // 2. Check the nested cause (IllegalArgumentException)
         var cause = exception.getCause();
         Assertions.assertNotNull(cause, "Exception should have a cause");
-        Assertions.assertTrue(cause instanceof IllegalArgumentException);
+        Assertions.assertInstanceOf(IllegalArgumentException.class, cause);
 
         var expectedCauseMessage = "Only Bean and Record domain objects are supported";
         Assertions.assertEquals(expectedCauseMessage, cause.getMessage());
