@@ -167,7 +167,7 @@ public class UjormTutorial {
 Pokud potřebujete provádět složitější dotazy, které přesahují základní CRUD, využijete `SqlQuery` v kombinaci s `ResultSetMapper`.
 
 import org.ujorm.orm.jdbc.ResultSetMapper;
-import org.ujorm.tools.jdbc.SqlQuery;
+import org.ujorm.orm.SqlQuery;
 import java.sql.Connection;
 import java.util.List;
 

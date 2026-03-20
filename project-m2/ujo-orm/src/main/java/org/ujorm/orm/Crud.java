@@ -18,7 +18,6 @@ package org.ujorm.orm;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.ujorm.core.SnapshotProvider;
-import org.ujorm.tools.jdbc.SqlQuery;
 
 import java.util.Objects;
 import java.util.Optional;

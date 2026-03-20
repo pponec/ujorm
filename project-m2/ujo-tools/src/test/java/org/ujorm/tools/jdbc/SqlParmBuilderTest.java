@@ -43,7 +43,7 @@ import static org.junit.jupiter.api.Assertions.*;
  * Testing the BasicSqlQuery class
  * @author Pavel Ponec
  */
-public class BasicSqlQueryTest extends AbstractJdbcConnector {
+public class SqlParmBuilderTest extends AbstractJdbcConnector {
 
     private final String newLine = "\n";
 
@@ -88,34 +88,34 @@ public class BasicSqlQueryTest extends AbstractJdbcConnector {
     @Test
     void regexpTest() {
         // Test pro :hello
-        var matcher = BasicSqlQuery.SQL_MARK.matcher(":hello");
+        var matcher = SqlParmBuilder.SQL_MARK.matcher(":hello");
         assertEquals("hello", matcher.find() ? matcher.group(1) : "");
 
         // Test pro :abc123
-        matcher = BasicSqlQuery.SQL_MARK.matcher(":abc123");
+        matcher = SqlParmBuilder.SQL_MARK.matcher(":abc123");
         assertEquals("abc123", matcher.find() ? matcher.group(1) : "");
 
         // Test pro :test_
-        matcher = BasicSqlQuery.SQL_MARK.matcher(":test_");
+        matcher = SqlParmBuilder.SQL_MARK.matcher(":test_");
         assertEquals("test_", matcher.find() ? matcher.group(1) : "");
 
         // Test pro :test%
-        matcher = BasicSqlQuery.SQL_MARK.matcher(":test%");
+        matcher = SqlParmBuilder.SQL_MARK.matcher(":test%");
         assertEquals("test", matcher.find() ? matcher.group(1) : "");
 
         // Test pro text bez shody
-        matcher = BasicSqlQuery.SQL_MARK.matcher("hello");
+        matcher = SqlParmBuilder.SQL_MARK.matcher("hello");
         assertEquals("", matcher.find() ? matcher.group(1) : "");
 
         // Test pro text s dvojtečkou, ale bez \w+
-        matcher = BasicSqlQuery.SQL_MARK.matcher(":");
+        matcher = SqlParmBuilder.SQL_MARK.matcher(":");
         assertEquals("", matcher.find() ? matcher.group(1) : "");
     }
 
     /** Example of SQL statement INSERT. */
     void runSqlStatements(Connection dbConnection) throws SQLException {
 
-        try (var query = new BasicSqlQuery(dbConnection)) {
+        try (var query = new SqlParmBuilder(dbConnection)) {
             System.out.println("CREATE TABLE");
             query.sql("CREATE TABLE employee",
                             "( id INTEGER PRIMARY KEY AUTO_INCREMENT",
@@ -193,7 +193,7 @@ public class BasicSqlQueryTest extends AbstractJdbcConnector {
     }
 
     private void newDemo(Connection dbConnection) {
-        List<Employee> employees = BasicSqlQuery.run(dbConnection, build -> build.sql("""
+        List<Employee> employees = SqlParmBuilder.run(dbConnection, build -> build.sql("""
                 SELECT t.id, t.name, t.created
                 FROM employee t
                 WHERE t.id > :id
@@ -210,7 +210,7 @@ public class BasicSqlQueryTest extends AbstractJdbcConnector {
         );
     }
 
-    private void runSqlStatementsLike(BasicSqlQuery query) {
+    private void runSqlStatementsLike(SqlParmBuilder query) {
         System.out.println("SELECT 3a");
         var employees = query.sql("SELECT t.id, t.name, t.created",
                         "FROM employee t",
@@ -245,7 +245,7 @@ public class BasicSqlQueryTest extends AbstractJdbcConnector {
     @Test
     void loggingSql() throws SQLException {
         var dbConnection = Mockito.mock(Connection.class);
-        try (var query = new BasicSqlQuery(dbConnection)) {
+        try (var query = new SqlParmBuilder(dbConnection)) {
 
             System.out.println("MISSING PARAMS");
             query.sql("SELECT t.id, t.name",
@@ -277,7 +277,7 @@ public class BasicSqlQueryTest extends AbstractJdbcConnector {
     @Test
     void testAllBindMethodsAndToStringLine() {
         var dbConnection = Mockito.mock(Connection.class);
-        try (var query = new BasicSqlQuery(dbConnection)) {
+        try (var query = new SqlParmBuilder(dbConnection)) {
             query.sql(
                     "SELECT :b1, :b2, :b3, :b4, :b5,",
                     ":b6, :b7, :b8, :b9, :b10, :b11"
@@ -324,7 +324,7 @@ public class BasicSqlQueryTest extends AbstractJdbcConnector {
         Mockito.when(preparedStatement.getGeneratedKeys())
                 .thenReturn(null);
 
-        try (var query = new BasicSqlQuery(dbConnection)) {
+        try (var query = new SqlParmBuilder(dbConnection)) {
             query.sql("INSERT INTO test (id) VALUES (:id)").bind("id", 1);
             query.prepareStatement(Statement.RETURN_GENERATED_KEYS);
 
@@ -342,7 +342,7 @@ public class BasicSqlQueryTest extends AbstractJdbcConnector {
     /** Check that autoclosing works correctly also on NULL objects. */
     @Test
     void autoCloseTest() {
-        try (BasicSqlQuery query = null) {
+        try (SqlParmBuilder query = null) {
         }
     }
 
@@ -350,7 +350,7 @@ public class BasicSqlQueryTest extends AbstractJdbcConnector {
     @Test
     void testStaticRun() throws Exception {
         try (var dbConnection = createDbConnection()) {
-            var result = BasicSqlQuery.run(dbConnection, query -> query
+            var result = SqlParmBuilder.run(dbConnection, query -> query
                     .sql("SELECT 1")
                     .streamMap(rs -> rs.getInt(1))
                     .findFirst()
@@ -367,7 +367,7 @@ public class BasicSqlQueryTest extends AbstractJdbcConnector {
         Mockito.when(dbConnection.prepareStatement(Mockito.anyString(), Mockito.anyInt()))
                 .thenReturn(preparedStatement);
 
-        try (var query = new BasicSqlQuery(dbConnection)) {
+        try (var query = new SqlParmBuilder(dbConnection)) {
             query.sql("SELECT * FROM employee").fetchSize(100).prepareStatement(Statement.NO_GENERATED_KEYS);
             Mockito.verify(preparedStatement).setFetchSize(100);
         }
@@ -377,7 +377,7 @@ public class BasicSqlQueryTest extends AbstractJdbcConnector {
     @Test
     void testBindNull() {
         var dbConnection = Mockito.mock(Connection.class);
-        try (var query = new BasicSqlQuery(dbConnection)) {
+        try (var query = new SqlParmBuilder(dbConnection)) {
             query.sql("INSERT INTO table (val) VALUES (:val)")
                     .bind("val", (String) null);
 
@@ -401,7 +401,7 @@ public class BasicSqlQueryTest extends AbstractJdbcConnector {
         Mockito.when(resultSet.getString(1))
                 .thenReturn("test_value");
 
-        try (var query = new BasicSqlQuery(dbConnection)) {
+        try (var query = new SqlParmBuilder(dbConnection)) {
             var stream = query.sql("SELECT name FROM employee")
                     .streamMap(rs -> rs.getString(1));
 
@@ -428,8 +428,8 @@ public class BasicSqlQueryTest extends AbstractJdbcConnector {
         Mockito.when(preparedStatement.executeQuery())
                 .thenThrow(new SQLException("Simulated database connection error"));
 
-        try (var query = new BasicSqlQuery(dbConnection)) {
-            var ex = assertThrows(BasicSqlQuery.SqlException.class, () -> {
+        try (var query = new SqlParmBuilder(dbConnection)) {
+            var ex = assertThrows(SqlParmBuilder.SqlException.class, () -> {
                 query.sql("SELECT * FROM non_existing_table").forEach(rs -> {});
             });
 
@@ -446,7 +446,7 @@ public class BasicSqlQueryTest extends AbstractJdbcConnector {
         Mockito.when(dbConnection.prepareStatement(Mockito.anyString(), Mockito.anyInt()))
                 .thenReturn(preparedStatement);
 
-        try (var query = new BasicSqlQuery(dbConnection)) {
+        try (var query = new SqlParmBuilder(dbConnection)) {
             // First query setup
             query.sql("SELECT * FROM employee WHERE id = :id")
                     .bind("id", 1)
@@ -459,7 +459,7 @@ public class BasicSqlQueryTest extends AbstractJdbcConnector {
             query.sql("SELECT * FROM employee WHERE code = :code");
 
             // Calling prepareStatement requires all bound parameters. It will trigger validation.
-            var ex = assertThrows(BasicSqlQuery.SqlException.class, () -> {
+            var ex = assertThrows(SqlParmBuilder.SqlException.class, () -> {
                 query.prepareStatement(Statement.NO_GENERATED_KEYS);
             });
             Assertions.assertTrue(ex.getMessage().contains("Missing SQL parameter: [code]"));
@@ -493,7 +493,7 @@ public class BasicSqlQueryTest extends AbstractJdbcConnector {
 
         try {
             // 1. Test without logging
-            try (var query = new BasicSqlQuery(dbConnection)) {
+            try (var query = new SqlParmBuilder(dbConnection)) {
                 query.sql("SELECT * FROM employee WHERE id = :id")
                         .bind("id", 1)
                         .prepareStatement(Statement.NO_GENERATED_KEYS);
@@ -501,7 +501,7 @@ public class BasicSqlQueryTest extends AbstractJdbcConnector {
             Assertions.assertEquals(0, logRecords.size());
 
             // 2. Test logging without parameters
-            try (var query = new BasicSqlQuery(dbConnection)) {
+            try (var query = new SqlParmBuilder(dbConnection)) {
                 query.sql("SELECT * FROM employee WHERE id = :id")
                         .bind("id", 2)
                         .log(Level.INFO, false)
@@ -513,7 +513,7 @@ public class BasicSqlQueryTest extends AbstractJdbcConnector {
             logRecords.clear();
 
             // 3. Test logging with parameters (single line check)
-            try (var query = new BasicSqlQuery(dbConnection)) {
+            try (var query = new SqlParmBuilder(dbConnection)) {
                 query.sql("SELECT * FROM employee", "WHERE id = :id")
                         .bind("id", 3)
                         .log(Level.INFO, true)
@@ -525,7 +525,7 @@ public class BasicSqlQueryTest extends AbstractJdbcConnector {
             logRecords.clear();
 
             // 4. Test turning off logging explicitly
-            try (var query = new BasicSqlQuery(dbConnection)) {
+            try (var query = new SqlParmBuilder(dbConnection)) {
                 query.sql("SELECT * FROM employee WHERE id = :id")
                         .bind("id", 4)
                         .log(Level.INFO, true)

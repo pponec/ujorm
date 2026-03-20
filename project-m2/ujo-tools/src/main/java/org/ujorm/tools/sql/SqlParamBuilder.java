@@ -26,9 +26,9 @@ import java.sql.PreparedStatement;
  * @deprecated Use the same class from the package {@code org.ujorm.tools.jdbc} rather.
  */
 @Deprecated
-public class SqlQuery extends org.ujorm.tools.jdbc.SqlQuery {
+public class SqlParamBuilder extends org.ujorm.tools.jdbc.SqlParmBuilder {
 
-    public SqlQuery(@NotNull Connection dbConnection) {
+    public SqlParamBuilder(@NotNull Connection dbConnection) {
         super(dbConnection);
     }
 }

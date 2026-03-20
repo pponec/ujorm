@@ -32,7 +32,7 @@ import org.ujorm.orm.utils.StatementCache;
 import org.ujorm.orm.utils.Tools;
 import org.ujorm.tools.common.StringUtils;
 import org.ujorm.tools.jdbc.SQLExceptionBuilder;
-import org.ujorm.tools.jdbc.SqlQuery;
+import org.ujorm.orm.SqlQuery;
 import org.ujorm.tools.jdbc.AbstractSqlQuery.SqlFunction;
 
 import java.sql.*;

@@ -1,4 +1,4 @@
-package org.ujorm.tools.jdbc;
+package org.ujorm.orm;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

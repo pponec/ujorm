@@ -14,12 +14,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.ujorm.tools.jdbc;
+package org.ujorm.orm;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.ujorm.Key;
 import org.ujorm.tools.common.StringUtils;
+import org.ujorm.tools.jdbc.AbstractSqlQuery;
 import org.ujorm.tools.msg.MessageService;
 import java.sql.Connection;
 import java.util.LinkedHashMap;

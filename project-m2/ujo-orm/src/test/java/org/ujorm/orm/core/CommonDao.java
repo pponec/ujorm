@@ -2,7 +2,7 @@ package org.ujorm.orm.core;
 
 import lombok.RequiredArgsConstructor;
 import org.ujorm.tools.jdbc.SQLExceptionBuilder;
-import org.ujorm.tools.sql.SqlQuery;
+import org.ujorm.orm.SqlQuery;
 
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;

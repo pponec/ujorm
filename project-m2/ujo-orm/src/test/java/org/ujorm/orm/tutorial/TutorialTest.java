@@ -3,7 +3,7 @@ package org.ujorm.orm.tutorial;
 import org.junit.jupiter.api.*;
 import org.ujorm.orm.core.EntityManager;
 import org.ujorm.orm.tutorial.domains.*;
-import org.ujorm.tools.jdbc.SqlQuery;
+import org.ujorm.orm.SqlQuery;
 
 import java.util.Comparator;
 import java.util.stream.Stream;

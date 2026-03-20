@@ -3,7 +3,7 @@ package org.ujorm.orm.core;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
-import org.ujorm.tools.sql.SqlQuery;
+import org.ujorm.orm.SqlQuery;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
