@@ -2,8 +2,11 @@ The Ujorm release notes
 (Maven groupId: org.ujorm)
 *******************************
 
-release 3.0.0-SNAPSHOT
-+ New module ujo-mapper.
+release 3.0.0-RC1 (2026-03-22) ?
++ Refactoring and performance optimization.
+
+release 3.0.0-BETA (2026-03-09)
++ New implementation of the Ujorm3
 + Obsolete module are removed.
 
 release 2.30 (2026-02-11)
