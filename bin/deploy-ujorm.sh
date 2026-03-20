@@ -5,7 +5,8 @@
 ###################################################################
 
 set -e
-alias mvn="sh $PWD/mvnw"
+cd "$(dirname "$0")/.."
+mvn() { bash "$PWD/mvnw" "$@"; }
 mvn -version || exit
 
 # Required Release (example: RELEASE=1.30):

@@ -1,7 +1,10 @@
-#!/bin/bash
+#!/bin/sh
 
 # Terminate script on first error
 set -e
+cd "$(dirname "$0")/.."
+mvn() { bash "$PWD/mvnw" "$@"; }
+mvn -version || exit
 
 # Target JavaDoc dir
 targetDir="_javadoc"
@@ -28,7 +31,7 @@ if [ -d "$targetDir" ]; then
 fi
 
 # Run Maven wrapper for aggregated Javadoc
-sh ./mvnw clean compile javadoc:aggregate -pl "$moduleList" -Dshow=protected -Ddoclint=none
+mvn clean compile javadoc:aggregate -pl "$moduleList" -Dshow=protected -Ddoclint=none
 
 sourceDir="target/reports/apidocs"
 
