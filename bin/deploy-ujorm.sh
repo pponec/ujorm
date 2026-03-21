@@ -5,9 +5,10 @@
 ###################################################################
 
 set -e
-cd "$(dirname "$0")/.."
-mvn() { bash "$PWD/mvnw" "$@"; }
-mvn -version || exit
+readonly PROJECT_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+mvn() { bash "$PROJECT_ROOT/mvnw" "$@"; }
+mvn -version
+cd "$PROJECT_ROOT"
 
 # Required Release (example: RELEASE=1.30):
 RELEASE=$( cd project-m2/ujo-tools; mvn help:evaluate -Dexpression=project.version | grep -v "\[" )
