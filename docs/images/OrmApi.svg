@@ -16,22 +16,22 @@
         <path d="M684 643 L684 726 L918 726 L918 643 Z"/>
       </clipPath>
       <clipPath clipPathUnits="userSpaceOnUse" id="clipPath5">
-        <path d="M343 373 L343 576 L676 576 L676 373 Z"/>
+        <path d="M343 367 L343 575 L676 575 L676 367 Z"/>
       </clipPath>
       <clipPath clipPathUnits="userSpaceOnUse" id="clipPath6">
-        <path d="M343 281 L343 342 L515 342 L515 281 Z"/>
+        <path d="M343 281 L343 336 L515 336 L515 281 Z"/>
       </clipPath>
       <clipPath clipPathUnits="userSpaceOnUse" id="clipPath7">
         <path d="M795 281 L795 523 L1159 523 L1159 281 Z"/>
       </clipPath>
       <clipPath clipPathUnits="userSpaceOnUse" id="clipPath8">
-        <path d="M569 281 L569 342 L741 342 L741 281 Z"/>
+        <path d="M569 281 L569 336 L741 336 L741 281 Z"/>
       </clipPath>
       <clipPath clipPathUnits="userSpaceOnUse" id="clipPath9">
-        <path d="M795 563 L795 598 L1159 598 L1159 563 Z"/>
+        <path d="M781 565 L781 600 L1043 600 L1043 565 Z"/>
       </clipPath>
       <clipPath clipPathUnits="userSpaceOnUse" id="clipPath10">
-        <path d="M343 603 L343 725 L648 725 L648 603 Z"/>
+        <path d="M343 608 L343 725 L648 725 L648 608 Z"/>
       </clipPath>
     </defs>
     <g fill="white" text-rendering="geometricPrecision" shape-rendering="geometricPrecision" transform="translate(-328,-266)" stroke="white">
@@ -66,32 +66,32 @@
       <line y2="680" fill="none" x1="685" clip-path="url(#clipPath4)" x2="917" y1="680"/>
       <text stroke-linecap="butt" x="689.34" y="698.5641" clip-path="url(#clipPath4)" font-family="sans-serif" stroke="none" stroke-miterlimit="1.45" xml:space="preserve">mapper(CharSequence... columnLabels)</text>
       <text stroke-linecap="butt" x="689.34" y="714.9082" clip-path="url(#clipPath4)" font-family="sans-serif" stroke="none" stroke-miterlimit="1.45" xml:space="preserve">    : SqlFunction&lt;ResultSet, D&gt;</text>
-      <rect x="344" y="374" clip-path="url(#clipPath2)" fill="rgb(255,255,153)" width="331" height="201" stroke="none"/>
-      <rect x="343" y="373" clip-path="url(#clipPath2)" fill="rgb(255,255,218)" width="1" height="203" stroke="none"/>
-      <rect x="344" y="373" clip-path="url(#clipPath2)" fill="rgb(255,255,218)" width="331" height="1" stroke="none"/>
-      <rect x="344" y="575" clip-path="url(#clipPath2)" fill="rgb(178,178,107)" width="332" height="1" stroke="none"/>
-      <rect x="675" y="373" clip-path="url(#clipPath2)" fill="rgb(178,178,107)" width="1" height="202" stroke="none"/>
+      <rect x="344" y="368" clip-path="url(#clipPath2)" fill="rgb(255,255,153)" width="331" height="206" stroke="none"/>
+      <rect x="343" y="367" clip-path="url(#clipPath2)" fill="rgb(255,255,218)" width="1" height="208" stroke="none"/>
+      <rect x="344" y="367" clip-path="url(#clipPath2)" fill="rgb(255,255,218)" width="331" height="1" stroke="none"/>
+      <rect x="344" y="574" clip-path="url(#clipPath2)" fill="rgb(178,178,107)" width="332" height="1" stroke="none"/>
+      <rect x="675" y="367" clip-path="url(#clipPath2)" fill="rgb(178,178,107)" width="1" height="207" stroke="none"/>
     </g>
     <g font-size="13px" stroke-linecap="butt" transform="matrix(1,0,0,1,-328,-266)" text-rendering="geometricPrecision" font-family="sans-serif" shape-rendering="geometricPrecision" font-weight="bold" stroke-miterlimit="1.45">
-      <text x="441.3165" xml:space="preserve" y="392.237" clip-path="url(#clipPath5)" stroke="none">AbstractSqlQuery&lt;T&gt;</text>
-      <text x="486.6067" font-size="12px" y="415.8741" clip-path="url(#clipPath5)" stroke="none" font-weight="normal" xml:space="preserve">{where T : AbstractSqlQuery&lt;T&gt;}</text>
+      <text x="441.3165" xml:space="preserve" y="386.237" clip-path="url(#clipPath5)" stroke="none">AbstractSqlQuery&lt;T&gt;</text>
+      <text x="486.6067" font-size="12px" y="409.8741" clip-path="url(#clipPath5)" stroke="none" font-weight="normal" xml:space="preserve">{where T : AbstractSqlQuery&lt;T&gt;}</text>
     </g>
     <g text-rendering="geometricPrecision" shape-rendering="geometricPrecision" transform="matrix(1,0,0,1,-328,-266)">
-      <line y2="426" fill="none" x1="344" clip-path="url(#clipPath5)" x2="675" y1="426"/>
-      <line y2="436" fill="none" x1="344" clip-path="url(#clipPath5)" x2="675" y1="436"/>
-      <text stroke-linecap="butt" x="348.32" y="454.2182" clip-path="url(#clipPath5)" font-family="sans-serif" stroke="none" stroke-miterlimit="1.45" xml:space="preserve">sql(sqlLines: String[*]): SqlQuery</text>
-      <text stroke-linecap="butt" x="348.32" y="470.5623" clip-path="url(#clipPath5)" font-family="sans-serif" stroke="none" stroke-miterlimit="1.45" xml:space="preserve">bind(key: String, values: Boolean[*]): T</text>
-      <text stroke-linecap="butt" x="348.32" y="486.9065" clip-path="url(#clipPath5)" font-family="sans-serif" stroke="none" stroke-miterlimit="1.45" xml:space="preserve">bind(key: String, values: Integer[*]): T</text>
-      <text stroke-linecap="butt" x="348.32" y="503.2505" clip-path="url(#clipPath5)" font-family="sans-serif" stroke="none" stroke-miterlimit="1.45" xml:space="preserve">bind(key: String, values: String[*]): T</text>
-      <text stroke-linecap="butt" x="348.32" y="519.5947" clip-path="url(#clipPath5)" font-family="sans-serif" stroke="none" stroke-miterlimit="1.45" xml:space="preserve">log(level: Level,  includingParams: boolean): T</text>
-      <text stroke-linecap="butt" x="348.32" y="535.9388" clip-path="url(#clipPath5)" font-family="sans-serif" stroke="none" stroke-miterlimit="1.45" xml:space="preserve">streamMap(mapper: SqlFunction): Stream&lt;ResultSet&gt;</text>
-      <text stroke-linecap="butt" x="348.32" y="552.2829" clip-path="url(#clipPath5)" font-family="sans-serif" stroke="none" stroke-miterlimit="1.45" xml:space="preserve">forEach(consumer: SqlConsumer): void</text>
-      <text stroke-linecap="butt" x="348.32" y="568.627" clip-path="url(#clipPath5)" font-family="sans-serif" stroke="none" stroke-miterlimit="1.45" xml:space="preserve">execute(): int</text>
-      <rect x="344" y="282" clip-path="url(#clipPath2)" fill="rgb(255,255,153)" width="170" height="59" stroke="none"/>
-      <rect x="343" y="281" clip-path="url(#clipPath2)" fill="rgb(255,255,218)" width="1" height="61" stroke="none"/>
+      <line y2="420" fill="none" x1="344" clip-path="url(#clipPath5)" x2="675" y1="420"/>
+      <line y2="430" fill="none" x1="344" clip-path="url(#clipPath5)" x2="675" y1="430"/>
+      <text stroke-linecap="butt" x="348.32" y="448.2182" clip-path="url(#clipPath5)" font-family="sans-serif" stroke="none" stroke-miterlimit="1.45" xml:space="preserve">sql(sqlLines: String[*]): SqlQuery</text>
+      <text stroke-linecap="butt" x="348.32" y="464.5623" clip-path="url(#clipPath5)" font-family="sans-serif" stroke="none" stroke-miterlimit="1.45" xml:space="preserve">bind(key: String, values: Boolean[*]): T</text>
+      <text stroke-linecap="butt" x="348.32" y="480.9065" clip-path="url(#clipPath5)" font-family="sans-serif" stroke="none" stroke-miterlimit="1.45" xml:space="preserve">bind(key: String, values: Integer[*]): T</text>
+      <text stroke-linecap="butt" x="348.32" y="497.2505" clip-path="url(#clipPath5)" font-family="sans-serif" stroke="none" stroke-miterlimit="1.45" xml:space="preserve">bind(key: String, values: String[*]): T</text>
+      <text stroke-linecap="butt" x="348.32" y="513.5947" clip-path="url(#clipPath5)" font-family="sans-serif" stroke="none" stroke-miterlimit="1.45" xml:space="preserve">log(level: Level,  includingParams: boolean): T</text>
+      <text stroke-linecap="butt" x="348.32" y="529.9388" clip-path="url(#clipPath5)" font-family="sans-serif" stroke="none" stroke-miterlimit="1.45" xml:space="preserve">streamMap(mapper: SqlFunction): Stream&lt;ResultSet&gt;</text>
+      <text stroke-linecap="butt" x="348.32" y="546.2829" clip-path="url(#clipPath5)" font-family="sans-serif" stroke="none" stroke-miterlimit="1.45" xml:space="preserve">forEach(consumer: SqlConsumer): void</text>
+      <text stroke-linecap="butt" x="348.32" y="562.627" clip-path="url(#clipPath5)" font-family="sans-serif" stroke="none" stroke-miterlimit="1.45" xml:space="preserve">execute(): int</text>
+      <rect x="344" y="282" clip-path="url(#clipPath2)" fill="rgb(255,255,153)" width="170" height="53" stroke="none"/>
+      <rect x="343" y="281" clip-path="url(#clipPath2)" fill="rgb(255,255,218)" width="1" height="55" stroke="none"/>
       <rect x="344" y="281" clip-path="url(#clipPath2)" fill="rgb(255,255,218)" width="170" height="1" stroke="none"/>
-      <rect x="344" y="341" clip-path="url(#clipPath2)" fill="rgb(178,178,107)" width="171" height="1" stroke="none"/>
-      <rect x="514" y="281" clip-path="url(#clipPath2)" fill="rgb(178,178,107)" width="1" height="60" stroke="none"/>
+      <rect x="344" y="335" clip-path="url(#clipPath2)" fill="rgb(178,178,107)" width="171" height="1" stroke="none"/>
+      <rect x="514" y="281" clip-path="url(#clipPath2)" fill="rgb(178,178,107)" width="1" height="54" stroke="none"/>
       <text stroke-linecap="butt" x="390.6137" y="299.6481" clip-path="url(#clipPath6)" font-family="sans-serif" stroke="none" stroke-miterlimit="1.45" xml:space="preserve">&lt;&lt;interface&gt;&gt;</text>
     </g>
     <g font-size="13px" stroke-linecap="butt" transform="matrix(1,0,0,1,-328,-266)" text-rendering="geometricPrecision" font-family="sans-serif" shape-rendering="geometricPrecision" font-weight="bold" stroke-miterlimit="1.45">
@@ -121,85 +121,85 @@
       <text x="800.36" xml:space="preserve" y="509.7953" clip-path="url(#clipPath7)" stroke="none">delete(domains: Stream&lt;D&gt;) : int</text>
     </g>
     <g fill="rgb(255,255,153)" text-rendering="geometricPrecision" shape-rendering="geometricPrecision" transform="matrix(1,0,0,1,-328,-266)" stroke="rgb(255,255,153)">
-      <rect x="570" width="170" height="59" y="282" clip-path="url(#clipPath2)" stroke="none"/>
-      <rect x="569" y="281" clip-path="url(#clipPath2)" fill="rgb(255,255,218)" width="1" height="61" stroke="none"/>
+      <rect x="570" width="170" height="53" y="282" clip-path="url(#clipPath2)" stroke="none"/>
+      <rect x="569" y="281" clip-path="url(#clipPath2)" fill="rgb(255,255,218)" width="1" height="55" stroke="none"/>
       <rect x="570" y="281" clip-path="url(#clipPath2)" fill="rgb(255,255,218)" width="170" height="1" stroke="none"/>
-      <rect x="570" y="341" clip-path="url(#clipPath2)" fill="rgb(178,178,107)" width="171" height="1" stroke="none"/>
-      <rect x="740" y="281" clip-path="url(#clipPath2)" fill="rgb(178,178,107)" width="1" height="60" stroke="none"/>
+      <rect x="570" y="335" clip-path="url(#clipPath2)" fill="rgb(178,178,107)" width="171" height="1" stroke="none"/>
+      <rect x="740" y="281" clip-path="url(#clipPath2)" fill="rgb(178,178,107)" width="1" height="54" stroke="none"/>
     </g>
     <g text-rendering="geometricPrecision" stroke-miterlimit="1.45" shape-rendering="geometricPrecision" font-family="sans-serif" transform="matrix(1,0,0,1,-328,-266)" stroke-linecap="butt">
       <text x="616.6337" xml:space="preserve" y="299.6481" clip-path="url(#clipPath8)" stroke="none">&lt;&lt;interface&gt;&gt;</text>
       <text x="618.355" font-size="13px" y="326.0611" clip-path="url(#clipPath8)" stroke="none" font-weight="bold" xml:space="preserve">Connection</text>
     </g>
     <g fill="rgb(255,204,0)" text-rendering="geometricPrecision" shape-rendering="geometricPrecision" transform="matrix(1,0,0,1,-328,-266)" stroke="rgb(255,204,0)">
-      <rect x="796" width="362" height="33" y="564" clip-path="url(#clipPath2)" stroke="none"/>
-      <rect x="795" y="563" clip-path="url(#clipPath2)" fill="yellow" width="1" height="35" stroke="none"/>
-      <rect x="796" y="563" clip-path="url(#clipPath2)" fill="yellow" width="362" height="1" stroke="none"/>
-      <rect x="796" y="597" clip-path="url(#clipPath2)" fill="rgb(178,142,0)" width="363" height="1" stroke="none"/>
-      <rect x="1158" y="563" clip-path="url(#clipPath2)" fill="rgb(178,142,0)" width="1" height="34" stroke="none"/>
+      <rect x="782" width="260" height="33" y="566" clip-path="url(#clipPath2)" stroke="none"/>
+      <rect x="781" y="565" clip-path="url(#clipPath2)" fill="yellow" width="1" height="35" stroke="none"/>
+      <rect x="782" y="565" clip-path="url(#clipPath2)" fill="yellow" width="260" height="1" stroke="none"/>
+      <rect x="782" y="599" clip-path="url(#clipPath2)" fill="rgb(178,142,0)" width="261" height="1" stroke="none"/>
+      <rect x="1042" y="565" clip-path="url(#clipPath2)" fill="rgb(178,142,0)" width="1" height="34" stroke="none"/>
     </g>
     <g font-size="13px" stroke-linecap="butt" transform="matrix(1,0,0,1,-328,-266)" text-rendering="geometricPrecision" font-family="sans-serif" shape-rendering="geometricPrecision" font-weight="bold" stroke-miterlimit="1.45">
-      <text x="926.8615" xml:space="preserve" y="581.927" clip-path="url(#clipPath9)" stroke="none">CrudImpl&lt;D, V&gt;</text>
+      <text x="861.8615" xml:space="preserve" y="584.822" clip-path="url(#clipPath9)" stroke="none">CrudImpl&lt;D, V&gt;</text>
     </g>
     <g fill="rgb(255,204,0)" text-rendering="geometricPrecision" shape-rendering="geometricPrecision" transform="matrix(1,0,0,1,-328,-266)" stroke="rgb(255,204,0)">
-      <rect x="344" width="303" height="120" y="604" clip-path="url(#clipPath2)" stroke="none"/>
-      <rect x="343" y="603" clip-path="url(#clipPath2)" fill="yellow" width="1" height="122" stroke="none"/>
-      <rect x="344" y="603" clip-path="url(#clipPath2)" fill="yellow" width="303" height="1" stroke="none"/>
+      <rect x="344" width="303" height="115" y="609" clip-path="url(#clipPath2)" stroke="none"/>
+      <rect x="343" y="608" clip-path="url(#clipPath2)" fill="yellow" width="1" height="117" stroke="none"/>
+      <rect x="344" y="608" clip-path="url(#clipPath2)" fill="yellow" width="303" height="1" stroke="none"/>
       <rect x="344" y="724" clip-path="url(#clipPath2)" fill="rgb(178,142,0)" width="304" height="1" stroke="none"/>
-      <rect x="647" y="603" clip-path="url(#clipPath2)" fill="rgb(178,142,0)" width="1" height="121" stroke="none"/>
+      <rect x="647" y="608" clip-path="url(#clipPath2)" fill="rgb(178,142,0)" width="1" height="116" stroke="none"/>
     </g>
     <g font-size="13px" stroke-linecap="butt" transform="matrix(1,0,0,1,-328,-266)" text-rendering="geometricPrecision" font-family="sans-serif" shape-rendering="geometricPrecision" font-weight="bold" stroke-miterlimit="1.45">
-      <text x="466.206" xml:space="preserve" y="622.767" clip-path="url(#clipPath10)" stroke="none">SqlQuery</text>
+      <text x="466.206" xml:space="preserve" y="627.767" clip-path="url(#clipPath10)" stroke="none">SqlQuery</text>
     </g>
     <g text-rendering="geometricPrecision" shape-rendering="geometricPrecision" transform="matrix(1,0,0,1,-328,-266)">
-      <line y2="631" fill="none" x1="344" clip-path="url(#clipPath10)" x2="647" y1="631"/>
-      <line y2="641" fill="none" x1="344" clip-path="url(#clipPath10)" x2="647" y1="641"/>
-      <text stroke-linecap="butt" x="348.32" y="659.4041" clip-path="url(#clipPath10)" font-family="sans-serif" stroke="none" stroke-miterlimit="1.45" xml:space="preserve">column(placeholder: String, label: Key[*]): SqlQuery</text>
-      <text stroke-linecap="butt" x="348.32" y="675.7482" clip-path="url(#clipPath10)" font-family="sans-serif" stroke="none" stroke-miterlimit="1.45" xml:space="preserve">label(placeholder: String, label: Key[*]): SqlQuery</text>
-      <text stroke-linecap="butt" x="348.32" y="692.0923" clip-path="url(#clipPath10)" font-family="sans-serif" stroke="none" stroke-miterlimit="1.45" xml:space="preserve">«static» &lt;R&gt; run(connection: Connection,</text>
-      <text stroke-linecap="butt" x="348.32" y="708.4365" clip-path="url(#clipPath10)" font-family="sans-serif" stroke="none" stroke-miterlimit="1.45" xml:space="preserve">    fun: SqlFunction&lt;SqlQuery, R&gt;) : R</text>
+      <line y2="636" fill="none" x1="344" clip-path="url(#clipPath10)" x2="647" y1="636"/>
+      <line y2="646" fill="none" x1="344" clip-path="url(#clipPath10)" x2="647" y1="646"/>
+      <text stroke-linecap="butt" x="348.32" y="664.4041" clip-path="url(#clipPath10)" font-family="sans-serif" stroke="none" stroke-miterlimit="1.45" xml:space="preserve">column(placeholder: String, label: Key[*]): SqlQuery</text>
+      <text stroke-linecap="butt" x="348.32" y="680.7482" clip-path="url(#clipPath10)" font-family="sans-serif" stroke="none" stroke-miterlimit="1.45" xml:space="preserve">label(placeholder: String, label: Key[*]): SqlQuery</text>
+      <text stroke-linecap="butt" x="348.32" y="697.0923" clip-path="url(#clipPath10)" font-family="sans-serif" stroke="none" stroke-miterlimit="1.45" xml:space="preserve">«static» &lt;R&gt; run(connection: Connection,</text>
+      <text stroke-linecap="butt" x="348.32" y="713.4365" clip-path="url(#clipPath10)" font-family="sans-serif" stroke="none" stroke-miterlimit="1.45" xml:space="preserve">    fun: SqlFunction&lt;SqlQuery, R&gt;) : R</text>
       <path fill="none" stroke-miterlimit="1.45" d="M947.3324 696.79 L918.3248 696.79" clip-path="url(#clipPath2)" stroke-linecap="butt"/>
     </g>
     <g stroke-linecap="butt" transform="matrix(1,0,0,1,-328,-266)" fill="white" text-rendering="geometricPrecision" shape-rendering="geometricPrecision" stroke="white" stroke-miterlimit="1.45">
       <path d="M954.3324 696.79 L947.3324 701.79 L940.3324 696.79 L947.3324 691.79 Z" stroke="none" clip-path="url(#clipPath2)"/>
       <path fill="none" d="M954.3324 696.79 L947.3324 701.79 L940.3324 696.79 L947.3324 691.79 Z" clip-path="url(#clipPath2)" stroke="black"/>
-      <path fill="none" stroke-dasharray="6,2" d="M429.32 373.3185 L429.32 358.3348" clip-path="url(#clipPath2)" stroke="black"/>
-      <path stroke-dasharray="6,2" d="M429.32 343.3348 L423.32 359.3348 L435.32 359.3348 Z" clip-path="url(#clipPath2)" stroke="none"/>
-      <path fill="none" d="M429.32 343.3348 L423.32 359.3348 L435.32 359.3348 Z" clip-path="url(#clipPath2)" stroke="black"/>
-      <path fill="none" d="M636.2319 366.3131 L636.2319 343.3533" clip-path="url(#clipPath2)" stroke="black"/>
-      <path d="M636.2319 373.3131 L631.2319 366.3131 L636.2319 359.3131 L641.2319 366.3131 Z" clip-path="url(#clipPath2)" stroke="none"/>
-      <path fill="none" d="M636.2319 373.3131 L631.2319 366.3131 L636.2319 359.3131 L641.2319 366.3131 Z" clip-path="url(#clipPath2)" stroke="black"/>
-      <path fill="none" d="M569.3409 312.58 L530.2947 312.58" clip-path="url(#clipPath2)" stroke="black"/>
-      <path d="M515.2947 312.58 L531.2947 318.58 L531.2947 306.58 Z" clip-path="url(#clipPath2)" stroke="none"/>
-      <path fill="none" d="M515.2947 312.58 L531.2947 318.58 L531.2947 306.58 Z" clip-path="url(#clipPath2)" stroke="black"/>
-      <path fill="none" stroke-dasharray="6,2" d="M1106.5 643.0254 L1106.5 603.0029" clip-path="url(#clipPath2)" stroke="black"/>
-      <path fill="black" stroke-dasharray="6,2" d="M1106.5 599.0029 L1100.5 611.0029 L1106.5 599.0029 L1112.5 611.0029 Z" clip-path="url(#clipPath2)" stroke="none"/>
+      <path fill="none" stroke-dasharray="6,2" d="M429.32 367.2993 L429.32 352.3405" clip-path="url(#clipPath2)" stroke="black"/>
+      <path stroke-dasharray="6,2" d="M429.32 337.3405 L423.32 353.3405 L435.32 353.3405 Z" clip-path="url(#clipPath2)" stroke="none"/>
+      <path fill="none" d="M429.32 337.3405 L423.32 353.3405 L435.32 353.3405 Z" clip-path="url(#clipPath2)" stroke="black"/>
+      <path fill="none" stroke-dasharray="6,2" d="M1106.5 643.0295 L1106.5 528.8174" clip-path="url(#clipPath2)" stroke="black"/>
+      <path fill="black" stroke-dasharray="6,2" d="M1106.5 524.8174 L1100.5 536.8174 L1106.5 524.8174 L1112.5 536.8174 Z" clip-path="url(#clipPath2)" stroke="none"/>
     </g>
     <g text-rendering="geometricPrecision" shape-rendering="geometricPrecision" transform="matrix(1,0,0,1,-328,-266)">
-      <path fill="none" d="M1106.5 599.0029 L1100.5 611.0029 L1106.5 599.0029 L1112.5 611.0029 Z" clip-path="url(#clipPath2)"/>
-      <text stroke-linecap="butt" x="1061.4357" y="625.186" clip-path="url(#clipPath2)" font-family="sans-serif" stroke="none" stroke-miterlimit="1.45" xml:space="preserve">creates</text>
-      <path fill="none" stroke-miterlimit="1.45" d="M993.1098 605.0494 L993.1098 643.0009" clip-path="url(#clipPath2)" stroke-linecap="butt"/>
+      <path fill="none" d="M1106.5 524.8174 L1100.5 536.8174 L1106.5 524.8174 L1112.5 536.8174 Z" clip-path="url(#clipPath2)"/>
+      <text stroke-linecap="butt" x="1061.4357" y="588.0811" clip-path="url(#clipPath2)" font-family="sans-serif" stroke="none" stroke-miterlimit="1.45" xml:space="preserve">creates</text>
+      <path fill="none" stroke-miterlimit="1.45" d="M636.2319 360.3394 L636.2319 337.3815" clip-path="url(#clipPath2)" stroke-linecap="butt"/>
     </g>
     <g stroke-linecap="butt" transform="matrix(1,0,0,1,-328,-266)" fill="white" text-rendering="geometricPrecision" shape-rendering="geometricPrecision" stroke="white" stroke-miterlimit="1.45">
-      <path d="M993.1098 598.0494 L998.1098 605.0494 L993.1098 612.0494 L988.1098 605.0494 Z" stroke="none" clip-path="url(#clipPath2)"/>
-      <path fill="none" d="M993.1098 598.0494 L998.1098 605.0494 L993.1098 612.0494 L988.1098 605.0494 Z" clip-path="url(#clipPath2)" stroke="black"/>
-      <path fill="none" d="M796.7175 556.5961 L704.978 343.3341" clip-path="url(#clipPath2)" stroke="black"/>
-      <path d="M799.4836 563.0264 L792.1245 558.572 L793.9513 550.1659 L801.3105 554.6203 Z" clip-path="url(#clipPath2)" stroke="none"/>
-      <path fill="none" d="M799.4836 563.0264 L792.1245 558.572 L793.9513 550.1659 L801.3105 554.6203 Z" clip-path="url(#clipPath2)" stroke="black"/>
-      <path fill="none" stroke-dasharray="6,2" d="M977.5777 563.0567 L977.8798 538.8141" clip-path="url(#clipPath2)" stroke="black"/>
-      <path stroke-dasharray="6,2" d="M978.0666 523.8152 L971.8678 539.7393 L983.8668 539.8887 Z" clip-path="url(#clipPath2)" stroke="none"/>
-      <path fill="none" d="M978.0666 523.8152 L971.8678 539.7393 L983.8668 539.8887 Z" clip-path="url(#clipPath2)" stroke="black"/>
-      <path fill="none" stroke-dasharray="6,2" d="M795.3802 590.5227 L653.2809 614.2244" clip-path="url(#clipPath2)" stroke="black"/>
-      <path fill="black" stroke-dasharray="6,2" d="M649.3354 614.8825 L662.159 618.8265 L649.3354 614.8825 L660.1847 606.99 Z" clip-path="url(#clipPath2)" stroke="none"/>
+      <path d="M636.2319 367.3394 L631.2319 360.3394 L636.2319 353.3394 L641.2319 360.3394 Z" stroke="none" clip-path="url(#clipPath2)"/>
+      <path fill="none" d="M636.2319 367.3394 L631.2319 360.3394 L636.2319 353.3394 L641.2319 360.3394 Z" clip-path="url(#clipPath2)" stroke="black"/>
+      <path fill="none" d="M569.3409 309.58 L530.2947 309.58" clip-path="url(#clipPath2)" stroke="black"/>
+      <path d="M515.2947 309.58 L531.2947 315.58 L531.2947 303.58 Z" clip-path="url(#clipPath2)" stroke="none"/>
+      <path fill="none" d="M515.2947 309.58 L531.2947 315.58 L531.2947 303.58 Z" clip-path="url(#clipPath2)" stroke="black"/>
+      <path fill="none" d="M993.1098 607.9075 L993.1098 643.0571" clip-path="url(#clipPath2)" stroke="black"/>
+      <path d="M993.1098 600.9075 L998.1098 607.9075 L993.1098 614.9075 L988.1098 607.9075 Z" clip-path="url(#clipPath2)" stroke="none"/>
+      <path fill="none" d="M993.1098 600.9075 L998.1098 607.9075 L993.1098 614.9075 L988.1098 607.9075 Z" clip-path="url(#clipPath2)" stroke="black"/>
+      <path fill="none" d="M781.131 559.3334 L702.2098 337.3395" clip-path="url(#clipPath2)" stroke="black"/>
+      <path d="M783.4758 565.929 L776.4199 561.0082 L778.7862 552.7377 L785.8421 557.6585 Z" clip-path="url(#clipPath2)" stroke="none"/>
+      <path fill="none" d="M783.4758 565.929 L776.4199 561.0082 L778.7862 552.7377 L785.8421 557.6585 Z" clip-path="url(#clipPath2)" stroke="black"/>
+      <path fill="none" stroke-dasharray="6,2" d="M912.36 565.9374 L912.36 538.7883" clip-path="url(#clipPath2)" stroke="black"/>
+      <path stroke-dasharray="6,2" d="M912.36 523.7883 L906.36 539.7883 L918.36 539.7883 Z" clip-path="url(#clipPath2)" stroke="none"/>
+      <path fill="none" d="M912.36 523.7883 L906.36 539.7883 L918.36 539.7883 Z" clip-path="url(#clipPath2)" stroke="black"/>
+      <path fill="none" stroke-dasharray="6,2" d="M781.3555 592.6782 L653.238 616.1054" clip-path="url(#clipPath2)" stroke="black"/>
+      <path fill="black" stroke-dasharray="6,2" d="M649.3032 616.825 L662.1868 620.5685 L649.3032 616.825 L660.0282 608.7642 Z" clip-path="url(#clipPath2)" stroke="none"/>
     </g>
     <g text-rendering="geometricPrecision" shape-rendering="geometricPrecision" transform="matrix(1,0,0,1,-328,-266)">
-      <path fill="none" d="M649.3354 614.8825 L662.159 618.8265 L649.3354 614.8825 L660.1847 606.99 Z" clip-path="url(#clipPath2)"/>
-      <text stroke-linecap="butt" x="701.3079" y="591.5147" clip-path="url(#clipPath2)" font-family="sans-serif" stroke="none" stroke-miterlimit="1.45" xml:space="preserve">creates</text>
-      <path fill="none" stroke-miterlimit="1.45" d="M512.687 603.8602 L512.8762 591.4715" clip-path="url(#clipPath2)" stroke-linecap="butt"/>
+      <path fill="none" d="M649.3032 616.825 L662.1868 620.5685 L649.3032 616.825 L660.0282 608.7642 Z" clip-path="url(#clipPath2)"/>
+      <text stroke-linecap="butt" x="694.3079" y="593.2048" clip-path="url(#clipPath2)" font-family="sans-serif" stroke="none" stroke-miterlimit="1.45" xml:space="preserve">creates</text>
+      <path fill="none" stroke-miterlimit="1.45" d="M512.625 608.8705 L512.8967 590.4744" clip-path="url(#clipPath2)" stroke-linecap="butt"/>
     </g>
     <g stroke-linecap="butt" transform="matrix(1,0,0,1,-328,-266)" fill="white" text-rendering="geometricPrecision" shape-rendering="geometricPrecision" stroke="white" stroke-miterlimit="1.45">
-      <path d="M513.1052 576.4733 L506.8617 592.3798 L518.8602 592.563 Z" stroke="none" clip-path="url(#clipPath2)"/>
-      <path fill="none" d="M513.1052 576.4733 L506.8617 592.3798 L518.8602 592.563 Z" clip-path="url(#clipPath2)" stroke="black"/>
+      <path d="M513.1182 575.4761 L506.8826 591.3857 L518.8813 591.5629 Z" stroke="none" clip-path="url(#clipPath2)"/>
+      <path fill="none" d="M513.1182 575.4761 L506.8826 591.3857 L518.8813 591.5629 Z" clip-path="url(#clipPath2)" stroke="black"/>
     </g>
   </g>
 </svg>
