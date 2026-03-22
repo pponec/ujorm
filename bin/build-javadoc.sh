@@ -1,10 +1,11 @@
 #!/bin/sh
+# Build JavaDoc for all required modules
 
-# Terminate script on first error
 set -e
-cd "$(dirname "$0")/.."
-mvn() { bash "$PWD/mvnw" "$@"; }
-mvn -version || exit
+readonly PROJECT_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+mvn() { bash "$PROJECT_ROOT/mvnw" "$@"; }
+mvn -version
+cd "$PROJECT_ROOT"
 
 # Target JavaDoc dir
 targetDir="_javadoc"
