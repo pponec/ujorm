@@ -356,6 +356,8 @@ Conversely, objects that wrap a database connection, like the `Crud` instance or
 **Is the runtime bytecode generation secure?**<br/>
 The generated code is based purely on the definition of the project's domain classes.
 No external data enters the compilation process, meaning a potential attacker has no way to influence it.
+Additionally, this approach is nothing new in the Java world.
+To achieve maximum performance, proven libraries such as HikariCP, Jackson (the Afterburner module), and notably the proxy mechanisms in Spring generate bytecode at runtime.
 
 ---
 
