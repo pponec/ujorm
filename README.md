@@ -353,6 +353,10 @@ Yes, core components such as `EntityManager` and the generated `Meta` classes ar
 They are designed to be shared across your entire application as singletons.
 Conversely, objects that wrap a database connection, like the `Crud` instance or `SqlQuery`, are stateful and must be scoped to a single thread or request.
 
+**Is the runtime bytecode generation secure?**<br/>
+The generated code is based purely on the definition of the project's domain classes.
+No external data enters the compilation process, meaning a potential attacker has no way to influence it.
+
 ---
 
 ## Feedback & Contributions
