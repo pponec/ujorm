@@ -70,6 +70,7 @@ public class TutorialTest extends AbstractDemo {
         assertEquals("Ingrid", employees.get(1).getBoss().getName());
     }
 
+    /** Note the last argument of the update() method specifying the modified attribute. */
     @Test
     @Order(300)
     void update() {
@@ -89,6 +90,7 @@ public class TutorialTest extends AbstractDemo {
         assertNull(employeeCrud.findByIdNullable(2L).getBoss());
     }
 
+    /** Note the returned row count at the end of the method. */
     @Test
     @Order(400)
     void delete() {
