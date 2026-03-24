@@ -6,3 +6,4 @@ a.sh
 **/nb-configuration.xml
 **/*.iml
 .idea/
+_javadoc/
