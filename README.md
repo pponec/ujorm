@@ -1,4 +1,4 @@
-# <img src="docs/images/ujorm-logo.png" align="right" height="150" hspace="20"> Ujorm3 Library
+# <img src="docs/images/ujorm3-logo.png" align="right" height="150" hspace="20"> Ujorm3 Library
 
 *<span style="color: grey;">The original Ujorm v2 homepage has moved [here](docs/ujorm2).</span>*
 
