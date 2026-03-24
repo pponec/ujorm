@@ -263,7 +263,7 @@ By default, you can write database queries using standard text literals.
     <dependency>
         <groupId>org.ujorm</groupId>
         <artifactId>ujorm-orm</artifactId>
-        <version>3.0.0-RC1</version>
+        <version>3.0.0-RC2</version>
     </dependency>
 </dependencies>
 ```
@@ -290,7 +290,7 @@ However, if you prefer a safer, strongly-typed coding style, you can optionally 
                     <path>
                         <groupId>org.ujorm</groupId>
                         <artifactId>ujorm-meta-processor</artifactId>
-                        <version>3.0.0-RC1</version>
+                        <version>3.0.0-RC2</version>
                     </path>
                 </annotationProcessorPaths>
                 <compilerArgs>
@@ -313,10 +313,7 @@ In addition, the project includes automated integration tests for basic CRUD ope
 * Oracle Free
 * MS SQL Server
 
-**Note for contributors:** Integration tests require a running Docker daemon and up to **6 GB** of local disk space for the database images. You can execute these tests using the provided Bash script:
-```bash
-./bin/docker-integration-test.sh
-```
+**Note for contributors:** Integration tests require a running Docker daemon and up to **6 GB** of local disk space for the database images. You can execute these tests using the provided Bash script: `bin/docker-integration-test.sh`.
 
 ---
 
@@ -336,7 +333,7 @@ The benchmarks focused not only on execution speed across various CRUD scenarios
 
 While performance differences may blur on slower production databases, Ujorm3's lightweight nature and optimized memory usage significantly reduce the deployment footprint and maintenance overhead.
 
-**Version tested:** `3.0.0-RC1`  
+**Version tested:** `3.0.0-RC2`  
 **Full benchmark source, detailed metrics, and results:** 👉 [GitHub: orm-benchmarks](https://github.com/pponec/orm-benchmarks?tab=readme-ov-file#orm-benchmark)
 
 ---
