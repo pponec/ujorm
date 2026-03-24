@@ -59,7 +59,7 @@ public class TableModelBuilder<D> {
         var insertedColumns = columns.stream()
                 .filter(c -> c != pk)
                 .toList();
-        var isOracleDb = isOracle(initConnection);
+        var isOracleDb = getDbVendor(initConnection);
         var sqlQuote = getSqlQuote(initConnection, ctx.config());
         var jdbc = new Jdbc(isOracleDb, sqlQuote);
         var tableName = softTableModel.merge(realTableModel).getQualifiedName();
@@ -147,22 +147,27 @@ public class TableModelBuilder<D> {
     }
 
     /**
-     * Determines if the provided connection is directed to an Oracle database.
+     * Determines the database vendor from the provided connection.
      *
      * @param connection The database connection to check.
-     * @return true if the database product name contains "oracle", false otherwise.
+     * @return The identified database vendor or DEFAULT if unknown or an error occurs.
      */
-    protected boolean isOracle(Connection connection) {
+    protected DatabaseVendor getDbVendor(Connection connection) {
         try {
-            var metaData = connection.getMetaData();
-            var productName = metaData.getDatabaseProductName();
-            if (productName != null && productName.toLowerCase().contains("oracle")) {
-                return true;
+            var productName = connection.getMetaData().getDatabaseProductName();
+            if (productName != null) {
+                var nameLower = productName.toLowerCase();
+                if (nameLower.contains("oracle")) {
+                    return DatabaseVendor.ORACLE;
+                }
+                if (nameLower.contains("sql server")) {
+                    return DatabaseVendor.MS_SQL_SERVER;
+                }
             }
         } catch (SQLException ex) {
-            LOGGER.log(Level.SEVERE, "Oracle test failed", ex);
+            LOGGER.log(Level.SEVERE, "Failed to determine database vendor", ex);
         }
-        return false;
+        return DatabaseVendor.DEFAULT;
     }
 
     /**
@@ -182,16 +187,22 @@ public class TableModelBuilder<D> {
             if (Check.hasLength(dbName)) {
                 if (dbName.contains("Microsoft SQL Server")) {
                     return QuotePair.ofSqlServer();
-                } else if (dbName.contains("MySQL") || dbName.contains("MariaDB")) {
+                }
+                if (dbName.contains("MySQL") || dbName.contains("MariaDB")) {
                     return QuotePair.ofMySql();
                 }
             }
 
-            var doubleQuote = '"';
             var quoteString = metaData.getIdentifierQuoteString();
-            var quoteChar = (quoteString == null || quoteString.isBlank())
-                    ? doubleQuote
-                    : quoteString.charAt(0);
+            if (" ".equals(quoteString)) {
+                return QuotePair.ofNone();
+            }
+            if (quoteString == null || quoteString.isEmpty()) {
+                return QuotePair.ofDefault();
+            }
+
+            var doubleQuote = '"';
+            var quoteChar = quoteString.charAt(0);
             return quoteChar == doubleQuote
                     ? QuotePair.ofDefault()
                     : new QuotePair(quoteChar, quoteChar);

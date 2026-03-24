@@ -292,7 +292,9 @@ public abstract class AbstractSqlQuery<T extends AbstractSqlQuery<T>> implements
             }
             for (var i = 0; i < sqlValues.size(); i++) {
                 var sqlValue = sqlValues.get(i);
-                result.setObject(i + 1, sqlValue.first(), sqlValue.jdbcType());
+                result.setObject(i + 1, sqlValue.first(), sqlValue
+                        .jdbcType()
+                        .getVendorTypeNumber());
             }
             preparedStatement = result;
             return result;

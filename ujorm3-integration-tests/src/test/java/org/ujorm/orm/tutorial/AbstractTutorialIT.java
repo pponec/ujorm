@@ -1,35 +1,91 @@
 package org.ujorm.orm.tutorial;
 
 import org.junit.jupiter.api.*;
-import org.ujorm.orm.core.EntityManager;
-import org.ujorm.orm.jdbc.ResultSetMapper;
-import org.ujorm.orm.tutorial.domains.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.SpringBootConfiguration;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.ujorm.orm.SqlQuery;
+import org.ujorm.orm.core.EntityManager;
+import org.ujorm.orm.tutorial.domains.City;
+import org.ujorm.orm.tutorial.domains.Employee;
+import org.ujorm.orm.tutorial.domains.MetaCity;
+import org.ujorm.orm.tutorial.domains.MetaEmployee;
 
+import javax.sql.DataSource;
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.Comparator;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
-/**
- * Ujorm3: Lightweight, fast, and transparent ORM.
- * Entities are either standard JavaBeans or Records. No magic, pure speed.
- * Note: These tests run sequentially to demonstrate an entity lifecycle.
- */
+/** Base test class for all database integration tests */
+@SpringBootTest(classes = AbstractTutorialIT.TestConfig.class)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-public class TutorialTest extends AbstractDemo {
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+public abstract class AbstractTutorialIT {
 
-    private static final ResultSetMapper<Employee> EMPLOYEE_MAPPER = ResultSetMapper.of(Employee.class);
-    private static final EntityManager<Employee, Long> EMPLOYEE_EM = EntityManager.of(Employee.class);
-    private static final EntityManager<City, Long> CITY_EM = EntityManager.of(City.class);
+    protected EntityManager<Employee, Long> employeeEm;
+    protected EntityManager<City, Long> cityEm;
+    private Connection dbConnection;
 
+    @Autowired
+    private DataSource dataSource;
+
+    /** Inner class for specific Spring configuration if needed */
+    @SpringBootConfiguration
+    @EnableAutoConfiguration
+    static class TestConfig { }
+
+    @BeforeAll
+    void setupDatabase() throws SQLException {
+        employeeEm = EntityManager.of(Employee.class);
+        cityEm = EntityManager.of(City.class);
+
+        dbConnection = dataSource.getConnection();
+        dbConnection.setAutoCommit(false);
+        init();
+        dbConnection.commit();
+    }
+
+    /** Commit the transaction after each test method to keep changes for the next test. */
+    @AfterEach
+    void commitTransaction() throws SQLException {
+        if (dbConnection != null && !dbConnection.isClosed()) {
+            dbConnection.commit();
+        }
+    }
+
+    /** Close the shared connection at the very end. */
+    @AfterAll
+    void tearDown() throws SQLException {
+        if (dbConnection != null) {
+            dbConnection.close();
+        }
+    }
+
+    /** Abstract method to initialize database schema */
+    abstract void init();
+
+    protected Connection connection() {
+        try {
+            if (dbConnection == null || dbConnection.isClosed()) {
+                dbConnection = dataSource.getConnection();
+                dbConnection.setAutoCommit(false);
+            }
+            return dbConnection;
+        } catch (SQLException e) {
+            throw new RuntimeException("Failed to get database connection", e);
+        }
+    }
 
     @Test
     @Order(100)
     void insert() {
-        var employeeCrud = EMPLOYEE_EM.crud(connection());
-        var cityCrud = CITY_EM.crud(connection());
+        var employeeCrud = employeeEm.crud(connection());
+        var cityCrud = cityEm.crud(connection());
 
         // City is an immutable Record, Employee is a mutable JavaBean
         var cityOttawa = cityCrud.insert(new City(null, "Ottawa", "CA"));
@@ -61,7 +117,7 @@ public class TutorialTest extends AbstractDemo {
                 .column("c.country_code", MetaEmployee.city, MetaCity.countryCode)
                 .column("b.name", MetaEmployee.boss, MetaEmployee.name)
                 .bind("employeeId", 0L)
-                .streamMap(EMPLOYEE_MAPPER.mapper())
+                .streamMap(employeeEm.mapper())
                 .toList());
 
         assertEquals(3, employees.size());
@@ -73,7 +129,7 @@ public class TutorialTest extends AbstractDemo {
     @Test
     @Order(300)
     void update() {
-        var employeeCrud = EMPLOYEE_EM.crud(connection());
+        var employeeCrud = employeeEm.crud(connection());
 
         var emplIngrid = employeeCrud.findById(1L).orElseThrow();
         var emplDave = employeeCrud.findById(2L).orElseThrow();
@@ -84,7 +140,7 @@ public class TutorialTest extends AbstractDemo {
         emplCarol.setBoss(emplDave);
 
         employeeCrud.update(Stream.of(emplIngrid, emplDave, emplCarol),
-                            MetaEmployee.boss);
+                MetaEmployee.boss);
 
         assertNull(employeeCrud.findByIdNullable(2L).getBoss());
     }
@@ -93,12 +149,12 @@ public class TutorialTest extends AbstractDemo {
     @Test
     @Order(400)
     void delete() {
-        var employeeCrud = EMPLOYEE_EM.crud(connection());
+        var employeeCrud = employeeEm.crud(connection());
 
         var allEmployees = employeeCrud
                 .selectWhere("id > :id", query -> query
                         .bind("id", 0L)
-                        .streamMap(EMPLOYEE_EM.mapper())
+                        .streamMap(employeeEm.mapper())
                         .sorted(Comparator.comparing(e -> e.getBoss() == null))
                         .toList());
 
@@ -111,39 +167,5 @@ public class TutorialTest extends AbstractDemo {
                 .findFirst()
                 .orElseThrow());
         assertEquals(0, count);
-    }
-
-    /** Create all database tables first */
-    @Override
-    void init() {
-        try (var query = new SqlQuery(connection())) {
-            query.sql("""
-                    CREATE TABLE city
-                    ( id BIGINT AUTO_INCREMENT PRIMARY KEY
-                    , name VARCHAR(50) NOT NULL
-                    , country_code VARCHAR(2) NOT NULL
-                    )
-                    """).execute();
-            query.sql("""
-                    CREATE TABLE employee
-                    ( id BIGINT AUTO_INCREMENT PRIMARY KEY
-                    , name VARCHAR(50) NOT NULL
-                    , boss_id BIGINT NULL
-                    , city_id BIGINT NOT NULL
-                    )
-                    """).execute();
-            query.sql("""
-                    ALTER TABLE employee ADD CONSTRAINT fk_employee_boss_id__id
-                    FOREIGN KEY (boss_id)
-                    REFERENCES employee(id)
-                    ON DELETE RESTRICT ON UPDATE RESTRICT;
-                    """).execute();
-            query.sql("""
-                    ALTER TABLE employee ADD CONSTRAINT fk_employee_city_id__id
-                    FOREIGN KEY (city_id)
-                    REFERENCES city(id)
-                    ON DELETE CASCADE ON UPDATE RESTRICT;
-                    """).execute();
-        }
     }
 }

@@ -203,7 +203,7 @@ public final class EntityManager<D, V> {
             return pk().getValue(domain);
         }
 
-        /** Checks if the primary key is empty (null or zero). */
+        /** Checks if the primary key has an empty value (null or zero). */
         public boolean isPkEmpty(@Nullable final V id) {
             return id == null || (id instanceof Number n && n.longValue() == 0L);
         }
@@ -227,13 +227,18 @@ public final class EntityManager<D, V> {
                 if (column.relation() && value != null) {
                     value = column.foreignKey().getValue(value);
                 }
-                ps.setObject(i + 1, value, column.jdbcType());
+
+                if (value == null) {
+                    ps.setNull(i + 1, column.jdbcType().getVendorTypeNumber());
+                } else {
+                    ps.setObject(i + 1, value, column.jdbcType().getVendorTypeNumber());
+                }
             }
         }
 
         /** Set PK to the Prepared Statement */
         public void setPkToStatement(final D domain, final int index, final PreparedStatement ps) throws SQLException {
-            ps.setObject(index, getPrimaryKeyValue(domain), pkColumn().jdbcType());
+            ps.setObject(index, getPrimaryKeyValue(domain), pkColumn().jdbcType().getVendorTypeNumber());
         }
 
         /** Set both column values and PK to the Prepared Statement for UPDATE queries */
@@ -454,6 +459,10 @@ public final class EntityManager<D, V> {
             var returnGeneratedKeys = utilities.isPkEmpty(pkOriginalValue);
 
             return utilities.run(false, dbconnection, sql, returnGeneratedKeys, ps -> {
+
+                LOGGER.warning(">>> " + sql);
+
+
                 utilities.setValuesToStatement(domain, columns, ps);
                 if (!returnGeneratedKeys) {
                     ps.executeUpdate();
@@ -773,6 +782,7 @@ public final class EntityManager<D, V> {
             private final Consumer<D> onInserted;
             private final List<D> domains = new ArrayList<>(utilities.getBatchLimit());
             private final Key<D,V> pk = pk();
+            private final boolean msSqlWorkaround = tableModel().jdbc().isMsSqlSrv();
             private PreparedStatement ps = null;
             private Boolean genKeys = null;
             private List<ColumnModel<D, Object>> cols = null;
@@ -810,6 +820,15 @@ public final class EntityManager<D, V> {
                 }
 
                 utilities.setValuesToStatement(domain, cols, ps);
+                if (emptyPk && msSqlWorkaround && onInserted != null) {
+                    var rowCount = ps.executeUpdate();
+                    try (var rs = ps.getGeneratedKeys()) {
+                        if (!rs.next()) throw new IllegalStateException("Missing key");
+                        onInserted.accept(utilities.assignGeneratedKey(domain, rs, pk));
+                    }
+                    return result + rowCount;
+                }
+
                 ps.addBatch();
                 domains.add(domain);
                 return result + (domains.size() >= utilities.getBatchLimit() ? flush() : 0L);

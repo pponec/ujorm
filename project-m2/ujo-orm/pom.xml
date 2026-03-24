@@ -7,7 +7,7 @@
 
     <groupId>org.ujorm</groupId>
     <artifactId>ujo-orm</artifactId>
-    <version>3.0.0-SNAPSHOT</version>
+    <version>3.0.0-RC2</version>
     <packaging>jar</packaging>
     <name>ujo-orm</name>
     <description>Map JDBC ResultSet to Java</description>
@@ -34,7 +34,7 @@
     </scm>
 
     <properties>
-        <revision>3.0.0-SNAPSHOT</revision>
+        <revision>3.0.0-RC2</revision>
         <java.version>17</java.version>
         <maven.compiler.target>${java.version}</maven.compiler.target>
         <maven.compiler.source>${java.version}</maven.compiler.source>
@@ -51,12 +51,12 @@
         <dependency>
             <groupId>org.ujorm</groupId>
             <artifactId>ujo-tools</artifactId>
-            <version>3.0.0-SNAPSHOT</version>
+            <version>3.0.0-RC2</version>
         </dependency>
         <dependency>
             <groupId>org.ujorm</groupId>
             <artifactId>ujo-core</artifactId>
-            <version>3.0.0-SNAPSHOT</version>
+            <version>3.0.0-RC2</version>
         </dependency>
         <!-- APT Processor dependency to enforce reactor build order -->
         <dependency>
@@ -131,26 +131,26 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.14.1</version>
                 <configuration>
-                <annotationProcessorPaths>
-                    <!-- APT configuration for Lombok -->
-                    <path>
-                        <groupId>org.projectlombok</groupId>
-                        <artifactId>lombok</artifactId>
-                        <version>${lombok.version}</version>
-                    </path>
-                    <!-- APT configuration for Ujorm -->
-                    <path>
-                        <groupId>org.ujorm</groupId>
-                        <artifactId>ujorm-meta-processor</artifactId>
-                        <version>${revision}</version>
-                    </path>
-                </annotationProcessorPaths>
-                <compilerArgs>
-                    <!-- Optional attributes for APT Ujorm -->
-                    <arg>-Aujorm.prefix=Meta</arg>
-                    <arg>-Aujorm.suffix=</arg>
-                </compilerArgs>
-            </configuration>
+                    <annotationProcessorPaths>
+                        <!-- APT configuration for Lombok -->
+                        <path>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok</artifactId>
+                            <version>${lombok.version}</version>
+                        </path>
+                        <!-- APT configuration for Ujorm -->
+                        <path>
+                            <groupId>org.ujorm</groupId>
+                            <artifactId>ujorm-meta-processor</artifactId>
+                            <version>${revision}</version>
+                        </path>
+                    </annotationProcessorPaths>
+                    <compilerArgs>
+                        <!-- Optional attributes for APT Ujorm -->
+                        <arg>-Aujorm.prefix=Meta</arg>
+                        <arg>-Aujorm.suffix=</arg>
+                    </compilerArgs>
+                </configuration>
             </plugin>
 
             <plugin>

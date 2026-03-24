@@ -9,13 +9,13 @@
 
     <groupId>org.ujorm</groupId>
     <artifactId>main</artifactId>
-    <version>3.0.0-SNAPSHOT</version>
+    <version>3.0.0-RC2</version>
     <name>Main UJO</name>
     <packaging>pom</packaging>
     <description>Ujorm common project</description>
 
     <properties>
-        <revision>3.0.0-SNAPSHOT</revision>
+        <revision>3.0.0-RC2</revision>
         <java.version>17</java.version>
         <maven.compiler.target>${java.version}</maven.compiler.target>
         <maven.compiler.source>${java.version}</maven.compiler.source>
@@ -24,10 +24,11 @@
         <junit.version>5.12.2</junit.version>
         <jakarta.persistence.version>3.1.0</jakarta.persistence.version>
         <lombok.version>1.18.42</lombok.version>
+        <skipITs>true</skipITs>
     </properties>
 
-
     <modules>
+        <module>project-m2</module>
         <module>ujorm3-integration-tests</module>
     </modules>
 
@@ -73,13 +74,6 @@
         </dependencies>
     </dependencyManagement>
 
-    <!--
-    <contributor>
-        <name>Pavel Ponec</name>
-        <url>http://ponec.net/</url>
-        <timezone>+1</timezone>
-    </contributor>
-    -->
     <scm>
         <url>http://sourceforge.net/p/ujoframework/svn/HEAD/tree/trunk/</url>
         <connection>scm:svn:https://ujoframework.svn.sourceforge.net/svnroot/ujoframework/trunk</connection>
@@ -105,33 +99,42 @@
                     </properties>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-failsafe-plugin</artifactId>
+                <version>3.2.5</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>integration-test</goal>
+                            <goal>verify</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <skipITs>${skipITs}</skipITs>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
 
-    <!-- The default profile is "common" -->
     <profiles>
         <profile>
             <id>common</id>
             <activation>
-               <activeByDefault>true</activeByDefault>
+                <activeByDefault>true</activeByDefault>
             </activation>
-            <modules>
-                <module>project-m2</module>
-            </modules>
         </profile>
 
         <profile>
             <id>production</id>
-            <modules>
-                <module>project-m2</module>
-            </modules>
         </profile>
 
         <profile>
             <id>docker-it</id>
-            <modules>
-                <module>ujorm3-integration-tests</module>
-            </modules>
+            <properties>
+                <skipITs>false</skipITs>
+            </properties>
         </profile>
     </profiles>
 

@@ -59,21 +59,27 @@ class TableModelBuilderTest {
     }
 
     @Test
-    void testIsOracleReturnsTrue() throws SQLException {
+    void testGetDbVendorReturnsOracle() throws SQLException {
         when(mockConnection.getMetaData()).thenReturn(mockMetaData);
         when(mockMetaData.getDatabaseProductName()).thenReturn("Oracle Database 19c");
 
-        var isOracle = builder.isOracle(mockConnection);
-        assertTrue(isOracle);
+        assertEquals(DatabaseVendor.ORACLE, builder.getDbVendor(mockConnection));
     }
 
     @Test
-    void testIsOracleReturnsFalse() throws SQLException {
+    void testGetDbVendorReturnsDefault() throws SQLException {
         when(mockConnection.getMetaData()).thenReturn(mockMetaData);
         when(mockMetaData.getDatabaseProductName()).thenReturn("PostgreSQL");
 
-        var isOracle = builder.isOracle(mockConnection);
-        assertFalse(isOracle);
+        assertEquals(DatabaseVendor.DEFAULT, builder.getDbVendor(mockConnection));
+    }
+
+    @Test
+    void testGetDbVendorReturnsMsSqlServer() throws SQLException {
+        when(mockConnection.getMetaData()).thenReturn(mockMetaData);
+        when(mockMetaData.getDatabaseProductName()).thenReturn("Microsoft SQL Server");
+
+        assertEquals(DatabaseVendor.MS_SQL_SERVER, builder.getDbVendor(mockConnection));
     }
 
     @Test

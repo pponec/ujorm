@@ -305,7 +305,18 @@ However, if you prefer a safer, strongly-typed coding style, you can optionally 
 ```
 
 Currently, the library's codebase is fully covered by JUnit tests utilizing an in-memory H2 database.
-Before the final release, integration tests for PostgreSQL, MySQL, Oracle, and MS SQL Server will be added.
+In addition, the project includes automated integration tests for basic CRUD operations across major relational databases using Testcontainers. Supported database engines are:
+
+* PostgreSQL
+* MySQL
+* MariaDB
+* Oracle Free
+* MS SQL Server
+
+**Note for contributors:** Integration tests require a running Docker daemon and up to **6 GB** of local disk space for the database images. You can execute these tests using the provided Bash script:
+```bash
+./bin/docker-integration-test.sh
+```
 
 ---
 
