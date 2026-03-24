@@ -9,13 +9,13 @@
 
     <groupId>org.ujorm</groupId>
     <artifactId>main</artifactId>
-    <version>3.0.0-RC1</version>
+    <version>3.0.0-SNAPSHOT</version>
     <name>Main UJO</name>
     <packaging>pom</packaging>
     <description>Ujorm common project</description>
 
     <properties>
-        <revision>3.0.0-RC1</revision>
+        <revision>3.0.0-SNAPSHOT</revision>
         <java.version>17</java.version>
         <maven.compiler.target>${java.version}</maven.compiler.target>
         <maven.compiler.source>${java.version}</maven.compiler.source>
@@ -25,6 +25,12 @@
         <jakarta.persistence.version>3.1.0</jakarta.persistence.version>
         <lombok.version>1.18.42</lombok.version>
     </properties>
+
+
+    <modules>
+        <module>ujorm3-integration-tests</module>
+    </modules>
+
     <dependencyManagement>
         <dependencies>
             <dependency>
@@ -118,6 +124,13 @@
             <id>production</id>
             <modules>
                 <module>project-m2</module>
+            </modules>
+        </profile>
+
+        <profile>
+            <id>docker-it</id>
+            <modules>
+                <module>ujorm3-integration-tests</module>
             </modules>
         </profile>
     </profiles>
