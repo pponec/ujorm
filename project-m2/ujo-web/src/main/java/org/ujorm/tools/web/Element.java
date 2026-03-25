@@ -70,12 +70,23 @@ public final class Element implements ApiElement<Element>, Html {
     protected static final String[] NO_CSS = {};
 
     /** An original XML element */
-    protected final ApiElement internalElement;
+    protected ApiElement internalElement;
+
+    /** A reusable child for performance optimization */
+    private Element reusableChild;
 
     /** New element for an API element
      * @see #of(org.ujorm.tools.xml.ApiElement)
      */
     Element(@NotNull final ApiElement original) {
+        this.internalElement = original;
+    }
+
+    /**
+     * Resets the internal element state for reuse
+     * @param original An original XML element
+     */
+    protected void reset(@NotNull final ApiElement original) {
         this.internalElement = original;
     }
 
@@ -278,7 +289,13 @@ public final class Element implements ApiElement<Element>, Html {
      */
     @Override @NotNull
     public Element addElement(@NotNull final String name) throws IllegalStateException {
-        return new Element(internalElement.addElement(name));
+        var childApi = this.internalElement.addElement(name);
+        if (this.reusableChild == null) {
+            this.reusableChild = new Element(childApi);
+        } else {
+            this.reusableChild.reset(childApi);
+        }
+        return this.reusableChild;
     }
 
     /**
@@ -349,9 +366,9 @@ public final class Element implements ApiElement<Element>, Html {
      * <h4>Usage</h4>
      * <pre>
      * element.addTable(getCars(), cssClasses, titles,
-     *         Car::getId,
-     *         Car::getName,
-     *         Car::getEnabled);
+     * Car::getId,
+     * Car::getName,
+     * Car::getEnabled);
      * </pre>
      * @return A new table element
      */
@@ -990,13 +1007,13 @@ public final class Element implements ApiElement<Element>, Html {
      * <h4>Usage</h4>
      *
      * <pre class="pre">
-     *  HtmlElement.of(config, writer).addBody()
-     *      .next(body -> {
-     *         body.addHeading(config.getTitle());
-     *      })
-     *      .catche(e -> {
-     *          logger.log(Level.SEVERE, "An error", e);
-     *      });
+     * HtmlElement.of(config, writer).addBody()
+     * .next(body -> {
+     * body.addHeading(config.getTitle());
+     * })
+     * .catche(e -> {
+     * logger.log(Level.SEVERE, "An error", e);
+     * });
      * </pre>
      */
     @NotNull

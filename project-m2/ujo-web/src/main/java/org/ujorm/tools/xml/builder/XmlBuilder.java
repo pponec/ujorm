@@ -67,9 +67,9 @@ public class XmlBuilder implements ApiElement<XmlBuilder> {
     /** Assertion message template */
     protected static final String REQUIRED_MSG = "The argument '{}' is required";
 
-    /** Element name */
+    /** Element name (not final to allow recycling) */
     @NotNull
-    protected final String name;
+    protected String name;
 
     /** Node writer */
     @NotNull
@@ -81,6 +81,10 @@ public class XmlBuilder implements ApiElement<XmlBuilder> {
     /** Last child node */
     @Nullable
     private XmlBuilder lastChild;
+
+    /** A reusable child for performance optimization */
+    @Nullable
+    private XmlBuilder reusableChild;
 
     /** The last child was a text */
     private boolean lastText;
@@ -119,7 +123,7 @@ public class XmlBuilder implements ApiElement<XmlBuilder> {
             final boolean printName
     ) {
         this.name = name;
-        this.lastText = name == XmlBuilder.HIDDEN_NAME;
+        this.lastText = name == HIDDEN_NAME;
         this.writer = Assert.required(writer, REQUIRED_MSG, "writer");
         this.level = level;
 
@@ -133,6 +137,23 @@ public class XmlBuilder implements ApiElement<XmlBuilder> {
     /** New element with a parent */
     public XmlBuilder(@NotNull final String name, @NotNull final XmlPrinter writer) {
         this(name, writer, 0);
+    }
+
+    /** Resets the internal state of the builder to allow object recycling */
+    protected XmlBuilder reset(@NotNull final String name, final boolean printName) {
+        this.name = name;
+        this.lastText = name == HIDDEN_NAME;
+        this.filled = false;
+        this.closed = false;
+        this.attributeMode = true;
+        this.lastChild = null;
+
+        if (printName) try {
+            writer.writeBeg(this, lastText);
+        } catch (IOException e) {
+            throw new IllegalStateException(e);
+        }
+        return this;
     }
 
     @NotNull
@@ -155,6 +176,7 @@ public class XmlBuilder implements ApiElement<XmlBuilder> {
         }
         if (lastChild != null) {
             lastChild.close();
+            lastChild = null;
         }
         if (element != null) try {
             writer.writeBeg(element, lastText);
@@ -176,16 +198,23 @@ public class XmlBuilder implements ApiElement<XmlBuilder> {
      */
     @Override @NotNull
     public final XmlBuilder addElement(@NotNull final String name) {
-        XmlBuilder xb = new XmlBuilder(name, writer, level + 1, false);
-        return nextChild(xb);
+        if (lastChild != null) {
+            lastChild.close();
+            lastChild = null;
+        }
+        reusableChild = reusableChild != null
+                ? reusableChild.reset(name, false)
+                : new XmlBuilder(name, writer, level + 1, false);
+
+        return nextChild(this.reusableChild);
     }
 
     /**
      * Add an attribute
      * @param name Required element name
      * @param value The {@code null} value is ignored. Formatting is performed by the
-     *   {@link XmlPrinter#writeValue(Object, ApiElement, String)}
-     *   method, where the default implementation calls a {@code toString()} only.
+     * {@link XmlPrinter#writeValue(Object, ApiElement, String)}
+     * method, where the default implementation calls a {@code toString()} only.
      * @return The original element
      */
     @Override @NotNull
@@ -283,6 +312,7 @@ public class XmlBuilder implements ApiElement<XmlBuilder> {
             closed = true;
             if (lastChild != null) {
                 lastChild.close();
+                lastChild = null;
             }
             writer.writeEnd(this);
         } catch (IOException e) {
@@ -319,17 +349,16 @@ public class XmlBuilder implements ApiElement<XmlBuilder> {
         return writer.toString();
     }
 
-    // --- Factory method ---
+    // --- Static Methods ---
 
     /** Create builder for HTML */
     @NotNull
     public static XmlBuilder forHtml(@NotNull Appendable response) {
-         return new XmlBuilder(HTML, XmlPrinter.forHtml(response));
+        return new XmlBuilder(HTML, XmlPrinter.forHtml(response));
     }
 
     @NotNull
     public static XmlBuilder forNiceHtml(@NotNull Appendable response) {
         return new XmlBuilder(HTML, XmlPrinter.forNiceHtml(response));
     }
-
 }

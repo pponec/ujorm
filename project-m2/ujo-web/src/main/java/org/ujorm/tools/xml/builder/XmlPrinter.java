@@ -24,8 +24,6 @@ import org.jetbrains.annotations.Nullable;
 import org.ujorm.tools.xml.AbstractWriter;
 import org.ujorm.tools.xml.config.HtmlConfig;
 import org.ujorm.tools.xml.config.XmlConfig;
-import org.ujorm.tools.xml.config.impl.DefaultHtmlConfig;
-import org.ujorm.tools.xml.config.impl.DefaultXmlConfig;
 
 /**
  * If you need special formatting, overwrite responsible methods.
@@ -68,6 +66,7 @@ public class XmlPrinter extends AbstractWriter {
         out.append(rawValue.toString());
     }
 
+    /** Writes an attribute */
     void writeAttrib(@NotNull String name, Object data, XmlBuilder owner) throws IOException {
         if (owner.getName() != XmlBuilder.HIDDEN_NAME) {
             out.append(SPACE);
@@ -79,13 +78,14 @@ public class XmlPrinter extends AbstractWriter {
         }
     }
 
+    /** Writes raw text */
     void writeRawText(Object rawText) throws IOException {
         out.append(String.valueOf(rawText));
     }
 
     /** Open the Node */
     void writeBeg(XmlBuilder element, final boolean lastText) throws IOException {
-        final CharSequence name = element.getName();
+        var name = element.getName();
         if (name != XmlBuilder.HIDDEN_NAME) {
             if (!lastText) {
                 writeNewLine(element.getLevel());
@@ -104,37 +104,40 @@ public class XmlPrinter extends AbstractWriter {
 
     /** Close the Node */
     void writeEnd(XmlBuilder element) throws IOException {
-        final String name = element.getName();
-        final boolean pairElement = config.pairElement(element);
-        final boolean filled = element.isFilled();
-        if (name != XmlBuilder.HIDDEN_NAME) {
-            if (filled || pairElement) {
-                if (indentationEnabled && !element.isLastText()) {
-                    if (pairElement && !filled) {
-                        out.append(XML_GT);
-                    } else {
-                        writeNewLine(element.getLevel());
-                    }
-                } else if (!filled) {
+        var name = element.getName();
+        if (name == XmlBuilder.HIDDEN_NAME) {
+            return;
+        }
+
+        var filled = element.isFilled();
+        var pairElement = config.pairElement(element);
+
+        if (filled || pairElement) {
+            if (indentationEnabled && !element.isLastText()) {
+                if (pairElement && !filled) {
                     out.append(XML_GT);
+                } else {
+                    writeNewLine(element.getLevel());
                 }
-                out.append(XML_LT);
-                out.append(FORWARD_SLASH);
-                out.append(name);
-                out.append(XML_GT);
-            } else {
-                out.append(FORWARD_SLASH);
+            } else if (!filled) {
                 out.append(XML_GT);
             }
+            out.append(XML_LT);
+            out.append(FORWARD_SLASH);
+            out.append(name);
+            out.append(XML_GT);
+        } else {
+            out.append(FORWARD_SLASH);
+            out.append(XML_GT);
         }
     }
 
     @Override @NotNull
     public String toString() {
-        final String result = out.toString();
+        var result = out.toString();
         return result != null
-             ? result
-             : String.valueOf(result);
+                ? result
+                : String.valueOf(result);
     }
 
     // ------- FACTORY METHODS -------
@@ -158,7 +161,7 @@ public class XmlPrinter extends AbstractWriter {
      * @return New instance of the XmlPrinter
      */
     public static XmlPrinter forNiceXml() {
-        DefaultXmlConfig config = XmlConfig.ofDefault();
+        var config = XmlConfig.ofDefault();
         config.setNiceFormat();
         return forXml(null, config);
     }
@@ -185,26 +188,24 @@ public class XmlPrinter extends AbstractWriter {
 
     /** Create a new instance including a DOCTYPE */
     public static XmlPrinter forHtml(final Appendable out) {
-        DefaultHtmlConfig config = HtmlConfig.ofDefault();
-        return forXml(out, config);
+        return forHtml(out, HtmlConfig.ofDefault());
     }
 
     /** Create a new instance including a DOCTYPE */
     public static XmlPrinter forNiceHtml(final Appendable out) {
-        DefaultHtmlConfig config = HtmlConfig.ofDefault();
+        var config = HtmlConfig.ofDefault();
         config.setNiceFormat();
         return forHtml(out, config);
     }
 
     /** Create XmlPrinter for UTF-8 */
     public static XmlPrinter forHtml(@NotNull final Object httpServletResponse) throws IOException {
-        DefaultHtmlConfig config = HtmlConfig.ofDefault();
-        return forHtml(httpServletResponse, config);
+        return forHtml(httpServletResponse, HtmlConfig.ofDefault());
     }
 
     /** Create XmlPrinter for UTF-8 */
     public static XmlPrinter forNiceHtml(@NotNull final Object httpServletResponse) throws IOException {
-        DefaultHtmlConfig config = HtmlConfig.ofDefault();
+        var config = HtmlConfig.ofDefault();
         config.setNiceFormat();
         return forHtml(httpServletResponse, config);
     }
@@ -224,7 +225,7 @@ public class XmlPrinter extends AbstractWriter {
             @NotNull final String indentationSpace,
             final boolean noCache
     ) throws IOException {
-        final DefaultHtmlConfig config = HtmlConfig.ofDefault();
+        var config = HtmlConfig.ofDefault();
         config.setCharset(charset);
         config.setIndentationSpace(indentationSpace);
         config.setCacheAllowed(!noCache);
@@ -239,7 +240,7 @@ public class XmlPrinter extends AbstractWriter {
             @NotNull final HtmlConfig config
     ) throws IOException {
         try {
-            final Appendable writer = createWriter(
+            var writer = createWriter(
                     httpServletResponse,
                     config.getCharset(),
                     config.isCacheAllowed());

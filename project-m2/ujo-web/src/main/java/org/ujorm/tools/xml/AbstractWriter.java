@@ -6,7 +6,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -17,7 +17,6 @@
 package org.ujorm.tools.xml;
 
 import java.io.IOException;
-import java.lang.reflect.Method;
 import java.nio.charset.Charset;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -88,7 +87,6 @@ public abstract class AbstractWriter {
     /** Value formatter */
     @NotNull
     private final Formatter formatter;
-
 
     @NotNull
     private final Appendable writerEscaped = new Appendable() {
@@ -172,11 +170,7 @@ public abstract class AbstractWriter {
                 }
                 break;
             case XML_APOSTROPHE:
-                if (true) {
-                    out.append(c);
-                } else {
-                    out.append(XML_AMPERSAND + "apos;");
-                }
+                out.append(c);
                 break;
             case SPACE:
                 out.append(c);
@@ -259,27 +253,20 @@ public abstract class AbstractWriter {
             @NotNull final Charset charset,
             final boolean noCache
     ) throws ReflectiveOperationException {
-        final Method setEncoding = httpServletResponse.getClass().getMethod("setCharacterEncoding", String.class);
-        final Method setHeader = httpServletResponse.getClass().getMethod("setHeader", String.class, String.class);
-        final Method getWriter = httpServletResponse.getClass().getMethod("getWriter");
+        var setEncoding = httpServletResponse.getClass().getMethod("setCharacterEncoding", String.class);
+        var setHeader = httpServletResponse.getClass().getMethod("setHeader", String.class, String.class);
+        var getWriter = httpServletResponse.getClass().getMethod("getWriter");
+
         setEncoding.invoke(httpServletResponse, charset.toString());
         setHeader.invoke(httpServletResponse, "Content-Type", "text/html; charset=" + charset);
+
         if (noCache) {
             setHeader.invoke(httpServletResponse, "Cache-Control", "no-cache, no-store, must-revalidate"); // HTTP 1.1
             setHeader.invoke(httpServletResponse, "Pragma", "no-cache"); // HTTP 1.0
             setHeader.invoke(httpServletResponse, "Expires", "0"); // Proxies
             setHeader.invoke(httpServletResponse, "X-UA-Compatible", "IE=edge"); // Proxies
         }
-        final Appendable writer = (Appendable) getWriter.invoke(httpServletResponse);
-        return writer;
-    }
 
-//    IT IS A WRONG IDEA:
-//    /** Close the an internal writer, if the one is Closeable */
-//    @Override
-//    public void close() throws IOException {
-//        if (this.out instanceof Closeable) {
-//            ((Closeable) out).close();
-//        }
-//    }
+        return (Appendable) getWriter.invoke(httpServletResponse);
+    }
 }
