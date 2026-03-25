@@ -5,10 +5,7 @@ import org.ujorm.core.csv.CsvConfig;
 import org.ujorm.tools.common.Primitive;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
+import java.util.*;
 import java.util.function.Function;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -50,11 +47,17 @@ public class Config {
     /** Enable or disable the service of the {@link org.ujorm.orm.UjormServiceProvider} object. */
     public static final Key<Boolean> enabledUjormServiceProvider = meta.key("enabledUjormServiceProvider", true);
 
+    /**
+     * Quotes for SQL column names. An empty string attempts to fetch them via JDBC.
+     * Otherwise, the first and last characters serve as opening and closing delimiters.
+     */
+    public static final Key<String> quotePair = meta.key("quotePair", "");
+
+
     // --- End of the list ---
 
     /** A technical parameter for the jUnit test only */
     public static final Key<String> testOnly = meta.key("testOnly", "");
-
 
     /** Object state stored in an array */
     private final Object[] values = new Object[meta.keys.size()];
@@ -74,11 +77,13 @@ public class Config {
 
     // --- Core Accessors ---
 
-    /** General setter with lock check */
-    public <V> void setValue(@NotNull Key<V> key, V value) {
+    /** General setter with lock check.
+     * Values set here have the highest priority over other sources. */
+    public <V> void setValue(@NotNull Key<V> key, @NotNull V value) {
         if (locked) {
             throw new IllegalStateException("The configuration is locked.");
         }
+        Objects.requireNonNull(value, "The value is required.");
         key.setValue(value, values);
     }
 
@@ -98,6 +103,7 @@ public class Config {
     public boolean isEnableSqlQuoting() { return enableSqlQuoting.getValue(values); }
     public boolean isAutoCommitWarned() { return autoCommitWarned.getValue(values); }
     public boolean isEnabledUjormServiceProvider() { return enabledUjormServiceProvider.getValue(values); }
+    public String quotePair() { return quotePair.getValue(values); }
     /** @deprecated For jUnit test only */
     @Deprecated
     String _testOnly() { return testOnly.getValue(values); }
@@ -163,6 +169,7 @@ public class Config {
             return (Class<V>) defaultValue.getClass();
         }
 
+        @NotNull
         private V getValue(final @NotNull Object[] objects) {
             var result = objects[index];
             return result != null ? (V) result : defaultValue;

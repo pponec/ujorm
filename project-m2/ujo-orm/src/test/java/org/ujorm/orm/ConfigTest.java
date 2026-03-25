@@ -58,6 +58,7 @@ class ConfigTest {
         assertNotNull(exception);
     }
 
+    /** Sample, how to set a value for the hight priority  */
     @Test
     @SuppressWarnings("deprecation")
     void testKeySetters() {
