@@ -171,16 +171,28 @@ public class TableModelBuilder<D> {
     }
 
     /**
-     * Retrieves the identifier quote character configuration used by the database connection.
+     * Retrieves the identifier quote character configuration for the database connection.
+     * <p>
+     * The method resolves the quotes in the following priority:
+     * <ol>
+     *   <li>If quoting is disabled in the configuration, returns no quotes.</li>
+     *   <li>If a custom quote string is defined in the configuration, uses that string.</li>
+     *   <li>Otherwise, falls back to the database metadata provided by JDBC.</li>
+     * </ol>
      *
      * @param connection The database connection to check.
      * @param config The current configuration context.
      * @return The identifier quote configuration.
      */
-    protected QuotePair getSqlQuote(Connection connection, Config config) {
+    protected QuotePair getSqlQuote(@NotNull Connection connection, @NotNull Config config) {
         if (!config.isEnableSqlQuoting()) {
             return QuotePair.ofNone();
         }
+
+        if (!config.quotePair().isEmpty()) {
+            return QuotePair.ofString(config.quotePair());
+        }
+
         try {
             var metaData = connection.getMetaData();
             var dbName = metaData.getDatabaseProductName();
@@ -193,16 +205,16 @@ public class TableModelBuilder<D> {
                 }
             }
 
-            var quoteString = metaData.getIdentifierQuoteString();
-            if (" ".equals(quoteString)) {
+            var jdbcQuote = metaData.getIdentifierQuoteString();
+            if (" ".equals(jdbcQuote)) {
                 return QuotePair.ofNone();
             }
-            if (quoteString == null || quoteString.isEmpty()) {
+            if (jdbcQuote == null || jdbcQuote.isEmpty()) {
                 return QuotePair.ofDefault();
             }
 
             var doubleQuote = '"';
-            var quoteChar = quoteString.charAt(0);
+            var quoteChar = jdbcQuote.charAt(0);
             return quoteChar == doubleQuote
                     ? QuotePair.ofDefault()
                     : new QuotePair(quoteChar, quoteChar);

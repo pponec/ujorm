@@ -38,18 +38,22 @@ public class Config {
     /** Prints all SQL templates to the log. */
     public static final Key<Boolean> printSql = meta.key("printSql", true);
 
-    /** Enable quoting the SQL columns */
-    public static final Key<Boolean> enableSqlQuoting = meta.key("enableSqlQuoting", true);
-
     /** Print warnings, if Connection autocommit is true in batch operations. */
     public static final Key<Boolean> autoCommitWarned = meta.key("autoCommitWarned", true);
 
     /** Enable or disable the service of the {@link org.ujorm.orm.UjormServiceProvider} object. */
     public static final Key<Boolean> enabledUjormServiceProvider = meta.key("enabledUjormServiceProvider", true);
 
+    /** Enable quoting the SQL columns.
+     * @see #quotePair
+     */
+    public static final Key<Boolean> enableSqlQuoting = meta.key("enableSqlQuoting", true);
+
     /**
      * Quotes for SQL column names. An empty string attempts to fetch them via JDBC.
      * Otherwise, the first and last characters serve as opening and closing delimiters.
+     * @see #enableSqlQuoting
+     * @see org.ujorm.orm.model.QuotePair
      */
     public static final Key<String> quotePair = meta.key("quotePair", "");
 
@@ -100,9 +104,9 @@ public class Config {
     public int getMaxCacheSize() { return maxCacheSize.getValue(values); }
     public int getBatchSize() { return batchSize.getValue(values); }
     public boolean isPrintSql() { return printSql.getValue(values); }
-    public boolean isEnableSqlQuoting() { return enableSqlQuoting.getValue(values); }
     public boolean isAutoCommitWarned() { return autoCommitWarned.getValue(values); }
     public boolean isEnabledUjormServiceProvider() { return enabledUjormServiceProvider.getValue(values); }
+    public boolean isEnableSqlQuoting() { return enableSqlQuoting.getValue(values); }
     public String quotePair() { return quotePair.getValue(values); }
     /** @deprecated For jUnit test only */
     @Deprecated

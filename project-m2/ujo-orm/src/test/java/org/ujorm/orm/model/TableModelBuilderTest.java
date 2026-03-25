@@ -43,8 +43,6 @@ class TableModelBuilderTest {
     @Mock
     private Context mockContext;
     @Mock
-    private Config mockConfig;
-    @Mock
     private Connection mockConnection;
     @Mock
     private DatabaseMetaData mockMetaData;
@@ -52,10 +50,12 @@ class TableModelBuilderTest {
     private ResultSet mockResultSet;
 
     private TableModelBuilder<Object> builder;
+    private Config config;
 
     @BeforeEach
     void setUp() {
         builder = new TableModelBuilder<>(mockHandler, mockContext);
+        config = new Config();
     }
 
     @Test
@@ -84,57 +84,87 @@ class TableModelBuilderTest {
 
     @Test
     void testGetSqlQuoteMsSqlServer() throws SQLException {
-        when(mockConfig.isEnableSqlQuoting()).thenReturn(true);
         when(mockConnection.getMetaData()).thenReturn(mockMetaData);
         when(mockMetaData.getDatabaseProductName()).thenReturn("Microsoft SQL Server");
 
-        var quote = builder.getSqlQuote(mockConnection, mockConfig);
-        assertEquals('[', quote.open());
-        assertEquals(']', quote.close());
+        var result = builder.getSqlQuote(mockConnection, config);
+        assertEquals('[', result.open());
+        assertEquals(']', result.close());
     }
 
     @Test
     void testGetSqlQuoteMySql() throws SQLException {
-        when(mockConfig.isEnableSqlQuoting()).thenReturn(true);
         when(mockConnection.getMetaData()).thenReturn(mockMetaData);
         when(mockMetaData.getDatabaseProductName()).thenReturn("MySQL");
 
-        var quote = builder.getSqlQuote(mockConnection, mockConfig);
-        assertEquals('`', quote.open());
-        assertEquals('`', quote.close());
+        var result = builder.getSqlQuote(mockConnection, config);
+        assertEquals('`', result.open());
+        assertEquals('`', result.close());
+    }
+
+    @Test
+    void testGetSqlQuoteMariaDb() throws SQLException {
+        when(mockConnection.getMetaData()).thenReturn(mockMetaData);
+        when(mockMetaData.getDatabaseProductName()).thenReturn("MariaDB");
+
+        var result = builder.getSqlQuote(mockConnection, config);
+        assertEquals('`', result.open());
+        assertEquals('`', result.close());
     }
 
     @Test
     void testGetSqlQuoteFallbackToJdbcMetaData() throws SQLException {
-        when(mockConfig.isEnableSqlQuoting()).thenReturn(true);
         when(mockConnection.getMetaData()).thenReturn(mockMetaData);
         when(mockMetaData.getDatabaseProductName()).thenReturn("Some Unknown DB");
         when(mockMetaData.getIdentifierQuoteString()).thenReturn("'");
 
-        var quote = builder.getSqlQuote(mockConnection, mockConfig);
-        assertEquals('\'', quote.open());
-        assertEquals('\'', quote.close());
+        var result = builder.getSqlQuote(mockConnection, config);
+        assertEquals('\'', result.open());
+        assertEquals('\'', result.close());
     }
 
     @Test
-    void testGetSqlQuoteDisabled() {
-        when(mockConfig.isEnableSqlQuoting()).thenReturn(false);
+    void testGetSqlQuoteJdbcNull() throws SQLException {
+        when(mockConnection.getMetaData()).thenReturn(mockMetaData);
+        when(mockMetaData.getDatabaseProductName()).thenReturn("PostgreSQL");
+        when(mockMetaData.getIdentifierQuoteString()).thenReturn(null);
 
-        var quote = builder.getSqlQuote(mockConnection, mockConfig);
-        assertEquals(' ', quote.open());
-        assertEquals(' ', quote.close());
+        var result = builder.getSqlQuote(mockConnection, config);
+        assertEquals('"', result.open());
+        assertEquals('"', result.close());
+    }
+
+    @Test
+    void testGetSqlQuoteJdbcSpace() throws SQLException {
+        when(mockConnection.getMetaData()).thenReturn(mockMetaData);
+        when(mockMetaData.getDatabaseProductName()).thenReturn("Some DB");
+        when(mockMetaData.getIdentifierQuoteString()).thenReturn(" ");
+
+        var result = builder.getSqlQuote(mockConnection, config);
+        assertEquals(' ', result.open());
+        assertEquals(' ', result.close());
     }
 
     @Test
     void testGetSqlQuoteDefaultFallback() throws SQLException {
-        when(mockConfig.isEnableSqlQuoting()).thenReturn(true);
         when(mockConnection.getMetaData()).thenReturn(mockMetaData);
         when(mockMetaData.getDatabaseProductName()).thenReturn("PostgreSQL");
-        when(mockMetaData.getIdentifierQuoteString()).thenReturn(""); // Blank string v JDBC
+        when(mockMetaData.getIdentifierQuoteString()).thenReturn("");
 
-        var quote = builder.getSqlQuote(mockConnection, mockConfig);
-        assertEquals('"', quote.open());
-        assertEquals('"', quote.close());
+        var result = builder.getSqlQuote(mockConnection, config);
+        assertEquals('"', result.open());
+        assertEquals('"', result.close());
+    }
+
+    @Test
+    void testGetSqlQuoteThrowsSQLException() throws SQLException {
+        when(mockConnection.getMetaData()).thenThrow(new SQLException("Mock DB Error"));
+
+        var exception = assertThrows(RuntimeException.class, () -> {
+            builder.getSqlQuote(mockConnection, config);
+        });
+
+        assertTrue(exception.getMessage().contains("Cannot read DB metadata"));
     }
 
     @Test
