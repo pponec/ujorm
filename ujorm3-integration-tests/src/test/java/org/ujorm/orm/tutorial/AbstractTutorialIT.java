@@ -16,6 +16,7 @@ import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Comparator;
+import java.util.logging.Level;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -117,6 +118,7 @@ public abstract class AbstractTutorialIT {
                 .column("c.country_code", MetaEmployee.city, MetaCity.countryCode)
                 .column("b.name", MetaEmployee.boss, MetaEmployee.name)
                 .bind("employeeId", 0L)
+                .log(Level.INFO, true)
                 .streamMap(employeeEm.mapper())
                 .toList());
 

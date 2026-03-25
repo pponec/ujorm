@@ -126,7 +126,7 @@ public abstract class AbstractDomainHandler<D> implements DomainHandler<D> {
 
     @SuppressWarnings("unchecked")
     @Override
-    public final @NotNull <V> Key<D, V> getKeyByColumn(@NotNull final String columnName, boolean required, @Nullable final Class<V> genericType)
+    public final @Nullable <V> Key<D, V> getKeyByColumn(@NotNull final String columnName, boolean required, @Nullable final Class<V> genericType)
             throws NoSuchElementException {
         var column = columnName.toUpperCase(Locale.ENGLISH);
         var result = columnMap.get(column);
