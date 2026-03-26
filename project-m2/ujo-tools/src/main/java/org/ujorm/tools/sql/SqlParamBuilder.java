@@ -17,6 +17,7 @@
 package org.ujorm.tools.sql;
 
 import org.jetbrains.annotations.NotNull;
+import org.ujorm.tools.jdbc.SqlBuilder;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -26,7 +27,7 @@ import java.sql.PreparedStatement;
  * @deprecated Use the same class from the package {@code org.ujorm.tools.jdbc} rather.
  */
 @Deprecated
-public class SqlParamBuilder extends org.ujorm.tools.jdbc.SqlParmBuilder {
+public class SqlParamBuilder extends SqlBuilder {
 
     public SqlParamBuilder(@NotNull Connection dbConnection) {
         super(dbConnection);

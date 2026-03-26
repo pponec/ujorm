@@ -48,19 +48,19 @@ import java.sql.Connection;
  * @author Pavel Ponec, https://github.com/pponec
  * @since 2.26
  */
-public class SqlParmBuilder extends AbstractSqlQuery<SqlParmBuilder> {
+public class SqlBuilder extends AbstractSqlQuery<SqlBuilder> {
 
     /**
      * Constructor with a database connection
      * @param dbConnection A database connection
      */
-    public SqlParmBuilder(@NotNull Connection dbConnection) {
+    public SqlBuilder(@NotNull Connection dbConnection) {
         super(dbConnection);
     }
 
     /** Run a query statement */
-    public static <R> R run(Connection connection, final SqlFunction<SqlParmBuilder, R> fun) {
-        try (var query = new SqlParmBuilder(connection)) {
+    public static <R> R run(Connection connection, final SqlFunction<SqlBuilder, R> fun) {
+        try (var query = new SqlBuilder(connection)) {
             return fun.applyFunction(query);
         } catch (Exception ex) {
             throw (ex instanceof RuntimeException re) ? re : new SqlException(ex);
