@@ -17,7 +17,10 @@
 package org.ujorm.tools.xml;
 
 import java.io.IOException;
+import java.lang.reflect.Method;
 import java.nio.charset.Charset;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.ujorm.tools.Assert;
@@ -62,12 +65,13 @@ public abstract class AbstractWriter {
     /** A CDATA end markup sequence */
     public static final String CDATA_END = "]]>";
     /** A comment beg sequence */
-    public static final String COMMENT_BEG = "<!--";
-    /** A comment end sequence */
-    public static final String COMMENT_END = "-->";
+    public static final String COMMENT_BEG = "";
 
     /** Common formatter */
     public static final MsgFormatter FORMATTER = new MsgFormatter(){};
+
+    /** Thread-safe cache for HttpServletResponse reflection methods */
+    private static final Map<Class<?>, ResponseMethods> METHOD_CACHE = new ConcurrentHashMap<>();
 
     /** Output */
     @NotNull
@@ -89,30 +93,8 @@ public abstract class AbstractWriter {
     private final Formatter formatter;
 
     @NotNull
-    private final Appendable writerEscaped = new Appendable() {
-            private final boolean attribute = false;
+    private final Appendable writerEscaped = createAppendable();
 
-            @NotNull
-            @Override
-            public Appendable append(@NotNull final CharSequence value) throws IOException {
-                write(value, attribute);
-                return this;
-            }
-
-            @NotNull
-            @Override
-            public Appendable append(@NotNull final CharSequence value, int start, int end) throws IOException {
-                write(value, start, end, attribute);
-                return this;
-            }
-
-            @NotNull
-            @Override
-            public Appendable append(final char value) throws IOException {
-                write(value, attribute);
-                return this;
-            }
-        };
 
     /**
      * A writer constructor
@@ -280,6 +262,51 @@ public abstract class AbstractWriter {
         return writerEscaped;
     }
 
+
+    private @NotNull Appendable createAppendable() {
+        return new Appendable() {
+            private final boolean attribute = false;
+
+            @NotNull
+            @Override
+            public Appendable append(@NotNull final CharSequence value) throws IOException {
+                write(value, attribute);
+                return this;
+            }
+
+            @NotNull
+            @Override
+            public Appendable append(@NotNull final CharSequence value, int start, int end) throws IOException {
+                write(value, start, end, attribute);
+                return this;
+            }
+
+            @NotNull
+            @Override
+            public Appendable append(final char value) throws IOException {
+                write(value, attribute);
+                return this;
+            }
+        };
+    }
+
+    /** Cached reflection methods for HttpServletResponse */
+    private static final class ResponseMethods {
+        final Method setEncoding;
+        final Method setHeader;
+        final Method getWriter;
+
+        ResponseMethods(Class<?> clazz) {
+            try {
+                this.setEncoding = clazz.getMethod("setCharacterEncoding", String.class);
+                this.setHeader = clazz.getMethod("setHeader", String.class, String.class);
+                this.getWriter = clazz.getMethod("getWriter");
+            } catch (NoSuchMethodException e) {
+                throw new IllegalStateException("Failed to initialize HttpServletResponse methods", e);
+            }
+        }
+    }
+
     // ---- STATIC METHOD(s) ---
 
     /** Assign a no-cache and an Edge compatibility mode and returns a writer from HttpServletResponse */
@@ -289,20 +316,18 @@ public abstract class AbstractWriter {
             @NotNull final Charset charset,
             final boolean noCache
     ) throws ReflectiveOperationException {
-        var setEncoding = httpServletResponse.getClass().getMethod("setCharacterEncoding", String.class);
-        var setHeader = httpServletResponse.getClass().getMethod("setHeader", String.class, String.class);
-        var getWriter = httpServletResponse.getClass().getMethod("getWriter");
+        var methods = METHOD_CACHE.computeIfAbsent(httpServletResponse.getClass(), ResponseMethods::new);
 
-        setEncoding.invoke(httpServletResponse, charset.toString());
-        setHeader.invoke(httpServletResponse, "Content-Type", "text/html; charset=" + charset);
+        methods.setEncoding.invoke(httpServletResponse, charset.toString());
+        methods.setHeader.invoke(httpServletResponse, "Content-Type", "text/html; charset=" + charset);
 
         if (noCache) {
-            setHeader.invoke(httpServletResponse, "Cache-Control", "no-cache, no-store, must-revalidate"); // HTTP 1.1
-            setHeader.invoke(httpServletResponse, "Pragma", "no-cache"); // HTTP 1.0
-            setHeader.invoke(httpServletResponse, "Expires", "0"); // Proxies
-            setHeader.invoke(httpServletResponse, "X-UA-Compatible", "IE=edge"); // Proxies
+            methods.setHeader.invoke(httpServletResponse, "Cache-Control", "no-cache, no-store, must-revalidate"); // HTTP 1.1
+            methods.setHeader.invoke(httpServletResponse, "Pragma", "no-cache"); // HTTP 1.0
+            methods.setHeader.invoke(httpServletResponse, "Expires", "0"); // Proxies
+            methods.setHeader.invoke(httpServletResponse, "X-UA-Compatible", "IE=edge"); // Proxies
         }
 
-        return (Appendable) getWriter.invoke(httpServletResponse);
+        return (Appendable) methods.getWriter.invoke(httpServletResponse);
     }
 }
