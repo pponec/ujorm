@@ -16,32 +16,18 @@
 
 package org.ujorm.tools.web;
 
+import java.nio.charset.Charset;
+
 import jakarta.servlet.http.HttpServletResponse;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.ujorm.tools.web.request.HttpContext;
-import org.ujorm.tools.xml.ApiElement;
 import org.ujorm.tools.xml.config.HtmlConfig;
 import org.ujorm.tools.xml.config.impl.DefaultHtmlConfig;
-import java.nio.charset.Charset;
 
-/** The root of HTML elements
- *
- * <h4>Usage</h4>
- * <pre class="pre">
- * var response = HttpContext.of();
- * try (var html = AbstractHtmlElement.of(response)) {
- *     try (var body = html.getBody()) {
- *         body.addHeading("Hello!");
- *         body.addLabel().addText("Active:")
- *             .addCheckBox("active").setCheckBoxValue(true);
- *     }
- * }
- * assertTrue(response.toString().contains("&lt;h1&gt;Hello!&lt;/h1&gt;"));
- * </pre>
- *
- * For more information see the
- * <a target="_top" href="https://jbook-samples-free.ponec.net/sample?src=net.ponec.jbook.s01_hello.HelloWorldElement">next sample</a>.
+/**
+ * A HTML root element.
+ * The class manages singleton instances of the HEAD and BODY elements via its parent.
  */
 public class HtmlElement extends AbstractHtmlElement {
 
@@ -50,8 +36,8 @@ public class HtmlElement extends AbstractHtmlElement {
         super(config, writer);
     }
 
-    /** New instance */
-    public HtmlElement(@NotNull ApiElement root, @NotNull HtmlConfig config, @NotNull Appendable writer) {
+    /** New instance - Changed ApiElement to Element */
+    public HtmlElement(@NotNull Element root, @NotNull HtmlConfig config, @NotNull Appendable writer) {
         super(root, config, writer);
     }
 
@@ -72,7 +58,7 @@ public class HtmlElement extends AbstractHtmlElement {
             @NotNull final Appendable writer,
             @Nullable final HtmlConfig myConfig
     ) throws IllegalStateException {
-        DefaultHtmlConfig conf = new DefaultHtmlConfig(myConfig).setNiceFormat();
+        var conf = (DefaultHtmlConfig) new DefaultHtmlConfig(myConfig).setNiceFormat();
         return AbstractHtmlElement.of(writer, conf);
     }
 

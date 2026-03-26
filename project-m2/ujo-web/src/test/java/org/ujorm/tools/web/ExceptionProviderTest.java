@@ -45,9 +45,9 @@ public class ExceptionProviderTest {
                 .setTitle("Element-try-catche");
 
         HtmlElement.of(writer, config).addBody()
-                .next(body -> {
-                    body.addHeading(config.getTitle());
-                })
+                .nest(body -> body
+                        .addHeading(config.getTitle())
+                )
                 .catchEx(e -> {
                     logger.log(Level.SEVERE, "An error", e);
                 });
@@ -65,7 +65,7 @@ public class ExceptionProviderTest {
                 .setTitle("Element-try-catche");
 
         String[] result = {""};
-        HtmlElement.of(writer, config).addBody().then(body -> {
+        HtmlElement.of(writer, config).addBody().nest(body -> {
                     throw new IllegalArgumentException("test");
                 })
                 .catchEx(e -> {
@@ -87,7 +87,7 @@ public class ExceptionProviderTest {
         Assertions.assertThrows(IllegalArgumentException.class, () -> {
             String[] result = {""};
             HtmlElement.of(writer, config).addBody()
-                    .next(body -> {
+                    .nest(body -> {
                         throw new IllegalArgumentException("test");
                     })
                     .catchEx(NullPointerException.class, e -> {
@@ -109,7 +109,7 @@ public class ExceptionProviderTest {
 
         String[] result = {""};
         HtmlElement.of(writer, config).addBody()
-                .then(body -> {
+                .nest(body -> {
                     throw new NullPointerException("test");
                 })
                 .catchEx(NullPointerException.class, e -> {
@@ -124,17 +124,16 @@ public class ExceptionProviderTest {
      */
     @Test
     public void testElementThenCatch4a() {
-        Assertions.assertThrows(OutOfMemoryError.class, () -> {
-            StringBuilder writer = new StringBuilder();
-            DefaultHtmlConfig config = HtmlConfig.ofDefault()
-                    .setTitle("Element-try-catche");
+        var writer = new StringBuilder();
+        var config = HtmlConfig.ofDefault()
+                .setTitle("Element-try-catche");
+        var result = new String[]{""};
 
-            String[] result = {""};
-            HtmlElement.of(writer, config).addBody()
-                    .then(body -> {
+        Assertions.assertThrows(OutOfMemoryError.class, () -> {
+            HtmlElement.of(writer, config).addBody().nest(body -> {
                         throw new OutOfMemoryError("test");
                     })
-                    .catchEx(NullPointerException.class, e -> {
+                    .catchEx(UnsupportedOperationException.class, e -> {
                         result[0] = e.getMessage();
                     });
             String expected = "test";
@@ -153,10 +152,10 @@ public class ExceptionProviderTest {
 
         String[] result = {""};
         HtmlElement.of(writer, config).addBody()
-                .next(body -> {
-                    throw new OutOfMemoryError("test");
+                .nest(body -> {
+                    throw new UnsupportedOperationException("test");
                 })
-                .catchEx(OutOfMemoryError.class, e -> {
+                .catchEx(UnsupportedOperationException.class, e -> {
                     result[0] = e.getMessage();
                 });
         String expected = "test";

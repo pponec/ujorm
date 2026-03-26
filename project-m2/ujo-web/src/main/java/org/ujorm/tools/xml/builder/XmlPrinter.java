@@ -21,7 +21,9 @@ import java.io.IOException;
 import java.nio.charset.Charset;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.ujorm.tools.Check;
 import org.ujorm.tools.xml.AbstractWriter;
+import org.ujorm.tools.xml.ApiElement;
 import org.ujorm.tools.xml.config.HtmlConfig;
 import org.ujorm.tools.xml.config.XmlConfig;
 
@@ -247,6 +249,23 @@ public class XmlPrinter extends AbstractWriter {
             return new XmlPrinter(writer, config);
         } catch (ReflectiveOperationException e) {
             throw new IllegalArgumentException("Response must be type of HttpServletResponse", e);
+        }
+    }
+
+    /**
+     * Write a comment with a security check for the forbidden sequence "--".
+     * If the sequence is found, it is replaced by "- -".
+     * @param comment The comment text. The null value is ignored.
+     * @param element Current element context.
+     * @throws IOException If an I/O error occurs.
+     */
+    public void writeComment(@Nullable final CharSequence comment, @NotNull final ApiElement<?> element) throws IOException {
+        if (Check.hasLength(comment)) {
+            writeNewLine(element.getLevel());
+            out.append("<!-- ");
+            var text = comment.toString().replace("--", "- -");
+            out.append(text);
+            out.append(" -->");
         }
     }
 }

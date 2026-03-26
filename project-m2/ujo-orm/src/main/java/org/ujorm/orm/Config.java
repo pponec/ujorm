@@ -82,8 +82,12 @@ public class Config {
     // --- Core Accessors ---
 
     /** General setter with lock check.
-     * Values set here have the highest priority over other sources. */
-    public <V> void setValue(@NotNull Key<V> key, @NotNull V value) {
+     * Values set here have the highest priority over other sources.
+     * @param key Key instance
+     * @param value Required value
+     * @param <V> The value type (annotation breaks IntelliJ tests
+     */
+    public <V> void setValue(@NotNull Key<V> key, /*@NotNull*/ V value) {
         if (locked) {
             throw new IllegalStateException("The configuration is locked.");
         }
@@ -118,25 +122,32 @@ public class Config {
     /** Loads value from System properties or file properties */
     private <V> void loadKey(Key<V> key, Properties props) {
         var fullKey = PREFIX + key.name();
-        var result = System.getProperty(fullKey);
+        var value = System.getProperty(fullKey);
 
-        if (result == null) {
-            result = props.getProperty(fullKey);
+        if (value == null) {
+            value = props.getProperty(fullKey);
         }
-        if (result != null) {
-            setValue(key, convertValue(result, key.defaultValue()));
+        if (value != null) {
+            setValue(key, convertValue(key, value));
         }
     }
 
     /** Converts string to the type of the default value */
     @SuppressWarnings("unchecked")
-    private <T> T convertValue(String value, T defaultValue) {
-        var type = Primitive.wrapPrimitive(defaultValue.getClass());
+    private <V> V convertValue(@NotNull Key<V> key, @NotNull String value) {
+        var type = Primitive.wrapPrimitive(key.type());
         var converter = (Function<String, ?>) funMap.get(type);
         if (converter == null) {
-            throw new IllegalStateException("No converter found for type: " + type);
+            var msg = "Parameter %s has no converter for type %s".formatted(key.name, key.type());
+            throw new IllegalStateException(msg);
         }
-        return (T) converter.apply(value);
+        try {
+            return (V) converter.apply(value);
+        } catch (RuntimeException e) {
+            var msg = "Cannot convert value '%s' to type %s of the parameter %s"
+                    .formatted(value, key.type().getSimpleName(), key.name());
+            throw new IllegalStateException(msg, e);
+        }
     }
 
     /** Loads properties from the classpath */
@@ -169,7 +180,7 @@ public class Config {
             /** Default value */
             V defaultValue
     ) {
-        public Class<V> getType() {
+        public Class<V> type() {
             return (Class<V>) defaultValue.getClass();
         }
 

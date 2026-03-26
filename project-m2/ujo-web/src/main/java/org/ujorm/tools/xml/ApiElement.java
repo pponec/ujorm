@@ -17,14 +17,16 @@
 
 package org.ujorm.tools.xml;
 
-import java.io.Closeable;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.ujorm.tools.Check;
+
+import java.io.Closeable;
 
 /**
  * An element model API.
  *
- * The XmlElement class implements the {@link Closeable} implementation
+ * The ApiElement interface implements the {@link Closeable} implementation
  * for an optional highlighting the tree structure in the source code.
  *
  * @since 1.86
@@ -47,12 +49,41 @@ public interface ApiElement<E extends ApiElement<?>> extends Closeable {
      * Set an attribute
      * @param name Required element name
      * @param value The {@code null} value is silently ignored. Formatting is performed by the
-     *   {@link org.ujorm.tools.xml.model.XmlWriter#writeValue(Object, ApiElement, String)}
-     *   method, where the default implementation calls a {@code toString()} only.
+     * {@link org.ujorm.tools.xml.AbstractWriter#writeValue(Object, ApiElement, String)}
+     * method, where the default implementation calls a {@code toString()} only.
      * @return The original element
      */
     @NotNull
     E setAttribute(@NotNull String name, @Nullable Object value);
+
+    /**
+     * Set an attribute with many values
+     * @param name Required element name
+     * @param values The {@code null} value is silently ignored. Formatting is performed by the
+     * {@link org.ujorm.tools.xml.AbstractWriter#writeValue(Object, ApiElement, String)}
+     * method, where the default implementation calls a {@code toString()} only.
+     * @return The original element
+     */
+    @NotNull
+    default E setAttribute(@NotNull String name, @Nullable Object... values) {
+        if (Check.isEmpty(values)) {
+            return setAttribute(name, (Object) null);
+        }
+        if (values.length == 1) {
+            return setAttribute(name, values[0]);
+        }
+        var builder = new StringBuilder(64);
+        for (var value : values) {
+            if (value != null) {
+                if (!builder.isEmpty()) {
+                    builder.append(' ');
+                }
+                builder.append(value);
+            }
+        }
+
+        return setAttribute(name, builder.isEmpty() ? null : builder.toString());
+    }
 
     /**
      * @deprecated Call a method {@link #setAttribute(java.lang.String, java.lang.Object) } rather.
@@ -66,8 +97,8 @@ public interface ApiElement<E extends ApiElement<?>> extends Closeable {
     /**
      * Add a text and escape special character
      * @param value The {@code null} value is allowed. Formatting is performed by the
-     *   {@link org.ujorm.tools.xml.model.XmlWriter#writeValue(Object, ApiElement, String)}  }
-     *   method, where the default implementation calls a {@code toString()} only.
+     * {@link org.ujorm.tools.xml.AbstractWriter#writeValue(Object, ApiElement, String)}
+     * method, where the default implementation calls a {@code toString()} only.
      * @return This instance */
     @NotNull
     E addText(@Nullable Object value);
@@ -109,4 +140,8 @@ public interface ApiElement<E extends ApiElement<?>> extends Closeable {
     /** Close the element */
     @Override
     void close();
+
+    /** Get the current element level */
+    int getLevel();
+
 }

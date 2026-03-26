@@ -139,6 +139,7 @@ public class DefaultXmlConfig implements XmlConfig {
     /**
      * Assign parameters for a nice format of the HTML result
      */
+    @SuppressWarnings("unchecked")
     public final <T extends DefaultXmlConfig> T setNiceFormat() {
         setNiceFormat(DEFAULT_INTENDATION);
         return (T) this;
@@ -148,6 +149,7 @@ public class DefaultXmlConfig implements XmlConfig {
      * Assign parameters for a nice format of the HTML result
      * @param indentation An empty String is replaced by a default intendation.
      */
+    @SuppressWarnings("unchecked")
     public final <T extends DefaultXmlConfig> T setNiceFormat(@Nullable final CharSequence indentation) {
         this.firstLevel = 0;
         this.indentation = Check.hasLength(indentation) ? indentation : DEFAULT_INTENDATION;
@@ -203,7 +205,6 @@ public class DefaultXmlConfig implements XmlConfig {
     public CharSequence getDefaultValue() {
         return defaultValue;
     }
-
 
     /** A default implementation is: {@code String.valueOf(value)} */
     @NotNull

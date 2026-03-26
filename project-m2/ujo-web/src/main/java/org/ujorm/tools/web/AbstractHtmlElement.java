@@ -22,14 +22,9 @@ import org.ujorm.tools.Assert;
 import org.ujorm.tools.Check;
 import org.ujorm.tools.web.request.HttpContext;
 import org.ujorm.tools.xml.ApiElement;
-import org.ujorm.tools.xml.builder.XmlBuilder;
 import org.ujorm.tools.xml.builder.XmlPrinter;
 import org.ujorm.tools.xml.config.HtmlConfig;
 import org.ujorm.tools.xml.config.impl.DefaultHtmlConfig;
-import org.ujorm.tools.xml.model.XmlModel;
-import org.ujorm.tools.xml.model.XmlWriter;
-
-import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.function.Consumer;
 
@@ -86,23 +81,25 @@ public abstract class AbstractHtmlElement implements ApiElement<Element>, Html {
     /** Flag to indicate if the header is already initialized */
     private boolean headerInitialized = false;
 
-    /** Create new instance with empty HTML headers
-     * @param config Configuration
-     * @param writer Writer
-     */
-    public AbstractHtmlElement(@NotNull final HtmlConfig config, @NotNull final Appendable writer) {
-        this(new XmlModel(Html.HTML), config, writer);
-    }
-
-    /** Create new instance with explicit root
+    /** Create new instance with explicit root.
      * @param root Root element
      * @param config Configuration
      * @param writer Writer
      */
-    public AbstractHtmlElement(@NotNull final ApiElement root, @NotNull final HtmlConfig config, @NotNull final Appendable writer) {
-        this.root = new Element(root);
+    public AbstractHtmlElement(@NotNull final Element root, @NotNull final HtmlConfig config, @NotNull final Appendable writer) {
+        this.root = root;
         this.config = config;
         this.writer = writer;
+    }
+
+    /** Convenience constructor to create Element implicitly. */
+    public AbstractHtmlElement(@NotNull final HtmlConfig config, @NotNull final Appendable writer) {
+        this(new Element(config.getRootElementName(), new XmlPrinter(writer, config), config.getFirstLevel()), config, writer);
+    }
+
+    @Override
+    public int getLevel() {
+        return 0;
     }
 
     @NotNull
@@ -152,7 +149,7 @@ public abstract class AbstractHtmlElement implements ApiElement<Element>, Html {
      * @return New instance of the Element
      */
     @Override @NotNull
-    public final Element addElement(@NotNull final String name) {
+    public Element addElement(@NotNull final String name) {
         return addElement(name, NO_CSS);
     }
 
@@ -173,13 +170,13 @@ public abstract class AbstractHtmlElement implements ApiElement<Element>, Html {
         };
     }
 
-    /** Returns or creates a head element
+    /** Returns or creates a head element. CSS classes are applied only during the first call.
      * @param css CSS classes
      * @return Head element
      */
     public Element addHead(@NotNull final CharSequence... css) {
         if (head == null) {
-            initHeader();
+            initHeader(css);
             if (head == null) {
                 head = root.addElement(Html.HEAD, css);
             }
@@ -190,11 +187,11 @@ public abstract class AbstractHtmlElement implements ApiElement<Element>, Html {
     /** Returns a head element
      * @return Head element
      */
-    public final Element getHead() {
+    public Element getHead() {
         return addHead();
     }
 
-    /** Returns or creates a body element
+    /** Returns or creates a body element. CSS classes are applied only during the first call.
      * @param css CSS classes
      * @return Body element
      */
@@ -211,12 +208,17 @@ public abstract class AbstractHtmlElement implements ApiElement<Element>, Html {
      * @return Body element
      */
     @NotNull
-    public final Element getBody() {
+    public Element getBody() {
         return addBody();
     }
 
     /** Lazy initialize the HTML header if requested and not yet initialized */
     protected void initHeader() {
+        initHeader(NO_CSS);
+    }
+
+    /** Lazy initialize the HTML header if requested and not yet initialized, allowing custom CSS for head */
+    protected void initHeader(CharSequence... headCss) {
         if (!headerInitialized && config.isHtmlHeaderRequest()) {
             headerInitialized = true;
 
@@ -226,8 +228,8 @@ public abstract class AbstractHtmlElement implements ApiElement<Element>, Html {
                         lang -> root.setAttribute(A_LANG, lang));
             }
 
-            // 2. Then create or use head element
-            final Element headElement = head != null ? head : root.addElement(Html.HEAD);
+            // 2. Then create or use head element WITH the provided CSS
+            final Element headElement = head != null ? head : root.addElement(Html.HEAD, headCss);
             if (head == null) {
                 head = headElement;
             }
@@ -350,16 +352,6 @@ public abstract class AbstractHtmlElement implements ApiElement<Element>, Html {
     public void close() throws IllegalStateException {
         initHeader();
         root.close();
-        if (root.internalElement instanceof XmlModel xmlElement) {
-            try {
-                final var doctype = config.getDoctype();
-                final var separator = doctype.isEmpty() ? "" : config.getNewLine();
-                final var xmlWriter = new XmlWriter(writer.append(doctype).append(separator), config.getIndentation());
-                xmlElement.toWriter(config.getFirstLevel() + 1, xmlWriter);
-            } catch (IOException e) {
-                throw new IllegalStateException(e);
-            }
-        }
     }
 
     /** Get config
@@ -377,27 +369,16 @@ public abstract class AbstractHtmlElement implements ApiElement<Element>, Html {
         return getConfig().getTitle();
     }
 
-    /** Apply body of element by a lambda expression.
-     * @param builder Builder
-     * @return Exception provider
-     * @deprecated Use the method {@link #next(Consumer)} rather.
-     */
-    @Deprecated
-    @NotNull
-    public final ExceptionProvider then(@NotNull final Consumer<AbstractHtmlElement> builder) {
-        return next(builder);
-    }
-
     /** Add nested elements to the element.
      * @param builder Lambda expression
      * @return Exception provider
      */
     @NotNull
-    public ExceptionProvider next(@NotNull final Consumer<AbstractHtmlElement> builder) {
+    public ExceptionProvider nest(@NotNull final Consumer<AbstractHtmlElement> builder) {
         try {
             builder.accept(this);
             return ExceptionProvider.of();
-        } catch (RuntimeException e) {
+        } catch (Exception e) {
             return ExceptionProvider.of(e);
         } finally {
             close();
@@ -414,10 +395,7 @@ public abstract class AbstractHtmlElement implements ApiElement<Element>, Html {
     @NotNull
     public static HtmlElement of(@NotNull final Appendable writer, @Nullable final HtmlConfig myConfig) {
         final var config = myConfig != null ? myConfig : new DefaultHtmlConfig();
-        final ApiElement rootElement = config.isDocumentObjectModel()
-                ? new XmlModel(config.getRootElementName())
-                : new XmlBuilder(config.getRootElementName(), new XmlPrinter(writer, config), config.getFirstLevel());
-
+        final var rootElement = new Element(config.getRootElementName(), new XmlPrinter(writer, config), config.getFirstLevel());
         return new HtmlElement(rootElement, config, writer);
     }
 

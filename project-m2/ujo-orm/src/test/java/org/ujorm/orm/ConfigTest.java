@@ -51,7 +51,7 @@ class ConfigTest {
         System.setProperty("org.ujorm.maxCacheSize", "not_a_number");
 
         var exception = assertThrows(
-                NumberFormatException.class,
+                IllegalStateException.class,
                 Config::new,
                 "Should throw an exception when property cannot be parsed into an Integer."
         );
@@ -80,12 +80,12 @@ class ConfigTest {
         var config = new Config();
 
         var exception = assertThrows(
-                IllegalArgumentException.class,
+                NullPointerException.class,
                 () -> config.setValue(Config.maxCacheSize, null),
                 "The setValue() method must throw an exception if value is null."
         );
 
-        assertTrue(exception.getMessage().contains("Value is required"));
+        assertEquals("The value is required.", exception.getMessage());
     }
 
     @Test

@@ -157,7 +157,7 @@ public class ResultSetMapperTestKey {
         var invalidAliases = new String[]{"id", "name"};
 
         // 4. Execute and verify the exception
-        var exception = assertThrows(IllegalArgumentException.class, () -> {
+        var exception = assertThrows(IllegalStateException.class, () -> {
             mapper.convert(rs, invalidAliases).findFirst();
         });
 

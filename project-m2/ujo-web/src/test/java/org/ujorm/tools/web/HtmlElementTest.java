@@ -51,7 +51,7 @@ public class HtmlElementTest {
     public void sample_1() {
         StringBuilder writer = new StringBuilder();
         DefaultHtmlConfig config = HtmlConfig.ofDefault();
-        config.setRawHedaderCode("<meta name='description' content='Powered by Ujorm'>");
+        config.setRawHeaderText("<meta name='description' content='Powered by Ujorm'>");
 
         try (HtmlElement html = HtmlElement.of(writer, config)) {
             html.addBody().addHeading("Hello!");
@@ -77,7 +77,6 @@ public class HtmlElementTest {
         config.setRootElementName(XmlBuilder.HIDDEN_NAME);
         config.setHtmlHeader(false);
         config.setDoctype("");
-        config.setDocumentObjectModel(true);
 
         StringBuilder writer = new StringBuilder();
         try (HtmlElement html = HtmlElement.of(writer, config)) {
@@ -225,6 +224,56 @@ public class HtmlElementTest {
         String expected = "<script src='./prettify.js'></script>"
                 .replace('\'', '"');
         assertEquals(expected, result);
+    }
+
+    /**
+     * Test verifying that addHead and addBody return the exact same instance
+     * on subsequent calls and apply CSS only on creation.
+     */
+    @Test
+    public void testHeadAndBodySingletonWithCss() {
+        StringBuilder writer = new StringBuilder();
+        try (HtmlElement html = HtmlElement.of("Singleton Test", writer)) {
+            Element head1 = html.addHead("first-head-css");
+            Element head2 = html.addHead("second-head-css");
+
+            Element body1 = html.addBody("first-body-css");
+            Element body2 = html.getBody();
+
+            assertSame(head1, head2, "Head elements should be the exact same instance");
+            assertSame(body1, body2, "Body elements should be the exact same instance");
+
+            body1.addDiv().addText("Singleton body logic verified.");
+        }
+
+        String result = writer.toString();
+
+        // Ověříme, že element vznikl jen jednou a má aplikované první CSS
+        assertTrue(result.contains("<head class=\"first-head-css\">"));
+        assertTrue(result.contains("<body class=\"first-body-css\">"));
+
+        // Druhé volání addHead("second-head-css") nemělo přidat další element ani přepsat CSS
+        assertFalse(result.contains("second-head-css"));
+
+        // Ověření, že ve výstupu je tag <head> a <body> přesně jednou (nepřidaly se duplikáty)
+        assertEquals(1, result.split("<head").length - 1);
+        assertEquals(1, result.split("<body").length - 1);
+    }
+
+    /**
+     * Test verifying addCssBody and addJavascriptBody implementations.
+     */
+    @Test
+    public void testEmbeddedScriptsAndStyles() {
+        StringBuilder writer = new StringBuilder();
+        try (HtmlElement html = HtmlElement.of("Embedded Assets", writer)) {
+            html.addCssBody(".red-text { color: red; }");
+            html.addJavascriptBody("console.log('Hello from Ujorm!');");
+        }
+
+        String result = writer.toString();
+        assertTrue(result.contains("<style>.red-text { color: red; }</style>"));
+        assertTrue(result.contains("console.log('Hello from Ujorm!')"));
     }
 
     private static String substring(String body, String beg, String end) {

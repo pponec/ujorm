@@ -135,13 +135,49 @@ public abstract class AbstractWriter {
         write(text, 0, text.length(), attribute);
     }
 
-    /** Write escaped value to the output
+    /** Writes escaped value to the output in blocks
      * @param text A value to write
      * @param attribute Write an attribute value
      */
     void write(@NotNull final CharSequence text, final int from, final int max, final boolean attribute) throws IOException {
-        for (int i = from; i < max; i++) {
-            write(text.charAt(i), attribute);
+        var start = from;
+        for (var i = from; i < max; i++) {
+            var c = text.charAt(i);
+            var requiresEscape = false;
+
+            switch (c) {
+                case XML_LT:
+                case XML_GT:
+                case XML_AMPERSAND:
+                case NBSP:
+                case NARROW_NBSP:
+                    requiresEscape = true;
+                    break;
+                case XML_2QUOT:
+                    requiresEscape = attribute;
+                    break;
+                default:
+                    requiresEscape = c < 32;
+                    break;
+            }
+
+            if (requiresEscape) {
+                // Append the safe block of text
+                if (i > start) {
+                    out.append(text, start, i);
+                }
+
+                // Escape and write the special character using the existing single-char method
+                write(c, attribute);
+
+                // Shift the start pointer
+                start = i + 1;
+            }
+        }
+
+        // Append any remaining safe text
+        if (start < max) {
+            out.append(text, start, max);
         }
     }
 
