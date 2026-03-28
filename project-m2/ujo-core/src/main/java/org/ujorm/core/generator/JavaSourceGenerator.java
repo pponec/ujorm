@@ -43,9 +43,9 @@ public class JavaSourceGenerator {
             params.put("domainClass", meta.domainClass().getSimpleName());
             params.put("domainClassFull", meta.domainClass().getCanonicalName());
             params.put("baseClass", AbstractDomainHandler.class.getSimpleName());
-            params.put("baseClassFull", AbstractDomainHandler.class.getName());
+            params.put("baseClassFull", AbstractDomainHandler.class.getCanonicalName());
             params.put("baseKeyClass", AbstractKey.class.getSimpleName());
-            params.put("baseKeyClassFull", AbstractKey.class.getName());
+            params.put("baseKeyClassFull", AbstractKey.class.getCanonicalName());
             params.put("generatorClass", getClass().getSimpleName());
             params.put("generatorPackage", getClass().getPackageName());
             params.put("@NotNull", enableEnotations ? "@org.jetbrains.annotations.NotNull" : "");
@@ -62,8 +62,8 @@ public class JavaSourceGenerator {
                 private static final Class<${domainClass}> domainClass = ${domainClass}.class;
                 public ${generatedClass}() {
                 """;
-            //  super( new Key_id(0)
-            //       , new Key_name(1)
+        //  super( new Key_id(0)
+        //       , new Key_name(1)
         var templateBeg2 = """
                      );
                 }
@@ -158,7 +158,7 @@ public class JavaSourceGenerator {
         writer.append(offset1).append("return new ").append(domainClass).append("\n");
         for(int i = 0, max = meta.properties().size(); i < max; ++i) {
             var sep = (i == 0) ? "( " : ", ";
-            var type = meta.properties().get(i).propertyObjectType().getName();
+            var type = meta.properties().get(i).propertyObjectType().getCanonicalName();
             var row = "(%s) values[%s]\n".formatted(type, i);
             writer.append(offset2).append(sep).append(row);
         }
