@@ -1,12 +1,10 @@
 package org.ujorm.orm.tutorial;
 
-import org.jetbrains.annotations.NotNull;
 import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
 import org.testcontainers.containers.MSSQLServerContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import org.ujorm.orm.SqlQuery;
-import org.ujorm.orm.model.QuotePair;
 
 /** MS SQL Server integration test implementation */
 @Testcontainers
@@ -18,10 +16,6 @@ class MsSqlTutorialIT extends AbstractTutorialIT {
     static MSSQLServerContainer<?> mssql = new MSSQLServerContainer<>(
             "mcr.microsoft.com/mssql/server:2022-CU24-ubuntu-22.04")
             .acceptLicense();
-
-    protected @NotNull QuotePair getQuotePair() {
-        return QuotePair.ofMsSqlServer();
-    }
 
     @Override
     void init() {

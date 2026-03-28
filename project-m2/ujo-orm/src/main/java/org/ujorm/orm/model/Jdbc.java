@@ -2,7 +2,7 @@ package org.ujorm.orm.model;
 
 public record Jdbc(
         DatabaseVendor dbVendor,
-        QuotePair quote)
+        QuotePair quotes)
 {
     public boolean isOracleDb() {
         return dbVendor == DatabaseVendor.ORACLE;

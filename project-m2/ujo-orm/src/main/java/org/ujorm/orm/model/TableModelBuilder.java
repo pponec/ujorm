@@ -152,6 +152,7 @@ public class TableModelBuilder<D> {
      * @param connection The database connection to check.
      * @return The identified database vendor or DEFAULT if unknown or an error occurs.
      */
+    /** Determines the database vendor from the connection metadata. */
     protected DatabaseVendor getDbVendor(Connection connection) {
         try {
             var productName = connection.getMetaData().getDatabaseProductName();
@@ -163,6 +164,12 @@ public class TableModelBuilder<D> {
                 if (nameLower.contains("sql server")) {
                     return DatabaseVendor.MS_SQL_SERVER;
                 }
+                if (nameLower.contains("mariadb")) {
+                    return DatabaseVendor.MARIA_DB;
+                }
+                if (nameLower.contains("mysql")) {
+                    return DatabaseVendor.MY_SQL;
+                }
             }
         } catch (SQLException ex) {
             LOGGER.log(Level.SEVERE, "Failed to determine database vendor", ex);
@@ -171,18 +178,18 @@ public class TableModelBuilder<D> {
     }
 
     /**
-     * Retrieves the identifier quote character configuration for the database connection.
+     * Retrieves the identifier quotes character configuration for the database connection.
      * <p>
      * The method resolves the quotes in the following priority:
      * <ol>
      *   <li>If quoting is disabled in the configuration, returns no quotes.</li>
-     *   <li>If a custom quote string is defined in the configuration, uses that string.</li>
+     *   <li>If a custom quotes string is defined in the configuration, uses that string.</li>
      *   <li>Otherwise, falls back to the database metadata provided by JDBC.</li>
      * </ol>
      *
      * @param connection The database connection to check.
      * @param config The current configuration context.
-     * @return The identifier quote configuration.
+     * @return The identifier quotes configuration.
      */
     protected QuotePair getSqlQuote(@NotNull Connection connection, @NotNull Config config) {
         if (!config.isEnableSqlQuoting()) {

@@ -17,10 +17,6 @@ class MariaDbTutorialIT extends AbstractTutorialIT {
     @ServiceConnection
     static MariaDBContainer<?> mariadb = new MariaDBContainer<>("mariadb:10.11.11");
 
-    protected @NotNull QuotePair getQuotePair() {
-        return QuotePair.ofMySql();
-    }
-
     @Override
     void init() {
         try (var query = new SqlQuery(connection())) {

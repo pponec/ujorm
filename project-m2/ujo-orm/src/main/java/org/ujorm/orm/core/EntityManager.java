@@ -158,9 +158,20 @@ public final class EntityManager<D, V> {
     private TableModel<D> tableModel() {
         var result = _tableModel;
         if (result == null) {
-            throw new IllegalStateException("%s is not initialized.".formatted(getClass().getSimpleName()));
+            var msg = "%s is not initialized.".formatted(getClass().getSimpleName());
+            throw new IllegalStateException(msg);
         }
         return result;
+    }
+
+    /** Thread-safe access to the TableModel. */
+    @NotNull
+    public TableModel<D> tableModel(@NotNull Connection dbConnection) {
+        var result = _tableModel;
+        if (result == null) {
+            initModel(dbConnection);
+        }
+        return tableModel();
     }
 
     @SuppressWarnings("unchecked")
@@ -173,7 +184,7 @@ public final class EntityManager<D, V> {
     }
 
     private QuotePair getQuote() {
-        return tableModel().jdbc().quote();
+        return tableModel().jdbc().quotes();
     }
 
     /** Utilities for EntityManager */

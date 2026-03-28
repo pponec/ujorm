@@ -15,6 +15,7 @@ class MySqlTutorialIT extends AbstractTutorialIT {
     @ServiceConnection
     static MySQLContainer<?> mysql = new MySQLContainer<>("mysql:8.0.36");
 
+    @Override
     void init() {
         try (var query = new SqlQuery(connection())) {
             query.sql("""

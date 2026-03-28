@@ -1,6 +1,5 @@
 package org.ujorm.orm.tutorial;
 
-import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringBootConfiguration;
@@ -8,7 +7,6 @@ import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.ujorm.orm.SqlQuery;
 import org.ujorm.orm.core.EntityManager;
-import org.ujorm.orm.model.QuotePair;
 import org.ujorm.orm.tutorial.domains.City;
 import org.ujorm.orm.tutorial.domains.Employee;
 import org.ujorm.orm.tutorial.domains.MetaCity;
@@ -17,12 +15,13 @@ import org.ujorm.orm.tutorial.domains.MetaEmployee;
 import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.ArrayDeque;
 import java.util.Comparator;
 import java.util.logging.Level;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 /** Base test class for all database integration tests */
 @SpringBootTest(classes = AbstractTutorialIT.TestConfig.class)
@@ -140,8 +139,8 @@ public abstract class AbstractTutorialIT {
                  WHERE e.id > :employeeId
                  """;
 
-        var quotePair = getQuotePair();
-        try (var query = new SqlQuery(connection(), quotePair)) {
+        var jdbcModel = employeeEm.tableModel(connection()).jdbc();
+        try (var query = new SqlQuery(connection(), jdbcModel.quotes())) {
             var employees = query
                     .sql(sql)
                     .column("e.id", MetaEmployee.id)
@@ -155,13 +154,22 @@ public abstract class AbstractTutorialIT {
                     .toList();
 
             var rawSql = query.toString();
+            var lines = rawSql.lines().collect(
+                    Collectors.toCollection(ArrayDeque::new));
 
-            //employeeEm.
-            //var expectedSqlFragment = "";
+            switch (jdbcModel.dbVendor()) {
+                case DEFAULT, ORACLE ->
+                    Assertions.assertEquals("SELECT e.id AS \"id\"", lines.getFirst());
+                case MS_SQL_SERVER ->
+                    Assertions.assertEquals("SELECT e.id AS [id]", lines.getFirst());
+                case MY_SQL, MARIA_DB ->
+                    Assertions.assertEquals("SELECT e.id AS `id`", lines.getFirst());
+            }
 
             assertEquals(3, employees.size());
             assertEquals("Dave", employees.get(1).getName());
             assertEquals("Ingrid", employees.get(1).getBoss().getName());
+            assertEquals("WHERE e.id > [0]", lines.getLast());
         }
     }
 
@@ -207,9 +215,5 @@ public abstract class AbstractTutorialIT {
                 .findFirst()
                 .orElseThrow());
         assertEquals(0, count);
-    }
-
-    protected @NotNull QuotePair getQuotePair() {
-        return QuotePair.ofDefault();
     }
 }

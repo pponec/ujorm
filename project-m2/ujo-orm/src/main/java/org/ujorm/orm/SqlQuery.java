@@ -74,6 +74,18 @@ public class SqlQuery extends AbstractSqlQuery<SqlQuery> {
         this(dbConnection, QuotePair.ofDefault());
     }
 
+    /**
+     * Creates a new query instance with defined quotes for column aliases.
+     * <p>
+     * The characters provided in the {@code quoter} parameter are applied exclusively
+     * to the generated database column labels (aliases) (i.e., the part after the {@code AS} keyword).
+     * These quotes are not applied to the column names themselves or to defined SQL expressions,
+     * as they may contain general SQL constructs (e.g., function calls or concatenations),
+     * where applying quotes globally would cause an SQL syntax error.
+     *
+     * @param dbConnection an active database connection
+     * @param quoter       a pair of characters used to quote the generated label (e.g., {@code []} or {@code ""})
+     */
     public SqlQuery(@NotNull Connection dbConnection, QuotePair quoter) {
         super(dbConnection);
         this.q = quoter;

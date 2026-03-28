@@ -18,8 +18,11 @@ package org.ujorm.orm.model;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.ujorm.core.DomainHandler;
+import org.ujorm.core.DomainHandlerProvider;
 import org.ujorm.core.Key;
+import org.ujorm.orm.impl.Context;
 
+import java.sql.Connection;
 import java.util.*;
 
 /** Temporary Model */
@@ -31,6 +34,7 @@ public record TableModel<D>(
         /** Inserted columns without PK. */
         @NotNull
         List<ColumnModel<D, Object>> updatableColumns,
+        /** Selected database parameters extracted from the JDBC model. */
         Jdbc jdbc
 ) {
 

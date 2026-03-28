@@ -28,7 +28,7 @@ mvn clean install -DskipTests
 echo "Starting the integration docker tests..."
 OPTS="-P docker-it -pl ujorm3-integration-tests"
 mvn verify $OPTS -Dit.test=PostgresTutorialIT
-mvn verify $OPTS -Dit.test=MysqlTutorialIT
+mvn verify $OPTS -Dit.test=MySqlTutorialIT
 mvn verify $OPTS -Dit.test=MariaDbTutorialIT
-mvn verify $OPTS -Dit.test=MssqlTutorialIT
+mvn verify $OPTS -Dit.test=MsSqlTutorialIT
 mvn verify $OPTS -Dit.test=OracleTutorialIT

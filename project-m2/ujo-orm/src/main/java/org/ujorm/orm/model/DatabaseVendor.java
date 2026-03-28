@@ -1,10 +1,20 @@
 package org.ujorm.orm.model;
 
-/** Represents a pair of delimiters used for quoting SQL identifiers or values. */
-
+/** Supported database vendors for SQL dialect resolution. */
 public enum DatabaseVendor {
-    /** Standard JDBC */
+
+    /** Standard JDBC (e.g. PostgreSQL, H2) */
     DEFAULT,
-    ORACLE,
-    MS_SQL_SERVER
+
+    /** MySQL database */
+    MY_SQL,
+
+    /** MariaDB database */
+    MARIA_DB,
+
+    /** Microsoft SQL Server */
+    MS_SQL_SERVER,
+
+    /** Oracle database */
+    ORACLE
 }

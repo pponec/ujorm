@@ -82,6 +82,32 @@ class TableModelBuilderTest {
         assertEquals(DatabaseVendor.MS_SQL_SERVER, builder.getDbVendor(mockConnection));
     }
 
+    /** Test MySQL database vendor detection */
+    @Test
+    void testGetDbVendorReturnsMySql() throws SQLException {
+        when(mockConnection.getMetaData()).thenReturn(mockMetaData);
+        when(mockMetaData.getDatabaseProductName()).thenReturn("MySQL");
+
+        assertEquals(DatabaseVendor.MY_SQL, builder.getDbVendor(mockConnection));
+    }
+
+    /** Test MariaDB database vendor detection */
+    @Test
+    void testGetDbVendorReturnsMariaDb() throws SQLException {
+        when(mockConnection.getMetaData()).thenReturn(mockMetaData);
+        when(mockMetaData.getDatabaseProductName()).thenReturn("MariaDB");
+
+        assertEquals(DatabaseVendor.MARIA_DB, builder.getDbVendor(mockConnection));
+    }
+
+    /** Test fallback to DEFAULT on SQLException */
+    @Test
+    void testGetDbVendorThrowsException() throws SQLException {
+        when(mockConnection.getMetaData()).thenThrow(new SQLException("Mock DB Error"));
+
+        assertEquals(DatabaseVendor.DEFAULT, builder.getDbVendor(mockConnection));
+    }
+
     @Test
     void testGetSqlQuoteMsSqlServer() throws SQLException {
         when(mockConnection.getMetaData()).thenReturn(mockMetaData);
@@ -180,11 +206,11 @@ class TableModelBuilderTest {
         when(mockResultSet.getString("TABLE_SCHEM")).thenReturn("PUBLIC");
         when(mockResultSet.getString("TABLE_CAT")).thenReturn("DEF_CAT");
 
-        var realIdentifier = builder.createTableIdentifier(softIdentifier, mockConnection);
+        var result = builder.createTableIdentifier(softIdentifier, mockConnection);
 
-        assertEquals("USER_ACCOUNT", realIdentifier.table());
-        assertEquals("PUBLIC", realIdentifier.schema());
-        assertEquals("DEF_CAT", realIdentifier.catalog());
+        assertEquals("USER_ACCOUNT", result.table());
+        assertEquals("PUBLIC", result.schema());
+        assertEquals("DEF_CAT", result.catalog());
     }
 
     @Test
