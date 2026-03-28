@@ -41,9 +41,20 @@ public class TutorialTest extends AbstractDemo {
         employeeCrud.insert(emplDave, emplCarol);
     }
 
+    /** Quick start: insert a new record (auto-generated ID) and find it by ID. */
+    @Test
+    @Order(210)
+    void quickStart() {
+        var crud = CITY_EM.crud(connection());
+        var saved = crud.insert(new City(null, "Barcelona", "ES"));
+        var barcelona = crud.findById(saved.id()).orElseThrow();
+
+        Assertions.assertNotNull(barcelona.id());
+    }
+
     /** Safe aliasing using generated Meta classes prevents SQL typos */
     @Test
-    @Order(200)
+    @Order(220)
     void select() {
         var sql = """
                  SELECT ${COLUMNS}

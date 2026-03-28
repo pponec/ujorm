@@ -27,6 +27,7 @@ To maintain a high utility-to-code ratio and minimize bugs, Ujorm3 intentionally
 ---
 
 ## Menu
+* [Quick Start (TL;DR)](#quick-start-tldr)
 * [Basic CRUD Operations](#basic-crud-operations)
     * [SELECT](#select)
     * [INSERT](#insert)
@@ -42,6 +43,19 @@ To maintain a high utility-to-code ratio and minimize bugs, Ujorm3 intentionally
 * [Feedback & Contributions](#feedback--contributions)
 
 ---
+
+## Quick Start (TL;DR)
+
+Mapping an object and inserting it into the database takes just a few lines of code. 
+Ujorm3 seamlessly supports standard Jakarta annotations and modern Java Records.
+    
+```java
+void quickStart() {
+    var crud = CITY_EM.crud(connection());
+    var saved = crud.insert(new City(null, "Barcelona", "ES"));
+    var barcelona = crud.findById(saved.id()).orElseThrow();
+}
+```
 
 ## Basic CRUD Operations
 
