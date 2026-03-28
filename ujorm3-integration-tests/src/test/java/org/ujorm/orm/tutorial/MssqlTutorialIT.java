@@ -10,10 +10,11 @@ import org.ujorm.orm.SqlQuery;
 @Testcontainers
 class MssqlTutorialIT extends AbstractTutorialIT {
 
+    /** Docker repository tags: https://mcr.microsoft.com/v2/mssql/server/tags/list */
     @Container
     @ServiceConnection
     static MSSQLServerContainer<?> mssql = new MSSQLServerContainer<>(
-            "mcr.microsoft.com/mssql/server:2022-latest")
+            "mcr.microsoft.com/mssql/server:2022-CU24-ubuntu-22.04")
             .acceptLicense();
 
     @Override

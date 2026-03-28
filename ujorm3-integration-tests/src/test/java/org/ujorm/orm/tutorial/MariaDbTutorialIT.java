@@ -10,10 +10,10 @@ import org.ujorm.orm.SqlQuery;
 @ImportTestcontainers
 class MariaDbTutorialIT extends AbstractTutorialIT {
 
-    /** MariaDB container */
+    /** Docker repository tags: https://hub.docker.com/_/mariadb/tags */
     @Container
     @ServiceConnection
-    static MariaDBContainer<?> mariadb = new MariaDBContainer<>("mariadb:10.11");
+    static MariaDBContainer<?> mariadb = new MariaDBContainer<>("mariadb:10.11.11");
 
     @Override
     void init() {

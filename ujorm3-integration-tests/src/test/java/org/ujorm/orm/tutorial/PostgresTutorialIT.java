@@ -9,9 +9,10 @@ import org.ujorm.orm.SqlQuery;
 @Testcontainers
 class PostgresTutorialIT extends AbstractTutorialIT {
 
+    /** Docker repository tags: https://hub.docker.com/_/postgres/tags */
     @Container
     @ServiceConnection
-    static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:16-alpine");
+    static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:16.2-alpine");
 
     @Override
     void init() {

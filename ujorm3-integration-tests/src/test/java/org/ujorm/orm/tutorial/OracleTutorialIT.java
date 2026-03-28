@@ -10,10 +10,10 @@ import org.ujorm.orm.SqlQuery;
 @Testcontainers
 class OracleTutorialIT extends AbstractTutorialIT {
 
-    /** Oracle Free container */
+    /** Docker repository tags:  https://hub.docker.com/r/gvenzl/oracle-free/tags */
     @Container
     @ServiceConnection
-    static OracleContainer oracle = new OracleContainer("gvenzl/oracle-free:23-slim-faststart");
+    static OracleContainer oracle = new OracleContainer("gvenzl/oracle-free:23.3-slim-faststart");
 
     @Override
     void init() {

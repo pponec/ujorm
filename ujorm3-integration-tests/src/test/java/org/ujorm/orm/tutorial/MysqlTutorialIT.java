@@ -10,9 +10,10 @@ import org.ujorm.orm.SqlQuery;
 @ImportTestcontainers
 class MysqlTutorialIT extends AbstractTutorialIT {
 
+    /** Docker repository tags: https://hub.docker.com/_/mysql/tags */
     @Container
     @ServiceConnection
-    static MySQLContainer<?> mysql = new MySQLContainer<>("mysql:8.0");
+    static MySQLContainer<?> mysql = new MySQLContainer<>("mysql:8.0.36");
 
     void init() {
         try (var query = new SqlQuery(connection())) {
