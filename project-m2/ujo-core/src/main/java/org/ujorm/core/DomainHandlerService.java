@@ -11,6 +11,9 @@ public class DomainHandlerService {
     /** A mapping a domain class to the domain handler object. */
     private final ConcurrentHashMap<Class<?>, DomainHandler<?>> map = new ConcurrentHashMap<>();
 
+    /** Protected constructor */
+    protected DomainHandlerService() {}
+
     @NotNull
     @SuppressWarnings("unchecked")
     public <D> DomainHandler<D> getHandler(Class<D> domainClass) {
@@ -81,8 +84,7 @@ public class DomainHandlerService {
         return getHandler(type).newDomain(values);
     }
 
-    /** Create new domain object type of the AbstractUjo. */
-    public <D> AbstractUjo<D> createUjoInstance(@NotNull Class<D> type) {
-        return AbstractUjo.of(getHandler(type));
+    public static DomainHandlerService of() {
+        return new DomainHandlerService();
     }
 }

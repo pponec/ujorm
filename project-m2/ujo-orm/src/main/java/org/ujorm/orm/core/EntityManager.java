@@ -31,7 +31,6 @@ import org.ujorm.orm.model.QuotePair;
 import org.ujorm.orm.model.TableModel;
 import org.ujorm.orm.model.TableModelBuilder;
 import org.ujorm.orm.utils.StatementCache;
-import org.ujorm.orm.utils.Tools;
 import org.ujorm.tools.Check;
 import org.ujorm.tools.jdbc.AbstractSqlQuery.SqlFunction;
 import org.ujorm.tools.jdbc.SQLExceptionBuilder;
@@ -59,7 +58,7 @@ public final class EntityManager<D, V> {
 
     private final DomainHandler<D> domainHandler;
     private final ResultSetMapper<D> resultSetMapper;
-    private final Context context;
+    private final Context ctx;
     private final Utilities utilities;
 
     /** Lazy initialized TableModel. Use {@link #tableModel()} method to access it safely. */
@@ -70,7 +69,7 @@ public final class EntityManager<D, V> {
             @NotNull Context context,
             @NotNull ResultSetMapper<D> resultSetMapper) {
         this.domainHandler = context.domainService().getHandler(domainClass);
-        this.context = context;
+        this.ctx = context;
         this.resultSetMapper = resultSetMapper;
         this.utilities = new Utilities();
     }
@@ -132,7 +131,7 @@ public final class EntityManager<D, V> {
         if (this._tableModel == null) {
             synchronized (this) {
                 if (this._tableModel == null) {
-                    this._tableModel = TableModelBuilder.build(domainHandler, context, connection);
+                    this._tableModel = TableModelBuilder.build(domainHandler, ctx, connection);
                     LOGGER.log(Level.INFO, () ->
                             "Lazy initialization of %s was triggered for the %s entity.".formatted(
                                     TableModel.class.getSimpleName(),
@@ -151,13 +150,13 @@ public final class EntityManager<D, V> {
 
     /** Default batch size */
     public int defaultBatchSize() {
-        return this.context.config().getBatchSize();
+        return ctx.config().getBatchSize();
     }
 
     /** Thread-safe access to the TableModel. */
     @NotNull
     private TableModel<D> tableModel() {
-        var result = this._tableModel;
+        var result = _tableModel;
         if (result == null) {
             throw new IllegalStateException("%s is not initialized.".formatted(getClass().getSimpleName()));
         }
@@ -183,7 +182,7 @@ public final class EntityManager<D, V> {
 
         /** Checks autoCommit state and logs a warning once per instance if enabled. */
         public void checkAutoCommit(@NotNull Connection connection) throws SQLException {
-            if (!autoCommitLogged && context.config().isAutoCommitWarned() && connection.getAutoCommit()) {
+            if (!autoCommitLogged && ctx.config().isAutoCommitWarned() && connection.getAutoCommit()) {
                 var msg = ("Connection has autoCommit=true in the entity '%s'. " +
                         "Batch operations will be significantly slower and lack transactional safety.")
                         .formatted(domainHandler.getDomainClass().getName());
@@ -194,7 +193,7 @@ public final class EntityManager<D, V> {
 
         /** Returns a safe limit for batch operations (insert, update, select). */
         public int getBatchLimit() {
-            var limit = context.config().getBatchSize();
+            var limit = ctx.config().getBatchSize();
             return limit > 0 ? limit : 500;
         }
 
@@ -312,7 +311,7 @@ public final class EntityManager<D, V> {
                 if (batch) {
                     checkAutoCommit(connection);
                 }
-                if (context.config().isPrintSql()) {
+                if (ctx.config().isPrintSql()) {
                     LOGGER.info(sql::toString);
                 }
                 return fun.applyFunction(ps);
@@ -529,8 +528,8 @@ public final class EntityManager<D, V> {
             sql.append(Check.hasLength(whereCondition) ? whereCondition : "1=1");
             try (var query = new SqlQuery(dbconnection, getQuote())) {
                 query.sql(sql.toString());
-                query.fetchSize(context.config().getBatchSize());
-                query.log(context.config().isPrintSql() ? Level.INFO : null, false);
+                query.fetchSize(ctx.config().getBatchSize());
+                query.log(ctx.config().isPrintSql() ? Level.INFO : null, false);
                 return fun.applyFunction(query);
             } catch (Exception ex) {
                 throw (ex instanceof RuntimeException re) ? re : SQLExceptionBuilder.build(ex);
@@ -608,7 +607,7 @@ public final class EntityManager<D, V> {
                         throw new IllegalStateException(("Missing snapshot for entity at index %s. " +
                                 "Call saveSnapshot() before update.").formatted(index));
                     }
-                    var changes = Tools.findChanges(domain, snapshot, domainHandler);
+                    var changes = ctx.commonService().findChanges(domain, snapshot, domainHandler);
                     var modifiedIdx = changes.getActive();
 
                     if (modifiedIdx.length == 0) {
@@ -625,7 +624,7 @@ public final class EntityManager<D, V> {
                     var statement = cache.get(changes);
                     if (statement == null) {
                         var sql = utilities.buildUpdateSql(modifiedKeys);
-                        if (context.config().isPrintSql()) {
+                        if (ctx.config().isPrintSql()) {
                             LOGGER.info(sql);
                         }
                         statement = dbconnection.prepareStatement(sql);
@@ -811,7 +810,7 @@ public final class EntityManager<D, V> {
                     genKeys = emptyPk;
                     cols = tableModel().createInsertedColumns(pkVal);
                     var sql = utilities.buildInsertSql(cols);
-                    if (context.config().isPrintSql()) LOGGER.info(sql);
+                    if (ctx.config().isPrintSql()) LOGGER.info(sql);
                     ps = !emptyPk
                             ? dbconnection.prepareStatement(sql)
                             : tableModel().jdbc().isOracleDb()

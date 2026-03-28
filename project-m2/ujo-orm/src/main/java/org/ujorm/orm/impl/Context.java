@@ -4,7 +4,9 @@ import org.ujorm.core.DomainHandlerProvider;
 import org.ujorm.core.DomainHandlerService;
 import org.ujorm.orm.Config;
 import org.ujorm.orm.service.CommonService;
+
 public record Context (
+        /** ORM configuration */
         Config config,
         /** Handler commonService */
         DomainHandlerService domainService,

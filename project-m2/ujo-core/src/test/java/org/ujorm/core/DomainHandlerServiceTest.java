@@ -12,7 +12,7 @@ public class DomainHandlerServiceTest {
 
     @Test @Order(100)
     void getHandler() {
-        var service = new DomainHandlerService();
+        var service = DomainHandlerService.of();
         var handler = service.getHandler(Employee.class);
         var keyId = handler.getKey("id", Long.class);
         var keyCity = handler.getKey("city", City.class);
@@ -26,7 +26,7 @@ public class DomainHandlerServiceTest {
 
     @Test @Order(200)
     void getHandlerOfInnerClass() {
-        var service = new DomainHandlerService();
+        var service = DomainHandlerService.of();
         var handler = service.getHandler(CityInner.class);
         var key = handler.getKey("name", String.class);
         Assertions.assertNotNull(key);
@@ -36,7 +36,7 @@ public class DomainHandlerServiceTest {
     @Test @Order(300)
     void getHandler_parent() {
         var domainClass = Parent.class;
-        var service = new DomainHandlerService();
+        var service = DomainHandlerService.of();
         var handler = service.getHandler(domainClass);
         var keyId = handler.getKey("id", Long.class);
         Assertions.assertNotNull(keyId);
@@ -46,7 +46,7 @@ public class DomainHandlerServiceTest {
     @Test  @Order(400)
     void getHandler_child() {
         var domainClass = Child.class;
-        var service = new DomainHandlerService();
+        var service = DomainHandlerService.of();
         var handler = service.getHandler(domainClass);
         var keyId = handler.getKey("id", Long.class);
         Assertions.assertNotNull(keyId);
@@ -56,7 +56,7 @@ public class DomainHandlerServiceTest {
     @Order(500)
     @Test
     void getHandler_fail() {
-        var service = new DomainHandlerService();
+        var service = DomainHandlerService.of();
 
         // Capture the top-level exception
         var exception = Assertions.assertThrows(IllegalStateException.class, () -> {

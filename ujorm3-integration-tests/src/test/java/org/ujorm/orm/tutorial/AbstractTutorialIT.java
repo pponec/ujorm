@@ -1,5 +1,6 @@
 package org.ujorm.orm.tutorial;
 
+import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringBootConfiguration;
@@ -7,6 +8,7 @@ import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.ujorm.orm.SqlQuery;
 import org.ujorm.orm.core.EntityManager;
+import org.ujorm.orm.model.QuotePair;
 import org.ujorm.orm.tutorial.domains.City;
 import org.ujorm.orm.tutorial.domains.Employee;
 import org.ujorm.orm.tutorial.domains.MetaCity;
@@ -127,6 +129,42 @@ public abstract class AbstractTutorialIT {
         assertEquals("Ingrid", employees.get(1).getBoss().getName());
     }
 
+    @Test
+    @Order(210)
+    void select_quoted() {
+        var sql = """
+                 SELECT ${COLUMNS}
+                 FROM employee e
+                 JOIN city c ON c.id = e.city_id
+                 LEFT JOIN employee b ON b.id = e.boss_id
+                 WHERE e.id > :employeeId
+                 """;
+
+        var quotePair = getQuotePair();
+        try (var query = new SqlQuery(connection(), quotePair)) {
+            var employees = query
+                    .sql(sql)
+                    .column("e.id", MetaEmployee.id)
+                    .column("e.name", MetaEmployee.name)
+                    .column("c.name", MetaEmployee.city, MetaCity.name)
+                    .column("c.country_code", MetaEmployee.city, MetaCity.countryCode)
+                    .column("b.name", MetaEmployee.boss, MetaEmployee.name)
+                    .bind("employeeId", 0L)
+                    .log(Level.INFO, true)
+                    .streamMap(employeeEm.mapper())
+                    .toList();
+
+            var rawSql = query.toString();
+
+            //employeeEm.
+            //var expectedSqlFragment = "";
+
+            assertEquals(3, employees.size());
+            assertEquals("Dave", employees.get(1).getName());
+            assertEquals("Ingrid", employees.get(1).getBoss().getName());
+        }
+    }
+
     /** Note the last argument of the update() method specifying the modified attribute. */
     @Test
     @Order(300)
@@ -169,5 +207,9 @@ public abstract class AbstractTutorialIT {
                 .findFirst()
                 .orElseThrow());
         assertEquals(0, count);
+    }
+
+    protected @NotNull QuotePair getQuotePair() {
+        return QuotePair.ofDefault();
     }
 }

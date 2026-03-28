@@ -8,7 +8,7 @@ import org.ujorm.orm.SqlQuery;
 
 /** MySQL integration test implementation */
 @ImportTestcontainers
-class MysqlTutorialIT extends AbstractTutorialIT {
+class MySqlTutorialIT extends AbstractTutorialIT {
 
     /** Docker repository tags: https://hub.docker.com/_/mysql/tags */
     @Container

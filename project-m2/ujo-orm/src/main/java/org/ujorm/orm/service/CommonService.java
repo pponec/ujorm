@@ -16,12 +16,12 @@
 package org.ujorm.orm.service;
 
 import org.jetbrains.annotations.NotNull;
+import org.ujorm.core.DomainHandler;
 import org.ujorm.core.Key;
 import org.ujorm.orm.impl.Context;
+import org.ujorm.orm.utils.BitSet;
 
-import java.util.HashSet;
 import java.util.Objects;
-import java.util.Set;
 
 public class CommonService {
 
@@ -39,20 +39,23 @@ public class CommonService {
         }
     }
 
-    /** Compare all values and get result; */
-    public <D> Set<String> compareValues(@NotNull D domain1, @NotNull D domain2, @NotNull Context ctx) {
-        if (domain1 == null || domain2 == null || ctx == null) {
-            throw new IllegalArgumentException("All arguments are required.");
+    /** Build a property change set */
+    @NotNull
+    public static <D> BitSet findChanges(@NotNull D domain, @NotNull D snapshot, @NotNull DomainHandler<D> handler) {
+        if (domain == null || snapshot == null) {
+            var msg = "The %s object type of %s is required".formatted(
+                    domain == null ? "domain" : "snapshot",
+                    handler.getDomainClass().getSimpleName());
+            throw new IllegalArgumentException(msg);
         }
-        if (domain1.getClass() != domain2.getClass()) {
-            throw new IllegalArgumentException("The data objects must be of the same type.");
-        }
-        var handler = ctx.domainService().getHandler(domain1.getClass());
-        var result = new HashSet<String>(handler.count());
+
+        var keys = handler.getKeyList();
+        var result = BitSet.of(keys.size());
         for (var key : handler.getKeyList()) {
-            var keyObject = (Key<D,Object>) key;
-            if (!Objects.equals(keyObject.getValue(domain1), keyObject.getValue(domain2))) {
-                result.add(keyObject.name());
+            var v1 = key.getValue(domain);
+            var v2 = key.getValue(snapshot);
+            if (!Objects.equals(v1, v2)) {
+                result.setValue(key.index(), true);
             }
         }
         return result;

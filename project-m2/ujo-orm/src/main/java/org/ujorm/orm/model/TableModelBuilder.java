@@ -198,7 +198,7 @@ public class TableModelBuilder<D> {
             var dbName = metaData.getDatabaseProductName();
             if (Check.hasLength(dbName)) {
                 if (dbName.contains("Microsoft SQL Server")) {
-                    return QuotePair.ofSqlServer();
+                    return QuotePair.ofMsSqlServer();
                 }
                 if (dbName.contains("MySQL") || dbName.contains("MariaDB")) {
                     return QuotePair.ofMySql();

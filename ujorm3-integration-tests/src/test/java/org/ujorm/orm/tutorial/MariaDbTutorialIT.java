@@ -1,10 +1,12 @@
 package org.ujorm.orm.tutorial;
 
+import org.jetbrains.annotations.NotNull;
 import org.springframework.boot.testcontainers.context.ImportTestcontainers;
 import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
 import org.testcontainers.containers.MariaDBContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.ujorm.orm.SqlQuery;
+import org.ujorm.orm.model.QuotePair;
 
 /** MariaDB integration test implementation */
 @ImportTestcontainers
@@ -14,6 +16,10 @@ class MariaDbTutorialIT extends AbstractTutorialIT {
     @Container
     @ServiceConnection
     static MariaDBContainer<?> mariadb = new MariaDBContainer<>("mariadb:10.11.11");
+
+    protected @NotNull QuotePair getQuotePair() {
+        return QuotePair.ofMySql();
+    }
 
     @Override
     void init() {

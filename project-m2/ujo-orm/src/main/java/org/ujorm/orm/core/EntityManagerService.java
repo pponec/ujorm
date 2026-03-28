@@ -22,7 +22,6 @@ public class EntityManagerService {
 
     /** Get Entity Manager */
     @NotNull
-    @SuppressWarnings("unchecked")
     public <D, V> EntityManager<D,V> entityManagerFromSingleton(
             @NotNull Class<D> domainClass,
             @Nullable Class<V> idType) throws UnsupportedOperationException{
@@ -32,12 +31,16 @@ public class EntityManagerService {
         return entityManager(domainClass, idType);
     }
 
-    /** Get Entity Manager */
+    /**
+     * Get Entity Manager
+     * @param domainClass Domain class
+     * @param ignoredIdType Only for generic typing, the value is ignored.
+     */
     @NotNull
     @SuppressWarnings("unchecked")
     public <D, V> EntityManager<D,V> entityManager(
             @NotNull Class<D> domainClass,
-            @Nullable Class<V> idType) {
+            @Nullable Class<V> ignoredIdType) {
         var result = (EntityManager<D,V>) map.get(domainClass);
         if (result == null) {
             synchronized (domainClass) {
@@ -51,7 +54,7 @@ public class EntityManagerService {
         return result;
     }
 
-    public static final EntityManagerService of() {
+    public static EntityManagerService of() {
         var context = new Context(
                 Config.ofDefault(),
                 DomainHandlerProvider.provider(),
@@ -66,8 +69,7 @@ public class EntityManagerService {
         var context = new Context(
                 config,
                 DomainHandlerProvider.provider(),
-                new CommonService()
-        );
+                new CommonService());
         return new EntityManagerService(context);
     }
 

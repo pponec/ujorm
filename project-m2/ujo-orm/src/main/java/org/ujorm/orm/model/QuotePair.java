@@ -28,13 +28,13 @@ public record QuotePair(
                 quotePair.charAt(quotePair.length() - 1));
     }
 
-    /** Returns quotes for MySQL dialects. */
+    /** Returns quotes for MySQL and MariaDB dialects. */
     public static QuotePair ofMySql() {
         return new QuotePair('`', '`');
     }
 
     /** Returns quotes for MS SQL Server dialect. */
-    public static QuotePair ofSqlServer() {
+    public static QuotePair ofMsSqlServer() {
         return new QuotePair('[', ']');
     }
 
