@@ -283,11 +283,12 @@ public interface HttpParameter extends CharSequence {
         return new DefaultHttpParam(name, defaultValue);
     }
 
-    /** Returns an enum constant by its parameter name or null */
-    @Nullable
+    /** Returns an enum constant by its parameter name or the default value */
+    @NotNull
     static <V extends Enum<V> & HttpParameter> V paramValueOf(
             @NotNull final Class<V> clazz,
-            @Nullable final String paramName) {
+            @Nullable final String paramName,
+            @NotNull final V defaultValue) {
         if (Check.hasLength(paramName)) {
             for (var item : clazz.getEnumConstants()) {
                 if (item.equalsParamName(paramName)) {
@@ -295,6 +296,14 @@ public interface HttpParameter extends CharSequence {
                 }
             }
         }
-        return null;
+        return defaultValue;
+    }
+
+    /** Returns an enum constant by its parameter name or null */
+    @Nullable
+    static <V extends Enum<V> & HttpParameter> V paramValueOf(
+            @NotNull final Class<V> clazz,
+            @Nullable final String paramName) {
+        return paramValueOf(clazz, paramName, null);
     }
 }

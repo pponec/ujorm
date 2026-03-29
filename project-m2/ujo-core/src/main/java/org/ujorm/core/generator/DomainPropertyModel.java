@@ -38,7 +38,9 @@ public record DomainPropertyModel(
         /** Database primary key */
         boolean primaryKey,
         /** Database foreign key */
-        boolean foreignKey
+        boolean foreignKey,
+        /** Determines whether to map the Enum by its ordinal (true) or name (false). */
+        boolean mapEnumByOrdinal
 ) {
 
     public Class<?> propertyObjectType() {

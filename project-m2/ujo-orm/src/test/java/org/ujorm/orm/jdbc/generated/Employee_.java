@@ -35,7 +35,7 @@ public Class<Employee> getDomainClass() {
 /** Key id */
 static final class Key_id extends AbstractKey<Employee, java.lang.Integer> {
     public Key_id(final int order) {
-        super(order, "id", java.lang.Integer.class, "id", false, false, false);
+        super(order, "id", java.lang.Integer.class, "id", false, false, false, false);
     }
     @Override
     public void setValue(@NotNull final Employee bean, @Nullable final java.lang.Integer value) {
@@ -53,7 +53,7 @@ static final class Key_id extends AbstractKey<Employee, java.lang.Integer> {
 /** Key name */
 static final class Key_name extends AbstractKey<Employee, java.lang.String> {
     public Key_name(final int order) {
-        super(order, "name", java.lang.String.class, "name", false, false, false);
+        super(order, "name", java.lang.String.class, "name", false, false, false, false);
     }
     @Override
     public void setValue(@NotNull final Employee bean, @Nullable final java.lang.String value) {
@@ -71,7 +71,7 @@ static final class Key_name extends AbstractKey<Employee, java.lang.String> {
 /** Key city */
 static final class Key_city extends AbstractKey<Employee, ResultSetMapperTestKey.City> {
     public Key_city(final int order) {
-        super(order, "city", ResultSetMapperTestKey.City.class, "city", false, true, false);
+        super(order, "city", ResultSetMapperTestKey.City.class, "city", false, true, false, false);
     }
     @Override
     public void setValue(@NotNull final Employee bean, @Nullable final ResultSetMapperTestKey.City value) {
@@ -89,7 +89,7 @@ static final class Key_city extends AbstractKey<Employee, ResultSetMapperTestKey
 /** Key boss */
 static final class Key_boss extends AbstractKey<Employee, ResultSetMapperTestKey.Employee> {
     public Key_boss(final int order) {
-        super(order, "boss", ResultSetMapperTestKey.Employee.class, "boss", false, true, false);
+        super(order, "boss", ResultSetMapperTestKey.Employee.class, "boss", false, true, false, false);
     }
     @Override
     public void setValue(@NotNull final Employee bean, @Nullable final ResultSetMapperTestKey.Employee value) {

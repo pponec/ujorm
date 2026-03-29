@@ -42,6 +42,8 @@ public abstract class AbstractKey<D, V> implements Key<D, V> {
     final boolean required;
     /** Default value of the key. */
     protected final V defaultValue;
+    /** Determines whether to map the Enum by its ordinal (true) or name (false). */
+    final boolean mapEnumByOrdinal;
 
     public AbstractKey(
             final int index,
@@ -50,7 +52,8 @@ public abstract class AbstractKey<D, V> implements Key<D, V> {
             @NotNull final String columnLabel,
             final boolean primaryKey,
             final boolean foreignKey,
-            final boolean required) {
+            final boolean required,
+            final boolean mapEnumByOrdinal) {
         this.index = toShortIndex(index, name);
         this.name = name.intern();
         this.type = type;
@@ -59,6 +62,7 @@ public abstract class AbstractKey<D, V> implements Key<D, V> {
         this.foreignKey = foreignKey;
         this.required = required;
         this.defaultValue = getDefaultValue(type);
+        this.mapEnumByOrdinal = mapEnumByOrdinal;
     }
 
     /** Convert int to short index. */
@@ -167,6 +171,11 @@ public abstract class AbstractKey<D, V> implements Key<D, V> {
     @Override
     public @Nullable V getDefaultValue() {
         return defaultValue;
+    }
+
+    @NotNull
+    public @Nullable boolean mapEnumByOrdinal() {
+        return mapEnumByOrdinal;
     }
 
     /**

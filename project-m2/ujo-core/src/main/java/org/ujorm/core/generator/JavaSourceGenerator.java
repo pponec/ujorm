@@ -89,7 +89,7 @@ public class JavaSourceGenerator {
                 /** Key ${propName} */
                 static final class Key_${propName} extends ${baseKeyClass}<${domainClass}, ${propObjectType}> {
                     public Key_${propName}(final int order) {
-                        super(order, "${propName}", ${propType}.class, "${column}", ${primaryKey}, ${foreignKey}, ${required});
+                        super(order, "${propName}", ${propType}.class, "${column}", ${primaryKey}, ${foreignKey}, ${required}, ${mapEnumByOrdinal});
                     }
                     @Override
                     public void setValue(${@NotNull} final ${domainClass} bean, ${@Nullable} final ${propObjectType} value) {
@@ -105,8 +105,8 @@ public class JavaSourceGenerator {
                     }
                 }
                 """.formatted(meta.isRecord()
-                    ? "throw unsupportedSetter(this)"
-                    : "bean.${setter}(value != null ? value : defaultValue)");
+                ? "throw unsupportedSetter(this)"
+                : "bean.${setter}(value != null ? value : defaultValue)");
         var templateEnd = "}";
 
         MessageService.formatMsg(templateBeg1, params, writer);
@@ -146,6 +146,7 @@ public class JavaSourceGenerator {
                 params.put("foreignKey", prop.foreignKey());
                 params.put("required", prop.required());
                 params.put("column", prop.dbColumName());
+                params.put("mapEnumByOrdinal", prop.mapEnumByOrdinal());
             }
             MessageService.formatMsg(template, params, writer);
         }

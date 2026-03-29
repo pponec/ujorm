@@ -104,6 +104,7 @@ class DomainModelBuilder {
         var primaryKey = element.isAnnotationPresent(Id.class);
         var column = element.getAnnotation(Column.class);
         var joinColumn = element.getAnnotation(JoinColumn.class);
+        var enumMapType = mapEnumByOrdinal(element, type);
         var required = type.isPrimitive() || primaryKey;
         var dbColName = "";
 
@@ -123,7 +124,16 @@ class DomainModelBuilder {
         var isTargetEntity = type.isAnnotationPresent(Entity.class) || type.isAnnotationPresent(Table.class);
         var foreignKey = hasManyToOne || joinColumn != null || isTargetEntity;
 
-        return new DomainPropertyModel(name, type, getter, setter, dbColName, required, primaryKey, foreignKey);
+        return new DomainPropertyModel(name, type, getter, setter, dbColName, required, primaryKey, foreignKey, enumMapType);
+    }
+
+    /** Determines whether to map the Enum by its ordinal (true) or name (false). */
+    @NotNull
+    private boolean mapEnumByOrdinal(@NotNull AnnotatedElement element, @NotNull Class<?> type) {
+        if (!type.isEnum()) return false;
+        var enumerated = element.getAnnotation(Enumerated.class);
+        var enumType = enumerated != null ? enumerated.value() : null;
+        return EnumType.ORDINAL.equals(enumType);
     }
 
     /** Converts a Java Bean property name to a snake_case database column name. */

@@ -93,6 +93,9 @@ public interface Key<UJO, VALUE> extends CharSequence, Comparable<Key> {
      */
     @Nullable VALUE getDefaultValue();
 
+    /** Determines whether to map the Enum by its ordinal (true) or name (false). */
+    boolean mapEnumByOrdinal();
+
     /** Indicates whether the property value of the given Ujo is equal to the default value of this key. */
     boolean isDefault(@NotNull UJO ujo);
 

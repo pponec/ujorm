@@ -11,8 +11,16 @@ public class DomainHandlerService {
     /** A mapping a domain class to the domain handler object. */
     private final ConcurrentHashMap<Class<?>, DomainHandler<?>> map = new ConcurrentHashMap<>();
 
+    /** Enum converter */
+    private final EnumMapper enumMapper = new EnumMapper();
+
     /** Protected constructor */
     protected DomainHandlerService() {}
+
+    /** Get Enum Converter */
+    public EnumMapper getEnumMapper() {
+        return enumMapper;
+    }
 
     @NotNull
     @SuppressWarnings("unchecked")

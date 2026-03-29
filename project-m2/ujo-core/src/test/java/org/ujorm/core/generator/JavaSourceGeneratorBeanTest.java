@@ -25,7 +25,7 @@ class JavaSourceGeneratorBeanTest {
         assertContains("final var key = (AbstractKey<Employee, Object>) keyList.get(i)", src);
 
         assertContains("static final class Key_id extends", src);
-        assertContains("super(order, \"id\", java.lang.Long.class, \"id\", true, false, true);", src);
+        assertContains("super(order, \"id\", java.lang.Long.class, \"id\", true, false, true, false);", src);
         assertContains("public void setValue(@NotNull final Employee bean, @Nullable final java.lang.Long value) {", src);
         assertContains("bean.setId(value != null ? value : defaultValue);", src);
         assertContains("public java.lang.Long getValue(@NotNull final Employee bean) {", src);

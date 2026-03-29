@@ -2,11 +2,7 @@ package org.ujorm.orm.jdbc;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.ujorm.core.DomainHandler;
-import org.ujorm.core.Ujo;
-import org.ujorm.core.DomainHandlerProvider;
-import org.ujorm.core.DomainHandlerService;
-import org.ujorm.core.Key;
+import org.ujorm.core.*;
 import org.ujorm.core.csv.CsvLineSplitter;
 import org.ujorm.core.impl.AbstractUjo;
 import org.ujorm.orm.Config;
@@ -41,6 +37,7 @@ import java.util.stream.Stream;
  * @param <D> the root domain type
  */
 public final class ResultSetMapper<D> {
+
     private static final Logger LOGGER = Logger.getLogger(ResultSetMapper.class.getName());
 
     /** The very fast dot splitter */
@@ -56,9 +53,7 @@ public final class ResultSetMapper<D> {
     @NotNull
     private final MappingCache<D> cache;
 
-    /**
-     * Constructs the mapper.
-     */
+    /** Constructs the mapper. */
     private ResultSetMapper(
             @NotNull Class<D> domainClass,
             @NotNull DomainHandlerService service,
@@ -70,38 +65,31 @@ public final class ResultSetMapper<D> {
         this.cache = new MappingCache<>(maxCacheSize);
     }
 
-    /** Creates a stateful mapping function for efficient stream processing.
+    /**
+     * Creates a stateful mapping function for efficient stream processing.
      * Returns SqlFunction to be compatible with SqlQuery.
      */
     public @NotNull SqlFunction<ResultSet, D> mapper(@Nullable CharSequence... columnLabels) {
         return new RowContext(columnLabels)::map;
     }
 
-    /**
-     * Maps a single row of a ResultSet.
-     */
+    /** Maps a single row of a ResultSet. */
     public @NotNull D map(@NotNull ResultSet resultSet, @Nullable CharSequence... columnLabels) {
         return this.mapper(columnLabels).apply(resultSet);
     }
 
-    /**
-     * Converts the given Stream of ResultSets into a stream of domain objects.
-     */
+    /** Converts the given Stream of ResultSets into a stream of domain objects. */
     public @NotNull Stream<D> convert(@NotNull Stream<ResultSet> rs, @Nullable CharSequence... columnLabels) {
         var mapper = this.mapper(columnLabels);
         return rs.map(mapper::apply);
     }
 
-    /**
-     * Converts the given ResultSet into a stream of domain objects.
-     */
+    /** Converts the given ResultSet into a stream of domain objects. */
     public @NotNull Stream<D> convert(@NotNull ResultSet rs, @Nullable CharSequence... columnLabels) {
         return convert(JdbcUtils.stream(rs), columnLabels);
     }
 
-    /**
-     * Type-safe mapping using Keys for a selection without relations.
-     */
+    /** Type-safe mapping using Keys for a selection without relations. */
     @SafeVarargs
     public final @NotNull Stream<D> convertFlat(@NotNull Stream<ResultSet> rs, @NotNull Key<D, ?>... columnLabels) {
         return convert(rs, columnLabels);
@@ -116,6 +104,7 @@ public final class ResultSetMapper<D> {
      * Recursively populates the target Ujo wrapper and its relations.
      * @return true if at least one non-null value was set in this node or its children
      */
+    @SuppressWarnings({"unchecked", "rawtypes"})
     private <D2> boolean populateNode(
             MappingNode<D2> node,
             Ujo<D2> target,
@@ -124,18 +113,20 @@ public final class ResultSetMapper<D> {
     ) throws SQLException {
         var hasData = false;
         for (var mapping : node.directMappings()) {
-            var objectType = Primitive.wrapPrimitive(mapping.key().type());
-            var value = rs.getObject(mapping.columnIndex(), objectType);
+            var targetType = mapping.key().type();
+            var value = targetType.isEnum()
+                    ? getEnumValue(rs, mapping, (Class) targetType)
+                    : rs.getObject(mapping.columnIndex(), Primitive.wrapPrimitive(targetType));
             if (value != null) {
                 target.setValue(mapping.key(), value);
                 hasData = true;
             }
         }
+
         for (var relation : node.relations()) {
             var childKey = relation.childKey();
             var childNode = relation.childNode();
 
-            @SuppressWarnings("unchecked")
             var childTarget = (AbstractUjo<Object>) relationCache.get(childNode);
             if (childTarget == null) {
                 var childHandler = service.getHandler(childKey.type());
@@ -151,6 +142,29 @@ public final class ResultSetMapper<D> {
             }
         }
         return hasData;
+    }
+
+    private <D2> @Nullable Object getEnumValue(
+            @NotNull ResultSet rs,
+            @NotNull DirectMapping<D2, Object> mapping,
+            @NotNull Class targetType) throws SQLException {
+        var rawValue = rs.getObject(mapping.columnIndex());
+        if (rawValue == null) {
+            return null;
+        } else if (rawValue instanceof String str) {
+            return service.getEnumMapper().getByName(targetType, str);
+        } else if (rawValue instanceof Integer
+                || rawValue instanceof Long
+                || rawValue instanceof Short
+                || rawValue instanceof Byte) {
+            return service.getEnumMapper().getByIndex(targetType, ((Number) rawValue).intValue());
+        } else {
+            throw new IllegalArgumentException(String.format(
+                    "Unsupported DB type '%s' for Enum mapping of column index %d.",
+                    rawValue.getClass().getSimpleName(),
+                    mapping.columnIndex()
+            ));
+        }
     }
 
     /** Builds the internal tree structure from the flat column definitions. */
@@ -243,7 +257,9 @@ public final class ResultSetMapper<D> {
     }
 
     private record MappingNode<D2>(
+            /** Gets the direct mappings. */
             List<DirectMapping<D2, Object>> directMappings,
+            /** Gets the relations. */
             List<RelationMapping<D2, Object>> relations
     ) {
         public MappingNode() {

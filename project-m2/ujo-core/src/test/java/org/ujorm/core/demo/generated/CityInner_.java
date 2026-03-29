@@ -27,7 +27,7 @@ public Class<CityInner> getDomainClass() {
 /** Key name */
 static final class Key_name extends AbstractKey<CityInner, java.lang.String> {
     public Key_name(final int order) {
-        super(order, "name", java.lang.String.class, "name", false, false, false);
+        super(order, "name", java.lang.String.class, "name", false, false, false, false);
     }
     @Override
     public void setValue(@NotNull final CityInner bean, @Nullable final java.lang.String value) {

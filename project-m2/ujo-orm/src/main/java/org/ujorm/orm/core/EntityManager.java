@@ -187,6 +187,8 @@ public final class EntityManager<D, V> {
         return tableModel().jdbc().quotes();
     }
 
+    // --- Inner classes ---
+
     /** Utilities for EntityManager */
     final class Utilities {
         private boolean autoCommitLogged = false;
@@ -218,6 +220,17 @@ public final class EntityManager<D, V> {
             return id == null || (id instanceof Number n && n.longValue() == 0L);
         }
 
+        /** Converts a domain value (like Enum) to its database representation. */
+        public Object toDbValue(@Nullable Object value, @NotNull ColumnModel<?, ?> column) {
+            if (value instanceof Enum<?> e) {
+                return switch (column.jdbcType().getVendorTypeNumber()) {
+                    case Types.INTEGER, Types.SMALLINT, Types.TINYINT, Types.BIGINT, Types.NUMERIC -> e.ordinal();
+                    default -> e.name();
+                };
+            }
+            return value;
+        }
+
         /** Reads the generated key from ResultSet and assigns it to the domain object. */
         public D assignGeneratedKey(D domain, java.sql.ResultSet rs, Key<D, V> pk) throws SQLException {
             var id = rs.getObject(1, pk.type());
@@ -238,6 +251,8 @@ public final class EntityManager<D, V> {
                     value = column.foreignKey().getValue(value);
                 }
 
+                value = toDbValue(value, column);
+
                 if (value == null) {
                     ps.setNull(i + 1, column.jdbcType().getVendorTypeNumber());
                 } else {
@@ -248,7 +263,8 @@ public final class EntityManager<D, V> {
 
         /** Set PK to the Prepared Statement */
         public void setPkToStatement(final D domain, final int index, final PreparedStatement ps) throws SQLException {
-            ps.setObject(index, getPrimaryKeyValue(domain), pkColumn().jdbcType().getVendorTypeNumber());
+            var value = toDbValue(getPrimaryKeyValue(domain), pkColumn());
+            ps.setObject(index, value, pkColumn().jdbcType().getVendorTypeNumber());
         }
 
         /** Set both column values and PK to the Prepared Statement for UPDATE queries */
@@ -505,7 +521,7 @@ public final class EntityManager<D, V> {
             sql.append(" WHERE ").append(q.open()).append(pkColumn().name()).append(q.close()).append(" = ?");
 
             return utilities.run(false, dbconnection, sql, false, ps -> {
-                ps.setObject(1, id);
+                ps.setObject(1, utilities.toDbValue(id, pkColumn()));
                 try (var rs = ps.executeQuery()) {
                     var mapFunction = resultSetMapper.mapper(labels);
                     if (rs.next()) {
@@ -735,7 +751,7 @@ public final class EntityManager<D, V> {
                     .append("DELETE FROM ").append(q.open()).append(tableName).append(q.close())
                     .append(" WHERE ").append(q.open()).append(pkColumn().name()).append(q.close()).append(" = ?");
             return utilities.run(false, dbconnection, sql, false, ps -> {
-                ps.setObject(1, id);
+                ps.setObject(1, utilities.toDbValue(id, pkColumn()));
                 return ps.executeUpdate();
             });
         }
@@ -760,7 +776,7 @@ public final class EntityManager<D, V> {
                     var domain = iterator.next();
                     if (domain == null) continue;
 
-                    ps.setObject(1, utilities.getPrimaryKeyValue(domain));
+                    ps.setObject(1, utilities.toDbValue(utilities.getPrimaryKeyValue(domain), pkColumn()));
                     ps.addBatch();
                     batchCount++;
 
@@ -878,7 +894,7 @@ public final class EntityManager<D, V> {
         }
     }
 
-    // --- STATIC METHOD(s) ---
+    // --- Static methods ---
 
     /** Factory method */
     public static <D, V> EntityManager<D,V> of(@NotNull Class<D> domainClass) {
