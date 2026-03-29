@@ -13,20 +13,20 @@ import java.util.function.Function;
 public interface URequest {
 
     /** Request Reader */
-    Reader getReader();
+    Reader reader();
 
     /** Parameter provider */
     @NotNull
-    String[] getParameters(final CharSequence key);
+    String[] parameters(final CharSequence key);
 
     /** Returns the last parameter */
-    default String getParameter(@NotNull CharSequence key, @Nullable String defaultValue) {
-        return getParameter(key, defaultValue, Function.identity());
+    default String parameter(@NotNull CharSequence key, @Nullable String defaultValue) {
+        return parameter(key, Function.identity(), defaultValue);
     }
 
     /** Returns the last parameter */
-    default <T> T getParameter(@NotNull CharSequence key, @NotNull T defaultValue, @NotNull Function<String, T> converter) {
-        final var params = getParameters(key);
+    default <T> T parameter(@NotNull CharSequence key, @NotNull Function<String, T> converter, @NotNull T defaultValue) {
+        final var params = parameters(key);
         if (params.length > 0) try {
                 return converter.apply(params[params.length - 1]);
         } catch (Exception e) { /* continue */ }
@@ -35,7 +35,7 @@ public interface URequest {
 
     /** Parameter provider */
     @NotNull
-    Set<String> getParameterNames();
+    Set<String> parameterNames();
 
     /** Convert the HttpServletRequest to the URequest */
     static URequest ofRequest(@Nullable final Object httpServletRequest) {
@@ -44,12 +44,12 @@ public interface URequest {
             Map<String, String[]> paramMap = null;
 
             @Override
-            public Reader getReader() {
+            public Reader reader() {
                 return Reflections.getServletReader(httpServletRequest);
             }
 
             @Override
-            public String[] getParameters(final CharSequence key) {
+            public String[] parameters(final CharSequence key) {
                 if (httpServletRequest != null) {
                     final Map<String, String[]> paramMap = getMap(httpServletRequest);
                     final String[] result = paramMap.get(key.toString());
@@ -60,7 +60,7 @@ public interface URequest {
             }
 
             @Override @NotNull
-            public Set<String> getParameterNames() {
+            public Set<String> parameterNames() {
                 return getMap(httpServletRequest).keySet();
             }
 

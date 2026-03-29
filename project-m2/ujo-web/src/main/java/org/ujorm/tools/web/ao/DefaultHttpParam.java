@@ -34,12 +34,12 @@ public final class DefaultHttpParam implements HttpParameter {
 
     /** The name of the parameter */
     @NotNull
-    private final String name;
+    private final String paramName;
     @NotNull
     private final String defaultValue;
 
-    DefaultHttpParam(@NotNull String name, @NotNull String defaultValue) {
-        this.name = name;
+    DefaultHttpParam(@NotNull String paramName, @NotNull String defaultValue) {
+        this.paramName = paramName;
         this.defaultValue = defaultValue;
     }
 
@@ -52,22 +52,28 @@ public final class DefaultHttpParam implements HttpParameter {
     @NotNull
     @Override
     public String toString() {
-        return name;
+        return paramName;
+    }
+
+    @NotNull
+    @Override
+    public String paramName() {
+        return paramName;
     }
 
     @Override
     public CharSequence subSequence(int start, int end) {
-        return name.subSequence(start, end);
+        return paramName.subSequence(start, end);
     }
 
     @Override
     public int length() {
-        return name.length();
+        return paramName.length();
     }
 
     @Override
     public char charAt(int index) {
-        return name.charAt(index);
+        return paramName.charAt(index);
     }
 
 }

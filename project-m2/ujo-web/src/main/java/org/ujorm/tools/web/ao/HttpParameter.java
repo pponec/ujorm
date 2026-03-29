@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -15,6 +15,7 @@
  */
 package org.ujorm.tools.web.ao;
 
+import java.lang.reflect.Method;
 import java.util.Locale;
 import java.util.function.Function;
 
@@ -45,13 +46,39 @@ import org.ujorm.tools.web.request.URequest;
  * @author Pavel Ponec
  */
 public interface HttpParameter extends CharSequence {
+
     /** An empty text value */
     String EMPTY_VALUE = "";
 
-    /** Returns a parameter name */
+    /** Cache for the 'name' method to avoid reflection overhead and access issues. */
+    ClassValue<Method> NAME_METHOD_CACHE = new ClassValue<>() {
+        @Override
+        protected Method computeValue(Class<?> type) {
+            try {
+                var method = type.getMethod("name");
+                method.setAccessible(true);
+                return method;
+            } catch (NoSuchMethodException e) {
+                throw new IllegalStateException("Method 'name()' is not available on " + type.getName(), e);
+            }
+        }
+    };
+
+    /** Returns a result of the expression {@code name().toLowerCase()} */
     @NotNull
     @Override
     String toString();
+
+    /** Returns the HTTP parameter name, defaults to the toString() method. */
+    @NotNull
+    default String paramName() {
+        return toString();
+    }
+
+    /** Compare argument with a result of the method {@link #toString()}. */
+    default boolean equalsParamName(@Nullable String name) {
+        return toString().equals(name);
+    }
 
     @Override
     default int length() {
@@ -69,7 +96,7 @@ public interface HttpParameter extends CharSequence {
     }
 
     /** Returns a non-null default text value.
-     *  The standard value is an empty String, override it for a change. */
+     * The standard value is an empty String, override it for a change. */
     @NotNull
     default String defaultValue() {
         return "";
@@ -86,8 +113,12 @@ public interface HttpParameter extends CharSequence {
      * NOTE: The method was renamed from obsolete {@code name()} due a Kotlin compatibility. */
     @NotNull
     default String originalName() {
+        if (this instanceof Enum<?> e) {
+            return e.name();
+        }
         try {
-            return String.valueOf(getClass().getMethod("name").invoke(this));
+            var method = NAME_METHOD_CACHE.get(getClass());
+            return String.valueOf(method.invoke(this));
         } catch (ReflectiveOperationException | SecurityException e) {
             throw new IllegalStateException("Method 'name()' is not available", e);
         }
@@ -104,8 +135,8 @@ public interface HttpParameter extends CharSequence {
     /** Returns the last parameter value of the request or a default value. The MAIN method */
     @NotNull
     default String of(@NotNull final URequest request, @NotNull final String defaultValue) {
-        final String[] results = request.getParameters(toString());
-        final String result = Check.hasLength(results) ? results[results.length - 1] : defaultValue;
+        var results = request.parameters(toString());
+        var result = Check.hasLength(results) ? results[results.length - 1] : defaultValue;
         return result != null ? result : defaultValue;
     }
 
@@ -141,13 +172,13 @@ public interface HttpParameter extends CharSequence {
 
     /** Returns a parameter of the request or the default value */
     default char of(@NotNull final HttpContext context, @Nullable final char defaultValue) {
-        final String value = of(context);
+        var value = of(context);
         return value.isEmpty() ? defaultValue : value.charAt(0);
     }
 
     /** Returns a parameter of the request or the default value */
     default short of(@NotNull final HttpContext context, @Nullable final short defaultValue) {
-        final String value = of(context, EMPTY_VALUE);
+        var value = of(context, EMPTY_VALUE);
         if (value.isEmpty()) {
             return defaultValue;
         } else try {
@@ -159,7 +190,7 @@ public interface HttpParameter extends CharSequence {
 
     /** Returns a parameter of the request or the default value */
     default int of(@NotNull final HttpContext context, @Nullable final int defaultValue) {
-        final String value = of(context, EMPTY_VALUE);
+        var value = of(context, EMPTY_VALUE);
         if (value.isEmpty()) {
             return defaultValue;
         } else try {
@@ -171,7 +202,7 @@ public interface HttpParameter extends CharSequence {
 
     /** Returns a parameter of the request or the default value */
     default long of(@NotNull final HttpContext context, @Nullable final long defaultValue) {
-        final String value = of(context, EMPTY_VALUE);
+        var value = of(context, EMPTY_VALUE);
         if (value.isEmpty()) {
             return defaultValue;
         } else try {
@@ -183,7 +214,7 @@ public interface HttpParameter extends CharSequence {
 
     /** Returns a parameter of the request or the default value */
     default float of(@NotNull final HttpContext context, @Nullable final float defaultValue) {
-        final String value = of(context, EMPTY_VALUE);
+        var value = of(context, EMPTY_VALUE);
         if (value.isEmpty()) {
             return defaultValue;
         } else try {
@@ -195,7 +226,7 @@ public interface HttpParameter extends CharSequence {
 
     /** Returns a parameter of the request or the default value */
     default double of(@NotNull final HttpContext context, @Nullable final double defaultValue) {
-        final String value = of(context, EMPTY_VALUE);
+        var value = of(context, EMPTY_VALUE);
         if (value.isEmpty()) {
             return defaultValue;
         } else try {
@@ -208,17 +239,21 @@ public interface HttpParameter extends CharSequence {
     /** Returns a parameter of the request or the Enum class */
     @NotNull
     default <V extends Enum<V>> V of(@NotNull final HttpContext context, @NotNull final V defaultValue) {
-        final V result = of(context, (Class<V>) defaultValue.getClass());
+        var result = of(context, (Class<V>) defaultValue.getClass());
         return result != null ? result : defaultValue;
     }
 
     /** Returns a parameter of the request or the default value */
     @Nullable
     default <V extends Enum<V>> V of(@NotNull final HttpContext context, @NotNull final Class<V> clazz) {
-        final String value = of(context);
-        for (Enum item : clazz.getEnumConstants()) {
-            if (item.name().equals(value)) {
-                return (V) item;
+        var value = of(context);
+        for (var item : clazz.getEnumConstants()) {
+            if (item instanceof HttpParameter p) {
+                if (p.equalsParamName(value)) {
+                    return item;
+                }
+            } else if (item.name().equals(value)) {
+                return item;
             }
         }
         return null;
@@ -226,7 +261,7 @@ public interface HttpParameter extends CharSequence {
 
     /** Returns a parameter of the request or the default value */
     default <V> V of(@NotNull final HttpContext context, @NotNull final V defaultValue, @NotNull final Function<String, V> decoder) {
-        final String value = of(context, EMPTY_VALUE);
+        var value = of(context, EMPTY_VALUE);
         if (value.isEmpty()) {
             return defaultValue;
         } else try {
@@ -246,5 +281,20 @@ public interface HttpParameter extends CharSequence {
             @NotNull final String name,
             @NotNull final String defaultValue) {
         return new DefaultHttpParam(name, defaultValue);
+    }
+
+    /** Returns an enum constant by its parameter name or null */
+    @Nullable
+    static <V extends Enum<V> & HttpParameter> V paramValueOf(
+            @NotNull final Class<V> clazz,
+            @Nullable final String paramName) {
+        if (Check.hasLength(paramName)) {
+            for (var item : clazz.getEnumConstants()) {
+                if (item.equalsParamName(paramName)) {
+                    return item;
+                }
+            }
+        }
+        return null;
     }
 }

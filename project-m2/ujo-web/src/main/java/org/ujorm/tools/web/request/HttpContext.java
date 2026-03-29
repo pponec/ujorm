@@ -14,16 +14,21 @@ public interface HttpContext {
     Appendable writer();
 
     /** Returns the last parameter or the null value. */
-    String getParameter(@NotNull String key);
+    String parameter(@NotNull CharSequence key);
 
-    /** Returns the parameter names */
-    Set<String> getParameterNames();
+    /** Returns the parameter name set */
+    Set<String> parameterNames();
 
     /** Returns the last parameter */
-    String getParameter(@NotNull CharSequence key, String defaultValue);
+    String parameter(@NotNull CharSequence key, String defaultValue);
 
     /** Returns the type safe last parameter or the default value. */
-    <T> T getParameter(@NotNull CharSequence key, @NotNull T defaultValue, @NotNull Function<String, T> converter);
+    <T> T parameter(@NotNull CharSequence key, @NotNull Function<String, T> converter, @NotNull T defaultValue);
+
+    /** Returns the type safe last parameter or the default value. */
+    default <T> T parameter(@NotNull CharSequence key, @NotNull Function<String, T> converter) {
+        return parameter(key, converter, (T) null);
+    }
 
     /** HTTP Servlet Factory */
     static HttpContext ofServletResponse(Object httpServletResponse) {

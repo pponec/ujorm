@@ -19,18 +19,18 @@ public final class URequestImpl implements URequest{
     }
 
     @NotNull
-    public Reader getReader() {
+    public Reader reader() {
         return reader;
     }
 
     @NotNull
-    public String[] getParameters(final CharSequence key) {
+    public String[] parameters(final CharSequence key) {
         final String[] result = map.get(key.toString());
         return result != null ? result : emptyTexts;
     }
 
     @Override
-    public @NotNull Set<String> getParameterNames() {
+    public @NotNull Set<String> parameterNames() {
         return map.keySet();
     }
 
