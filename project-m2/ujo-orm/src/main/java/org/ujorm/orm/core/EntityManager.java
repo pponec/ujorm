@@ -469,10 +469,6 @@ public final class EntityManager<D, V> {
             var returnGeneratedKeys = utilities.isPkEmpty(pkOriginalValue);
 
             return utilities.run(false, dbconnection, sql, returnGeneratedKeys, ps -> {
-
-                LOGGER.warning(">>> " + sql);
-
-
                 utilities.setValuesToStatement(domain, columns, ps);
                 if (!returnGeneratedKeys) {
                     ps.executeUpdate();
