@@ -60,7 +60,7 @@ public interface CsvLineSplitter {
      * @param delimiter The character used to separate values.
      * @return A fast implementation of the CSV line splitter.
      */
-    @NotNull
+    @NotNull  @SuppressWarnings("java:S3776")
     static CsvLineSplitter ofQuoted(final char delimiter, final char quoteChar) {
         final var quoteStr = String.valueOf(quoteChar);
         final var doubleQuoteStr = quoteStr + quoteStr;

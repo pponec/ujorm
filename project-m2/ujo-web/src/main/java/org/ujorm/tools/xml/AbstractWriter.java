@@ -90,7 +90,7 @@ public abstract class AbstractWriter {
 
     /** Value formatter */
     @NotNull
-    private final Formatter formatter;
+    private final Formatter format;
 
     @NotNull
     private final Appendable writerEscaped = createAppendable();
@@ -104,7 +104,7 @@ public abstract class AbstractWriter {
     public AbstractWriter(@NotNull final Appendable out, @NotNull final XmlConfig config) {
         this.out = Objects.requireNonNull(out, "out");
         this.config = Objects.requireNonNull(config, "config");
-        this.formatter = config.getFormatter();
+        this.format = config.getFormatter();
         this.newLine = config.getNewLine().toString();
         this.indentationEnabled = Check.hasLength(config.getIndentation());
     }
@@ -221,7 +221,7 @@ public abstract class AbstractWriter {
             @NotNull final ApiElement element,
             @Nullable final String attributeName
     ) throws IOException {
-        write(formatter.format(value, element, attributeName), attributeName != null);
+        write(format.format(value, element, attributeName), attributeName != null);
     }
 
     /**

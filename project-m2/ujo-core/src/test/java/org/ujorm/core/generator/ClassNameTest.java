@@ -60,7 +60,7 @@ class ClassNameTest {
     void testOfGeneratedThrowsException() {
         var anonymousClass = new Runnable() {
             @Override
-            public void run() {}
+            public void run() {} // default implementation ignored
         }.getClass();
 
         var exception = assertThrows(IllegalArgumentException.class,

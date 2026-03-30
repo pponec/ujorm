@@ -14,6 +14,7 @@ import java.util.*;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+@SuppressWarnings("java:S3776")
 public final class HtmlToJavaConverter {
 
     /** HTML heading pattern: h1 to h6 */
@@ -22,6 +23,8 @@ public final class HtmlToJavaConverter {
     private static final String DEFAULT_UJORM_VERSION = "2.30";
     /** Space for indenting code. */
     private static final String OFFSET = " ".repeat(4);
+    /** Class text */
+    private static final String CLASS = "class";
 
     /**
      * Map of method suffixes to actual HTML tags.
@@ -311,13 +314,13 @@ public final class HtmlToJavaConverter {
 
     private CreationResult resolveCreationCode(String parentVar, Element element) {
         String tagName = element.tagName();
-        String classValue = element.attr("class");
+        String classValue = element.attr(CLASS);
         boolean hasClass = !classValue.isBlank();
 
         if (HEADING_PATTERN.matcher(tagName).matches()) {
             int level = Integer.parseInt(tagName.substring(1));
             String args = hasClass ? level + ", " + formatCssArgs(classValue) : String.valueOf(level);
-            return createResult(parentVar, "addHeadingX", args, Set.of("class"));
+            return createResult(parentVar, "addHeadingX", args, Set.of(CLASS));
         }
 
         // 2. Handle Anchors (a) -> addAnchor(url, cssClasses)
@@ -327,12 +330,12 @@ public final class HtmlToJavaConverter {
             if (hasClass) {
                 args.append(", ").append(formatCssArgs(classValue));
             }
-            return createResult(parentVar, "addAnchor", args.toString(), Set.of("href", "class"));
+            return createResult(parentVar, "addAnchor", args.toString(), Set.of("href", CLASS));
         }
 
         // 3. Standard resolution based on reflection maps
         if (hasClass && elementCssMethods.containsKey(tagName)) {
-            return createResult(parentVar, elementCssMethods.get(tagName), formatCssArgs(classValue), Set.of("class"));
+            return createResult(parentVar, elementCssMethods.get(tagName), formatCssArgs(classValue), Set.of(CLASS));
         }
         if (elementNoArgMethods.containsKey(tagName)) {
             return createResult(parentVar, elementNoArgMethods.get(tagName), "", Collections.emptySet());
@@ -344,7 +347,7 @@ public final class HtmlToJavaConverter {
         // 4. Generic addElement
         String nameArg = htmlConstants.getOrDefault(tagName, "\"" + tagName + "\"");
         if (hasClass) {
-            return createResult(parentVar, "addElement", nameArg + ", " + formatCssArgs(classValue), Set.of("class"));
+            return createResult(parentVar, "addElement", nameArg + ", " + formatCssArgs(classValue), Set.of(CLASS));
         } else {
             return createResult(parentVar, "addElement", nameArg, Collections.emptySet());
         }

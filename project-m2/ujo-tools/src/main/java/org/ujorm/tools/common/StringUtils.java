@@ -152,10 +152,8 @@ public class StringUtils {
      */
     @NotNull
     public Stream<String> readRows(@NotNull final URL url) throws IOException {
-        final InputStream is = url.openStream();
-        if (is == null) {
-            throw new IllegalStateException("Can't open: " + url);
-        } else return readRows(is).onClose(()-> {
+        final var is = url.openStream();
+        return readRows(is).onClose(()-> {
             try {
                 is.close();
             } catch (IOException e) {
