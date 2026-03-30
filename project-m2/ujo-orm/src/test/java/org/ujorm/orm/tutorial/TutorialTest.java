@@ -24,7 +24,6 @@ public class TutorialTest extends AbstractDemo {
     private static final EntityManager<Employee, Long> EMPLOYEE_EM = EntityManager.of(Employee.class);
     private static final EntityManager<City, Long> CITY_EM = EntityManager.of(City.class);
 
-
     @Test
     @Order(100)
     void insert() {
@@ -41,21 +40,42 @@ public class TutorialTest extends AbstractDemo {
         employeeCrud.insert(emplDave, emplCarol);
     }
 
-    /** Quick start: insert a new record (auto-generated ID) and find it by ID. */
+    /** Select employees and map columns by type-safe generated Meta classes. */
     @Test
-    @Order(210)
-    void quickStart() {
-        var crud = CITY_EM.crud(connection());
-        var saved = crud.insert(new City(null, "Barcelona", "ES"));
-        var barcelona = crud.findById(saved.id()).orElseThrow();
+    @Order(200)
+    void select() {
+        var sql = """
+                 SELECT e.id      AS ${e.id}
+                 , e.name         AS ${e.name}
+                 , c.name         AS ${c.name}
+                 , c.country_code AS ${c.country_code}
+                 , b.name         AS ${b.name}
+                 FROM employee e
+                 JOIN city c ON c.id = e.city_id
+                 LEFT JOIN employee b ON b.id = e.boss_id
+                 WHERE e.id > :employeeId
+                 """;
 
-        Assertions.assertNotNull(barcelona.id());
+        var employees = SqlQuery.run(connection(), query -> query
+                .sql(sql)
+                .label("e.id", MetaEmployee.id)
+                .label("e.name", MetaEmployee.name)
+                .label("c.name", MetaEmployee.city, MetaCity.name)
+                .label("c.country_code", MetaEmployee.city, MetaCity.countryCode)
+                .label("b.name", MetaEmployee.boss, MetaEmployee.name)
+                .bind("employeeId", 0L)
+                .streamMap(EMPLOYEE_MAPPER.mapper())
+                .toList());
+
+        assertEquals(3, employees.size());
+        assertEquals("Dave", employees.get(1).getName());
+        assertEquals("Ingrid", employees.get(1).getBoss().getName());
     }
 
-    /** Safe aliasing using generated Meta classes prevents SQL typos */
+    /** Simplified select by the column method. */
     @Test
-    @Order(220)
-    void select() {
+    @Order(210)
+    void select_by_columns() {
         var sql = """
                  SELECT ${COLUMNS}
                  FROM employee e
@@ -80,6 +100,16 @@ public class TutorialTest extends AbstractDemo {
         assertEquals("Ingrid", employees.get(1).getBoss().getName());
     }
 
+    /** Select an Entity by ID. */
+    @Test
+    @Order(230)
+    void selectEntity_by_id() {
+        var crud = CITY_EM.crud(connection());
+        var barcelonaId = 1L;
+        var barcelona = crud.findById(barcelonaId).orElseThrow();
+        Assertions.assertNotNull(barcelona.id());
+    }
+
     /** Note the last argument of the update() method specifying the modified attribute. */
     @Test
     @Order(300)
@@ -95,7 +125,7 @@ public class TutorialTest extends AbstractDemo {
         emplCarol.setBoss(emplDave);
 
         employeeCrud.update(Stream.of(emplIngrid, emplDave, emplCarol),
-                            MetaEmployee.boss);
+                MetaEmployee.boss);
 
         assertNull(employeeCrud.findByIdNullable(2L).getBoss());
     }
@@ -124,7 +154,7 @@ public class TutorialTest extends AbstractDemo {
         assertEquals(0, count);
     }
 
-    /** Create all database tables first */
+    /** Create all database tables first. */
     @Override
     void init() {
         try (var query = new SqlQuery(connection())) {
