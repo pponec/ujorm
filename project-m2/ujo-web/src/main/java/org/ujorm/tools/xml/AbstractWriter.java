@@ -20,10 +20,10 @@ import java.io.IOException;
 import java.lang.reflect.Method;
 import java.nio.charset.Charset;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.ujorm.tools.Assert;
 import org.ujorm.tools.Check;
 import org.ujorm.tools.common.StringUtils;
 import org.ujorm.tools.msg.MsgFormatter;
@@ -102,8 +102,8 @@ public abstract class AbstractWriter {
      * @param config XML configuration
      */
     public AbstractWriter(@NotNull final Appendable out, @NotNull final XmlConfig config) {
-        this.out = Assert.required(out, "out");
-        this.config = Assert.required(config, "config");
+        this.out = Objects.requireNonNull(out, "out");
+        this.config = Objects.requireNonNull(config, "config");
         this.formatter = config.getFormatter();
         this.newLine = config.getNewLine().toString();
         this.indentationEnabled = Check.hasLength(config.getIndentation());

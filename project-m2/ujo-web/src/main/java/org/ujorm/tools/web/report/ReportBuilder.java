@@ -17,6 +17,7 @@ package org.ujorm.tools.web.report;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Objects;
 import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.logging.Level;
@@ -211,31 +212,31 @@ public class ReportBuilder<D> {
 
     @NotNull
     public ReportBuilder<D> setAjaxRequestParam(@NotNull HttpParameter ajaxRequestParam) {
-        this.ajaxRequestParam = Assert.required(ajaxRequestParam, "ajaxRequestParam");
+        this.ajaxRequestParam = Objects.requireNonNull(ajaxRequestParam, "ajaxRequestParam");
         return this;
     }
 
     @NotNull
     public ReportBuilder<D> setHtmlHeader(@NotNull Injector htmlHeader) {
-        this.htmlHeader = Assert.required(htmlHeader, "htmlHeader");
+        this.htmlHeader = Objects.requireNonNull(htmlHeader, "htmlHeader");
         return this;
     }
 
     @NotNull
     public ReportBuilder<D> setHeader(@NotNull Injector header) {
-        this.header = Assert.required(header, "header");
+        this.header = Objects.requireNonNull(header, "header");
         return this;
     }
 
     @NotNull
     public ReportBuilder<D> setFooter(@NotNull Injector footer) {
-        this.footer = Assert.required(footer, "footer");
+        this.footer = Objects.requireNonNull(footer, "footer");
         return this;
     }
 
     @NotNull
     public ReportBuilder<D> setFormItem(@NotNull Injector formItem) {
-        this.formAdditions = Assert.required(formItem, "formAdditions");
+        this.formAdditions = Objects.requireNonNull(formItem, "formAdditions");
         return this;
     }
 
@@ -246,7 +247,7 @@ public class ReportBuilder<D> {
     }
 
     public ReportBuilder<D> setJavascritWriter(@NotNull Supplier<Injector> javascritWriter) {
-        this.javascritWriter = Assert.required(javascritWriter, "javascritWriter");
+        this.javascritWriter = Objects.requireNonNull(javascritWriter, "javascritWriter");
         return this;
     }
 
@@ -302,9 +303,9 @@ public class ReportBuilder<D> {
             @NotNull final HtmlElement html,
             @NotNull final Function<GridBuilder<D>, Stream<D>> resource
     ) {
-        Assert.required(context, "context");
-        Assert.required(html, "html");
-        Assert.required(resource, "resource");
+        Objects.requireNonNull(context, "context");
+        Objects.requireNonNull(html, "html");
+        Objects.requireNonNull(resource, "resource");
 
         if (Check.hasLength(config.getJavascriptLink())) {
             html.addJavascriptLink(false, config.getJavascriptLink());

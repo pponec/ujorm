@@ -17,11 +17,11 @@ package org.ujorm.tools.web.table;
 
 import java.io.IOException;
 import java.util.Comparator;
+import java.util.Objects;
 import java.util.function.Function;
 import java.util.regex.Pattern;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.ujorm.tools.Assert;
 import org.ujorm.tools.msg.MsgFormatter;
 import org.ujorm.tools.web.ao.Column;
 import org.ujorm.tools.web.ao.HttpParameter;
@@ -60,8 +60,8 @@ public class ColumnModel<D, V> {
                        @NotNull final CharSequence title,
                        @Nullable final HttpParameter param) {
         this.index = index;
-        this.column = Assert.required(column, "column");
-        this.title = Assert.required(title, "title");
+        this.column = Objects.requireNonNull(column, "column");
+        this.title = Objects.requireNonNull(title, "title");
         this.param = param;
     }
 
@@ -108,7 +108,7 @@ public class ColumnModel<D, V> {
     }
 
     public final void setDirection(@NotNull final Direction direction) {
-        this.direction = Assert.required(direction, "direction");
+        this.direction = Objects.requireNonNull(direction, "direction");
     }
 
     /**

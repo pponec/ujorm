@@ -16,8 +16,8 @@
 package org.ujorm.tools.common;
 
 import java.io.IOException;
+import java.util.Objects;
 import org.jetbrains.annotations.NotNull;
-import org.ujorm.tools.Assert;
 
 /**
  * Building a text.
@@ -46,7 +46,7 @@ public class TextBuilder implements CharSequence {
     }
 
     public TextBuilder(final StringBuilder builder) {
-        this.builder = Assert.required(builder, "builder");
+        this.builder = Objects.requireNonNull(builder, "builder");
     }
 
     public TextBuilder add(@NotNull final CharSequence... items) {

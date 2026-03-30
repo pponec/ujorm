@@ -26,6 +26,7 @@ import java.nio.file.Path;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.util.Locale;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.jetbrains.annotations.NotNull;
@@ -96,8 +97,8 @@ public class StringUtils {
     }
 
     public StringUtils(@NotNull final Charset charset, @NotNull final Class<?> classOfLoader) {
-        this.charset = Assert.required(charset, "charset");
-        this.classOfLoader = Assert.required(classOfLoader, "classOfLoader");
+        this.charset = Objects.requireNonNull(charset, "charset");
+        this.classOfLoader = Objects.requireNonNull(classOfLoader, "classOfLoader");
     }
 
     /** Read a content of the resource encoded by UTF-8.

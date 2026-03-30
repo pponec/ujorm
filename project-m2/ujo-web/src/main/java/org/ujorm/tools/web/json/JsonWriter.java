@@ -17,8 +17,8 @@ package org.ujorm.tools.web.json;
 
 import java.io.IOException;
 import java.util.HexFormat;
+import java.util.Objects;
 import org.jetbrains.annotations.NotNull;
-import org.ujorm.tools.Assert;
 
 /**
  * Simple JSON writer for object type of key-value.
@@ -34,7 +34,7 @@ public final class JsonWriter implements Appendable {
     private final Appendable writer;
 
     JsonWriter(@NotNull final Appendable writer) {
-        this.writer = Assert.required(writer, "writer");
+        this.writer = Objects.requireNonNull(writer, "writer");
     }
 
     @Override
