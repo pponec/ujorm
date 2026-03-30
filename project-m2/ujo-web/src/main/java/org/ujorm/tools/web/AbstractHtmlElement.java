@@ -60,11 +60,11 @@ public abstract class AbstractHtmlElement implements ApiElement<Element>, Html {
 
     /** Head element */
     @Nullable
-    private Element head;
+    private Element headElement;
 
     /** Body element */
     @Nullable
-    private Element body;
+    private Element bodyElement;
 
     /** Configuration */
     @NotNull
@@ -175,13 +175,13 @@ public abstract class AbstractHtmlElement implements ApiElement<Element>, Html {
      * @return Head element
      */
     public Element addHead(@NotNull final CharSequence... css) {
-        if (head == null) {
+        if (headElement == null) {
             initHeader(css);
-            if (head == null) {
-                head = root.addElement(Html.HEAD, css);
+            if (headElement == null) {
+                headElement = root.addElement(Html.HEAD, css);
             }
         }
-        return head;
+        return headElement;
     }
 
     /** Returns a head element
@@ -197,11 +197,11 @@ public abstract class AbstractHtmlElement implements ApiElement<Element>, Html {
      */
     @NotNull
     public Element addBody(@NotNull final CharSequence... css) {
-        if (body == null) {
+        if (bodyElement == null) {
             initHeader();
-            body = root.addElement(Html.BODY, css);
+            bodyElement = root.addElement(Html.BODY, css);
         }
-        return body;
+        return bodyElement;
     }
 
     /** Returns a body element
@@ -229,9 +229,9 @@ public abstract class AbstractHtmlElement implements ApiElement<Element>, Html {
             }
 
             // 2. Then create or use head element WITH the provided CSS
-            final Element headElement = head != null ? head : root.addElement(Html.HEAD, headCss);
-            if (head == null) {
-                head = headElement;
+            final Element headElement = this.headElement != null ? this.headElement : root.addElement(Html.HEAD, headCss);
+            if (this.headElement == null) {
+                this.headElement = headElement;
             }
 
             // 3. Populate head

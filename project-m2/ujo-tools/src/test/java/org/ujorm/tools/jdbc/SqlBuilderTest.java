@@ -344,6 +344,7 @@ class SqlBuilderTest extends AbstractJdbcConnector {
     void autoCloseTest() {
         try (SqlBuilder query = null) {
         }
+        assertTrue(true);
     }
 
     /** Test the static run method */

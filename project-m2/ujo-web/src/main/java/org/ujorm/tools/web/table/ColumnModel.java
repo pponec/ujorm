@@ -154,11 +154,7 @@ public class ColumnModel<D, V> {
 
     /** Including is more common choice */
     protected boolean isIncludeColumnType() {
-        if (true) {
-            return true;
-        } else {
-            return !(column instanceof Column);
-        }
+        return true; // !(column instanceof Column);
     }
 
     @Override

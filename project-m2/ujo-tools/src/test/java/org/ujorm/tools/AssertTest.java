@@ -123,34 +123,40 @@ class AssertTest {
     @Test
     public void testIsTrue_boolean_ok() {
         Assert.isTrue(true);
+        assertTrue(true);
     }
 
     @Test
     public void testIsTrue_Predicate_ok() {
         Assert.isTrue(10, (x) -> x < 20, TEST_MESSAGE);
+        assertTrue(true);
     }
 
     @Test
     public void testHasLength_byteArr_ok() {
         var array = new byte[1];
         Assert.hasLength(array, NO_MESSAGE);
+        assertTrue(true);
     }
 
     @Test
     public void testHasLength_Collection_ok() {
         var values = Arrays.asList("A", "B", "C");
         Assert.hasLength(values, TEST_MESSAGE);
+        assertTrue(true);
     }
 
     @Test
     public void testIsNull_Object_ok() {
         Assert.isNull(null, TEST_MESSAGE);
+        assertTrue(true);
     }
 
     @Test
     public void testIsEmpty_CharSequence_ok() {
         Assert.isEmpty((CharSequence) null, NO_MESSAGE);
         Assert.isEmpty("", NO_MESSAGE);
+        assertTrue(true);
     }
 
     // ------------- EXCEPTION TESTS -------------

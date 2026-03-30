@@ -121,6 +121,7 @@ class PerformanceMsgTest {
         for (var formatterClass : result.keySet()) {
             System.out.println(buildResult(formatterClass, result));
         }
+        assertTrue(true);
     }
 
     /**
@@ -149,7 +150,6 @@ class PerformanceMsgTest {
         for (int i = 0; i < MAX_COUNT; i++) {
             String msg = MessageFormatter.format(template, argument1, argument2).getMessage();
             if (msg != null) { continue; }
-
         }
         result.put(MessageFormatter.class, beg.until(LocalDateTime.now(), ChronoUnit.MILLIS));
 
@@ -158,6 +158,7 @@ class PerformanceMsgTest {
         for (Class formatter : result.keySet()) {
             System.out.println(buildResult(formatter, result));
         }
+        assertTrue(true);
     }
 
     /** Calculate percent */

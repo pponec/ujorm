@@ -75,7 +75,7 @@ public abstract class AbstractSnapshotable<D> implements Cloneable, Snapshotable
      * @throws CloneNotSupportedException If the object's class does not support the {@code Cloneable} interface.
      */
     @Override
-    @SuppressWarnings("S2975")
+    @SuppressWarnings("java:S2975")
     protected Object clone() throws CloneNotSupportedException {
         var result = super.clone();
         ((AbstractSnapshotable<?>) result).snapshot = null;
