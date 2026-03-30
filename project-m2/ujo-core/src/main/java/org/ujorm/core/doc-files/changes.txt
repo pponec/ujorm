@@ -2,8 +2,11 @@ The Ujorm release notes
 (Maven groupId: org.ujorm)
 *******************************
 
+release 3.0.0-RC3 (2026-04-30)
++ ORM supports Enum types.
+
 release 3.0.0-RC2 (2026-03-24)
-+ Integration tests for database vendors: PostgreSQL, MySQL, MariaDB, Oracle, and MS SQL Server
++ Integration tests for five database vendors: PostgreSQL, MySQL, MariaDB, Oracle, and MS SQL Server.
 
 release 3.0.0-RC1 (2026-03-22)
 + API refactoring and performance optimization.

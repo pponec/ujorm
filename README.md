@@ -41,14 +41,15 @@ To maintain a high utility-to-code ratio and minimize bugs, Ujorm3 intentionally
 * [Benchmarks](#benchmarks)
 * [FAQ](#faq)
 * [Feedback & Contributions](#feedback--contributions)
+* [Related Links](#related-links)
 
 ---
 
 ## Quick Start (TL;DR)
 
-Mapping an object and inserting it into the database takes just a few lines of code. 
+Mapping an object and inserting it into the database takes just a few lines of code.
 Ujorm3 seamlessly supports standard Jakarta annotations and modern Java Records.
-    
+
 ```java
 void quickStart() {
     var crud = CITY_EM.crud(connection());
@@ -56,6 +57,8 @@ void quickStart() {
     var barcelona = crud.findById(saved.id()).orElseThrow();
 }
 ```
+> 💡 **Sample Application:** For a practical demonstration of the library in action, check out
+> the **[PetStore reference implementation](https://github.com/pponec/ujorm-petstore?tab=readme-ov-file#ujorm-petstore)**.
 
 ## Basic CRUD Operations
 
@@ -150,7 +153,7 @@ void update() {
     emplCarol.setBoss(emplDave);
 
     employeeCrud.update(Stream.of(emplIngrid, emplDave, emplCarol),
-                        MetaEmployee.boss);
+            MetaEmployee.boss);
 }
 ```
 
@@ -276,8 +279,15 @@ By default, you can write database queries using standard text literals.
 <dependencies>
     <dependency>
         <groupId>org.ujorm</groupId>
+        <artifactId>ujo-core</artifactId>
+        <version>3.0.0-RC3</version>
+    </dependency>
+</dependencies>
+<dependencies>
+    <dependency>
+        <groupId>org.ujorm</groupId>
         <artifactId>ujorm-orm</artifactId>
-        <version>3.0.0-RC2</version>
+        <version>3.0.0-RC3</version>
     </dependency>
 </dependencies>
 ```
@@ -347,7 +357,7 @@ The benchmarks focused not only on execution speed across various CRUD scenarios
 
 While performance differences may blur on slower production databases, Ujorm3's lightweight nature and optimized memory usage significantly reduce the deployment footprint and maintenance overhead.
 
-**Version tested:** `3.0.0-RC2`  
+**Version tested:** `3.0.0-RC3`  
 **Full benchmark source, detailed metrics, and results:** 👉 [GitHub: orm-benchmarks](https://github.com/pponec/orm-benchmarks?tab=readme-ov-file#orm-benchmark)
 
 ---
@@ -391,3 +401,12 @@ Whether you want to provide feedback, report a bug, suggest a feature, or just c
 👉 **[Join the Discussion / Open an Issue on GitHub](https://github.com/pponec/ujorm)**
 
 Your input is crucial in shaping the future of this lightweight ORM.
+
+---
+
+## Related Links
+
+* [Ujorm](https://github.com/pponec/ujorm/tree/ujorm3?tab=readme-ov-file#-ujorm3-library) - The main project page.
+* [Petstore](https://github.com/pponec/ujorm-petstore?tab=readme-ov-file#ujorm-petstore) - A demonstration project for the Ujorm library, building the DAO on the ORM module and the UI on the Element class.
+* [Benchmark test Ujorm ORM](https://github.com/pponec/orm-benchmarks?tab=readme-ov-file#orm-benchmark) - Compares the runtime performance metrics of Ujorm3 with several popular libraries.
+* [Benchmark test Ujorm Element](https://github.com/pponec/html-benchmarks?tab=readme-ov-file#html-builder-benchmark) - A comparison of libraries focused on building HTML pages.
