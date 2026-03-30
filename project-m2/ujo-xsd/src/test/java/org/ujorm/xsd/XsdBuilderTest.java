@@ -25,7 +25,7 @@ import org.ujorm.xsd.domains.Customer;
  * Test of the XSD Builder
  * @author Pavel Ponec
  */
-public class XsdBuilderTest extends org.junit.jupiter.api.Assertions {
+class XsdBuilderTest extends org.junit.jupiter.api.Assertions {
 
     /**
      * Test of print method, of class XsdBuilder.

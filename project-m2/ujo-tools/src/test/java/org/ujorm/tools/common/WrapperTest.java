@@ -24,7 +24,7 @@ import static org.junit.jupiter.api.Assertions.*;
  *
  * @author Pavel Poone
  */
-public class WrapperTest {
+class WrapperTest {
 
     @Test
     public void testHashAndEquals() {

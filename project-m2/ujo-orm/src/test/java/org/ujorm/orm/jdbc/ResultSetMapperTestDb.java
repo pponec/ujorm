@@ -14,7 +14,7 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 
 /** Tests a logic of column aliases processing in ResultSetMapper */
-public class ResultSetMapperTestDb extends AbstractDaoTest {
+class ResultSetMapperTestDb extends AbstractDaoTest {
 
     City cityOriginal = null;
     Employee employeeOriginal = null;

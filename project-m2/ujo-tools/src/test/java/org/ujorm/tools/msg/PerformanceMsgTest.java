@@ -39,7 +39,7 @@ import static org.junit.jupiter.api.Assertions.*;
  * Tests of the Message implementation
  * @author Pavel Ponec
  */
-public class PerformanceMsgTest {
+class PerformanceMsgTest {
 
     /** Iterations for s performance tests */
     private static final int MAX_COUNT = 1; // 5_000_000;

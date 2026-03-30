@@ -3,7 +3,7 @@ package org.ujorm.orm.utils;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
-public class BitSetTest {
+class BitSetTest {
 
     /** Tests basic setting and getting of values within the first 64 bits. */
     @Test

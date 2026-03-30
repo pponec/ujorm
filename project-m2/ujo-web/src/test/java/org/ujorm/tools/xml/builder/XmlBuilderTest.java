@@ -28,7 +28,7 @@ import static org.junit.jupiter.api.Assertions.*;
  * A test of the XmlNode class
  * @author Pavel Ponec
  */
-public class XmlBuilderTest implements Html {
+class XmlBuilderTest implements Html {
 
     @Test
     public void testXmlBuilding() throws IOException {

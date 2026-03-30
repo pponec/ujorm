@@ -25,7 +25,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
  *
  * @author Pavel Ponec
  */
-public class JoinableTest {
+class JoinableTest {
 
     @Test
     public void testOf() {

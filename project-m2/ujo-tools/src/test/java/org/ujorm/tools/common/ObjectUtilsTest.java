@@ -23,7 +23,7 @@ import static org.junit.jupiter.api.Assertions.*;
  *
  * @author Pavel Ponec
  */
-public class ObjectUtilsTest {
+class ObjectUtilsTest {
 
     /**
      * Test of iof method, of class ObjectUtils.

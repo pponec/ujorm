@@ -31,7 +31,7 @@ import static org.junit.jupiter.api.Assertions.*;
  * Tests for the class MessageService
  * @author Pavel Ponec
  */
-public class MessageServiceTest {
+class MessageServiceTest {
 
     /** Message Argument */
     private static final MessageArg ID = new MessageArg("ID");

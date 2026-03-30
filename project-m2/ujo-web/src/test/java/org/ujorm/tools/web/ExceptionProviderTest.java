@@ -28,7 +28,7 @@ import org.ujorm.tools.xml.config.impl.DefaultHtmlConfig;
  *
  * @author pavel
  */
-public class ExceptionProviderTest {
+class ExceptionProviderTest {
 
     /**
      * Logger

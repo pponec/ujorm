@@ -7,7 +7,7 @@ import java.sql.SQLException;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-public class StatementCacheTest {
+class StatementCacheTest {
 
     /** Tests basic put, get and size operations. */
     @Test

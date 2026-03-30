@@ -24,7 +24,7 @@ import static java.time.Month.JANUARY;
 import static org.junit.jupiter.api.Assertions.*;
 
 /** Test of the HttpParameter interface. */
-public class HttpParameterTest {
+class HttpParameterTest {
 
     private static final double DELTA = 0.0000001;
 

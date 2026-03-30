@@ -24,7 +24,7 @@ import static org.junit.jupiter.api.Assertions.*;
  * Testing the method Assert
  * @author Pavel Ponec
  */
-public class AssertTest {
+class AssertTest {
 
     /** Demo message {@code MESSAGE:ABC} */
     private static final Object[] TEST_MESSAGE = {"MESSAGE:{}{}{}", "A", "B", "C"};

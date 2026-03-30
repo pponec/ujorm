@@ -28,7 +28,7 @@ import static org.junit.jupiter.api.Assertions.*;
  *
  * @author Pavel Ponec
  */
-public class StringUtilsTest {
+class StringUtilsTest {
 
     @Test
     public void testRead() {

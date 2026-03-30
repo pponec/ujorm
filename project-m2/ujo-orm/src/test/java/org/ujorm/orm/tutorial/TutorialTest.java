@@ -17,7 +17,7 @@ import static org.junit.jupiter.api.Assertions.*;
  * Note: These tests run sequentially to demonstrate an entity lifecycle.
  */
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-public class TutorialTest extends AbstractDemo {
+class TutorialTest extends AbstractDemo {
 
     private static final ResultSetMapper<Employee> EMPLOYEE_MAPPER = ResultSetMapper.of(Employee.class);
     private static final EntityManager<Employee, Long> EMPLOYEE_EM = EntityManager.of(Employee.class);
