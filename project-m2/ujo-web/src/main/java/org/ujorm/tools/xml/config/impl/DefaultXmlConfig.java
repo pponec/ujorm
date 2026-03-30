@@ -258,7 +258,7 @@ public class DefaultXmlConfig implements XmlConfig {
      * <br> null -> "null"
      */
     public DefaultXmlConfig setIsoFormatter() {
-        Formatter formatter = new Formatter() {
+        var formatter = new Formatter() {
             @Override
             public @NotNull CharSequence format(@Nullable Object value, @NotNull ApiElement element, @Nullable String attributeName) {
                 return (value == null)

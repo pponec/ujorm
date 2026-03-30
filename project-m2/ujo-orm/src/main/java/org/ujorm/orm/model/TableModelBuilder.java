@@ -196,8 +196,8 @@ public class TableModelBuilder<D> {
             return QuotePair.ofNone();
         }
 
-        if (!config.quotePair().isEmpty()) {
-            return QuotePair.ofString(config.quotePair());
+        if (!config.getQuotePair().isEmpty()) {
+            return QuotePair.ofString(config.getQuotePair());
         }
 
         try {

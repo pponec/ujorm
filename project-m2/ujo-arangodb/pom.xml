@@ -7,11 +7,6 @@
         <artifactId>oss-parent</artifactId>
         <version>9</version>
     </parent>
-    <!--<parent>
-        <groupId>org.ujorm</groupId>
-        <artifactId>ujo</artifactId>
-        <version>3.0.0-RC3</version>
-    </parent>-->
 
     <groupId>org.ujorm</groupId>
     <artifactId>ujo-arangodb</artifactId>

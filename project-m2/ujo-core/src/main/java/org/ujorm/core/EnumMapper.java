@@ -56,7 +56,7 @@ public class EnumMapper {
     }
 
     /** Not null checker */
-    private static <E extends Enum<E>> E required(@Nullable E result, @NotNull Class<E> clazz, Object key) {
+    private <E extends Enum<E>> E required(@Nullable E result, @NotNull Class<E> clazz, Object key) {
         if (result == null) {
             var msg = "No enum item of the %s class for [%s]".formatted(clazz.getSimpleName(), key);
             throw new IllegalArgumentException(msg);

@@ -80,12 +80,8 @@ class ConfigTest {
         var config = new Config();
 
         var exception = assertThrows(
-                NullPointerException.class,
-                () -> config.setValue(Config.maxCacheSize, null),
-                "The setValue() method must throw an exception if value is null."
-        );
-
-        assertEquals("The value is required.", exception.getMessage());
+                RuntimeException.class,
+                () -> config.setValue(Config.maxCacheSize, null));
     }
 
     @Test

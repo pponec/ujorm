@@ -34,6 +34,7 @@ import java.time.OffsetTime;
 import java.time.ZonedDateTime;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.UUID;
 
 /** JDBC provider */
@@ -91,9 +92,7 @@ public final class JdbcTypeProvider {
     /** Try tu find JDBC type */
     @Nullable
     public JDBCType findJdbcType(@NotNull Class<?> clazz) throws IllegalArgumentException {
-        if (clazz == null) {
-            throw new IllegalArgumentException("The class must is required");
-        }
+        Objects.requireNonNull(clazz, "The class is required");
         return typeMap.get(Primitive.wrapPrimitive(clazz));
     }
 

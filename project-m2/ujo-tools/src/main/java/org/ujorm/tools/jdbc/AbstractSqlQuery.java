@@ -111,6 +111,7 @@ public abstract class AbstractSqlQuery<T extends AbstractSqlQuery<T>> implements
     public T bind(@NotNull final String key, final Byte... values) {
         return bind(true, key, values);
     }
+
     public T bind(final boolean enabled, @NotNull final String key, final Byte... values) {
         return bindObject(enabled, key, JDBCType.TINYINT, (Object[]) values);
     }
@@ -119,6 +120,7 @@ public abstract class AbstractSqlQuery<T extends AbstractSqlQuery<T>> implements
     public T bind(@NotNull final String key, final Short... values) {
         return bind(true, key, values);
     }
+
     public T bind(final boolean enabled, @NotNull final String key, final Short... values) {
         return bindObject(enabled, key, JDBCType.SMALLINT, (Object[]) values);
     }
@@ -127,6 +129,7 @@ public abstract class AbstractSqlQuery<T extends AbstractSqlQuery<T>> implements
     public T bind(@NotNull final String key, final Integer... values) {
         return bind(true, key, values);
     }
+
     public T bind(final boolean enabled, @NotNull final String key, final Integer... values) {
         return bindObject(enabled, key, JDBCType.BIGINT, (Object[]) values);
     }
@@ -135,6 +138,7 @@ public abstract class AbstractSqlQuery<T extends AbstractSqlQuery<T>> implements
     public T bind(@NotNull final String key, final Long... values) {
         return bind(true, key, values);
     }
+
     public T bind(final boolean enabled, @NotNull final String key, final Long... values) {
         return bindObject(enabled, key, JDBCType.BIGINT, (Object[]) values);
     }
@@ -143,6 +147,7 @@ public abstract class AbstractSqlQuery<T extends AbstractSqlQuery<T>> implements
     public T bind(@NotNull final String key, final BigDecimal... values) {
         return bind(true, key, values);
     }
+
     public T bind(final boolean enabled, @NotNull final String key, final BigDecimal... values) {
         return bindObject(enabled, key, JDBCType.NUMERIC, (Object[]) values);
     }
@@ -151,6 +156,7 @@ public abstract class AbstractSqlQuery<T extends AbstractSqlQuery<T>> implements
     public T bind(@NotNull final String key, final String... values) {
         return bind(true, key, values);
     }
+
     public T bind(final boolean enabled, @NotNull final String key, final String... values) {
         return bindObject(enabled, key, JDBCType.VARCHAR, (Object[]) values);
     }
@@ -159,6 +165,7 @@ public abstract class AbstractSqlQuery<T extends AbstractSqlQuery<T>> implements
     public T bind(@NotNull final String key, final LocalDate... values) {
         return bind(true, key, values);
     }
+
     public T bind(final boolean enabled, @NotNull final String key, final LocalDate... values) {
         return bindObject(enabled, key, JDBCType.DATE, (Object[]) values);
     }
@@ -167,6 +174,7 @@ public abstract class AbstractSqlQuery<T extends AbstractSqlQuery<T>> implements
     public T bind(@NotNull final String key, final LocalDateTime... values) {
         return bind(true, key, values);
     }
+
     public T bind(final boolean enabled, @NotNull final String key, final LocalDateTime... values) {
         return bindObject(enabled, key, JDBCType.TIMESTAMP, (Object[]) values);
     }
@@ -372,14 +380,21 @@ public abstract class AbstractSqlQuery<T extends AbstractSqlQuery<T>> implements
         return sqlTemplate;
     }
 
+    /** Returns the SQL string include values */
     @NotNull
     @Override
     public String toString() {
         return buildSql(new ArrayList<>(), true);
     }
 
+    /**
+     * Converts the text to a single line by collapsing all whitespace sequences into a single space.
+     * Note that this formatting applies to the entire string, including spaces inside text literals.
+     *
+     * @return A single-line text optimized for logging
+     */
     public String toStringLine() {
-        return toString().replaceAll("\\s*\\R+\\s*", " ");
+        return toString().replaceAll("\\s+", " ").trim();
     }
 
     /** A request for logging the SQL. */

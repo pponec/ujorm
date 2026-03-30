@@ -6,12 +6,25 @@ import org.ujorm.core.DomainHandlerProvider;
 import org.ujorm.orm.Config;
 import org.ujorm.orm.impl.Context;
 import org.ujorm.orm.service.CommonService;
-
 import java.util.concurrent.ConcurrentHashMap;
 
 /** Service provides meta models of domain objects */
 public class EntityManagerService {
-    /** A mapping a domain class to the domain handler object. */
+    /** A mapping a domain class to the domain handler object.
+     * <p>
+     * Note: This map is used with Double-Checked Locking in the {@code getHandler} method
+     * instead of its {@code computeIfAbsent()} method to prevent severe issues during runtime:
+     * <ul>
+     *   <li><b>Long-running operation:</b> The handler creation generates and compiles
+     *   Java source code dynamically. Using {@code computeIfAbsent()} would lock the map's bucket for a
+     *   long time, blocking other unrelated threads.</li>
+     *   <li><b>Recursive evaluation (Deadlock risk):</b> Domain models often reference other domain classes.
+     *   A recursive call to {@code getHandler} during handler creation inside {@code computeIfAbsent()} would
+     *   likely lead to thread deadlocks or {@code IllegalStateException}.</li>
+     * </ul>
+     * The {@code ConcurrentHashMap} is still strictly required to guarantee memory visibility and safe,
+     * lock-free reads during the initial non-synchronized check.
+     */
     private final ConcurrentHashMap<Class<?>, EntityManager<?,?>> map;
     private final Context context;
 
@@ -43,7 +56,7 @@ public class EntityManagerService {
             @Nullable Class<V> ignoredIdType) {
         var result = (EntityManager<D,V>) map.get(domainClass);
         if (result == null) {
-            synchronized (domainClass) {
+            synchronized (map) {
                 result = (EntityManager<D,V>) map.get(domainClass);
                 if (result == null) {
                     result = EntityManager.of(domainClass);

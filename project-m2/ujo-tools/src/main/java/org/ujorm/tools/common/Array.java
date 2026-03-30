@@ -16,6 +16,7 @@
 package org.ujorm.tools.common;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.Serializable;
 import java.util.*;
@@ -41,21 +42,28 @@ public class Array<T> implements Serializable {
 
     protected final T[] array;
 
+    /** Internal constructor */
     protected Array(@NotNull final T[] array) {
         this.array = array;
     }
 
-    @NotNull
-    public final Array<T> clone() {
-        return new Array<>(toArray());
+    /** Copy constructor */
+    public Array(@NotNull final Array<T> source) {
+        this(source.toArray());
     }
 
+    /** Create a shallow copy of the object */
+    @NotNull
+    public final Array<T> copy() {
+        return new Array<>(this);
+    }
+
+    /** Create a new array and copy all items */
     @SuppressWarnings("unchecked")
     @NotNull
     public T[] toArray() {
-        final Class<T> type = (Class<T>) array.getClass().getComponentType();
-        @SuppressWarnings("unchecked")
-        final T[] result = (T[]) java.lang.reflect.Array.newInstance(type, array.length);
+        var type = (Class<T>) array.getClass().getComponentType();
+        var result = (T[]) java.lang.reflect.Array.newInstance(type, array.length);
         System.arraycopy(array, 0, result, 0, array.length);
         return result;
     }
@@ -73,7 +81,7 @@ public class Array<T> implements Serializable {
     /** Negative index value is supported, the index out of the range returns the {@code null} value. */
     @NotNull
     public Optional<T> get(final int i) {
-        final int j = i >= 0 ? i : array.length + i;
+        var j = i >= 0 ? i : array.length + i;
         return Optional.ofNullable(j >= 0 && j < array.length ? array[j] : null);
     }
 
@@ -93,22 +101,23 @@ public class Array<T> implements Serializable {
     }
 
     public Array<T> removeFirst() {
-        final T[] result = array.length > 0 ? Arrays.copyOfRange(array, 1, array.length) : array;
+        var result = array.length > 0 ? Arrays.copyOfRange(array, 1, array.length) : array;
         return new Array<>(result);
     }
 
     /** @param from Negative value is supported */
     @NotNull
     public Array<T> subArray(final int from) {
-        final int from2 = from < 0 ? array.length - from : from;
-        final T[] result = Arrays.copyOfRange(array, Math.min(from2, array.length), array.length);
+        var from2 = from < 0 ? array.length - from : from;
+        var result = Arrays.copyOfRange(array, Math.min(from2, array.length), array.length);
         return new Array<>(result);
     }
 
     /** Add new items to the new Array */
+    @SafeVarargs
     @NotNull
-    public Array<T> add(@NotNull final T... toAdd) {
-        final T[] result = Arrays.copyOf(array, array.length + toAdd.length);
+    public final Array<T> add(@NotNull final T... toAdd) {
+        var result = Arrays.copyOf(array, array.length + toAdd.length);
         System.arraycopy(toAdd, 0, result, array.length, toAdd.length);
         return new Array<>(result);
     }
@@ -133,8 +142,8 @@ public class Array<T> implements Serializable {
     }
 
     @Override
-    public boolean equals(@NotNull final Object obj) {
-        return (obj instanceof Array) && Arrays.equals(array, ((Array) obj).array);
+    public boolean equals(@Nullable final Object obj) {
+        return (obj instanceof Array) && Arrays.equals(array, ((Array<?>) obj).array);
     }
 
     @NotNull
@@ -144,10 +153,9 @@ public class Array<T> implements Serializable {
     }
 
     /** Factory method */
-    @SuppressWarnings("unchecked")
+    @SafeVarargs
     @NotNull
-    public static <T> Array<T> of(@NotNull final T... chars) {
-        return new Array<T>(chars);
+    public static <T> Array<T> of(@NotNull final T... items) {
+        return new Array<>(items);
     }
-
 }

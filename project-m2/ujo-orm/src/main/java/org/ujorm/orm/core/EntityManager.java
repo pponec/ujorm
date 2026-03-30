@@ -129,7 +129,7 @@ public final class EntityManager<D, V> {
     /** Initializes TableModel if not already done. */
     private void initModel(@NotNull Connection connection) {
         if (this._tableModel == null) {
-            synchronized (this) {
+            synchronized (ctx) {
                 if (this._tableModel == null) {
                     this._tableModel = TableModelBuilder.build(domainHandler, ctx, connection);
                     LOGGER.log(Level.INFO, () ->

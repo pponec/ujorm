@@ -9,8 +9,7 @@ import org.ujorm.orm.SqlQuery;
 import java.util.Comparator;
 import java.util.stream.Stream;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Ujorm3: Lightweight, fast, and transparent ORM.
@@ -38,6 +37,8 @@ public class TutorialTest extends AbstractDemo {
 
         employeeCrud.insert(emplIngrid);
         employeeCrud.insert(emplDave, emplCarol);
+
+        assertNotNull(emplIngrid.getId());
     }
 
     /** Select employees and map columns by type-safe generated Meta classes. */

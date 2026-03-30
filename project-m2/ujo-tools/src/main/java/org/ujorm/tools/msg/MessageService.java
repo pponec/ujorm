@@ -248,9 +248,10 @@ public class MessageService {
             if (val != null) {
                 writer.append(msg, last, i);
                 if (formatIndex > 0) {
-                    new Formatter(writer, locale != null ? locale : defaultLocale).format
-                          ( expr.substring(1 + formatIndex)
-                          , val, val, val, val, val, val); // Simplify Date format
+                    try (var formatter = new Formatter(writer, locale != null ? locale : defaultLocale)) {
+                        formatter.format( expr.substring(1 + formatIndex)
+                                        , val, val, val, val, val, val); // Simplify Date format
+                    }
                 } else {
                     writeValue(val, writer, locale);
                 }

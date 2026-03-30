@@ -87,7 +87,7 @@ public class Config {
      * @param value Required value
      * @param <V> The value type (annotation breaks IntelliJ tests
      */
-    public <V> void setValue(@NotNull Key<V> key, /*@NotNull*/ V value) {
+    public <V> void setValue(@NotNull Key<V> key, @NotNull V value) {
         if (locked) {
             throw new IllegalStateException("The configuration is locked.");
         }
@@ -111,7 +111,7 @@ public class Config {
     public boolean isAutoCommitWarned() { return autoCommitWarned.getValue(values); }
     public boolean isEnabledUjormServiceProvider() { return enabledUjormServiceProvider.getValue(values); }
     public boolean isEnableSqlQuoting() { return enableSqlQuoting.getValue(values); }
-    public String quotePair() { return quotePair.getValue(values); }
+    public String getQuotePair() { return quotePair.getValue(values); }
     /** @deprecated For jUnit test only */
     @Deprecated
     String _testOnly() { return testOnly.getValue(values); }
@@ -191,9 +191,6 @@ public class Config {
         }
 
         private void setValue(@NotNull final V value, @NotNull final Object[] objects) {
-            if (value == null) {
-                throw new IllegalArgumentException("Value is required");
-            }
             objects[index] = value;
         }
 

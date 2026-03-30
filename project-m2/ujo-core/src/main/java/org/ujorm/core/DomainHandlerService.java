@@ -8,7 +8,21 @@ import java.util.concurrent.ConcurrentHashMap;
 
 /** Service provides meta models of domain objects */
 public class DomainHandlerService {
-    /** A mapping a domain class to the domain handler object. */
+    /** A mapping a domain class to the domain handler object.
+     * <p>
+     * Note: This map is used with Double-Checked Locking in the {@code getHandler} method
+     * instead of its {@code computeIfAbsent()} method to prevent severe issues during runtime:
+     * <ul>
+     *   <li><b>Long-running operation:</b> The handler creation generates and compiles
+     *   Java source code dynamically. Using {@code computeIfAbsent()} would lock the map's bucket for a
+     *   long time, blocking other unrelated threads.</li>
+     *   <li><b>Recursive evaluation (Deadlock risk):</b> Domain models often reference other domain classes.
+     *   A recursive call to {@code getHandler} during handler creation inside {@code computeIfAbsent()} would
+     *   likely lead to thread deadlocks or {@code IllegalStateException}.</li>
+     * </ul>
+     * The {@code ConcurrentHashMap} is still strictly required to guarantee memory visibility and safe,
+     * lock-free reads during the initial non-synchronized check.
+     */
     private final ConcurrentHashMap<Class<?>, DomainHandler<?>> map = new ConcurrentHashMap<>();
 
     /** Enum converter */
@@ -27,7 +41,7 @@ public class DomainHandlerService {
     public <D> DomainHandler<D> getHandler(Class<D> domainClass) {
         var result = (DomainHandler<D>) map.get(domainClass);
         if (result == null) {
-            synchronized (domainClass) {
+            synchronized (map) {
                 result = (DomainHandler<D>) map.get(domainClass);
                 if (result == null) {
                     result = createHandler(domainClass);
