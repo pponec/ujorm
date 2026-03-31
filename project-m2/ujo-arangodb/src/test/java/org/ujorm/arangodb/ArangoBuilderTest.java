@@ -74,7 +74,7 @@ class ArangoBuilderTest extends org.junit.jupiter.api.Assertions {
     }
 
     @Test
-    public void testAQL() {
+    void testAQL() {
         String collectionName = "firstCollection";
 
         // A sample with an argument type of date-time:
