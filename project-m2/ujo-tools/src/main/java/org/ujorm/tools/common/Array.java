@@ -108,8 +108,9 @@ public class Array<T> implements Serializable {
     /** @param from Negative value is supported */
     @NotNull
     public Array<T> subArray(final int from) {
-        var from2 = from < 0 ? array.length - from : from;
-        var result = Arrays.copyOfRange(array, Math.min(from2, array.length), array.length);
+        var from2 = from < 0 ? array.length + from : from;
+        var startIndex = Math.max(0, Math.min(from2, array.length));
+        var result = Arrays.copyOfRange(array, startIndex, array.length);
         return new Array<>(result);
     }
 

@@ -3,7 +3,7 @@ package org.ujorm.tools.web.ao;
 import org.jetbrains.annotations.Nullable;
 
 /** Interface defining type-safe equality comparison */
-public interface Equatable<T> {
+public interface Eq<T extends Eq<T>> {
 
     /**
      * Compares this object to the specified object of the same type.

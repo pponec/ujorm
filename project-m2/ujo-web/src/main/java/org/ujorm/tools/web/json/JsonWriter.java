@@ -48,7 +48,7 @@ public final class JsonWriter implements Appendable {
             final int start,
             final int end)
             throws IOException {
-        for (int i = start; i < end; i++) {
+        for (var i = start; i < end; i++) {
             append(csq.charAt(i));
         }
         return this;
@@ -56,47 +56,29 @@ public final class JsonWriter implements Appendable {
 
     @Override
     public Appendable append(final char c) throws IOException {
-        switch (c) {
-            case BACKSLASH -> {
-                writer.append(BACKSLASH);
-                writer.append(BACKSLASH);
-            }
-            case DOUBLE_QUOTE -> {
-                writer.append(BACKSLASH);
-                writer.append(DOUBLE_QUOTE);
-            }
-            case '\b' -> {
-                writer.append(BACKSLASH);
-                writer.append('b');
-            }
-            case '\f' -> {
-                writer.append(BACKSLASH);
-                writer.append('f');
-            }
-            case '\n' -> {
-                writer.append(BACKSLASH);
-                writer.append('n');
-            }
-            case '\r' -> {
-                writer.append(BACKSLASH);
-                writer.append('r');
-            }
-            case '\t' -> {
-                writer.append(BACKSLASH);
-                writer.append('t');
-            }
-            default -> {
-                if (c < ' ' || c == '\u2028' || c == '\u2029') {
-                    writer.append("\\u");
-                    writer.append(HEX_FORMAT.toHexDigits(c, 4));
-                } else {
-                    writer.append(c);
-                }
-            }
+        var escaped = switch (c) {
+            case BACKSLASH, DOUBLE_QUOTE -> c;
+            case '\b' -> 'b';
+            case '\f' -> 'f';
+            case '\n' -> 'n';
+            case '\r' -> 'r';
+            case '\t' -> 't';
+            default -> '\0';
+        };
+
+        if (escaped != '\0') {
+            writer.append(BACKSLASH);
+            writer.append(escaped);
+        } else if (c < ' ' || c == '\u2028' || c == '\u2029') {
+            writer.append("\\u");
+            writer.append(HEX_FORMAT.toHexDigits(c, 4));
+        } else {
+            writer.append(c);
         }
         return this;
     }
 
+    /** Returns the original writer */
     @NotNull
     public Appendable original() {
         return writer;

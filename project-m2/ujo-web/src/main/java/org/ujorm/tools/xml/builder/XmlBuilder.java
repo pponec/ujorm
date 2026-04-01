@@ -120,6 +120,7 @@ public class XmlBuilder<T extends XmlBuilder<T>> implements ApiElement<T> {
      * @param level Level of the Element
      * @param printName Print the element name immediately.
      */
+    @SuppressWarnings("java:S4973")
     protected XmlBuilder(
             @NotNull final String name,
             @NotNull final XmlPrinter writer,
@@ -151,7 +152,7 @@ public class XmlBuilder<T extends XmlBuilder<T>> implements ApiElement<T> {
     }
 
     /** Resets the internal state of the builder to allow object recycling */
-    @NotNull
+    @NotNull @SuppressWarnings("java:S4973")
     protected T reset(@NotNull final String name, final boolean printName) {
         this.name = name;
         this.lastText = name == HIDDEN_NAME;

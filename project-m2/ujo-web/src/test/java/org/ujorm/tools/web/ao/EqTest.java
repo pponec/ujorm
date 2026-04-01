@@ -4,7 +4,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 /** Tests for the Equatable interface */
-class EquatableTest {
+class EqTest {
 
     /** Defines a default test name */
     private static final String DEFAULT_NAME = "Alice";
@@ -15,11 +15,11 @@ class EquatableTest {
             int id,
             /** Property name */
             String name
-    ) implements Equatable<User> {
+    ) implements Eq<User> {
     }
 
     /** Represents a standard entity without overridden equals */
-    static class Entity implements Equatable<Entity> {
+    static class Entity implements Eq<Entity> {
 
         /** Property value */
         private final int value;
