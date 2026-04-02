@@ -66,6 +66,11 @@ public class SqlQueryDsl<D extends SqlQueryDsl<D>> extends AbstractSqlQuery<SqlQ
         return this;
     }
 
+    public <V> SqlQueryDsl<D> where (CharSequence... keys) {
+        return this;
+    }
+
+
 
     /** Run a query statement */
     public static <R> R run(Connection connection, final SqlFunction<SqlQueryDsl, R> fun) {

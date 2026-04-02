@@ -18,12 +18,23 @@ class SqlQueryDslTest {
 
     @Test
     void demo() {
+
+
         var query = new SqlQueryDsl(connection());
         query.select( MetaEmployee.id
                 , MetaEmployee.name
                 , MetaEmployee.city.join(MetaCity.name)
                 , MetaEmployee.boss.join(MetaEmployee.name)
-                );
+                ).where(MetaCity.name, "= :id");
+
+
+
+//        var query2 = new SqlQueryDsl(connection());
+//        query.select( MetaEmployee.id
+//                , MetaEmployee.name
+//                , MetaEmployee.city.join(MetaCity.name)
+//                , MetaEmployee.boss.join(MetaEmployee.name)
+//        ).where(MetaCity.name.whereEq(10));
 
 
     }
