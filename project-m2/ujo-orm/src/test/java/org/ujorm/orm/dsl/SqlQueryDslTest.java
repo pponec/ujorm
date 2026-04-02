@@ -35,7 +35,9 @@ class SqlQueryDslTest {
 
         var bossAlias = MetaEmployee.as("b");
         var emplId2 = bossAlias.key(MetaEmployee.id);
-        Assertions.assertNotNull(emplId2);
+        var tableAlias = emplId2.tableAlias();
+
+        Assertions.assertNotNull(tableAlias);
 
 //        var crn1 = MetaEmployee.name.whereEq("Joe");
 //        var crn2 = MetaCity.name.whereEq("Prague");
