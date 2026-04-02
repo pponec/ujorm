@@ -46,25 +46,14 @@ public interface Key<UJO, VALUE> extends CharSequence, Comparable<Key> {
     /** Returns the type of the value associated with this key. */
     @NotNull Class<VALUE> type();
 
-    /** Checks if the value type is a primitive. */
-    default boolean primitiveType() {
-        return type().isPrimitive();
-    }
+//    /** Checks if the value type is a primitive. */
+//    default boolean primitiveType() {
+//        return type().isPrimitive();
+//    }
 
     /** Returns the class of the domain Ujo object. */
     @NotNull Class<UJO> domainClass();
 
-    /** Returns the name of the database column label. */
-    @NotNull String columnLabel();
-
-    /** Indicates whether the database column is required. */
-    boolean required();
-
-    /** Indicates whether the column is a primary key. */
-    boolean primaryKey();
-
-    /** Indicates whether the column is a foreign key. */
-    boolean foreignKey();
 
     /**
      * Sets a type-safe value to the specified Ujo object.
@@ -93,10 +82,9 @@ public interface Key<UJO, VALUE> extends CharSequence, Comparable<Key> {
      */
     @Nullable VALUE getDefaultValue();
 
-    /** Determines whether to map the Enum by its ordinal (true) or name (false). */
-    boolean mapEnumByOrdinal();
 
     /** Indicates whether the property value of the given Ujo is equal to the default value of this key. */
+    @Deprecated
     boolean isDefault(@NotNull UJO ujo);
 
     /**
@@ -189,5 +177,24 @@ public interface Key<UJO, VALUE> extends CharSequence, Comparable<Key> {
             }
             return result.toString();
     }
+
+    // --- Low priority ---
+
+
+    /** Returns the name of the database column label. */
+    @NotNull String columnLabel();
+
+    /** Indicates whether the database column is required. */
+    boolean required();
+
+    /** Indicates whether the column is a primary key. */
+    boolean primaryKey();
+
+    /** Indicates whether the column is a foreign key. */
+    boolean foreignKey();
+
+
+    /** Determines whether to map the Enum by its ordinal (true) or name (false). */
+    boolean mapEnumByOrdinal();
 
 }
