@@ -1,10 +1,7 @@
 package org.ujorm.orm;
 
 import org.junit.jupiter.api.Test;
-import org.ujorm.orm.demo.City;
-import org.ujorm.orm.demo.Employee;
-import org.ujorm.orm.demo.MetaCity;
-import org.ujorm.orm.demo.MetaEmployee;
+import org.ujorm.orm.tutorial.domains.*;
 
 import java.sql.Connection;
 
@@ -21,13 +18,11 @@ class SqlQueryDslTest {
 
     @Test
     void demo() {
-
         var query = new SqlQueryDsl(connection());
-
         query.select( MetaEmployee.id
-                , MetaEmployee.active
+                , MetaEmployee.name
                 , MetaEmployee.city.join(MetaCity.name)
-                , MetaEmployee.superior.join(MetaEmployee.name) // BUG !
+                , MetaEmployee.boss.join(MetaEmployee.name)
                 );
 
 
