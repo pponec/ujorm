@@ -188,7 +188,7 @@ public final class ResultSetMapper<D> {
             var isLast = (i == parts.length - 1);
             var key = findKey(clazz, parts[i], byColumn);
 
-            if (isLast && !key.foreignKey()) {
+            if (isLast && !key.info().foreignKey()) {
                 currentNode.addMapping(key, colIdx);
             } else {
                 currentNode = currentNode.getOrCreateRelation(key);
@@ -218,7 +218,7 @@ public final class ResultSetMapper<D> {
     private <D2> Key<D2, Object> findPrimaryKey(Class<D2> domainType) {
         var handler = service.getHandler(domainType);
         for (var key : handler.getKeyList()) {
-            if (key.primaryKey()) {
+            if (key.info().primaryKey()) {
                 return (Key<D2, Object>) key;
             }
         }

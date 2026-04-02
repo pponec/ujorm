@@ -70,6 +70,9 @@ public class SqlQueryDsl<D extends SqlQueryDsl<D>> extends AbstractSqlQuery<SqlQ
         return this;
     }
 
+    public <V> SqlQueryDsl<D> append(CharSequence... sqlTail) {
+        return this;
+    }
 
 
     /** Run a query statement */

@@ -23,9 +23,9 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import org.ujorm.Key;
+import org.ujorm.core.Key;
 import org.ujorm.ListKey;
-import org.ujorm.Ujo;
+
 import org.ujorm.core.IllegalUjormException;
 import org.ujorm.core.UjoManager;
 import org.ujorm.core.UjoManagerXML;
@@ -167,7 +167,7 @@ public class XsdBuilder {
             print(xmlHeader, writer);
         } catch (IOException ex) {
             String msg = "Can't export model into XML";
-            throw new IllegalUjormException(msg, ex);
+            throw new IllegalStateException(msg, ex);
         }
         return writer.toString();
     }
@@ -184,7 +184,7 @@ public class XsdBuilder {
         try {
             return (Ujo) ujoClass.newInstance();
         } catch (RuntimeException | ReflectiveOperationException e) {
-            throw new IllegalUjormException("Can't create instance for " + ujoClass, e);
+            throw new IllegalStateException("Can't create instance for " + ujoClass, e);
         }
     }
 }

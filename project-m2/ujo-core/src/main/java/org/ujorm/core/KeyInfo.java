@@ -33,22 +33,9 @@ import org.jetbrains.annotations.Unmodifiable;
  */
 @Unmodifiable
 @SuppressWarnings("deprecation")
-public interface KeyInfo {
+public interface KeyInfo<VALUE> {
 
-
-
-    /** Returns the full name of the Key, including the simple name of the
-     * domain class separated by a dot (e.g., "Employee.name").
-     */
-    @NotNull String fullName();
-
-
-    /** Checks if the value type is a primitive. */
-    default boolean primitiveType() {
-        return type().isPrimitive();
-    }
-
-
+    // --- Low priority ---
 
     /** Returns the name of the database column label. */
     @NotNull String columnLabel();
@@ -62,21 +49,8 @@ public interface KeyInfo {
     /** Indicates whether the column is a foreign key. */
     boolean foreignKey();
 
-
-
-
     /** Determines whether to map the Enum by its ordinal (true) or name (false). */
     boolean mapEnumByOrdinal();
 
-
-    /** Returns true if the key type is a subtype of, or equal to, the specified class. */
-    default boolean isTypeOf(@NotNull final Class<?> type) {
-        return type().isAssignableFrom(type);
-    }
-
-    /** Returns true if the domain type is a subtype of, or equal to, the specified class. */
-    default boolean isDomainOf(@NotNull final Class<?> type) {
-        return domainClass().isAssignableFrom(type);
-    }
 
 }

@@ -4,10 +4,15 @@ package org.ujorm.core.impl;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.ujorm.core.Key;
+import org.ujorm.core.KeyInfo;
+import org.ujorm.core.criterion.Criterion;
+import org.ujorm.core.criterion.Operator;
+import org.ujorm.core.criterion.ProxyValue;
+import org.ujorm.core.criterion.ValueCriterion;
 import org.ujorm.tools.common.Primitive;
 
+import java.util.Collection;
 import java.util.Map;
-import java.util.Objects;
 
 /**
  * Abstract implementation of the {@link Key} interface.
@@ -15,7 +20,7 @@ import java.util.Objects;
  * @param <D> Domain type
  * @param <V> Value type
  */
-public abstract class AbstractKey<D, V> implements Key<D, V> {
+public abstract class AbstractKey<D, V> implements Key<D, V>, KeyInfo<V> {
 
     /** Default values for primitive types. */
     private static final Map<Class<?>, Object> DEFAULT_VALUES = Primitive.ofAllToMap(
@@ -85,18 +90,8 @@ public abstract class AbstractKey<D, V> implements Key<D, V> {
     }
 
     @Override
-    public String fullName() {
-        return domainClass().getSimpleName() + '.' + name;
-    }
-
-    @Override
     public final @NotNull Class<V> type() {
         return type;
-    }
-
-    @Override
-    public final boolean primitiveType() {
-        return type().isPrimitive();
     }
 
     @Override
@@ -117,11 +112,6 @@ public abstract class AbstractKey<D, V> implements Key<D, V> {
     @Override
     public boolean required() {
         return required;
-    }
-
-    @Override
-    public V of(@NotNull final D bean) {
-        return getValue(bean);
     }
 
     @Nullable
@@ -163,12 +153,6 @@ public abstract class AbstractKey<D, V> implements Key<D, V> {
     }
 
     @Override
-    public boolean isDefault(@NotNull final D bean) {
-        final var value = getValue(bean);
-        return Objects.equals(value, defaultValue);
-    }
-
-    @Override
     public @Nullable V getDefaultValue() {
         return defaultValue;
     }
@@ -207,6 +191,125 @@ public abstract class AbstractKey<D, V> implements Key<D, V> {
     @Override
     public String toString() {
         return name;
+    }
+
+    @Override
+    public final KeyInfo<V> info() {
+        return this;
+    }
+
+    // --- CRITERIONS ---
+
+
+    /** {@inheritDoc} */
+    @Override
+    public Criterion where(@NotNull final Operator operator, @Nullable final V value) {
+        return Criterion.where(this, operator, value);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public Criterion where(@NotNull final Operator operator, @Nullable final ProxyValue<V> proxyValue) {
+        return Criterion.where(this, operator, proxyValue);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public Criterion where(@NotNull final Operator operator, Key<?, V> value) {
+        return Criterion.where(this, operator, value);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public Criterion whereEq(@Nullable final V value) {
+        return Criterion.where(this, value);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public Criterion whereEq(@NotNull final Key<?, V> value) {
+        return Criterion.where(this, Operator.EQ, value);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public Criterion whereEq(@NotNull final ProxyValue<V> proxyValue) {
+        return Criterion.where(this, Operator.EQ, proxyValue);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public Criterion whereIn(@NotNull final Collection<V> list) {
+        return Criterion.whereIn(this, list);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public Criterion whereNotIn(@NotNull final Collection<V> list) {
+        return Criterion.whereNotIn(this, list);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public Criterion whereIn(@NotNull final V... list) {
+        return Criterion.whereIn(this, list);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public Criterion whereNotIn(@NotNull final V... list) {
+        return Criterion.whereNotIn(this, list);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public Criterion whereNull() {
+        return Criterion.whereNull(this);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public Criterion whereNotNull() {
+        return Criterion.whereNotNull(this);
+    }
+
+    @Override
+    public Criterion whereNeq(@Nullable final V value) {
+        return Criterion.where(this, Operator.NOT_EQ, value);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public Criterion whereGt(@Nullable final V value) {
+        return Criterion.where(this, Operator.GT, value);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public Criterion whereGe(@Nullable final V value) {
+        return Criterion.where(this, Operator.GE, value);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public Criterion whereLt(@Nullable final V value) {
+        return Criterion.where(this, Operator.LT, value);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public Criterion whereLe(@Nullable final V value) {
+        return Criterion.where(this, Operator.LE, value);
+    }
+
+    @Override
+    public @NotNull Criterion whereAll() {
+        return Criterion.forAll(this);
+    }
+
+    @Override
+    public @NotNull Criterion whereNone() {
+        return Criterion.forNone(this);
     }
 
     /** Creates a new exception for missing setters. */

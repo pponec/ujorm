@@ -29,7 +29,7 @@ public class CommonService {
     public <D> Key<D,?> findPrimaryKey(Class<D> clazz, Context ctx) {
         var handler = ctx.domainService().getHandler(clazz);
         for (var key : handler.getKeyList()) {
-            if (key.primaryKey()) return key;
+            if (key.info().primaryKey()) return key;
         }
         if (ctx.config().isFirstPropertyIsIdentifier()) {
             return handler.getKeyList().get(0);

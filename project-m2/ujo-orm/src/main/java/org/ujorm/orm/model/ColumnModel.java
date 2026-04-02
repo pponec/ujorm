@@ -62,7 +62,7 @@ public record ColumnModel<D,V>(
 
     /** Is it a Primary Key? */
     public boolean pk() {
-        return key.primaryKey();
+        return key.info().primaryKey();
     }
 
     /** Return a domain Key for a common value type. */

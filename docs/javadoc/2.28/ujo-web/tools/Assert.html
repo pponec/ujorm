@@ -86,7 +86,7 @@ loadScripts(document, 'script');</script>
  <pre class="pre">
   Assert.isTrue(true, "TEST:{}{}", "A", "B");
   Assert.isTrue(30, (x) -> x > 20, "Wrong No");
-  Assert.notNull("ABC");
+  Objects.requireNonNull("ABC");
   Assert.hasLength("ABC");
   Assert.hasLength(new char[]{'A','B','C'});
   Assert.hasLength(new StringBuilder().append("ABC"));

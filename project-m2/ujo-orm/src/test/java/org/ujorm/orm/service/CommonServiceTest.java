@@ -6,6 +6,7 @@ import org.mockito.Mockito;
 import org.ujorm.core.DomainHandler;
 import org.ujorm.core.DomainHandlerProvider;
 import org.ujorm.core.Key;
+import org.ujorm.core.KeyInfo;
 import org.ujorm.orm.demo.Employee;
 import org.ujorm.orm.impl.Context;
 
@@ -36,8 +37,10 @@ class CommonServiceTest {
     /** Test finding primary key directly */
     @Test
     void findPrimaryKey() {
+        var keyInfoMock = Mockito.mock(KeyInfo.class);
+        when(keyInfoMock.primaryKey()).thenReturn(true);
         var keyMock = Mockito.mock(Key.class);
-        when(keyMock.primaryKey()).thenReturn(true);
+        when(keyMock.info()).thenReturn(keyInfoMock);
 
         var handlerMock = Mockito.mock(DomainHandler.class);
         when(handlerMock.getKeyList()).thenReturn(List.of(keyMock));
@@ -52,8 +55,11 @@ class CommonServiceTest {
     /** Test fallback to the first property */
     @Test
     void findPrimaryKey_fallbackToFirstProperty() {
+        var keyInfoMock = Mockito.mock(KeyInfo.class);
+        when(keyInfoMock.primaryKey()).thenReturn(false);
+
         var keyMock = Mockito.mock(Key.class);
-        when(keyMock.primaryKey()).thenReturn(false);
+        when(keyMock.info()).thenReturn(keyInfoMock);
 
         var handlerMock = Mockito.mock(DomainHandler.class);
         when(handlerMock.getKeyList()).thenReturn(List.of(keyMock));
@@ -69,8 +75,10 @@ class CommonServiceTest {
     /** Test exception when no primary key is found */
     @Test
     void findPrimaryKey_notFoundThrowsException() {
+        var keyInfoMock = Mockito.mock(KeyInfo.class);
+        when(keyInfoMock.primaryKey()).thenReturn(false);
         var keyMock = Mockito.mock(Key.class);
-        when(keyMock.primaryKey()).thenReturn(false);
+        when(keyMock.info()).thenReturn(keyInfoMock);
 
         var handlerMock = Mockito.mock(DomainHandler.class);
         when(handlerMock.getKeyList()).thenReturn(List.of(keyMock));

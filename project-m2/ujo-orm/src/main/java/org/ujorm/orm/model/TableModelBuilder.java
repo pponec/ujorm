@@ -234,17 +234,17 @@ public class TableModelBuilder<D> {
     protected <V> ColumnModel<D,V> column(Key<D,V> key) {
         var jdbcType = (JDBCType) null;
         var foreignKey = (Key<V,?>) null;
-        if (key.foreignKey()) {
+        if (key.info().foreignKey()) {
             var foreignHandler = ctx.domainService().getHandler(key.type());
             foreignKey = ctx.commonService().findPrimaryKey(foreignHandler.getDomainClass(), ctx);
             jdbcType = jdbcTypeProvider.findJdbcType(foreignKey);
         } else {
             jdbcType = jdbcTypeProvider.findJdbcType(key);
         }
-        var columnName = dbColumMapLowerCase.get(key.columnLabel().toLowerCase(Locale.ENGLISH));
+        var columnName = dbColumMapLowerCase.get(key.info().columnLabel().toLowerCase(Locale.ENGLISH));
         if (Check.isEmpty(columnName)) {
             var msg = "Property %s mapped to column '%s' not found in database."
-                    .formatted(key.fullName(), key.columnLabel());
+                    .formatted(key.fullName(), key.info().columnLabel());
             throw new IllegalStateException(msg);
         }
         return new ColumnModel<>(key, columnName.intern(), jdbcType, foreignKey);

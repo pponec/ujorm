@@ -1,5 +1,5 @@
 /*
- *  Copyright 2014-2026 Pavel Ponec
+ *  Copyright 2007-2022 Pavel Ponec
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -13,27 +13,20 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package org.ujorm.xsd.domains;
 
-import org.ujorm.core.Key;
-import org.ujorm.core.KeyFactory;
-import org.ujorm.core.annot.XmlAttribute;
-import org.ujorm.implementation.quick.SmartUjo;
+package org.ujorm.core.criterion;
 
 /**
- *
+ * The abstract criteria operator
  * @author Pavel Ponec
+ * @since 0.90
  */
-public class Enumeration extends SmartUjo<Enumeration> {
-    private static final KeyFactory<Enumeration> f = newCamelFactory(Enumeration.class);
+public interface AbstractOperator {
 
-    @XmlAttribute
-    public static final Key<Enumeration, String> VALUE = f.newKey("value");
+    /** Is the operator a binary type ? */
+    boolean isBinary();
 
-    // Lock the Key factory
-    static { f.lock(); }
-
-
-
+    /** Returns Enum */
+    Enum getEnum();
 
 }

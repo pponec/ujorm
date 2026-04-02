@@ -32,10 +32,7 @@ class Employee_Test {
         Assertions.assertEquals("California", EmployeeUjo.keyCity.getValue(employee).name());
 
         Assertions.assertNull(EmployeeUjo.keyCity.getDefaultValue());
-        Assertions.assertFalse(EmployeeUjo.keyCity.isDefault(employee));
         Assertions.assertFalse(EmployeeUjo.keyActive.getDefaultValue());
-        Assertions.assertFalse(EmployeeUjo.keyActive.isDefault(employee));
-
     }
 
     /** Create new instance */

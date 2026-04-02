@@ -101,7 +101,7 @@ public final class JdbcTypeProvider {
     public JDBCType findJdbcType(@NotNull Key<?, ?> key) {
         var valueType = key.type();
         if (valueType.isEnum()) {
-            valueType = key.mapEnumByOrdinal()
+            valueType = key.info().mapEnumByOrdinal()
                     ? Integer.class
                     : String.class;
         }

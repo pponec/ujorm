@@ -3,6 +3,12 @@ package org.ujorm.orm.dsl.meta;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.ujorm.core.Key;
+import org.ujorm.core.KeyInfo;
+import org.ujorm.core.criterion.Criterion;
+import org.ujorm.core.criterion.Operator;
+import org.ujorm.core.criterion.ProxyValue;
+
+import java.util.Collection;
 
 /** Represents a domain key bound to a specific SQL table alias */
 public class AliasedKey<T, V> implements Key<T, V> {
@@ -26,23 +32,8 @@ public class AliasedKey<T, V> implements Key<T, V> {
         return originalKey;
     }
 
-    /** Creates an equality condition bound to the alias */
-    public Object whereEq(V value) {
-        // Implementace bude záviset na vašem stávajícím modelu podmínek
-        // Příklad:
-        // var result = new Criterion(this, Operator.EQ, value);
-        // return result;
-
-        return null;
-    }
-
     @Override
     public @NotNull String name() {
-        return "";
-    }
-
-    @Override
-    public @NotNull String fullName() {
         return "";
     }
 
@@ -54,26 +45,6 @@ public class AliasedKey<T, V> implements Key<T, V> {
     @Override
     public @NotNull Class<T> domainClass() {
         return null;
-    }
-
-    @Override
-    public @NotNull String columnLabel() {
-        return "";
-    }
-
-    @Override
-    public boolean required() {
-        return false;
-    }
-
-    @Override
-    public boolean primaryKey() {
-        return false;
-    }
-
-    @Override
-    public boolean foreignKey() {
-        return false;
     }
 
     @Override
@@ -92,17 +63,107 @@ public class AliasedKey<T, V> implements Key<T, V> {
     }
 
     @Override
-    public boolean mapEnumByOrdinal() {
-        return false;
-    }
-
-    @Override
-    public boolean isDefault(@NotNull T t) {
-        return false;
-    }
-
-    @Override
     public short index() {
         return 0;
+    }
+
+    @Override
+    public @NotNull KeyInfo info() {
+        return this.originalKey.info();
+    }
+
+    @Override
+    public Criterion where(@NotNull Operator operator, @Nullable V v) {
+        return null;
+    }
+
+    @Override
+    public @NotNull Criterion where(@NotNull Operator operator, @NotNull ProxyValue<V> proxyValue) {
+        return null;
+    }
+
+    @Override
+    public @NotNull Criterion where(@NotNull Operator operator, @NotNull Key<?, V> value) {
+        return null;
+    }
+
+    @Override
+    public @NotNull Criterion whereEq(@Nullable V v) {
+        return null;
+    }
+
+    @Override
+    public @NotNull Criterion whereEq(@NotNull ProxyValue<V> proxyValue) {
+        return null;
+    }
+
+    @Override
+    public @NotNull Criterion whereEq(@NotNull Key<?, V> key) {
+        return null;
+    }
+
+    @Override
+    public @NotNull Criterion whereIn(@NotNull Collection<V> list) {
+        return null;
+    }
+
+    @Override
+    public @NotNull Criterion whereNotIn(@NotNull Collection<V> list) {
+        return null;
+    }
+
+    @Override
+    public @NotNull Criterion whereIn(@NotNull V... list) {
+        return null;
+    }
+
+    @Override
+    public @NotNull Criterion whereNotIn(@NotNull V... list) {
+        return null;
+    }
+
+    @Override
+    public @NotNull Criterion whereNeq(@Nullable V v) {
+        return null;
+    }
+
+    @Override
+    public Criterion whereGt(@NotNull V v) {
+        return null;
+    }
+
+    @Override
+    public Criterion whereGe(@NotNull V v) {
+        return null;
+    }
+
+    @Override
+    public Criterion whereLt(@NotNull V v) {
+        return null;
+    }
+
+    @Override
+    public Criterion whereLe(@NotNull V v) {
+        return null;
+    }
+
+    @Override
+    public @NotNull Criterion whereNull() {
+        return null;
+    }
+
+    @Override
+    public @NotNull Criterion whereNotNull() {
+        return null;
+    }
+
+    @Override
+    public @NotNull Criterion whereAll() {
+        return null;
+    }
+
+    @Override
+    public @NotNull Criterion whereNone() {
+        return null;
     }
 }

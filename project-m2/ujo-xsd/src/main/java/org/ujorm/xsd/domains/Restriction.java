@@ -15,7 +15,7 @@
  */
 package org.ujorm.xsd.domains;
 
-import org.ujorm.Key;
+import org.ujorm.core.Key;
 import org.ujorm.ListKey;
 import org.ujorm.core.KeyFactory;
 import org.ujorm.core.annot.XmlAttribute;

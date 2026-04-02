@@ -27,7 +27,10 @@ class SqlQueryDslTest {
                 , MetaEmployee.name
                 , MetaEmployee.city.join(MetaCity.name)
                 , MetaEmployee.boss.join(MetaEmployee.name)
-                ).where(MetaCity.name, "= :id");
+                )
+                .where(MetaCity.name, "= :id")
+                .append("ORDER BY", MetaEmployee.id, "DESC" );
+
 
 
 
