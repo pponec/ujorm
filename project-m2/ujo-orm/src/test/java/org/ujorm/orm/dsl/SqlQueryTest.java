@@ -1,8 +1,9 @@
-package org.ujorm.orm;
+package org.ujorm.orm.dsl;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.ujorm.core.Key;
+import org.ujorm.orm.SqlQuery;
 
 import java.sql.Connection;
 
