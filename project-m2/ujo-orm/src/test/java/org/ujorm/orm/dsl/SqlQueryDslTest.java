@@ -1,11 +1,13 @@
-package org.ujorm.orm;
+package org.ujorm.orm.dsl;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.ujorm.orm.tutorial.domains.*;
+import org.ujorm.orm.SqlQueryDsl;
+import org.ujorm.orm.tutorial.domains.Employee;
+import org.ujorm.orm.tutorial.domains.MetaCity;
+import org.ujorm.orm.dsl.meta.MetaEmployee;
 
 import java.sql.Connection;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 class SqlQueryDslTest {
 
@@ -29,12 +31,21 @@ class SqlQueryDslTest {
 
 
 
-//        var query2 = new SqlQueryDsl(connection());
+         var query2 = new SqlQueryDsl(connection());
+
+        var bossAlias = MetaEmployee.as("b");
+        var emplId2 = bossAlias.key(MetaEmployee.id);
+        Assertions.assertNotNull(emplId2);
+
+//        var crn1 = MetaEmployee.name.whereEq("Joe");
+//        var crn2 = MetaCity.name.whereEq("Prague");
+//        var crn3 = crn1.and(crn2);
+
 //        query.select( MetaEmployee.id
 //                , MetaEmployee.name
 //                , MetaEmployee.city.join(MetaCity.name)
 //                , MetaEmployee.boss.join(MetaEmployee.name)
-//        ).where(MetaCity.name.whereEq(10));
+//        ).where(crn3);
 
 
     }
