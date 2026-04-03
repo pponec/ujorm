@@ -25,12 +25,10 @@ class DslQueryTest {
         var select = new DslQuery<Employee>(connection());
         select.column(MetaEmployee.id)
                 .column(MetaEmployee.name)
-                .column(MetaEmployee.city.join(MetaCity.name))
-                .column(MetaEmployee.boss.join(MetaEmployee.name))
+                .column(MetaEmployee.city, MetaCity.name)
+                .column(MetaEmployee.boss, MetaEmployee.name)
                 .where(MetaEmployee.id.whereGt(1L))
                 .append("ORDER BY", MetaEmployee.id, "DESC" );
-
-
 
 
          var query2 = new DslQuery(connection());
