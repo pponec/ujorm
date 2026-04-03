@@ -48,11 +48,11 @@ class DslQueryTest {
         var crn3 = bossNameKey.whereEq("Joe");
         var crnAll = crn1.and(crn2).and(crn3);
 
-        select.select( MetaEmployee.id
-                , MetaEmployee.name
-                , MetaEmployee.city.join(MetaCity.name)
-                , MetaEmployee.boss.join(bossNameKey)
-        ).where(crnAll);
+        select.column(MetaEmployee.id)
+                .column(MetaEmployee.name)
+                .column(MetaEmployee.city, MetaCity.name)
+                .column(MetaEmployee.boss, MetaEmployee.name)
+                .where(crnAll);
 
 
     }

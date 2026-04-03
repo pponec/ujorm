@@ -35,7 +35,6 @@ import java.util.stream.StreamSupport;
 
 /** Abstract base class for SqlQuery containing internal JDBC execution logic. */
 public abstract class AbstractSqlQuery<T extends AbstractSqlQuery<T>> implements AutoCloseable {
-
     /** SQL parameter mark type of {@code :param} */
     static final Pattern SQL_MARK = Pattern.compile(":(\\w+)");
 
