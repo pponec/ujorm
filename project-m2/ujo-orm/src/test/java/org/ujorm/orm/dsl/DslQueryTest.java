@@ -22,8 +22,8 @@ class DslQueryTest {
     void demo() {
 
 
-        var query = new SqlQueryDsl(connection());
-        query.select( MetaEmployee.id
+        var select = new SqlQueryDsl(connection());
+        select.select( MetaEmployee.id
                 , MetaEmployee.name
                 , MetaEmployee.city.join(MetaCity.name)
                 , MetaEmployee.boss.join(MetaEmployee.name)
@@ -51,7 +51,7 @@ class DslQueryTest {
         var crn3 = bossNameKey.whereEq("Joe");
         var crnAll = crn1.and(crn2).and(crn3);
 
-        query.select( MetaEmployee.id
+        select.select( MetaEmployee.id
                 , MetaEmployee.name
                 , MetaEmployee.city.join(MetaCity.name)
                 , MetaEmployee.boss.join(bossNameKey)
