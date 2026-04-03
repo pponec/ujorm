@@ -74,7 +74,7 @@ public class ValueCriterion<U> extends Criterion  {
         if (key==null) {
             value = value; // Type test for the CriterionConstant.
         }
-        if (operator==null) {
+        if (operator == null) {
             operator = Operator.EQ;  // The default operator.
         }
 

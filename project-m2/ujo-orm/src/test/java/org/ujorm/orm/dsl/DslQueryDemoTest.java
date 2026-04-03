@@ -8,14 +8,14 @@ import org.ujorm.orm.dsl.meta.MetaEmployee;
 
 import java.sql.Connection;
 
-class DslQueryTest {
+class DslQueryDemoTest {
 
 
 
     private Employee emp = new Employee();
     private MetaEmployee emps = new MetaEmployee();
 
-    @Test
+    /** @Test  : Only demo */
     void demo() {
 
         var select = new DslQuery<Employee>(connection());

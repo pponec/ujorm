@@ -19,8 +19,8 @@ package org.ujorm.core.criterion;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.ujorm.core.Key;
+import org.ujorm.core.impl.AbstractKey;
 
-import java.io.Serializable;
 import java.util.Collection;
 import java.util.Objects;
 
@@ -77,6 +77,9 @@ import java.util.Objects;
 public abstract class Criterion {
 
     static final long serialVersionUID = 2017_12_04L;
+
+    /** Dummy key */
+    static final Key<?,?> DUMMY_KEY = createDummyKey();
 
     /** Returns the left node of the parent. */
     @NotNull
@@ -479,10 +482,44 @@ public abstract class Criterion {
 
     /**
      * This is a constant criterion independent of the key value or the ujo entity.
+     */
+    @NotNull
+    public static Criterion forAll() {
+        return constant(DUMMY_KEY, true);
+    }
+
+    /**
+     * This is a constant criterion independent of the key value or the ujo entity.
      * @param key The parameter is required by Ujorm to location a basic database table
      */
     @NotNull
     public static <U> Criterion forNone(@NotNull final Key<U,?> key) {
         return constant(key, false);
+    }
+
+    /**
+     * This is a constant criterion independent of the key value or the ujo entity.
+     */
+    @NotNull
+    public static Criterion forNone() {
+        return constant(DUMMY_KEY, false);
+    }
+
+    private static @NotNull AbstractKey<Object, Object> createDummyKey() {
+        return new AbstractKey<>(0, "", Object.class, "", false, false, false, false) {
+            @Override
+            public @NotNull Class<Object> domainClass() {
+                return Object.class;
+            }
+
+            @Override
+            public void setValue(@NotNull Object bean, @Nullable Object o) {
+            }
+
+            @Override
+            public Object getValue(@NotNull Object bean) {
+                return null;
+            }
+        };
     }
 }
