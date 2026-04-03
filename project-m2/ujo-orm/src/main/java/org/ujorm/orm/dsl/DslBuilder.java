@@ -45,6 +45,7 @@ public class DslBuilder {
 
     /** New Line Character */
     private static final char NEW_LINE = '\n';
+
     /** Space Character */
     private static final char SPACE = ' ';
 
@@ -90,14 +91,6 @@ public class DslBuilder {
         this.criterion = criterion != null ? criterion : Criterion.forAll();
     }
 
-    /** Get Database column name */
-    String databaseColumnName(Key<?, ?> column, String defaultTableAlias) {
-        var resolvedAlias = column instanceof AliasedKey akey
-                ? akey.tableAlias()
-                : domainAliases.getOrDefault(column.domainClass(), defaultTableAlias);
-        return resolvedAlias + "." + column.name();
-    }
-
     /** Build the query */
     public void build() {
         if (columns.isEmpty()) {
@@ -132,9 +125,21 @@ public class DslBuilder {
                 if (!joinMap.containsKey(subPath)) {
                     var targetTable = relKey.type().getSimpleName();
                     var isReq = relKey.info().required();
-                    var targetAlias = keyNameCounts.contains(relKeyName)
-                            ? generateNumberedAlias(relKeyName)
-                            : generateAlias(relKeyName);
+                    String targetAlias;
+                    var nextKey = keyPath[i + 1];
+
+                    var aliasedKey = nextKey instanceof AliasedKey ak
+                            ? ak
+                            : (relKey instanceof AliasedKey akRel ? akRel : null);
+
+                    if (aliasedKey != null) {
+                        targetAlias = aliasedKey.tableAlias();
+                        usedAliases.add(targetAlias);
+                    } else {
+                        targetAlias = keyNameCounts.contains(relKeyName)
+                                ? generateNumberedAlias(relKeyName)
+                                : generateAlias(relKeyName);
+                    }
 
                     var joinInfo = new JoinModel(relKey, currentAlias, targetAlias, targetTable, isReq);
                     joinMap.put(subPath, joinInfo);
@@ -154,6 +159,7 @@ public class DslBuilder {
             var finalAlias = finalKey instanceof AliasedKey akey
                     ? akey.tableAlias()
                     : currentAlias;
+
             writer.append(finalAlias).append(".").append(finalKey.name());
         }
     }
@@ -168,10 +174,10 @@ public class DslBuilder {
     /** Inner/outer joins according to isRequired method */
     public void buildJoins() {
         for (var join : joins) {
-            writer.append(NEW_LINE).append(join.required() ? "INNER JOIN " : "LEFT OUTER JOIN ");
-            writer.append(join.targetTable()).append(SPACE).append(join.targetAlias());
-            writer.append(" ON ").append(join.targetAlias()).append(".id");
-            writer.append(" = ").append(join.sourceAlias()).append(".").append(join.relationKey().name());
+            writer.append(NEW_LINE).append(join.required() ? "INNER JOIN " : "LEFT OUTER JOIN ")
+                    .append(join.targetTable()).append(SPACE).append(join.targetAlias())
+                    .append(" ON ").append(join.targetAlias()).append(".id")
+                    .append(" = ").append(join.sourceAlias()).append(".").append(join.relationKey().name());
         }
     }
 
@@ -185,40 +191,49 @@ public class DslBuilder {
         }
 
         writer.append(NEW_LINE).append("WHERE ");
-        buildCriterionTree(this.criterion);
+        buildCriterionTree(this.criterion, true);
     }
 
     /** Recursive evaluation of the criterion tree */
-    private void buildCriterionTree(Criterion crn) {
-        if (crn.isBinary() && crn instanceof BinaryCriterion binCrn) {
-            writer.append("(");
-            buildCriterionTree(binCrn.getLeftNode());
+    private void buildCriterionTree(Criterion crn, boolean isRoot) {
+        if (crn instanceof BinaryCriterion binCrn) {
+            if (!isRoot) {
+                writer.append("(");
+            }
+            buildCriterionTree(binCrn.getLeftNode(), false);
             writer.append(SPACE).append(binCrn.getOperator().name()).append(SPACE);
-            buildCriterionTree(binCrn.getRightNode());
-            writer.append(")");
-
+            buildCriterionTree(binCrn.getRightNode(), false);
+            if (!isRoot) {
+                writer.append(")");
+            }
         } else if (crn instanceof FunctionCriterion<?, ?> funCrn) {
-            var key = (Key<?, ?>) funCrn.getLeftNode();
-            writer.append(databaseColumnName(key, baseTableAlias))
-                    .append(SPACE).append(funCrn.getOperator().name())
-                    .append(SPACE).append(formatValue(funCrn.getRightNode()));
-
+            appendSimpleCriterion(funCrn.getLeftNode(), funCrn.getOperator(), funCrn.getRightNode());
         } else if (crn instanceof ValueCriterion<?> valCrn) {
-            var key = (Key<?, ?>) valCrn.getLeftNode();
-            writer.append(databaseColumnName(key, baseTableAlias))
-                    .append(SPACE).append(valCrn.getOperator().name())
-                    .append(SPACE).append(formatValue(valCrn.getRightNode()));
+            appendSimpleCriterion(valCrn.getLeftNode(), valCrn.getOperator(), valCrn.getRightNode());
         }
+    }
+
+    /** Append simple criterion to writer */
+    private void appendSimpleCriterion(Object leftNode, Enum<?> operator, Object rightNode) {
+        var key = (Key<?, ?>) leftNode;
+        appendDatabaseColumnName(key, baseTableAlias);
+        writer.append(SPACE).append(operator.name()).append(SPACE);
+        formatValue(rightNode);
+    }
+
+    /** Append database column name directly to writer */
+    private void appendDatabaseColumnName(Key<?, ?> column, String defaultTableAlias) {
+        var resolvedAlias = column instanceof AliasedKey akey
+                ? akey.tableAlias()
+                : domainAliases.getOrDefault(column.domainClass(), defaultTableAlias);
+        writer.append(resolvedAlias).append(".").append(column.name());
     }
 
     /** Generate unique table alias from free characters */
     private String generateAlias(String name) {
-        var lower = name.toLowerCase();
-
-        for (var i = 0; i < lower.length(); i++) {
-            var candidate = String.valueOf(lower.charAt(i));
-            if (!usedAliases.contains(candidate)) {
-                usedAliases.add(candidate);
+        for (var c : name.toLowerCase().toCharArray()) {
+            var candidate = String.valueOf(c);
+            if (usedAliases.add(candidate)) {
                 return candidate;
             }
         }
@@ -227,25 +242,43 @@ public class DslBuilder {
 
     /** Generate sequentially numbered alias */
     private String generateNumberedAlias(String name) {
-        var firstChar = name.toLowerCase().charAt(0);
+        var prefix = String.valueOf(name.toLowerCase().charAt(0));
         var counter = 1;
         while (true) {
-            var candidate = firstChar + String.valueOf(counter);
-            if (!usedAliases.contains(candidate)) {
-                usedAliases.add(candidate);
+            var candidate = prefix + counter++;
+            if (usedAliases.add(candidate)) {
                 return candidate;
             }
-            counter++;
         }
     }
 
-    /** Format scalar value */
-    private String formatValue(Object value) {
-        return value == null
-                ? "NULL"
-                : (value instanceof String)
-                ? "'" + value + "'"
-                : String.valueOf(value);
+    /** Format scalar value or arrays directly to writer */
+    private void formatValue(Object value) {
+        if (value == null) {
+            writer.append("NULL");
+        } else if (value instanceof String str) {
+            writer.append("'").append(str).append("'");
+        } else if (value instanceof Object[] arr) {
+            formatIterable(Arrays.asList(arr));
+        } else if (value instanceof Iterable<?> it) {
+            formatIterable(it);
+        } else {
+            writer.append(value);
+        }
+    }
+
+    /** Helper to format iterables directly to writer */
+    private void formatIterable(Iterable<?> it) {
+        writer.append("(");
+        var first = true;
+        for (var item : it) {
+            if (!first) {
+                writer.append(", ");
+            }
+            formatValue(item);
+            first = false;
+        }
+        writer.append(")");
     }
 
     @Override
@@ -255,15 +288,15 @@ public class DslBuilder {
 
     /** Record representing a parsed JOIN relationship. */
     record JoinModel(
-            /** Relation key */
+            /** Relation key property */
             Key<?, ?> relationKey,
-            /** Source alias */
+            /** Source alias property */
             String sourceAlias,
-            /** Target alias */
+            /** Target alias property */
             String targetAlias,
-            /** Target table */
+            /** Target table property */
             String targetTable,
-            /** Is required */
+            /** Is required property */
             boolean required
     ) {}
 
