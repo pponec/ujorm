@@ -251,18 +251,6 @@ public abstract class AbstractKey<D, V> implements Key<D, V>, KeyInfo<V> {
 
     /** {@inheritDoc} */
     @Override
-    public Criterion whereIn(@NotNull final V... list) {
-        return Criterion.whereIn(this, list);
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public Criterion whereNotIn(@NotNull final V... list) {
-        return Criterion.whereNotIn(this, list);
-    }
-
-    /** {@inheritDoc} */
-    @Override
     public Criterion whereNull() {
         return Criterion.whereNull(this);
     }

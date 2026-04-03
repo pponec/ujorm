@@ -34,37 +34,37 @@ public class AliasedKey<T, V> implements Key<T, V> {
 
     @Override
     public @NotNull String name() {
-        return "";
+        return originalKey.name();
     }
 
     @Override
     public @NotNull Class<V> type() {
-        return null;
+        return originalKey.type();
     }
 
     @Override
     public @NotNull Class<T> domainClass() {
-        return null;
+        return originalKey.domainClass();
     }
 
     @Override
-    public void setValue(@NotNull T bean, @Nullable V v) throws UnsupportedOperationException {
-
+    public void setValue(@NotNull T bean, @Nullable V value) throws UnsupportedOperationException {
+        originalKey.setValue(bean, value);
     }
 
     @Override
     public V getValue(@NotNull T bean) {
-        return null;
+        return originalKey.getValue(bean);
     }
 
     @Override
     public @Nullable V getDefaultValue() {
-        return null;
+        return originalKey.getDefaultValue();
     }
 
     @Override
     public short index() {
-        return 0;
+        return originalKey.index();
     }
 
     @Override
@@ -72,98 +72,40 @@ public class AliasedKey<T, V> implements Key<T, V> {
         return this.originalKey.info();
     }
 
+    // --- CRITERIONS ---
+
     @Override
-    public Criterion where(@NotNull Operator operator, @Nullable V v) {
-        return null;
+    public @NotNull Criterion where(@NotNull Operator operator, @Nullable V value) {
+        return originalKey.where(operator, value);
     }
 
     @Override
     public @NotNull Criterion where(@NotNull Operator operator, @NotNull ProxyValue<V> proxyValue) {
-        return null;
+        return originalKey.where(operator, proxyValue);
     }
 
     @Override
     public @NotNull Criterion where(@NotNull Operator operator, @NotNull Key<?, V> value) {
-        return null;
+        return originalKey.where(operator, value);
     }
 
     @Override
-    public @NotNull Criterion whereEq(@Nullable V v) {
-        return null;
+    public @NotNull Criterion whereIn(@NotNull Collection<V> values) {
+        return originalKey.whereIn(values);
     }
 
     @Override
-    public @NotNull Criterion whereEq(@NotNull ProxyValue<V> proxyValue) {
-        return null;
-    }
-
-    @Override
-    public @NotNull Criterion whereEq(@NotNull Key<?, V> key) {
-        return null;
-    }
-
-    @Override
-    public @NotNull Criterion whereIn(@NotNull Collection<V> list) {
-        return null;
-    }
-
-    @Override
-    public @NotNull Criterion whereNotIn(@NotNull Collection<V> list) {
-        return null;
-    }
-
-    @Override
-    public @NotNull Criterion whereIn(@NotNull V... list) {
-        return null;
-    }
-
-    @Override
-    public @NotNull Criterion whereNotIn(@NotNull V... list) {
-        return null;
-    }
-
-    @Override
-    public @NotNull Criterion whereNeq(@Nullable V v) {
-        return null;
-    }
-
-    @Override
-    public Criterion whereGt(@NotNull V v) {
-        return null;
-    }
-
-    @Override
-    public Criterion whereGe(@NotNull V v) {
-        return null;
-    }
-
-    @Override
-    public Criterion whereLt(@NotNull V v) {
-        return null;
-    }
-
-    @Override
-    public Criterion whereLe(@NotNull V v) {
-        return null;
-    }
-
-    @Override
-    public @NotNull Criterion whereNull() {
-        return null;
-    }
-
-    @Override
-    public @NotNull Criterion whereNotNull() {
-        return null;
+    public @NotNull Criterion whereNotIn(@NotNull Collection<V> values) {
+        return originalKey.whereNotIn(values);
     }
 
     @Override
     public @NotNull Criterion whereAll() {
-        return null;
+        return originalKey.whereAll();
     }
 
     @Override
     public @NotNull Criterion whereNone() {
-        return null;
+        return originalKey.whereNone();
     }
 }
