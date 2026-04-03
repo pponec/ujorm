@@ -2,7 +2,7 @@ package org.ujorm.orm.dsl;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.ujorm.orm.SqlQueryDsl;
+import org.ujorm.orm.DslQuery;
 import org.ujorm.orm.tutorial.domains.Employee;
 import org.ujorm.orm.tutorial.domains.MetaCity;
 import org.ujorm.orm.dsl.meta.MetaEmployee;
@@ -22,19 +22,18 @@ class DslQueryTest {
     void demo() {
 
 
-        var select = new SqlQueryDsl(connection());
-        select.select( MetaEmployee.id
-                , MetaEmployee.name
-                , MetaEmployee.city.join(MetaCity.name)
-                , MetaEmployee.boss.join(MetaEmployee.name)
-                )
+        var select = new DslQuery<Employee>(connection());
+        select.column(MetaEmployee.id)
+                .column(MetaEmployee.name)
+                .column(MetaEmployee.city.join(MetaCity.name))
+                .column(MetaEmployee.boss.join(MetaEmployee.name))
                 .where(MetaEmployee.id.whereGt(1L))
                 .append("ORDER BY", MetaEmployee.id, "DESC" );
 
 
 
 
-         var query2 = new SqlQueryDsl(connection());
+         var query2 = new DslQuery(connection());
 
         var bossAlias = MetaEmployee.as("b");
         var emplId2 = bossAlias.key(MetaEmployee.id);
