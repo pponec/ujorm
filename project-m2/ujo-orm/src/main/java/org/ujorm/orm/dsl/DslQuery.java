@@ -58,7 +58,7 @@ import java.util.List;
 public class DslQuery<D> extends AbstractSqlQuery<DslQuery<D>> {
 
     /** Columns */
-    private List<Key<?,?>[]> columns = new ArrayList<>();
+    private DslBuilder builder = new DslBuilder();
 
 
     /**

@@ -15,8 +15,6 @@ class DslQueryTest {
     private Employee emp = new Employee();
     private MetaEmployee emps = new MetaEmployee();
 
-
-
     @Test
     void demo() {
 

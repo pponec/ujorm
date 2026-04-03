@@ -16,6 +16,7 @@
  */
 package org.ujorm.orm.dsl;
 
+import org.jetbrains.annotations.Nullable;
 import org.ujorm.core.Key;
 import org.ujorm.core.criterion.Criterion;
 import org.ujorm.core.criterion.ValueCriterion;
@@ -58,19 +59,20 @@ public class DslBuilder {
     /** Columns */
     private final List<Key<?,?>[]> columns = new ArrayList<>();
 
-
-    private final Criterion criterion;
-
     /** Writer */
-    private StringBuilder writer = new StringBuilder(256);
+    private final StringBuilder writer = new StringBuilder(256);
 
+    @Nullable
+    private Criterion criterion;
 
-    public DslBuilder(Criterion criterion) {
-        this.criterion = criterion;
-    }
 
     public void column(Key<?,?>[] column) {
         columns.add(column);
+    }
+
+    /** Set criterion */
+    public void setCriterion(@Nullable Criterion criterion) {
+        this.criterion = criterion;
     }
 
     boolean isRequired(Key<?,?> column) {
