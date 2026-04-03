@@ -37,36 +37,39 @@ public enum Operator implements AbstractOperator {
     IN("IN"),
     /** Negation operator to compare a key to collection */
     NOT_IN("NOT IN"),
-    /** Regular expression */
+    /** Regular expression. Note: Not a standard SQL operator. */
     REGEXP("REGEXP"),
-    /** Negation of the regular expression */
+    /** Negation of the regular expression. Note: Not a standard SQL operator. */
     NOT_REGEXP("NOT REGEXP"),
-    /** Only for a CharSequence subtypes (including String) */
+    /** Only for a CharSequence subtypes (including String). Note: Not a standard SQL operator. */
     EQUALS_CASE_INSENSITIVE("="),
     /** Only for a CharSequence subtypes (including String) */
     STARTS("LIKE"),
-    /** Only for a CharSequence subtypes (including String) */
+    /** Only for a CharSequence subtypes (including String). Note: Not a standard SQL operator. */
     STARTS_CASE_INSENSITIVE("ILIKE"),
     /** Only for a CharSequence subtypes (including String) */
     ENDS("LIKE"),
-    /** Only for a CharSequence subtypes (including String) */
+    /** Only for a CharSequence subtypes (including String). Note: Not a standard SQL operator. */
     ENDS_CASE_INSENSITIVE("ILIKE"),
     /** Only for a CharSequence subtypes (including String) */
     CONTAINS("LIKE"),
-    /** Only for a CharSequence subtypes (including String) */
+    /** Only for a CharSequence subtypes (including String). Note: Not a standard SQL operator. */
     CONTAINS_CASE_INSENSITIVE("ILIKE"),
     /** This operator can have their own SQL condition by a SqlDialect solution.
      * <br>If you need to use more operators, I recommend to implement your own class
      * by the interface AbstractOperator and adjust the appropriate SqlDialect.
+     * <br>Note: Not a standard SQL operator.
      */
     USER(""),
     /** The operator for an internal use only where a result is
      * <strong>not dependent</strong> on the value.
      * The result of the {@link Criterion#getRightNode()} method is the {@link Boolean} type always.
+     * <br>Note: Not a standard SQL operator.
      */
     XFIXED(""),
     /** The operator for an indication of the SQL condition in a text format
      * Parameters of the SQL condition are not supported by the Ujorm.
+     * <br>Note: Not a standard SQL operator.
      */
     XSQL("");
 
