@@ -2,7 +2,6 @@ package org.ujorm.orm.dsl;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.ujorm.orm.DslQuery;
 import org.ujorm.orm.tutorial.domains.Employee;
 import org.ujorm.orm.tutorial.domains.MetaCity;
 import org.ujorm.orm.dsl.meta.MetaEmployee;
@@ -20,7 +19,6 @@ class DslQueryTest {
 
     @Test
     void demo() {
-
 
         var select = new DslQuery<Employee>(connection());
         select.column(MetaEmployee.id)

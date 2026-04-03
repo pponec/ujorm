@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.ujorm.orm;
+package org.ujorm.orm.dsl;
 
 import org.jetbrains.annotations.NotNull;
 import org.ujorm.core.criterion.Criterion;
@@ -23,6 +23,8 @@ import org.ujorm.tools.jdbc.SQLException;
 import org.ujorm.core.Key;
 
 import java.sql.Connection;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A fluent wrapper over {@link java.sql.PreparedStatement}
@@ -54,6 +56,9 @@ import java.sql.Connection;
  * @since 2.26
  */
 public class DslQuery<D> extends AbstractSqlQuery<DslQuery<D>> {
+
+    /** Columns */
+    private List<Key<?,?>[]> columns = new ArrayList<>();
 
 
     /**

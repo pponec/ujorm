@@ -1,4 +1,4 @@
-package org.ujorm.orm.dsl.meta;
+package org.ujorm.orm.dsl;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

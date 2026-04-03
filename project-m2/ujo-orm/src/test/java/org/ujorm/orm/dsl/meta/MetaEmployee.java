@@ -1,5 +1,6 @@
 package org.ujorm.orm.dsl.meta;
 
+import org.ujorm.orm.dsl.TableAlias;
 import org.ujorm.orm.tutorial.domains.Employee;
 import javax.annotation.processing.Generated;
 import org.ujorm.core.Key;
