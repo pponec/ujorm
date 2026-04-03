@@ -1,23 +1,29 @@
 package org.ujorm.orm.dsl.meta;
 
+import org.jetbrains.annotations.NotNull;
 import org.ujorm.core.Key;
 
-/** Generic wrapper for SQL table aliases */
-public class TableAlias<T> {
+import java.util.Objects;
 
+/** Generic wrapper for SQL table aliases */
+public final class TableAlias<T> {
+
+    @NotNull
     private final String alias;
 
     /** Constructor */
-    public TableAlias(String alias) {
-        this.alias = alias;
+    public TableAlias(@NotNull String alias) {
+        this.alias = Objects.requireNonNull(alias, "alias");
     }
 
     /** Wraps a domain property with this table alias */
-    public <V> AliasedKey<T, V> key(Key<T, V> key) {
-        return new AliasedKey<>(this, key);
+    public <V> AliasedKey<T, V> key(@NotNull Key<T, V> key) {
+        var originalKey = (key instanceof AliasedKey akey) ? akey.originalKey() : key;
+        return new AliasedKey<>(this, originalKey);
     }
 
     /** Returns the SQL table alias */
+    @NotNull
     public String alias() {
         return alias;
     }

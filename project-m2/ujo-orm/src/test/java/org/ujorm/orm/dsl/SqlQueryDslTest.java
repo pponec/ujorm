@@ -28,7 +28,7 @@ class SqlQueryDslTest {
                 , MetaEmployee.city.join(MetaCity.name)
                 , MetaEmployee.boss.join(MetaEmployee.name)
                 )
-                .where(MetaCity.name, "= :id")
+                .where(MetaEmployee.id.whereGt(1L))
                 .append("ORDER BY", MetaEmployee.id, "DESC" );
 
 
@@ -42,15 +42,20 @@ class SqlQueryDslTest {
 
         Assertions.assertNotNull(tableAlias);
 
-//        var crn1 = MetaEmployee.name.whereEq("Joe");
-//        var crn2 = MetaCity.name.whereEq("Prague");
-//        var crn3 = crn1.and(crn2);
+        //---
 
-//        query.select( MetaEmployee.id
-//                , MetaEmployee.name
-//                , MetaEmployee.city.join(MetaCity.name)
-//                , MetaEmployee.boss.join(MetaEmployee.name)
-//        ).where(crn3);
+        var bossNameKey = MetaEmployee.as("b", MetaEmployee.name);
+
+        var crn1 = MetaEmployee.name.whereEq("Joe");
+        var crn2 = MetaCity.name.whereEq("Prague");
+        var crn3 = bossNameKey.whereEq("Joe");
+        var crnAll = crn1.and(crn2).and(crn3);
+
+        query.select( MetaEmployee.id
+                , MetaEmployee.name
+                , MetaEmployee.city.join(MetaCity.name)
+                , MetaEmployee.boss.join(bossNameKey)
+        ).where(crnAll);
 
 
     }

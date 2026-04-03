@@ -21,4 +21,9 @@ public class MetaEmployee {
     public static TableAlias<Employee> as(String alias) {
         return new TableAlias<>(alias);
     }
+
+    /** Creates a Key for the Employee alias */
+    public static <V> Key<Employee, V> as(String alias, Key<Employee,V> key) {
+        return as(alias).key(key);
+    }
 }

@@ -17,6 +17,7 @@
 package org.ujorm.orm;
 
 import org.jetbrains.annotations.NotNull;
+import org.ujorm.core.criterion.Criterion;
 import org.ujorm.tools.jdbc.AbstractSqlQuery;
 import org.ujorm.tools.jdbc.SQLException;
 import org.ujorm.core.Key;
@@ -66,11 +67,11 @@ public class SqlQueryDsl<D extends SqlQueryDsl<D>> extends AbstractSqlQuery<SqlQ
         return this;
     }
 
-    public <V> SqlQueryDsl<D> where (CharSequence... keys) {
+    public <V> SqlQueryDsl<D> where (@NotNull Criterion condition) {
         return this;
     }
 
-    public <V> SqlQueryDsl<D> append(CharSequence... sqlTail) {
+    public <V> SqlQueryDsl<D> append(@NotNull CharSequence... sqlTail) {
         return this;
     }
 
