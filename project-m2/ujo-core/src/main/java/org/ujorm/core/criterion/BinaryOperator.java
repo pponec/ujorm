@@ -1,19 +1,18 @@
 /*
- *  Copyright 2007-2022 Pavel Ponec
+ * Copyright 2007-2022 Pavel Ponec
  *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
-
 
 /*
  * The last change: $Date: $
@@ -22,8 +21,6 @@
 
 package org.ujorm.core.criterion;
 
-
-
 /**
  * The criterion binary operator
  * @since 0.90
@@ -31,22 +28,35 @@ package org.ujorm.core.criterion;
  */
 public enum BinaryOperator implements AbstractOperator {
     /** (a AND b) */
-    AND,
+    AND("AND"),
     /** (a OR b) */
-    OR,
+    OR("OR"),
     /** (a XOR b) <br>Note: the SQL language may not support the operator. */
-    XOR,
+    XOR("XOR"),
     /** NOT (a OR b) <br>Note: the SQL language may not support the operator. */
-    NOR,
+    NOR("NOR"),
     /** NOT (a AND b) <br>Note: the SQL language may not support the operator. */
-    NAND,
-    /** (a == b) <br>Note: the SQL language may not support the operator.
+    NAND("NAND"),
+    /**
+     * (a == b) <br>Note: the SQL language may not support the operator.
      * <br/> See also: XAND, XNOR, EQV
      */
-    EQ,
+    EQ("="),
     /** NOT a */
-    NOT,
-    ;
+    NOT("NOT");
+
+    /** The SQL standard string representation of the operator */
+    private final String sqlOperator;
+
+    /** Creates a new BinaryOperator with its SQL string representation */
+    BinaryOperator(String sqlOperator) {
+        this.sqlOperator = sqlOperator;
+    }
+
+    /** Returns the SQL string representation of the operator */
+    public String getSqlOperator() {
+        return sqlOperator;
+    }
 
     /** Join two criterions. */
     public <UJO> Criterion join(final Criterion a, final Criterion b) {
