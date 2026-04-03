@@ -118,4 +118,8 @@ public class DslBuilder {
         }
     }
 
+    @Override
+    public String toString() {
+        return writer.toString();
+    }
 }
