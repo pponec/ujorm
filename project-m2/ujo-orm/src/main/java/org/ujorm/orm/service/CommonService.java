@@ -25,20 +25,6 @@ import java.util.Objects;
 
 public class CommonService {
 
-    /** Find PK. */
-    public <D> Key<D,?> findPrimaryKey(Class<D> clazz, Context ctx) {
-        var handler = ctx.domainService().getHandler(clazz);
-        for (var key : handler.getKeyList()) {
-            if (key.info().primaryKey()) return key;
-        }
-        if (ctx.config().isFirstPropertyIsIdentifier()) {
-            return handler.getKeyList().get(0);
-        } else {
-            var msg = "No primary key was found by to annotation in " + clazz;
-            throw new IllegalStateException(msg);
-        }
-    }
-
     /** Build a property change set */
     @NotNull
     public static <D> BitSet findChanges(@NotNull D domain, @NotNull D snapshot, @NotNull DomainHandler<D> handler) {

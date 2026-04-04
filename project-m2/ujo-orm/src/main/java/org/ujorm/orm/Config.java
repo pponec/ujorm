@@ -27,7 +27,7 @@ public class Config {
      * Otherwise, or if you need to specify a different field as the primary key,
      * you must explicitly annotate the field using the JPA {@code @Id} annotation.
      */
-    public static final Key<Boolean> firstPropertyIsIdentifier = meta.key("firstPropertyIsIdentifier", true);
+    public static final Key<Boolean> acceptDefaultPk = meta.key("firstPropertyIsIdentifier", true);
 
     /** Maximum size of the cache in the {@link org.ujorm.orm.jdbc.ResultSetMapper} */
     public static final Key<Integer> maxCacheSize = meta.key("maxCacheSize", 512);
@@ -104,7 +104,7 @@ public class Config {
 
     // --- Getters ---
 
-    public boolean isFirstPropertyIsIdentifier() { return firstPropertyIsIdentifier.getValue(values); }
+    public boolean acceptDefaultPk() { return acceptDefaultPk.getValue(values); }
     public int getMaxCacheSize() { return maxCacheSize.getValue(values); }
     public int getBatchSize() { return batchSize.getValue(values); }
     public boolean isPrintSql() { return printSql.getValue(values); }

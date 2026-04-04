@@ -18,20 +18,17 @@ package org.ujorm.orm.dsl;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.ujorm.core.DomainHandlerProvider;
 import org.ujorm.core.Key;
 import org.ujorm.core.criterion.BinaryCriterion;
 import org.ujorm.core.criterion.Criterion;
 import org.ujorm.core.criterion.FunctionCriterion;
 import org.ujorm.core.criterion.ValueCriterion;
+import org.ujorm.orm.Config;
+import org.ujorm.orm.model.QuotePair;
 import org.ujorm.tools.jdbc.SQLException;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * A fluent wrapper over {@link java.sql.PreparedStatement}
@@ -64,6 +61,9 @@ public class DslBuilder {
     /** Default aliases for domain classes */
     private final Map<Class<?>, String> domainAliases = new HashMap<>();
 
+    /** Quoters */
+    private final QuotePair q;
+
     /** Extracted base table alias */
     private String baseTableAlias;
 
@@ -71,14 +71,15 @@ public class DslBuilder {
     private Criterion criterion = Criterion.forAll();
 
     /** Writer */
-    private final StringBuilder writer;
+    @Nullable
+    private StringBuilder writer;
 
-    public DslBuilder(StringBuilder writer) {
-        this.writer = writer;
+    public DslBuilder(QuotePair quotePair) {
+        this.q = quotePair;
     }
 
     public DslBuilder() {
-        this(new StringBuilder(256));
+        this(QuotePair.ofDefault());
     }
 
     /** Add new column */
@@ -100,7 +101,8 @@ public class DslBuilder {
     }
 
     /** Build the query */
-    public void build() {
+    public StringBuilder build(@NotNull StringBuilder writer) {
+        this.writer = Objects.requireNonNull(writer, "writer");
         if (writer.isEmpty()) {
             writer.append("SELECT ");
         }
@@ -108,6 +110,9 @@ public class DslBuilder {
         buildTable();
         buildJoins();
         buildWhere();
+
+        this.writer = null;
+        return writer;
     }
 
     /** Prepare model for JOINs and format SELECT columns */
@@ -161,7 +166,7 @@ public class DslBuilder {
             }
 
             if (colIdx > 0) {
-                writer.append(", ");
+                writer.append(NEW_LINE).append(", ");
             }
 
             var finalKey = keyPath[keyPath.length - 1];
@@ -169,7 +174,7 @@ public class DslBuilder {
                     ? akey.tableAlias()
                     : currentAlias;
 
-            writer.append(finalAlias).append(".").append(finalKey.name());
+            writeColumn(finalAlias, finalKey, keyPath);
         }
     }
 
@@ -210,8 +215,10 @@ public class DslBuilder {
         for (var join : joins) {
             writer.append(NEW_LINE).append(join.required() ? "INNER JOIN " : "LEFT OUTER JOIN ")
                     .append(join.targetTable()).append(SPACE).append(join.targetAlias())
-                    .append(" ON ").append(join.targetAlias()).append(".id")
-                    .append(" = ").append(join.sourceAlias()).append(".").append(join.relationKey().name());
+                    .append(" ON ");
+            writeColumn(join.targetAlias(), findRelatedPrimaryKey(join.relationKey()));
+            writer.append(" = ");
+            writeColumn(join.sourceAlias(), join.relationKey());
         }
     }
 
@@ -260,7 +267,7 @@ public class DslBuilder {
         var resolvedAlias = column instanceof AliasedKey akey
                 ? akey.tableAlias()
                 : domainAliases.getOrDefault(column.domainClass(), defaultTableAlias);
-        writer.append(resolvedAlias).append(".").append(column.name());
+        writeColumn(resolvedAlias, column);
     }
 
     /** Generate unique table alias from free characters */
@@ -315,9 +322,31 @@ public class DslBuilder {
         writer.append(")");
     }
 
+    /** Write database column. */
+    protected void writeColumn(@NotNull String tableAlias, @NotNull Key<?,?> column, Key<?,?>... labels) {
+        writer.append(q.open()).append(tableAlias).append('.').append(column.name()).append(q.close());
+
+        var printLabel = labels.length > 0;
+        if (printLabel) {
+            writer.append(" AS ");
+            writer.append(q.open());
+            for (var i = 0; i < labels.length; i++) {
+                if (i > 0) writer.append('.');
+                writer.append(labels[i].name());
+            }
+            writer.append(q.close());
+        }
+    }
+
+    /** Find a relation key */
+    protected Key<?,?> findRelatedPrimaryKey(Key<?,?> foreignKey) {
+        var acceptDefaultPk = Config.ofDefault().acceptDefaultPk(); // TODO
+        return DomainHandlerProvider.getHandler(foreignKey.domainClass()).findPrimaryKey(acceptDefaultPk);
+    }
+
     @Override
     public String toString() {
-        return writer.toString();
+        return build(new StringBuilder(256)).toString();
     }
 
     /** Record representing a parsed JOIN relationship. */

@@ -29,6 +29,7 @@ import java.util.*;
 public record TableModel<D>(
         DomainHandler<D> hander,
         ColumnModel<D,Object> pk,
+        /** Ordered by the {@link Key#index()} . */
         List<ColumnModel<D,Object>> columns,
         String tableName,
         /** Inserted columns without PK. */

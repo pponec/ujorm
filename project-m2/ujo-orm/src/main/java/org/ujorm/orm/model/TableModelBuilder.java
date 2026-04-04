@@ -236,7 +236,8 @@ public class TableModelBuilder<D> {
         var foreignKey = (Key<V,?>) null;
         if (key.info().foreignKey()) {
             var foreignHandler = ctx.domainService().getHandler(key.type());
-            foreignKey = ctx.commonService().findPrimaryKey(foreignHandler.getDomainClass(), ctx);
+            var acceptDefaultPk = ctx.config().acceptDefaultPk();
+            foreignKey = foreignHandler.findPrimaryKey(acceptDefaultPk);
             jdbcType = jdbcTypeProvider.findJdbcType(foreignKey);
         } else {
             jdbcType = jdbcTypeProvider.findJdbcType(key);
@@ -255,7 +256,7 @@ public class TableModelBuilder<D> {
             if (col.pk()) return col;
         }
         var firstColumn = columns.get(0);
-        if (ctx.config().isFirstPropertyIsIdentifier()) {
+        if (ctx.config().acceptDefaultPk()) {
             return firstColumn;
         } else {
             var msg = "No primary key was found by to annotation in " + firstColumn.key().domainClass();

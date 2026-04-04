@@ -61,19 +61,25 @@ public class DslQuery<D> extends AbstractSqlQuery<DslQuery<D>> {
     /** Columns */
     private final DslBuilder builder;
 
+    /** Sql Tail */
+    @NotNull
+    private String sqlTail = "";
+
     /**
      * Constructor with a database connection
      * @param dbConnection A database connection
      */
     public DslQuery(@NotNull Connection dbConnection) {
         super(dbConnection);
-        builder = new DslBuilder(super.initWriter());
+        builder = new DslBuilder();
     }
 
     @Override
-    public DslQuery<D> sql(@NotNull String... sqlLines) {
-        super.sql(sqlLines);
-        _writer.append(super.sqlTemplate);
+    public DslQuery<D> sql(@NotNull String... sqlItems) {
+        initWriter();
+        // TODO:
+        var sql = String.join(" ", sqlItems);
+        super.sql(sql);
         return self();
     }
 
@@ -82,6 +88,9 @@ public class DslQuery<D> extends AbstractSqlQuery<DslQuery<D>> {
     }
 
     public <V> DslQuery<D> append(@NotNull CharSequence... sqlTail) {
+        initWriter();
+        // TODO:
+        this.sqlTail = String.join(" ", sqlTail);
         return self();
     }
 

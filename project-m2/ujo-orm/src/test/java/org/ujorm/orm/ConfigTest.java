@@ -26,7 +26,7 @@ class ConfigTest {
 
         // Verifies fallback to defaults or file properties
         assertNotNull(config._testOnly());
-        assertTrue(config.isFirstPropertyIsIdentifier());
+        assertTrue(config.acceptDefaultPk());
     }
 
     @Test
@@ -43,7 +43,7 @@ class ConfigTest {
         assertEquals(128, config.getBatchSize());
 
         // This remains default as it was not overridden
-        assertTrue(config.isFirstPropertyIsIdentifier());
+        assertTrue(config.acceptDefaultPk());
     }
 
     @Test
@@ -72,7 +72,7 @@ class ConfigTest {
         assertEquals(9999, config.getMaxCacheSize());
         assertFalse(config.isPrintSql());
         assertEquals("BUILDER_TEST", config._testOnly());
-        assertTrue(config.isFirstPropertyIsIdentifier());
+        assertTrue(config.acceptDefaultPk());
     }
 
     @Test

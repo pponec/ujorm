@@ -78,7 +78,7 @@ public class AliasedKey<T, V> implements Key<T, V> {
         return originalKey.domainClass().getSimpleName() + '.' + tableAlias() + ':' + originalKey.name();
     }
 
-    /** Text by a template {@code e:name} . */
+    /** Returns a key name including a table alias according to the template: {@code e:name} . */
     @Override
     public String toString() {
         return tableAlias() + ':' + originalKey.name();

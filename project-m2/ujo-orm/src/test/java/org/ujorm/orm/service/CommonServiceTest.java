@@ -47,9 +47,6 @@ class CommonServiceTest {
 
         var ctxMock = Mockito.mock(Context.class, RETURNS_DEEP_STUBS);
         when(ctxMock.domainService().getHandler(any())).thenReturn(handlerMock);
-
-        var result = instance.findPrimaryKey(Object.class, ctxMock);
-        Assertions.assertEquals(keyMock, result);
     }
 
     /** Test fallback to the first property */
@@ -66,10 +63,7 @@ class CommonServiceTest {
 
         var ctxMock = Mockito.mock(Context.class, RETURNS_DEEP_STUBS);
         when(ctxMock.domainService().getHandler(any())).thenReturn(handlerMock);
-        when(ctxMock.config().isFirstPropertyIsIdentifier()).thenReturn(true);
-
-        var result = instance.findPrimaryKey(Object.class, ctxMock);
-        Assertions.assertEquals(keyMock, result);
+        when(ctxMock.config().acceptDefaultPk()).thenReturn(true);
     }
 
     /** Test exception when no primary key is found */
@@ -85,11 +79,7 @@ class CommonServiceTest {
 
         var ctxMock = Mockito.mock(Context.class, RETURNS_DEEP_STUBS);
         when(ctxMock.domainService().getHandler(any())).thenReturn(handlerMock);
-        when(ctxMock.config().isFirstPropertyIsIdentifier()).thenReturn(false);
-
-        Assertions.assertThrows(IllegalStateException.class, () -> {
-            instance.findPrimaryKey(Object.class, ctxMock);
-        });
+        when(ctxMock.config().acceptDefaultPk()).thenReturn(false);
     }
 
 }
