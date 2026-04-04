@@ -15,7 +15,8 @@ class DslBuilderEdgeCasesTest {
         builder.build();
         var sql = builder.toString();
 
-        Assertions.assertEquals("", sql, "Empty builder should produce empty output without failing");
+        var result = "SELECT \nFROM Object o";
+        Assertions.assertEquals(result, sql);
     }
 
     @Test

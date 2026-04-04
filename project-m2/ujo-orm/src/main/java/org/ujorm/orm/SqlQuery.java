@@ -143,7 +143,7 @@ public class SqlQuery extends AbstractSqlQuery<SqlQuery> {
             columnLabels = new LinkedHashMap<>();
         }
 
-        var builder = initBuilder();
+        var builder = initWriter();
         int labelOffset = 0;
 
         if (isColumn) {

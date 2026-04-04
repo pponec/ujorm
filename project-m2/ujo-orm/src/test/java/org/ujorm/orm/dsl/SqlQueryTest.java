@@ -13,7 +13,7 @@ import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-class SqlQueryTest {
+    class SqlQueryTest {
 
     private Connection connectionMock;
 

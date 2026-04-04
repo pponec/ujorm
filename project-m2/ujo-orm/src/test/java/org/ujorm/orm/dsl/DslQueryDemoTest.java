@@ -26,9 +26,6 @@ class DslQueryDemoTest {
                 .where(MetaEmployee.id.whereGt(1L))
                 .append("ORDER BY", MetaEmployee.id, "DESC" );
 
-
-         var query2 = new DslQuery(connection());
-
         var bossAlias = MetaEmployee.as("b");
         var emplId2 = bossAlias.key(MetaEmployee.id);
         var tableAlias = emplId2.tableAlias();
@@ -51,6 +48,21 @@ class DslQueryDemoTest {
                 .where(crnAll);
 
 
+    }
+
+    /** @Test  : Only demo */
+    void count() {
+
+        var select = new DslQuery<Employee>(connection());
+        select.sql("SELECT COUNT(*)")
+                .where(MetaEmployee.id.whereGt(1L))
+                .append("ORDER BY", MetaEmployee.id, "DESC" );
+
+        var bossAlias = MetaEmployee.as("b");
+        var emplId2 = bossAlias.key(MetaEmployee.id);
+        var tableAlias = emplId2.tableAlias();
+
+        Assertions.assertNotNull(tableAlias);
     }
 
     private Connection connection() {

@@ -57,7 +57,7 @@ public abstract class AbstractSqlQuery<T extends AbstractSqlQuery<T>> implements
     private AbstractSqlQuery.LogRequest logRequest = null;
 
     @Nullable
-    protected StringBuilder _builder = null;
+    protected StringBuilder _writer = null;
 
     public AbstractSqlQuery(@NotNull Connection dbConnection) {
         this.dbConnection = dbConnection;
@@ -70,13 +70,13 @@ public abstract class AbstractSqlQuery<T extends AbstractSqlQuery<T>> implements
     }
 
     /** Init builder */
-    protected StringBuilder initBuilder() {
-        if (_builder == null) {
-            _builder = new StringBuilder(64);
+    protected StringBuilder initWriter() {
+        if (_writer == null) {
+            _writer = new StringBuilder(64);
         } else {
-            _builder.setLength(0);
+            _writer.setLength(0);
         }
-        return _builder;
+        return _writer;
     }
 
     /** Sets a new SQL template and resets current parameters. Any existing resources are closed. */
@@ -341,7 +341,7 @@ public abstract class AbstractSqlQuery<T extends AbstractSqlQuery<T>> implements
 
     @NotNull
     protected String buildSql(List<ParamValue> sqlValues, boolean includingValues) {
-        final var sqlBuffer = initBuilder();
+        final var sqlBuffer = initWriter();
         final var matcher = SQL_MARK.matcher(sqlTemplate);
         final var missingKeys = new HashSet<String>();
 

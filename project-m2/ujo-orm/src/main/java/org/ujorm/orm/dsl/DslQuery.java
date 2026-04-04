@@ -6,7 +6,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -23,8 +23,6 @@ import org.ujorm.tools.jdbc.SQLException;
 import org.ujorm.core.Key;
 
 import java.sql.Connection;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * A fluent wrapper over {@link java.sql.PreparedStatement}
@@ -57,9 +55,11 @@ import java.util.List;
  */
 public class DslQuery<D> extends AbstractSqlQuery<DslQuery<D>> {
 
-    /** Columns */
-    private DslBuilder builder = new DslBuilder();
+    /** Empty key array */
+    private static final Key<?,?>[] EMPTY = new Key<?,?>[0];
 
+    /** Columns */
+    private final DslBuilder builder;
 
     /**
      * Constructor with a database connection
@@ -67,6 +67,14 @@ public class DslQuery<D> extends AbstractSqlQuery<DslQuery<D>> {
      */
     public DslQuery(@NotNull Connection dbConnection) {
         super(dbConnection);
+        builder = new DslBuilder(super.initWriter());
+    }
+
+    @Override
+    public DslQuery<D> sql(@NotNull String... sqlLines) {
+        super.sql(sqlLines);
+        _writer.append(super.sqlTemplate);
+        return self();
     }
 
     public <V> DslQuery<D> where (@NotNull Criterion condition) {
@@ -79,34 +87,38 @@ public class DslQuery<D> extends AbstractSqlQuery<DslQuery<D>> {
 
     // ------- COLUMNS -------
 
-    /** Add a SQL column definition dynamically to replace the {@code ${COLUMNS} } placeholder.
+    /**
+     * Add a SQL column definition dynamically to replace the {@code ${COLUMNS} } placeholder.
      * The provided metamodel attributes define a type-safe path to the specific property
      * (e.g., entity -> relation -> property) and are concatenated to form the final SQL column label.
      */
     public DslQuery column(@NotNull Key<?,?> attr) {
-        return putColumnOrLabel(true, attr);
+        return putColumn(EMPTY, attr);
     }
 
-    /** Add a SQL column definition dynamically to replace the {@code ${COLUMNS} } placeholder.
+    /**
+     * Add a SQL column definition dynamically to replace the {@code ${COLUMNS} } placeholder.
      * The provided metamodel attributes define a type-safe path to the specific property
      * (e.g., entity -> relation -> property) and are concatenated to form the final SQL column label.
      */
     public <V1> DslQuery column(@NotNull Key<D,V1> attr1,
                                 @NotNull Key<V1,?> attr2) {
-        return putColumnOrLabel(true, attr1, attr2);
+        return putColumn(EMPTY, attr1, attr2);
     }
 
-    /** Add a SQL column definition dynamically to replace the {@code ${COLUMNS} } placeholder.
+    /**
+     * Add a SQL column definition dynamically to replace the {@code ${COLUMNS} } placeholder.
      * The provided metamodel attributes define a type-safe path to the specific property
      * (e.g., entity -> relation -> property) and are concatenated to form the final SQL column label.
      */
     public <V1,V2> DslQuery column(@NotNull Key<D,V1> attr1,
                                    @NotNull Key<V1,V2> attr2,
                                    @NotNull Key<V2,?> attr3) {
-        return putColumnOrLabel(true, attr1, attr2, attr3);
+        return putColumn(EMPTY, attr1, attr2, attr3);
     }
 
-    /** Add a SQL column definition dynamically to replace the {@code ${COLUMNS} } placeholder.
+    /**
+     * Add a SQL column definition dynamically to replace the {@code ${COLUMNS} } placeholder.
      * The provided metamodel attributes define a type-safe path to the specific property
      * (e.g., entity -> relation -> property) and are concatenated to form the final SQL column label.
      */
@@ -116,21 +128,20 @@ public class DslQuery<D> extends AbstractSqlQuery<DslQuery<D>> {
                                             @NotNull Key<V2,V3> attr3,
                                             @NotNull Key<V3,?> attr4,
                                             @NotNull Key<?,?>... attrs) {
-        var allAttrs = new CharSequence[4 + attrs.length];
-        allAttrs[0] = attr1;
-        allAttrs[1] = attr2;
-        allAttrs[2] = attr3;
-        allAttrs[3] = attr4;
-        System.arraycopy(attrs, 0, allAttrs, 4, attrs.length);
-        return putColumnOrLabel(true, allAttrs);
+        return putColumn(attrs, attr1, attr2, attr3, attr4);
     }
-
 
     /** Validates and adds an expression to the internal map */
-    protected DslQuery putColumnOrLabel(boolean isColumn, CharSequence... attrs) {
+    DslQuery putColumn(
+            @NotNull Key<?,?>[] attrs,
+            @NotNull Key<?,?>... keys
+    ) {
+        var result = new Key<?,?>[keys.length + attrs.length];
+        System.arraycopy(keys, 0, result, 0, keys.length);
+        if (attrs != EMPTY) System.arraycopy(attrs, 0, result, keys.length, attrs.length);
+        this.builder.column(result);
         return self();
     }
-
 
     /** Run a query statement */
     public static <R> R run(Connection connection, final SqlFunction<DslQuery, R> fun) {

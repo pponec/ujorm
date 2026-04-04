@@ -52,14 +52,11 @@ public class DslBuilder {
     /** Columns */
     private final List<Key<?, ?>[]> columns = new ArrayList<>();
 
-    /** Writer */
-    private final StringBuilder writer = new StringBuilder(256);
-
     /** Used table aliases */
     private final Set<String> usedAliases = new HashSet<>();
 
     /** Mapped relations to avoid duplicate JOIN clauses */
-    private final Map<List<Key<?, ?>>, JoinModel> joinMap = new HashMap<>();
+    private final Map<List<Key<?, ?>>, JoinModel> joinMap = new HashMap<>(5);
 
     /** Ordered list of JOIN clauses */
     private final List<JoinModel> joins = new ArrayList<>();
@@ -72,6 +69,17 @@ public class DslBuilder {
 
     @NotNull
     private Criterion criterion = Criterion.forAll();
+
+    /** Writer */
+    private final StringBuilder writer;
+
+    public DslBuilder(StringBuilder writer) {
+        this.writer = writer;
+    }
+
+    public DslBuilder() {
+        this(new StringBuilder(256));
+    }
 
     /** Add new column */
     public void column(Key<?, ?>... column) {
@@ -93,9 +101,6 @@ public class DslBuilder {
 
     /** Build the query */
     public void build() {
-        if (columns.isEmpty()) {
-            return;
-        }
         if (writer.isEmpty()) {
             writer.append("SELECT ");
         }
@@ -107,6 +112,10 @@ public class DslBuilder {
 
     /** Prepare model for JOINs and format SELECT columns */
     public void buildColumns() {
+        if (columns.isEmpty()) {
+            return;
+        }
+
         var firstKey = columns.get(0)[0];
         var baseTable = firstKey.domainClass().getSimpleName();
         this.baseTableAlias = generateAlias(baseTable);
@@ -164,11 +173,36 @@ public class DslBuilder {
         }
     }
 
-    /** Build the FROM clause */
+    /** Build the FROM clause. Find a basic domain model using:
+     * <br/> the first select column or
+     * <br/> the first criterion column of
+     */
     public void buildTable() {
-        var firstKey = columns.get(0)[0];
-        var tableName = firstKey.domainClass().getSimpleName();
-        writer.append(NEW_LINE).append("FROM ").append(tableName).append(SPACE).append(baseTableAlias);
+        var tableName = columns.isEmpty()
+                ? extractTableNameFromCriterion(this.criterion)    // The first criterion column
+                : columns.get(0)[0].domainClass().getSimpleName(); // The first select column
+
+        if (baseTableAlias == null) {
+            baseTableAlias = generateAlias(tableName.isEmpty() ? "t" : tableName);
+        }
+
+        writer.append(NEW_LINE).append("FROM ")
+                .append(tableName.isEmpty() ? "?" : tableName)
+                .append(SPACE).append(baseTableAlias);
+    }
+
+    /** Extract base table name from criterion */
+    private String extractTableNameFromCriterion(Criterion crn) {
+        var result = "";
+        if (crn instanceof BinaryCriterion binCrn) {
+            result = extractTableNameFromCriterion(binCrn.getLeftNode());
+            if (result.isEmpty()) {
+                result = extractTableNameFromCriterion(binCrn.getRightNode());
+            }
+        } else if (crn instanceof ValueCriterion<?> valCrn) {
+            result = valCrn.getLeftNode().domainClass().getSimpleName();
+        }
+        return result;
     }
 
     /** Inner/outer joins according to isRequired method */

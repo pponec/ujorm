@@ -246,7 +246,7 @@ public class UjormMetaProcessor extends AbstractProcessor {
             result.append("import org.ujorm.core.DomainHandlerProvider;\n\n");
 
             result.append("/** Auto-generated metamodel for ").append(originalName).append(" */\n");
-            result.append("public class ").append(newClassName).append(" {\n\n");
+            result.append("public abstract class ").append(newClassName).append(" {\n\n");
 
             result.append("    private static final DomainHandler<").append(originalName)
                     .append("> meta = DomainHandlerProvider.getHandler(").append(originalName).append(".class);\n\n");

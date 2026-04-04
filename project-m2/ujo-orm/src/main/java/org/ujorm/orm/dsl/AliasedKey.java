@@ -72,6 +72,18 @@ public class AliasedKey<T, V> implements Key<T, V> {
         return this.originalKey.info();
     }
 
+    /** Key name by a template {@code Employee.e:name} . */
+    @Override
+    public @NotNull String fullName() {
+        return originalKey.domainClass().getSimpleName() + '.' + tableAlias() + ':' + originalKey.name();
+    }
+
+    /** Text by a template {@code e:name} . */
+    @Override
+    public String toString() {
+        return tableAlias() + ':' + originalKey.name();
+    }
+
     // --- CRITERIONS ---
 
     /** {@inheritDoc} */
