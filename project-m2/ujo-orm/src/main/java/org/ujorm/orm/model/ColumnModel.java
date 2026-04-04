@@ -26,14 +26,10 @@ public record ColumnModel<D,V>(
         /** Column name */
         String name,
         JDBCType jdbcType,
-        /** Is foreign key to a relation */
+        /** Optional foreign key to the relation */
         @Nullable
         Key<V,?> foreignKey
 ) {
-
-    public boolean relation() {
-        return foreignKey != null;
-    }
 
     /**
      * Reading values from a JDBC ResultSet requires using object types

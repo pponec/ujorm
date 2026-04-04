@@ -247,8 +247,9 @@ public final class EntityManager<D, V> {
             for (var i = 0; i < columns.size(); i++) {
                 var column = columns.get(i);
                 var value = column.valueOf(domain);
-                if (column.relation() && value != null) {
-                    value = column.foreignKey().getValue(value);
+                var foreignKey = column.foreignKey();
+                if (foreignKey != null && value != null) {
+                    value = foreignKey.getValue(value);
                 }
 
                 value = toDbValue(value, column);
