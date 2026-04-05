@@ -20,6 +20,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.ujorm.core.DomainHandlerProvider;
 import org.ujorm.core.Key;
+import org.ujorm.core.criterion.AbstractOperator;
 import org.ujorm.core.criterion.BinaryCriterion;
 import org.ujorm.core.criterion.Criterion;
 import org.ujorm.core.criterion.FunctionCriterion;
@@ -236,7 +237,7 @@ public class DslQueryBuilder {
                 writer.append("(");
             }
             buildCriterionTree(binCrn.getLeftNode(), false);
-            writer.append(SPACE).append(binCrn.getOperator().name()).append(SPACE);
+            writer.append(SPACE).append(getSqlOperatorText(binCrn.getOperator())).append(SPACE);
             buildCriterionTree(binCrn.getRightNode(), false);
             if (!isRoot) {
                 writer.append(")");
@@ -256,8 +257,13 @@ public class DslQueryBuilder {
                 : domainAliases.getOrDefault(key.domainClass(), baseTableAlias);
 
         writeColumnName(resolvedAlias, key);
-        writer.append(SPACE).append(operator.name()).append(SPACE);
+        writer.append(SPACE).append(getSqlOperatorText(operator)).append(SPACE);
         formatValue(rightNode);
+    }
+
+    /** Get SQL operator text. */
+    private String getSqlOperatorText(Enum<?> operator) {
+        return operator instanceof AbstractOperator op ? op.term() : operator.name();
     }
 
     /** Generate unique table alias from free characters */
@@ -347,20 +353,17 @@ public class DslQueryBuilder {
         return build(new StringBuilder(256)).toString();
     }
 
-    /**
-     * Record representing a parsed JOIN relationship.
-     *
-     * @param relationKey Relation key property
-     * @param sourceAlias Source alias property
-     * @param targetAlias Target alias property
-     * @param targetClass Target class property
-     * @param required    Is required property
-     */
+    /** Record representing a parsed JOIN relationship. */
     record JoinModel(
+            /** Relation key property */
             Key<?, ?> relationKey,
+            /** Source alias property */
             String sourceAlias,
+            /** Target alias property */
             String targetAlias,
+            /** Target class property */
             Class<?> targetClass,
+            /** Is required property */
             boolean required
     ) {}
 
