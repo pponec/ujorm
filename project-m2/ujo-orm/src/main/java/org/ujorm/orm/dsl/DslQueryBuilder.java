@@ -114,9 +114,9 @@ public class DslQueryBuilder {
         }
 
         var firstKey = columns.get(0)[0];
-        var baseTable = firstKey.domainClass().getSimpleName();
-        this.baseTableAlias = generateAlias(baseTable);
-        this.domainAliases.putIfAbsent(firstKey.domainClass(), this.baseTableAlias);
+        var baseClass = firstKey.domainClass();
+        this.baseTableAlias = generateAlias(baseClass.getSimpleName());
+        this.domainAliases.putIfAbsent(baseClass, this.baseTableAlias);
 
         for (var colIdx = 0; colIdx < columns.size(); colIdx++) {
             var keyPath = columns.get(colIdx);
@@ -129,7 +129,7 @@ public class DslQueryBuilder {
                 var relKeyName = relKey.name();
 
                 if (!joinMap.containsKey(subPath)) {
-                    var targetTable = relKey.type().getSimpleName();
+                    var targetClass = relKey.type();
                     var isReq = relKey.info().required();
                     String targetAlias;
                     var nextKey = keyPath[i + 1];
@@ -147,10 +147,10 @@ public class DslQueryBuilder {
                                 : generateAlias(relKeyName);
                     }
 
-                    var joinInfo = new JoinModel(relKey, currentAlias, targetAlias, targetTable, isReq);
+                    var joinInfo = new JoinModel(relKey, currentAlias, targetAlias, targetClass, isReq);
                     joinMap.put(subPath, joinInfo);
                     joins.add(joinInfo);
-                    domainAliases.putIfAbsent(relKey.type(), targetAlias);
+                    domainAliases.putIfAbsent(targetClass, targetAlias);
                 }
 
                 keyNameCounts.add(relKeyName);
@@ -175,29 +175,31 @@ public class DslQueryBuilder {
      * <br/> the first criterion column of
      */
     public void buildTable() {
-        var tableName = columns.isEmpty()
-                ? extractTableNameFromCriterion(this.criterion)    // The first criterion column
-                : columns.get(0)[0].domainClass().getSimpleName(); // The first select column
+        var entityClass = columns.isEmpty()
+                ? extractTableClassFromCriterion(this.criterion)    // The first criterion column
+                : columns.get(0)[0].domainClass();                  // The first select column
+
+        Objects.requireNonNull(entityClass, "Entity class could not be resolved.");
 
         if (baseTableAlias == null) {
-            baseTableAlias = generateAlias(tableName.isEmpty() ? "t" : tableName);
+            baseTableAlias = generateAlias(entityClass.getSimpleName());
         }
 
-        writer.append(NEW_LINE).append("FROM ")
-                .append(tableName.isEmpty() ? "?" : tableName)
-                .append(SPACE).append(baseTableAlias);
+        writer.append(NEW_LINE).append("FROM ");
+        writeTableName(baseTableAlias, entityClass);
     }
 
-    /** Extract base table name from criterion */
-    private String extractTableNameFromCriterion(Criterion crn) {
-        var result = "";
+    /** Extract base table class from criterion */
+    @Nullable
+    private Class<?> extractTableClassFromCriterion(Criterion crn) {
+        Class<?> result = null;
         if (crn instanceof BinaryCriterion binCrn) {
-            result = extractTableNameFromCriterion(binCrn.getLeftNode());
-            if (result.isEmpty()) {
-                result = extractTableNameFromCriterion(binCrn.getRightNode());
+            result = extractTableClassFromCriterion(binCrn.getLeftNode());
+            if (result == null) {
+                result = extractTableClassFromCriterion(binCrn.getRightNode());
             }
         } else if (crn instanceof ValueCriterion<?> valCrn) {
-            result = valCrn.getLeftNode().domainClass().getSimpleName();
+            result = valCrn.getLeftNode().domainClass();
         }
         return result;
     }
@@ -205,9 +207,9 @@ public class DslQueryBuilder {
     /** Inner/outer joins according to isRequired method */
     public void buildJoins() {
         for (var join : joins) {
-            writer.append(NEW_LINE).append(join.required() ? "INNER JOIN " : "LEFT OUTER JOIN ")
-                    .append(join.targetTable()).append(SPACE).append(join.targetAlias())
-                    .append(" ON ");
+            writer.append(NEW_LINE).append(join.required() ? "INNER JOIN " : "LEFT OUTER JOIN ");
+            writeTableName(join.targetAlias(), join.targetClass());
+            writer.append(" ON ");
             writeColumnName(join.targetAlias(), findRelatedPrimaryKey(join.relationKey()));
             writer.append(" = ");
             writeColumnName(join.sourceAlias(), join.relationKey());
@@ -249,17 +251,13 @@ public class DslQueryBuilder {
     /** Append simple criterion to writer */
     private void appendSimpleCriterion(Object leftNode, Enum<?> operator, Object rightNode) {
         var key = (Key<?, ?>) leftNode;
-        appendDatabaseColumnName(key, baseTableAlias);
+        var resolvedAlias = key instanceof AliasedKey akey
+                ? akey.tableAlias()
+                : domainAliases.getOrDefault(key.domainClass(), baseTableAlias);
+
+        writeColumnName(resolvedAlias, key);
         writer.append(SPACE).append(operator.name()).append(SPACE);
         formatValue(rightNode);
-    }
-
-    /** Append database column name directly to writer */
-    private void appendDatabaseColumnName(Key<?, ?> column, String defaultTableAlias) {
-        var resolvedAlias = column instanceof AliasedKey akey
-                ? akey.tableAlias()
-                : domainAliases.getOrDefault(column.domainClass(), defaultTableAlias);
-        writeColumnName(resolvedAlias, column);
     }
 
     /** Generate unique table alias from free characters */
@@ -314,11 +312,12 @@ public class DslQueryBuilder {
         writer.append(")");
     }
 
-
     /** Write database table name. */
     protected void writeTableName(@NotNull String tableAlias, @NotNull Class<?> entityClass) {
-        writer.append(q.open()).append(entityClass.getSimpleName()).append(q.close())
-                .append(' ').append(tableAlias);
+        writer.append(q.open())
+                .append(entityClass.getSimpleName())
+                .append(q.close())
+                .append(SPACE).append(tableAlias);
     }
 
     /** Write database column name. */
@@ -348,17 +347,20 @@ public class DslQueryBuilder {
         return build(new StringBuilder(256)).toString();
     }
 
-    /** Record representing a parsed JOIN relationship. */
+    /**
+     * Record representing a parsed JOIN relationship.
+     *
+     * @param relationKey Relation key property
+     * @param sourceAlias Source alias property
+     * @param targetAlias Target alias property
+     * @param targetClass Target class property
+     * @param required    Is required property
+     */
     record JoinModel(
-            /** Relation key property */
             Key<?, ?> relationKey,
-            /** Source alias property */
             String sourceAlias,
-            /** Target alias property */
             String targetAlias,
-            /** Target table property */
-            String targetTable,
-            /** Is required property */
+            Class<?> targetClass,
             boolean required
     ) {}
 
