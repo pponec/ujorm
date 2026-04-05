@@ -46,16 +46,17 @@ public enum BinaryOperator implements AbstractOperator {
     NOT("NOT");
 
     /** The SQL standard string representation of the operator */
-    private final String sqlOperator;
+    private final String term;
 
     /** Creates a new BinaryOperator with its SQL string representation */
-    BinaryOperator(String sqlOperator) {
-        this.sqlOperator = sqlOperator;
+    BinaryOperator(String term) {
+        this.term = term;
     }
 
     /** Returns the SQL string representation of the operator */
-    public String getSqlOperator() {
-        return sqlOperator;
+    @Override
+    public String term() {
+        return term;
     }
 
     /** Join two criterions. */

@@ -29,4 +29,7 @@ public interface AbstractOperator {
     /** Returns Enum */
     Enum getEnum();
 
+    /** SQL expression */
+    String term();
+
 }

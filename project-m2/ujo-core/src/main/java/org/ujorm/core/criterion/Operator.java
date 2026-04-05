@@ -74,16 +74,17 @@ public enum Operator implements AbstractOperator {
     XSQL("");
 
     /** The SQL standard string representation of the operator */
-    private final String sqlOperator;
+    private final String term;
 
     /** Creates a new Operator with its SQL string representation */
-    Operator(String sqlOperator) {
-        this.sqlOperator = sqlOperator;
+    Operator(String term) {
+        this.term = term;
     }
 
     /** Returns the SQL string representation of the operator */
-    public String getSqlOperator() {
-        return sqlOperator;
+    @Override
+    public String term() {
+        return term;
     }
 
     /** The implementation is a VALUE type (not a binary one) */
