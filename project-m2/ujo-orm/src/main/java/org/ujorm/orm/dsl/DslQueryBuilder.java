@@ -166,7 +166,7 @@ public class DslQueryBuilder {
                     ? akey.tableAlias()
                     : currentAlias;
 
-            writeColumn(finalAlias, finalKey, keyPath);
+            writeColumnName(finalAlias, finalKey, keyPath);
         }
     }
 
@@ -208,9 +208,9 @@ public class DslQueryBuilder {
             writer.append(NEW_LINE).append(join.required() ? "INNER JOIN " : "LEFT OUTER JOIN ")
                     .append(join.targetTable()).append(SPACE).append(join.targetAlias())
                     .append(" ON ");
-            writeColumn(join.targetAlias(), findRelatedPrimaryKey(join.relationKey()));
+            writeColumnName(join.targetAlias(), findRelatedPrimaryKey(join.relationKey()));
             writer.append(" = ");
-            writeColumn(join.sourceAlias(), join.relationKey());
+            writeColumnName(join.sourceAlias(), join.relationKey());
         }
     }
 
@@ -259,7 +259,7 @@ public class DslQueryBuilder {
         var resolvedAlias = column instanceof AliasedKey akey
                 ? akey.tableAlias()
                 : domainAliases.getOrDefault(column.domainClass(), defaultTableAlias);
-        writeColumn(resolvedAlias, column);
+        writeColumnName(resolvedAlias, column);
     }
 
     /** Generate unique table alias from free characters */
@@ -316,13 +316,13 @@ public class DslQueryBuilder {
 
 
     /** Write database table name. */
-    protected void writeTable(@NotNull String tableAlias, @NotNull Class<?> entityClass) {
+    protected void writeTableName(@NotNull String tableAlias, @NotNull Class<?> entityClass) {
         writer.append(q.open()).append(entityClass.getSimpleName()).append(q.close())
                 .append(' ').append(tableAlias);
     }
 
     /** Write database column name. */
-    protected void writeColumn(@NotNull String tableAlias, @NotNull Key<?,?> column, Key<?,?>... labels) {
+    protected void writeColumnName(@NotNull String tableAlias, @NotNull Key<?,?> column, Key<?,?>... labels) {
         writer.append(q.open()).append(tableAlias).append('.').append(column.name()).append(q.close());
 
         var printLabel = labels.length > 0;
