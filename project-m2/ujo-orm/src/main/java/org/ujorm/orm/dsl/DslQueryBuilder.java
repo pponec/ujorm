@@ -314,7 +314,14 @@ public class DslQueryBuilder {
         writer.append(")");
     }
 
-    /** Write database column. */
+
+    /** Write database table name. */
+    protected void writeTable(@NotNull String tableAlias, @NotNull Class<?> entityClass) {
+        writer.append(q.open()).append(entityClass.getSimpleName()).append(q.close())
+                .append(' ').append(tableAlias);
+    }
+
+        /** Write database column name. */
     protected void writeColumn(@NotNull String tableAlias, @NotNull Key<?,?> column, Key<?,?>... labels) {
         writer.append(q.open()).append(tableAlias).append('.').append(column.name()).append(q.close());
 
