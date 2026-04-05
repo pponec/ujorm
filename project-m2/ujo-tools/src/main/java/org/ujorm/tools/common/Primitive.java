@@ -33,8 +33,8 @@ public record Primitive<T>(
      * @param type the class type to check
      * @return the wrapper class if primitive, otherwise the original type
      */
-    public static Class<?> wrapPrimitive(final Class<?> type) {
-        return type.isPrimitive() ? PRIMITIVE_MAP.getOrDefault(type, type) : type;
+    public static <T> Class<T> wrapPrimitive(final Class<T> type) {
+        return type.isPrimitive() ? (Class<T>) PRIMITIVE_MAP.getOrDefault(type, type) : type;
     }
 
     /** Compare two classes with ignoring primitive forms */

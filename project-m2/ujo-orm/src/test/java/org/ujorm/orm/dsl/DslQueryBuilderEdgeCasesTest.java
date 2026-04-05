@@ -9,7 +9,7 @@ import org.ujorm.orm.model.QuotePair;
 import org.ujorm.orm.tutorial.domains.MetaCity;
 import org.ujorm.orm.dsl.meta.MetaEmployee;
 
-class DslBuilderEdgeCasesTest {
+class DslQueryBuilderEdgeCasesTest {
 
     @Test
     void testEmptyColumnsList() {
@@ -31,7 +31,7 @@ class DslBuilderEdgeCasesTest {
         // The criterion is placed on MetaCity, but the user doesn't pass an explicitly aliased key.
         // DslBuilder should dynamically figure out that MetaCity matches the joined table alias.
         var crn = Criterion.where(MetaCity.name, Operator.EQ, "Prague");
-        builder.setCriterion(crn);
+        builder.where(crn);
 
         var sql = builder.toString().lines().toArray(String[]::new);
 
@@ -50,7 +50,7 @@ class DslBuilderEdgeCasesTest {
         builder.column(MetaEmployee.id);
 
         var crn = Criterion.whereNull(MetaEmployee.name); // Usually maps to Operator.EQ and null value
-        builder.setCriterion(crn);
+        builder.where(crn);
 
         var sql = builder.toString().lines().toArray(String[]::new);
 
@@ -67,7 +67,7 @@ class DslBuilderEdgeCasesTest {
         builder.column(MetaEmployee.id);
 
         // Simulating 1=1 or always true
-        builder.setCriterion(Criterion.forAll());
+        builder.where(Criterion.forAll());
 
         var sql = builder.toString().lines().toArray(String[]::new);
 
@@ -83,7 +83,7 @@ class DslBuilderEdgeCasesTest {
         builder.column(MetaEmployee.id);
 
         // Simulating 1=0 or always false
-        builder.setCriterion(Criterion.forNone());
+        builder.where(Criterion.forNone());
 
         var sql = builder.toString().lines().toArray(String[]::new);
 
@@ -95,7 +95,7 @@ class DslBuilderEdgeCasesTest {
     }
 
 
-    private static @NotNull DslBuilder createBuilder() {
-        return new DslBuilder(QuotePair.ofMsSqlServer());
+    private static @NotNull DslQueryBuilder createBuilder() {
+        return new DslQueryBuilder(QuotePair.ofMsSqlServer());
     }
 }

@@ -38,7 +38,7 @@ import java.util.*;
  *
  * @since 2.26
  */
-public class DslBuilder {
+public class DslQueryBuilder {
 
     /** New Line Character */
     private static final char NEW_LINE = '\n';
@@ -74,29 +74,21 @@ public class DslBuilder {
     @Nullable
     private StringBuilder writer;
 
-    public DslBuilder(QuotePair quotePair) {
+    public DslQueryBuilder(QuotePair quotePair) {
         this.q = quotePair;
     }
 
-    public DslBuilder() {
+    public DslQueryBuilder() {
         this(QuotePair.ofDefault());
     }
 
-    /** Add new column */
+    /** Adds a description of a single column composed of sequentially linked components. */
     public void column(Key<?, ?>... column) {
         columns.add(column);
     }
 
-    /** Add new column with a mandatory first key */
-    public void columnChain(Key<?, ?> firstColumn, Key<?, ?>... column) {
-        var mergedColumn = new Key[1 + column.length];
-        mergedColumn[0] = firstColumn;
-        System.arraycopy(column, 0, mergedColumn, 1, column.length);
-        column(mergedColumn);
-    }
-
     /** Set criterion */
-    public void setCriterion(@Nullable Criterion criterion) {
+    public void where(@Nullable Criterion criterion) {
         this.criterion = criterion != null ? criterion : Criterion.forAll();
     }
 

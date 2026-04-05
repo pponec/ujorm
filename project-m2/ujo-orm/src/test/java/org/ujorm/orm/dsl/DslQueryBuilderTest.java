@@ -7,7 +7,7 @@ import org.ujorm.orm.dsl.meta.MetaEmployee;
 import org.ujorm.orm.model.QuotePair;
 import org.ujorm.orm.tutorial.domains.MetaCity;
 
-class DslBuilderTest {
+class DslQueryBuilderTest {
 
     @Test
     void testBasicSelectWithJoinsAndWhere() {
@@ -24,7 +24,7 @@ class DslBuilderTest {
         var crn2 = MetaCity.name.whereEq("Prague");
         var crnAll = crn1.and(crn2);
 
-        builder.setCriterion(crnAll);
+        builder.where(crnAll);
 
         // 3. Execution
         var sql = builder.toString().lines().toArray(String[]::new);
@@ -59,7 +59,7 @@ class DslBuilderTest {
         var crn4 = metaBossName.whereEq("Black");
         var crnAll = crn1.and(crn2).or(crn3.and(crn4));
 
-        builder.setCriterion(crnAll);
+        builder.where(crnAll);
 
         // 3. Execution
         var sql = builder.toString().lines().toArray(String[]::new);
@@ -77,7 +77,7 @@ class DslBuilderTest {
     }
 
 
-    private static @NotNull DslBuilder getBuilder() {
-        return new DslBuilder(QuotePair.ofMsSqlServer());
+    private static @NotNull DslQueryBuilder getBuilder() {
+        return new DslQueryBuilder(QuotePair.ofMsSqlServer());
     }
 }

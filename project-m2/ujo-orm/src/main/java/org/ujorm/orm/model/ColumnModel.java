@@ -37,7 +37,7 @@ public record ColumnModel<D,V>(
      */
     public Class<V> objectType() {
         final var type = key.type();
-        return type.isPrimitive() ? (Class<V>) Primitive.wrapPrimitive(type) : type;
+        return type.isPrimitive() ? Primitive.wrapPrimitive(type) : type;
     }
 
     /** Java Property Name */

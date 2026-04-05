@@ -59,7 +59,7 @@ public class DslQuery<D> extends AbstractSqlQuery<DslQuery<D>> {
     private static final Key<?,?>[] EMPTY = new Key<?,?>[0];
 
     /** Columns */
-    private final DslBuilder builder;
+    private final DslQueryBuilder builder;
 
     /** Sql Tail */
     @NotNull
@@ -71,7 +71,7 @@ public class DslQuery<D> extends AbstractSqlQuery<DslQuery<D>> {
      */
     public DslQuery(@NotNull Connection dbConnection) {
         super(dbConnection);
-        builder = new DslBuilder();
+        builder = new DslQueryBuilder();
     }
 
     @Override
