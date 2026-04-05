@@ -35,9 +35,9 @@ class DslQueryBuilderTest {
         Assertions.assertEquals(", [e.name] AS [name]"    , sql[i++]);
         Assertions.assertEquals(", [c.name] AS [city.name]" , sql[i++]);
         Assertions.assertEquals(", [b.name] AS [boss.name]" , sql[i++]);
-        Assertions.assertEquals("FROM Employee e"         , sql[i++]);
-        Assertions.assertEquals("INNER JOIN City c ON [c.id] = [e.city]", sql[i++]);
-        Assertions.assertEquals("LEFT OUTER JOIN Employee b ON [b.id] = [e.boss]", sql[i++]);
+        Assertions.assertEquals("FROM [Employee] e"         , sql[i++]);
+        Assertions.assertEquals("INNER JOIN [City] c ON [c.id] = [e.city]", sql[i++]);
+        Assertions.assertEquals("LEFT OUTER JOIN [Employee] b ON [b.id] = [e.boss]", sql[i++]);
         Assertions.assertEquals("WHERE [e.name] EQ 'Joe' AND [c.name] EQ 'Prague'", sql[i++]);
     }
 
@@ -70,9 +70,9 @@ class DslQueryBuilderTest {
         Assertions.assertEquals(", [e.name] AS [name]"    , sql[i++]);
         Assertions.assertEquals(", [c.name] AS [city.name]" , sql[i++]);
         Assertions.assertEquals(", [bb.name] AS [boss.name]", sql[i++]);
-        Assertions.assertEquals("FROM Employee e"         , sql[i++]);
-        Assertions.assertEquals("INNER JOIN City c ON [c.id] = [e.city]", sql[i++]);
-        Assertions.assertEquals("LEFT OUTER JOIN Employee bb ON [bb.id] = [e.boss]", sql[i++]);
+        Assertions.assertEquals("FROM [Employee] e"         , sql[i++]);
+        Assertions.assertEquals("INNER JOIN [City] c ON [c.id] = [e.city]", sql[i++]);
+        Assertions.assertEquals("LEFT OUTER JOIN [Employee] bb ON [bb.id] = [e.boss]", sql[i++]);
         Assertions.assertEquals("WHERE ([e.id] LE 0 AND [c.id] IN (1, 2)) OR ([c.name] EQ 'Joe' AND [bb.name] EQ 'Black')", sql[i++]);
     }
 
