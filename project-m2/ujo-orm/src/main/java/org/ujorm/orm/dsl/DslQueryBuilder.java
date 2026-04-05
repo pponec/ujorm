@@ -321,7 +321,7 @@ public class DslQueryBuilder {
                 .append(' ').append(tableAlias);
     }
 
-        /** Write database column name. */
+    /** Write database column name. */
     protected void writeColumn(@NotNull String tableAlias, @NotNull Key<?,?> column, Key<?,?>... labels) {
         writer.append(q.open()).append(tableAlias).append('.').append(column.name()).append(q.close());
 
