@@ -76,10 +76,21 @@ public interface CriterionProvider<DOMAIN, VALUE> {
     @NotNull Criterion whereNotIn(@NotNull Collection<VALUE> list);
 
     /** Create a new Criterion for all values. The method evaluate(ujo) always returns TRUE. */
-    @NotNull Criterion whereAll();
+    @NotNull Criterion whereTrue();
 
     /** Create a new Criterion for no values. The method evaluate(method) always returns FALSE. */
-    @NotNull Criterion whereNone();
+    @NotNull Criterion whereFalse();
+
+
+    /**
+     * Creates a new {@code Criterion} with a custom SQL template.
+     * The template can contain the {@code ${COLUMN}} placeholder which will be replaced
+     * by the actual column name including its alias.
+     * Assign a value using the {@code DslQuery.bind()} method in the ORM module.
+     * @param template SQL template (e.g., {@code "UPPER(${COLUMN}) = 'JOE'"})
+     * @return A new immutable Criterion
+     */
+    @NotNull Criterion whereSql(@NotNull String template);
 
     // --- DEFAULT METHODS ---
 
@@ -177,5 +188,4 @@ public interface CriterionProvider<DOMAIN, VALUE> {
     @NotNull default Criterion whereNotNull() {
         return where(Operator.NOT_EQ, (VALUE) null);
     }
-
 }

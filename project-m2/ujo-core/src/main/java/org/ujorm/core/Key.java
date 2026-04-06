@@ -40,7 +40,8 @@ public interface Key<DOMAIN, VALUE> extends CharSequence, Comparable<Key>, Crite
     /** Returns the name of the Key (e.g., "name"). */
     @NotNull String name();
 
-    /** Returns the full name of the Key, including the simple name of the
+    /**
+     * Returns the full name of the Key, including the simple name of the
      * domain class separated by a dot (e.g., "Employee.name").
      */
     @NotNull
@@ -51,9 +52,19 @@ public interface Key<DOMAIN, VALUE> extends CharSequence, Comparable<Key>, Crite
     /** Returns the type of the value associated with this key. */
     @NotNull Class<VALUE> type();
 
+    /** Returns true if the domain type is a subtype of, or equal to, the specified class. */
+    default boolean isDomainOf(@NotNull final Class<?> type) {
+        return type.isAssignableFrom(domainClass());
+    }
+
     /** Returns true if the key type is a subtype of, or equal to, the specified class. */
     default boolean isTypeOf(@NotNull final Class<?> type) {
-        return type().isAssignableFrom(type);
+        return type.isAssignableFrom(type());
+    }
+
+    /** Returns true if the value can be assigned to this Key. */
+    default boolean isInstanceOf(@Nullable final Object value) {
+        return type().isInstance(value);
     }
 
     /** Returns the class of the domain Ujo object. */
@@ -81,7 +92,8 @@ public interface Key<DOMAIN, VALUE> extends CharSequence, Comparable<Key>, Crite
      */
     VALUE getValue(@NotNull DOMAIN bean);
 
-    /** Returns a default value for substitution.
+    /**
+     * Returns a default value for substitution.
      * Defaults to {@code null} unless overridden.
      */
     @Nullable
@@ -89,13 +101,15 @@ public interface Key<DOMAIN, VALUE> extends CharSequence, Comparable<Key>, Crite
         return null;
     }
 
-    /** Returns a default value used when the current property value is null.
+    /**
+     * Returns a default value used when the current property value is null.
      * This feature is only relevant if the default value is not null.
      */
     @Nullable VALUE getDefaultValue();
 
 
-    /** Returns the index of the key.
+    /**
+     * Returns the index of the key.
      * The index is useful for sorting keys in {@code UjoManager.readProperties(Class)}.
      */
     short index();
@@ -103,12 +117,6 @@ public interface Key<DOMAIN, VALUE> extends CharSequence, Comparable<Key>, Crite
     /** Returns a name of the key. */
     @Override
     String toString();
-
-
-    /** Returns true if the domain type is a subtype of, or equal to, the specified class. */
-    default boolean isDomainOf(@NotNull final Class<?> type) {
-        return domainClass().isAssignableFrom(type);
-    }
 
     @Override
     default int length() {
@@ -128,8 +136,8 @@ public interface Key<DOMAIN, VALUE> extends CharSequence, Comparable<Key>, Crite
 
     @Override
     default int compareTo(@NotNull final Key o) {
-        final var i1 = this.index();
-        final var i2 = o.index();
+        var i1 = this.index();
+        var i2 = o.index();
         return Integer.compare(i1, i2);
     }
 
@@ -175,10 +183,9 @@ public interface Key<DOMAIN, VALUE> extends CharSequence, Comparable<Key>, Crite
                 .append('.').append(key2.name())
                 .append('.').append(key3.name())
                 .append('.').append(key4.name());
-            for (var key : keys) {
-                result.append('.').append(key);
-            }
-            return result.toString();
+        for (var key : keys) {
+            result.append('.').append(key.name());
+        }
+        return result.toString();
     }
-
 }

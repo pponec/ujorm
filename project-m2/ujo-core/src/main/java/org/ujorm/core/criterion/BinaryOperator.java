@@ -14,11 +14,6 @@
  * limitations under the License.
  */
 
-/*
- * The last change: $Date: $
- * Release: $Revision: $
- */
-
 package org.ujorm.core.criterion;
 
 /**
@@ -67,7 +62,7 @@ public enum BinaryOperator implements AbstractOperator {
     /** The operator is the BINARY type (not a value one) */
     @Override
     public final boolean isBinary() {
-        return false;
+        return true;
     }
 
     /** Returns Enum */

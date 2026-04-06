@@ -25,9 +25,9 @@ import org.ujorm.core.criterion.AbstractOperator;
 import org.ujorm.core.criterion.BinaryCriterion;
 import org.ujorm.core.criterion.Criterion;
 import org.ujorm.core.criterion.FunctionCriterion;
+import org.ujorm.core.criterion.Operator;
 import org.ujorm.core.criterion.ValueCriterion;
 import org.ujorm.orm.Config;
-import org.ujorm.tools.jdbc.SQLException;
 
 import java.util.*;
 
@@ -35,7 +35,6 @@ import java.util.*;
  * A fluent wrapper over {@link java.sql.PreparedStatement}
  * that manages named parameters and ensures automatic resource cleanup
  * of both statements and result sets.
- * This class has no dependencies other than its abstract parent, annotations, and {@link SQLException}.
  *
  * @since 2.26
  */
@@ -178,21 +177,6 @@ public class DslQueryBuilder {
         writer.writeTableName(baseTableAlias, entityClass);
     }
 
-    /** Extract base table class from criterion */
-    @Nullable
-    private Class<?> extractTableClassFromCriterion(Criterion crn) {
-        Class<?> result = null;
-        if (crn instanceof BinaryCriterion binCrn) {
-            result = extractTableClassFromCriterion(binCrn.getLeftNode());
-            if (result == null) {
-                result = extractTableClassFromCriterion(binCrn.getRightNode());
-            }
-        } else if (crn instanceof ValueCriterion<?> valCrn) {
-            result = valCrn.getLeftNode().domainClass();
-        }
-        return result;
-    }
-
     /** Inner/outer joins according to isRequired method */
     public void buildJoins() {
         for (var join : joins) {
@@ -205,13 +189,20 @@ public class DslQueryBuilder {
         }
     }
 
-    /** Build the WHERE clause traversing the Criterion tree */
+    /**
+     * Build the WHERE clause traversing the Criterion tree.
+     */
     public void buildWhere() {
-        if (this.criterion instanceof ValueCriterion<?> valCrn && valCrn.isConstant()) {
-            if (Boolean.FALSE.equals(valCrn.getRightNode())) {
-                writer.append(NEW_LINE).append("WHERE 1=0");
+        if (this.criterion instanceof ValueCriterion<?> valCrn) {
+            switch (valCrn.getOperator()) {
+                case ALWAYS_TRUE -> { return; }
+                case ALWAYS_FALSE -> {
+                    writer.append(NEW_LINE).append("WHERE ")
+                            .append(getSqlOperatorText(valCrn.getOperator()));
+                    return;
+                }
+                default -> {}
             }
-            return;
         }
 
         writer.append(NEW_LINE).append("WHERE ");
@@ -237,16 +228,53 @@ public class DslQueryBuilder {
         }
     }
 
-    /** Append simple criterion to writer */
+    /**
+     * Append simple criterion to writer.
+     * Special handling for {@link Operator#CUSTOM_SQL} templates.
+     */
     private void appendSimpleCriterion(Object leftNode, Enum<?> operator, Object rightNode) {
         var key = (Key<?, ?>) leftNode;
         var resolvedAlias = key instanceof AliasedKey akey
                 ? akey.tableAlias()
                 : domainAliases.getOrDefault(key.domainClass(), baseTableAlias);
 
-        writer.writeColumnName(resolvedAlias, key);
-        writer.append(SPACE).append(getSqlOperatorText(operator)).append(SPACE);
-        formatValue(rightNode);
+        if (operator == Operator.CUSTOM_SQL) {
+            var template = String.valueOf(rightNode);
+            var placeholder = Operator.CUSTOM_SQL.term(); // "${COLUMN}"
+            var lastIndex = 0;
+            var index = template.indexOf(placeholder);
+
+            if (index == -1) {
+                writer.append(template);
+            } else {
+                while (index != -1) {
+                    writer.append(template.substring(lastIndex, index));
+                    writer.writeColumnName(resolvedAlias, key);
+                    lastIndex = index + placeholder.length();
+                    index = template.indexOf(placeholder, lastIndex);
+                }
+                writer.append(template.substring(lastIndex));
+            }
+        } else {
+            writer.writeColumnName(resolvedAlias, key);
+            writer.append(SPACE).append(getSqlOperatorText(operator)).append(SPACE);
+            formatValue(rightNode);
+        }
+    }
+
+    /** Extract base table class from criterion */
+    @Nullable
+    private Class<?> extractTableClassFromCriterion(Criterion crn) {
+        Class<?> result = null;
+        if (crn instanceof BinaryCriterion binCrn) {
+            result = extractTableClassFromCriterion(binCrn.getLeftNode());
+            if (result == null) {
+                result = extractTableClassFromCriterion(binCrn.getRightNode());
+            }
+        } else if (crn instanceof ValueCriterion<?> valCrn) {
+            result = valCrn.getLeftNode().domainClass();
+        }
+        return result;
     }
 
     /** Get SQL operator text. */
@@ -308,7 +336,7 @@ public class DslQueryBuilder {
 
     /** Find a relation key */
     protected Key<?,?> findRelatedPrimaryKey(Key<?,?> foreignKey) {
-        var acceptDefaultPk = Config.ofDefault().acceptDefaultPk(); // TODO:pop
+        var acceptDefaultPk = true;
         return DomainHandlerProvider.getHandler(foreignKey.domainClass()).findPrimaryKey(acceptDefaultPk);
     }
 

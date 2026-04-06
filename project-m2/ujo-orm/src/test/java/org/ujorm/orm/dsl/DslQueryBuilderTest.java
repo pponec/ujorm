@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.ujorm.core.Key;
+import org.ujorm.core.criterion.Criterion;
 import org.ujorm.orm.dsl.meta.MetaEmployee;
 import org.ujorm.orm.model.QuotePair;
 import org.ujorm.orm.tutorial.domains.MetaCity;
@@ -88,10 +89,145 @@ class DslQueryBuilderTest {
         Assertions.assertEquals("WHERE ([e.id] <= 0 AND [c.id] IN (1, 2)) OR ([c.name] = 'Joe' AND [bb.name] = 'Black')", sql[i]);
     }
 
+    /** Test that the WHERE clause is omitted when the root criterion is ALWAYS_TRUE */
+    @Test
+    void testStandaloneAlwaysTrue() {
+        var builder = getBuilder();
+        builder.column(MetaEmployee.id);
+        builder.where(MetaEmployee.id.whereTrue());
+
+        // 3. Execution
+        var sql = builder.toString().lines().toArray(String[]::new);
+
+        // 4. Output verification
+        var i = 0;
+        Assertions.assertEquals(2, sql.length, () -> builder.toString());
+        Assertions.assertEquals("SELECT [e.id] AS [id]", sql[i++]);
+        Assertions.assertEquals("FROM [Employee] e"    , sql[i++]);
+    }
+
+    /** Test that the WHERE clause contains only the constant when the root criterion is ALWAYS_FALSE */
+    @Test
+    void testStandaloneAlwaysFalse() {
+        var builder = getBuilder();
+        builder.column(MetaEmployee.id);
+        builder.where(MetaEmployee.id.whereFalse());
+
+        // 3. Execution
+        var sql = builder.toString().lines().toArray(String[]::new);
+
+        // 4. Output verification
+        var i = 0;
+        Assertions.assertEquals(3, sql.length, () -> builder.toString());
+        Assertions.assertEquals("SELECT [e.id] AS [id]", sql[i++]);
+        Assertions.assertEquals("FROM [Employee] e"    , sql[i++]);
+        Assertions.assertEquals("WHERE 1=0"            , sql[i++]);
+    }
+
+    /** Test that nested constant criteria are not specially handled and fall back to standard column rendering */
+    @Test
+    void testNestedConstantRestriction() {
+        var builder = getBuilder();
+        builder.column(MetaEmployee.id);
+
+        var crn1 = MetaEmployee.id.whereGt(100L);
+        var crn2 = MetaEmployee.name.whereTrue();
+        var crnAll = crn1.and(crn2);
+
+        builder.where(crnAll);
+
+        // 3. Execution
+        var sql = builder.toString().lines().toArray(String[]::new);
+
+        // 4. Output verification
+        var i = 0;
+        Assertions.assertEquals(3, sql.length, () -> builder.toString());
+        Assertions.assertEquals("SELECT [e.id] AS [id]", sql[i++]);
+        Assertions.assertEquals("FROM [Employee] e"    , sql[i++]);
+        Assertions.assertEquals("WHERE [e.id] > 100", sql[i++]);
+    }
+
+    /** Test that the default Criterion.forAll() behaves the same as ALWAYS_TRUE and omits the WHERE clause */
+    @Test
+    void testCriterionForAllOmission() {
+        var builder = getBuilder();
+        builder.column(MetaEmployee.id);
+        builder.where(Criterion.forAll());
+
+        // 3. Execution
+        var sql = builder.toString().lines().toArray(String[]::new);
+
+        // 4. Output verification
+        var i = 0;
+        Assertions.assertEquals(2, sql.length, () -> builder.toString());
+        Assertions.assertEquals("SELECT [e.id] AS [id]", sql[i++]);
+        Assertions.assertEquals("FROM [Employee] e"    , sql[i++]);
+    }
+
+    /** Test that an empty columns list results in a SELECT clause without specific columns */
+    @Test
+    void testEmptyColumnsList() {
+        var builder = getBuilder();
+        builder.where(Criterion.forAll());
+
+        // 3. Execution
+        var sql = builder.toString().lines().toArray(String[]::new);
+
+        // 4. Output verification
+        var i = 0;
+        Assertions.assertEquals(2, sql.length, () -> builder.toString());
+        Assertions.assertEquals("SELECT "           , sql[i++]);
+        Assertions.assertEquals("FROM [Object] o"   , sql[i++]);
+    }
 
     private @NotNull DslQueryBuilder getBuilder() {
         return new DslQueryBuilder(new DslQueryWriterImpl(writer));
     }
+
+    /** Test that CUSTOM_SQL template correctly replaces the placeholder with the column name */
+    @Test
+    void testCustomSqlTemplate() {
+        var builder = getBuilder();
+        builder.column(MetaEmployee.id);
+
+        // 2. Criteria creation using a template
+        var crn = MetaEmployee.name.whereSql("UPPER(${COLUMN}) = :name");
+        builder.where(crn);
+
+        // 3. Execution
+        var sql = builder.toString().lines().toArray(String[]::new);
+
+        // 4. Output verification
+        var i = 0;
+        Assertions.assertEquals(3, sql.length, () -> builder.toString());
+        Assertions.assertEquals("SELECT [e.id] AS [id]", sql[i++]);
+        Assertions.assertEquals("FROM [Employee] e"    , sql[i++]);
+        Assertions.assertEquals("WHERE UPPER([e.name]) = :name", sql[i]);
+    }
+
+    /** Test that CUSTOM_SQL template correctly replaces multiple placeholders in a single string */
+    @Test
+    void testCustomSqlMultiTemplate() {
+        var builder = getBuilder();
+        builder.column(MetaEmployee.id);
+
+        // 2. Criteria creation with multiple placeholders
+        var crn = MetaEmployee.name.where(org.ujorm.core.criterion.Operator.CUSTOM_SQL,
+                "${COLUMN} IS NOT NULL AND LENGTH(${COLUMN}) > 0");
+        builder.where(crn);
+
+        // 3. Execution
+        var sql = builder.toString().lines().toArray(String[]::new);
+
+        // 4. Output verification
+        var i = 0;
+        Assertions.assertEquals(3, sql.length, () -> builder.toString());
+        Assertions.assertEquals("SELECT [e.id] AS [id]", sql[i++]);
+        Assertions.assertEquals("FROM [Employee] e"    , sql[i++]);
+        Assertions.assertEquals("WHERE [e.name] IS NOT NULL AND LENGTH([e.name]) > 0", sql[i]);
+    }
+
+    // --- CLASS ---
 
     /** */
     @RequiredArgsConstructor

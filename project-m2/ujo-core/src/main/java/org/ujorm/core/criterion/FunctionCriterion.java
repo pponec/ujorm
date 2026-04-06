@@ -34,7 +34,7 @@ public final class FunctionCriterion<U, T> extends ValueCriterion<U> {
      * Common constructor
      * @param key Key
      * @param operator Value operator
-     * @param proxyValue An function for the value where the {@code null} value is not supported in ORM. The class should be serialized.
+     * @param proxyValue A function for the value where the {@code null} value is not supported in ORM. The class should be serialized.
      */
     FunctionCriterion(
             @NotNull final Key<U, ?> key,
@@ -60,8 +60,7 @@ public final class FunctionCriterion<U, T> extends ValueCriterion<U> {
         if (valueSup instanceof Supplier<?> supplier) {
             super.checkType(clazz, key, supplier.get());
         } else {
-            var msg = "Only argument type of %s is supported"
-                    .formatted(Supplier.class.getSimpleName());
+            var msg = "Only argument type of %s is supported".formatted(Supplier.class.getSimpleName());
             throw new IllegalArgumentException(msg);
         }
     }
@@ -71,5 +70,4 @@ public final class FunctionCriterion<U, T> extends ValueCriterion<U> {
     public ValueCriterion<U> freeze() {
         return new ValueCriterion<>(this);
     }
-
 }

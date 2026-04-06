@@ -20,12 +20,12 @@ class DslQueryBoundsTest {
 
     @Test
     void testEmptyColumnsList() {
-        var builder = createBuilder();
+        var builder = createBuilder("SELECT *");
         var sql = builder.toString().lines().toArray(String[]::new);
 
         var i = 0;
         Assertions.assertEquals(2, sql.length, () -> builder.toString());
-        Assertions.assertEquals("SELECT ", sql[i++]);
+        Assertions.assertEquals("SELECT *", sql[i++]);
         Assertions.assertEquals("FROM [Object] o", sql[i++]);
         Assertions.assertEquals(i, sql.length);
     }
@@ -106,8 +106,9 @@ class DslQueryBoundsTest {
         Assertions.assertEquals(i, sql.length, "Globally false criterion should generate a safe fail block");
     }
 
-    private @NotNull DslQueryBuilder createBuilder() {
+    private @NotNull DslQueryBuilder createBuilder(String ...sql) {
         var dslWriter = new DslQueryBuilderTest.DslQueryWriterImpl(writer);
+        dslWriter.append(String.join(" ", sql));
         return new DslQueryBuilder(dslWriter);
     }
 }

@@ -423,36 +423,6 @@ public abstract class Criterion {
     }
 
     /**
-     * The method creates a new Criterion for a native condition (called Native Criterion) in SQL statement format.
-     * @param key The parameter is required by Ujorm to location a basic database table
-     * @param sqlTemplate a SQL condition in the String format, the NULL value or empty string is not accepted
-     * @param value a condition value
-     * @see Operator#CUSTOM_SQL
-     */
-    @NotNull
-    public static <U, VALUE> Criterion forSql(
-            @NotNull final Key<U,VALUE> key,
-            @NotNull final String sqlTemplate,
-            VALUE value) {
-        return new ValueCriterion<>(key, Operator.CUSTOM_SQL, new TemplateValue(sqlTemplate, value));
-    }
-
-    /**
-     * The method creates a new Criterion for a native condition (called Native Criterion) in SQL statement format.
-     * @param key The parameter is required by Ujorm to location a basic database table
-     * @param sqlTemplate a SQL condition in the String format, the NULL value or empty string is not accepted
-     * @param value a condition value, array, list or an another key
-     * @see Operator#CUSTOM_SQL
-     */
-    @NotNull
-    public static <U, VALUE> Criterion forSqlUnchecked(
-            @NotNull final Key<U,VALUE> key,
-            @NotNull final String sqlTemplate,
-            @Nullable final Object value) {
-        return new ValueCriterion<>(key, Operator.CUSTOM_SQL, new TemplateValue(sqlTemplate, value));
-    }
-
-    /**
      * This is a constant criterion independent of the key value or the ujo entity.
      * @param key The parameter is required by Ujorm to location a basic database table
      */
@@ -485,7 +455,6 @@ public abstract class Criterion {
     public static Criterion forNone() {
         return constant(DUMMY_KEY, false);
     }
-
     /**
      * This is a special constant criterion independent of the key or the ujo entity.
      * @param key The parameter is required by Ujorm to location a basic database table

@@ -61,9 +61,10 @@ public enum Operator implements AbstractOperator {
      * <br>Note: Not a standard SQL operator.
      */
     USER(""),
-    /** The operator for an internal use only where a result is
-     * <strong>not dependent</strong> on the value.
-     * The result of the {@link Criterion#getRightNode()} method is the {@link Boolean} type always.
+
+    /**
+     * A custom SQL operator where the placeholder {@code ${COLUMN}} is replaced by the real column name.
+     * The right-hand value of the Criterion is used as the SQL template.
      * <br>Note: Not a standard SQL operator.
      */
     CUSTOM_SQL("${COLUMN}"),
@@ -74,7 +75,7 @@ public enum Operator implements AbstractOperator {
 
     /** The operator for an internal use only where a result is
      * <strong>not dependent</strong> on the value. Always return false. */
-    ALWAYS_FALSE("1=2");
+    ALWAYS_FALSE("1=0");
 
     /** The SQL standard string representation of the operator */
     private final String term;
