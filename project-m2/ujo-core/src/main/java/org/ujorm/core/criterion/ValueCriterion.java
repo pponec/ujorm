@@ -86,8 +86,8 @@ public class ValueCriterion<U> extends Criterion  {
             case ENDS_CASE_INSENSITIVE:
             case CONTAINS:
             case CONTAINS_CASE_INSENSITIVE:
-                 makeCharSequenceTest(key);
-                 makeCharSequenceTest(value);
+                 checkCharSequence(key);
+                 checkCharSequence(value);
                  break;
             case IN:
             case NOT_IN:
@@ -141,10 +141,9 @@ public class ValueCriterion<U> extends Criterion  {
     /** Test a value is an instance of CharSequence or a type Key is type of CharSequence.
      * If parameter is not valid than method throws Exception.
      */
-    protected void makeCharSequenceTest(Object value) throws IllegalArgumentException {
+    protected void checkCharSequence(Object value) throws IllegalArgumentException {
         final boolean ok = value instanceof CharSequence
-        || value instanceof Key
-        && ((Key)value).isTypeOf(CharSequence.class);
+        || value instanceof Key key && key.isTypeOf(CharSequence.class);
 
         Assert.isTrue(ok, "Key type must be a {}", CharSequence.class);
     }
