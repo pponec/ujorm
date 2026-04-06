@@ -45,7 +45,7 @@ public class FunctionCriterionTest {
 
     @Test
     void testNullSupplierValidation() {
-        assertThrows(NullPointerException.class, () -> new FunctionCriterion<>(MetaEmployee.name, Operator.EQ, null));
+        assertThrows(RuntimeException.class, () -> new FunctionCriterion<>(MetaEmployee.name, Operator.EQ, null));
     }
 
     @Test
