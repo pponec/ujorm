@@ -27,13 +27,8 @@ public class FunctionCriterionTest {
     void testUnsupportedOperators() {
         Supplier<String> supplier = () -> "John";
 
-        assertThrows(IllegalArgumentException.class, () -> {
-            new FunctionCriterion<>(MetaEmployee.name, Operator.ALWAYS_TRUE, supplier);
-        });
-
-        assertThrows(IllegalArgumentException.class, () -> {
-            new FunctionCriterion<>(MetaEmployee.name, Operator.ALWAYS_FALSE, supplier);
-        });
+        assertThrows(IllegalArgumentException.class, () -> new FunctionCriterion<>(MetaEmployee.name, Operator.ALWAYS_TRUE, supplier));
+        assertThrows(IllegalArgumentException.class, () -> new FunctionCriterion<>(MetaEmployee.name, Operator.ALWAYS_FALSE, supplier));
     }
 
     @Test
@@ -50,9 +45,7 @@ public class FunctionCriterionTest {
 
     @Test
     void testNullSupplierValidation() {
-        assertThrows(RuntimeException.class, () -> {
-            new FunctionCriterion<>(MetaEmployee.name, Operator.EQ, null);
-        });
+        assertThrows(NullPointerException.class, () -> new FunctionCriterion<>(MetaEmployee.name, Operator.EQ, null));
     }
 
     @Test
