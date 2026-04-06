@@ -66,12 +66,15 @@ public enum Operator implements AbstractOperator {
      * The result of the {@link Criterion#getRightNode()} method is the {@link Boolean} type always.
      * <br>Note: Not a standard SQL operator.
      */
-    XFIXED(""),
-    /** The operator for an indication of the SQL condition in a text format
-     * Parameters of the SQL condition are not supported by the Ujorm.
-     * <br>Note: Not a standard SQL operator.
-     */
-    XSQL("");
+    CUSTOM_SQL("${COLUMN}"),
+
+    /** The operator for an internal use only where a result is
+     * <strong>not dependent</strong> on the value. Allways return true  */
+    ALWAYS_TRUE("1=1"),
+
+    /** The operator for an internal use only where a result is
+     * <strong>not dependent</strong> on the value. Always return false. */
+    ALWAYS_FALSE("1=2");
 
     /** The SQL standard string representation of the operator */
     private final String term;

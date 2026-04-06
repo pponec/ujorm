@@ -2,14 +2,21 @@ package org.ujorm.orm.dsl;
 
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.ujorm.core.criterion.Criterion;
 import org.ujorm.core.criterion.Operator;
-import org.ujorm.orm.model.QuotePair;
 import org.ujorm.orm.tutorial.domains.MetaCity;
 import org.ujorm.orm.dsl.meta.MetaEmployee;
 
-class DslQueryBuilderEdgeCasesTest {
+class DslQueryBoundsTest {
+
+    private final StringBuilder writer = new StringBuilder(256);
+
+    @BeforeEach
+    public void init() {
+        writer.setLength(0);
+    }
 
     @Test
     void testEmptyColumnsList() {
@@ -17,8 +24,9 @@ class DslQueryBuilderEdgeCasesTest {
         var sql = builder.toString().lines().toArray(String[]::new);
 
         var i = 0;
+        Assertions.assertEquals(2, sql.length, () -> builder.toString());
         Assertions.assertEquals("SELECT ", sql[i++]);
-        Assertions.assertEquals("FROM Object o", sql[i++]);
+        Assertions.assertEquals("FROM [Object] o", sql[i++]);
         Assertions.assertEquals(i, sql.length);
     }
 
@@ -36,11 +44,12 @@ class DslQueryBuilderEdgeCasesTest {
         var sql = builder.toString().lines().toArray(String[]::new);
 
         var i = 0;
+        Assertions.assertEquals(5, sql.length, () -> builder.toString());
         Assertions.assertEquals("SELECT [e.id] AS [id]", sql[i++]);
         Assertions.assertEquals(", [c.name] AS [city.name]", sql[i++]);
-        Assertions.assertEquals("FROM Employee e", sql[i++]);
-        Assertions.assertEquals("INNER JOIN City c ON [c.id] = [e.city]", sql[i++]);
-        Assertions.assertEquals("WHERE [c.name] EQ 'Prague'", sql[i++]);
+        Assertions.assertEquals("FROM [Employee] e", sql[i++]);
+        Assertions.assertEquals("INNER JOIN [City] c ON [c.id] = [e.city]", sql[i++]);
+        Assertions.assertEquals("WHERE [c.name] = 'Prague'", sql[i++]);
         Assertions.assertEquals(i, sql.length);
     }
 
@@ -55,9 +64,10 @@ class DslQueryBuilderEdgeCasesTest {
         var sql = builder.toString().lines().toArray(String[]::new);
 
         var i = 0;
+        Assertions.assertEquals(3, sql.length, () -> builder.toString());
         Assertions.assertEquals("SELECT [e.id] AS [id]", sql[i++]);
-        Assertions.assertEquals("FROM Employee e", sql[i++]);
-        Assertions.assertEquals("WHERE [e.name] EQ NULL", sql[i++]);
+        Assertions.assertEquals("FROM [Employee] e", sql[i++]);
+        Assertions.assertEquals("WHERE [e.name] = NULL", sql[i++]);
         Assertions.assertEquals(i, sql.length);
     }
 
@@ -72,8 +82,9 @@ class DslQueryBuilderEdgeCasesTest {
         var sql = builder.toString().lines().toArray(String[]::new);
 
         var i = 0;
+        Assertions.assertEquals(2, sql.length, () -> builder.toString());
         Assertions.assertEquals("SELECT [e.id] AS [id]", sql[i++]);
-        Assertions.assertEquals("FROM Employee e", sql[i++]);
+        Assertions.assertEquals("FROM [Employee] e", sql[i++]);
         Assertions.assertEquals(i, sql.length, "Globally true criterion should skip generating WHERE clause");
     }
 
@@ -88,14 +99,15 @@ class DslQueryBuilderEdgeCasesTest {
         var sql = builder.toString().lines().toArray(String[]::new);
 
         var i = 0;
+        Assertions.assertEquals(3, sql.length, () -> builder.toString());
         Assertions.assertEquals("SELECT [e.id] AS [id]", sql[i++]);
-        Assertions.assertEquals("FROM Employee e", sql[i++]);
+        Assertions.assertEquals("FROM [Employee] e", sql[i++]);
         Assertions.assertEquals("WHERE 1=0", sql[i++]);
         Assertions.assertEquals(i, sql.length, "Globally false criterion should generate a safe fail block");
     }
 
-
-    private static @NotNull DslQueryBuilder createBuilder() {
-        return new DslQueryBuilder(QuotePair.ofMsSqlServer());
+    private @NotNull DslQueryBuilder createBuilder() {
+        var dslWriter = new DslQueryBuilderTest.DslQueryWriterImpl(writer);
+        return new DslQueryBuilder(dslWriter);
     }
 }

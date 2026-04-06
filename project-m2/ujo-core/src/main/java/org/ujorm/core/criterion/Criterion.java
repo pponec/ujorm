@@ -76,8 +76,6 @@ import java.util.Objects;
  */
 public abstract class Criterion {
 
-    static final long serialVersionUID = 2017_12_04L;
-
     /** Dummy key */
     static final Key<?,?> DUMMY_KEY = createDummyKey();
 
@@ -112,18 +110,13 @@ public abstract class Criterion {
      * @return Result
      */
     public Criterion join(@NotNull final BinaryOperator operator, @NotNull final Criterion criterion) {
-        if (criterion.getOperator() == Operator.XFIXED) {
-            var rightNode = criterion.getRightNode();
-            if (rightNode instanceof Boolean rightValue) {
-                switch (operator) {
-                    case OR:
-                        return rightValue ? criterion : this;
-                    case AND:
-                        return rightValue ? this : criterion;
-                    default:
-                        break;
-                }
-            }
+        var rightOp = criterion.getOperator();
+        if (rightOp == Operator.ALWAYS_TRUE || rightOp == Operator.ALWAYS_FALSE) {
+            return switch (operator) {
+                case OR -> rightOp == Operator.ALWAYS_TRUE ? criterion : this;
+                case AND -> rightOp == Operator.ALWAYS_TRUE ? this : criterion;
+                default -> new BinaryCriterion(this, operator, criterion);
+            };
         }
         return new BinaryCriterion(this, operator, criterion);
     }
@@ -412,33 +405,21 @@ public abstract class Criterion {
     @SuppressWarnings("unchecked")
     public static <U> Criterion where(final boolean value) {
         return value
-                ? (Criterion) ValueCriterion.TRUE
-                : (Criterion) ValueCriterion.FALSE;
-    }
-
-    /**
-     * This is a special constant criterion independent of the key or the ujo entity.
-     * @param key The parameter is required by Ujorm to location a basic database table
-     * @see Operator#XFIXED
-     */
-    @NotNull
-    public static <U> Criterion constant(
-            @NotNull final Key<U,?> key,
-            final boolean constant) {
-        return new ValueCriterion<>(key, Operator.XFIXED, constant);
+                ? ValueCriterion.TRUE
+                : ValueCriterion.FALSE;
     }
 
     /**
      * The method creates a new Criterion for a native condition (called Native Criterion) in SQL statement format.
      * @param key The parameter is required by Ujorm to location a basic database table
      * @param sqlCondition a SQL condition in the String format, the NULL value or empty string is not accepted
-     * @see Operator#XSQL
+     * @see Operator#CUSTOM_SQL
      */
     @NotNull
     public static <U> Criterion forSql(
             @NotNull final Key<U,?> key,
             @NotNull final String sqlCondition) {
-        return new ValueCriterion<>(key, Operator.XSQL, sqlCondition);
+        return new ValueCriterion<>(key, Operator.CUSTOM_SQL, sqlCondition);
     }
 
     /**
@@ -446,14 +427,14 @@ public abstract class Criterion {
      * @param key The parameter is required by Ujorm to location a basic database table
      * @param sqlTemplate a SQL condition in the String format, the NULL value or empty string is not accepted
      * @param value a condition value
-     * @see Operator#XSQL
+     * @see Operator#CUSTOM_SQL
      */
     @NotNull
     public static <U, VALUE> Criterion forSql(
             @NotNull final Key<U,VALUE> key,
             @NotNull final String sqlTemplate,
             VALUE value) {
-        return new ValueCriterion<>(key, Operator.XSQL, new TemplateValue(sqlTemplate, value));
+        return new ValueCriterion<>(key, Operator.CUSTOM_SQL, new TemplateValue(sqlTemplate, value));
     }
 
     /**
@@ -461,14 +442,14 @@ public abstract class Criterion {
      * @param key The parameter is required by Ujorm to location a basic database table
      * @param sqlTemplate a SQL condition in the String format, the NULL value or empty string is not accepted
      * @param value a condition value, array, list or an another key
-     * @see Operator#XSQL
+     * @see Operator#CUSTOM_SQL
      */
     @NotNull
     public static <U, VALUE> Criterion forSqlUnchecked(
             @NotNull final Key<U,VALUE> key,
             @NotNull final String sqlTemplate,
             @Nullable final Object value) {
-        return new ValueCriterion<>(key, Operator.XSQL, new TemplateValue(sqlTemplate, value));
+        return new ValueCriterion<>(key, Operator.CUSTOM_SQL, new TemplateValue(sqlTemplate, value));
     }
 
     /**
@@ -503,6 +484,15 @@ public abstract class Criterion {
     @NotNull
     public static Criterion forNone() {
         return constant(DUMMY_KEY, false);
+    }
+
+    /**
+     * This is a special constant criterion independent of the key or the ujo entity.
+     * @param key The parameter is required by Ujorm to location a basic database table
+     */
+    @NotNull
+    public static <U> Criterion constant(@NotNull final Key<U,?> key, final boolean constant) {
+        return new ValueCriterion<>(key, constant ? Operator.ALWAYS_TRUE : Operator.ALWAYS_FALSE, constant);
     }
 
     private static @NotNull AbstractKey<Object, Object> createDummyKey() {

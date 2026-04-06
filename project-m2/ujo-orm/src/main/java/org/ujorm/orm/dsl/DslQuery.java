@@ -18,6 +18,7 @@ package org.ujorm.orm.dsl;
 
 import org.jetbrains.annotations.NotNull;
 import org.ujorm.core.criterion.Criterion;
+import org.ujorm.orm.model.QuotePair;
 import org.ujorm.tools.jdbc.AbstractSqlQuery;
 import org.ujorm.tools.jdbc.SQLException;
 import org.ujorm.core.Key;
@@ -61,6 +62,8 @@ public class DslQuery<D> extends AbstractSqlQuery<DslQuery<D>> {
     /** Columns */
     private final DslQueryBuilder builder;
 
+    private final QuotePair q;
+
     /** Sql Tail */
     @NotNull
     private String sqlTail = "";
@@ -71,7 +74,8 @@ public class DslQuery<D> extends AbstractSqlQuery<DslQuery<D>> {
      */
     public DslQuery(@NotNull Connection dbConnection) {
         super(dbConnection);
-        builder = new DslQueryBuilder();
+        q = QuotePair.ofMsSqlServer(); // TODO
+        builder = new DslQueryBuilder(new Writer());
     }
 
     @Override
@@ -83,11 +87,11 @@ public class DslQuery<D> extends AbstractSqlQuery<DslQuery<D>> {
         return self();
     }
 
-    public <V> DslQuery<D> where (@NotNull Criterion condition) {
+    public DslQuery<D> where (@NotNull Criterion condition) {
         return self();
     }
 
-    public <V> DslQuery<D> append(@NotNull CharSequence... sqlTail) {
+    public DslQuery<D> append(@NotNull CharSequence... sqlTail) {
         initWriter();
         // TODO:
         this.sqlTail = String.join(" ", sqlTail);
@@ -158,6 +162,47 @@ public class DslQuery<D> extends AbstractSqlQuery<DslQuery<D>> {
             return fun.applyFunction(query);
         } catch (Exception ex) {
             throw (ex instanceof RuntimeException re) ? re : new SqlException(ex);
+        }
+    }
+
+    public final class Writer implements DslQueryWriter {
+
+        final StringBuilder writer = initWriter();
+
+        /** Write database table name. */
+        @Override
+        public void writeTableName(@NotNull String tableAlias, @NotNull Class<?> entityClass) {
+            writer.append(q.open())
+                    .append(entityClass.getSimpleName())
+                    .append(q.close())
+                    .append(' ').append(tableAlias);
+        }
+
+        /** Write database column name. */
+        @Override
+        public void writeColumnName(@NotNull String tableAlias, @NotNull Key<?,?> column, Key<?,?>... labels) {
+            writer.append(q.open()).append(tableAlias).append('.').append(column.name()).append(q.close());
+
+            var printLabel = labels.length > 0;
+            if (printLabel) {
+                writer.append(" AS ");
+                writer.append(q.open());
+                for (var i = 0; i < labels.length; i++) {
+                    if (i > 0) writer.append('.');
+                    writer.append(labels[i].name());
+                }
+                writer.append(q.close());
+            }
+        }
+
+        @Override
+        public StringBuilder append(String str) {
+            return writer.append(str);
+        }
+
+        @Override
+        public StringBuilder append(char str) {
+            return writer.append(str);
         }
     }
 }

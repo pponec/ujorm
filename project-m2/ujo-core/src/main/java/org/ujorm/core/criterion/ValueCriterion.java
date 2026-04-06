@@ -31,7 +31,6 @@ import java.util.Objects;
  * @author Pavel Ponec
  */
 public class ValueCriterion<U> extends Criterion  {
-    static final long serialVersionUID = 2017_12_04;
 
     /** Simple space */
     public static final char SPACE = ' ';
@@ -47,7 +46,7 @@ public class ValueCriterion<U> extends Criterion  {
 
     /** Create an Criterion constant */
     protected ValueCriterion(final boolean value) {
-        this(null, Operator.XFIXED, value);
+        this(null, value ? Operator.ALWAYS_TRUE : Operator.ALWAYS_FALSE, value);
     }
 
     /** An undefined operator (null) is replaced by EQ. */
@@ -94,7 +93,7 @@ public class ValueCriterion<U> extends Criterion  {
             case NOT_IN:
                  makeArrayTest(value);
                  break;
-            case XSQL:
+            case CUSTOM_SQL:
                  String template = value instanceof TemplateValue
                       ? ((TemplateValue)value).getTemplate()
                       : String.valueOf(value);
@@ -129,13 +128,14 @@ public class ValueCriterion<U> extends Criterion  {
     /** Join this instance with a second criterion by an operator with a simple logical optimization. */
     @Override
     public Criterion join(final BinaryOperator operator, final Criterion criterion) {
-        if (this.operator == Operator.XFIXED) {
-            switch (operator) {
-                case OR : return (Boolean) value ? this : criterion;
-                case AND: return (Boolean) value ? criterion : this;
-            }
-        }
-        return super.join(operator, criterion);
+        return switch (this.operator) {
+            case ALWAYS_TRUE, ALWAYS_FALSE -> switch (operator) {
+                case OR -> this.operator == Operator.ALWAYS_TRUE ? this : criterion;
+                case AND -> this.operator == Operator.ALWAYS_TRUE ? criterion : this;
+                default -> super.join(operator, criterion);
+            };
+            default -> super.join(operator, criterion);
+        };
     }
 
     /** Test a value is an instance of CharSequence or a type Key is type of CharSequence.
@@ -188,7 +188,10 @@ public class ValueCriterion<U> extends Criterion  {
 
     /** Is the operator have got value XFIXED or XSQL ? */
     public final boolean isConstant() {
-        return operator==Operator.XFIXED || operator==Operator.XSQL;
+        return switch (operator) {
+            case ALWAYS_TRUE, ALWAYS_FALSE, CUSTOM_SQL -> true;
+            default -> false;
+        };
     }
 
    @Override
@@ -199,21 +202,21 @@ public class ValueCriterion<U> extends Criterion  {
     }
 
     @Override
-    public SimpleValuePrinter toPrinter(@NotNull final SimpleValuePrinter out) {
-        out.append('(');
-        if (operator == Operator.XSQL) {
-            out.appendValue(getRightNode());
-            return out.append(')');
+    public SimpleValuePrinter toPrinter(@NotNull final SimpleValuePrinter writer) {
+        writer.append('(');
+        if (operator == Operator.CUSTOM_SQL) {
+            writer.appendValue(getRightNode());
+            return writer.append(')');
         }
-        else if (operator != Operator.XFIXED) {
-            out
+        if (operator != Operator.ALWAYS_TRUE && operator != Operator.ALWAYS_FALSE) {
+            writer
             .append(key)
             .append(SPACE)
             .append(operator.name())
             .append(SPACE);
         }
-        out.appendValue(getRightNode());
-        return out.append(')');
+        writer.appendValue(getRightNode());
+        return writer.append(')');
     }
 
     /** Find a domain class type of {@code Class<UJO>} from its keys.

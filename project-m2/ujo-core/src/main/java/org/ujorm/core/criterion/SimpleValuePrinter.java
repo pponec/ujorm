@@ -84,16 +84,6 @@ public class SimpleValuePrinter extends ValuePrinter {
                out.append(null);
             } else if (value instanceof Key<?,?>) {
                 out.append((Key) value);
-            } else if (/*value instanceof Ujo ujo*/ false) { // TODO:pop: relation
-//                final Key firstProperty = ujo.readKeys().get(0);
-//                final Object firstValue = firstProperty.of(ujo);
-//
-//                out.append(ujo.getClass().getSimpleName());
-//                out.append('[');
-//                out.append(firstProperty);
-//                out.append('=');
-//                appendValue(firstValue);
-//                out.append(']');
             } else {
                 super.writeValue(value, out, true);
             }

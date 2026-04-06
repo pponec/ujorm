@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -23,6 +23,7 @@ import org.ujorm.tools.msg.MsgFormatter;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 import java.util.function.Supplier;
 
@@ -44,7 +45,7 @@ public class ValueFormatter extends MsgFormatter {
     private static final char THREE_DOTS = '…';
 
     /** Hexa characters */
-    private final char[] HEX_ARRAY = {'0','1','2','3','4','5','6','7','8','9','A','B','C','D','E','F'};
+    private static final char[] HEX_ARRAY = {'0','1','2','3','4','5','6','7','8','9','A','B','C','D','E','F'};
 
     /** Border of the byte array */
     protected final String valueBorder;
@@ -62,48 +63,60 @@ public class ValueFormatter extends MsgFormatter {
     }
 
     /**
-     * Print argument to the Writter with an optional format.
+     * Print argument to the Writer with an optional format.
      * @param out Appendable
      * @param value A one value where the {@code Supplier} interface is supported.
      */
     @Override
     protected void writeValue(@Nullable final Object value, @NotNull final Appendable out, final boolean marked) throws IOException  {
-        final Object val = value instanceof Supplier
-                ? ((Supplier)value).get()
+        var val = value instanceof Supplier<?> supplier
+                ? supplier.get()
                 : value;
+
         if (!marked) {
             out.append(SEPARATOR);
         }
+
         if (val == null) {
             out.append(null);
-        } else if (val instanceof CharSequence) {
+        } else if (val instanceof CharSequence text) {
             out.append(valueBorder);
-            writeLongValue((CharSequence) val, out);
+            writeLongValue(text, out);
             out.append(valueBorder);
-        } else if (val instanceof Number) {
-            out.append(String.valueOf(val));
-        } else if (val instanceof Date) {
+        } else if (val instanceof Number numVal) {
+            out.append(String.valueOf(numVal));
+        } else if (val instanceof Date date) {
             out.append(valueBorder);
-            final String format = val instanceof java.sql.Date
+            var format = date instanceof java.sql.Date
                     ? "yyyy-MM-dd"
                     : "yyyy-MM-dd'T'HH:mm:ss.SSS";
-            out.append(new SimpleDateFormat(format, Locale.ENGLISH).format((Date)val));
+            out.append(new SimpleDateFormat(format, Locale.ENGLISH).format(date));
             out.append(valueBorder);
-        } else if (val instanceof byte[]) {
+        } else if (val instanceof byte[] bytes) {
             out.append(valueBorder);
-            writeByteArray((byte[]) val, out);
+            writeByteArray(bytes, out);
             out.append(valueBorder);
-        } else if (val instanceof Character) {
+        } else if (val instanceof Character chVal) {
             out.append(valueBorder);
-            out.append((Character) val);
+            out.append(chVal);
             out.append(valueBorder);
-            out.append(((Throwable)val).getMessage());
-        } else if (val instanceof Enum) {
-            out.append(((Enum) val).name());
-        } else if (val instanceof Throwable) {
-            out.append(val.getClass().getSimpleName());
+        } else if (val instanceof Enum<?> enumVal) {
+            out.append(enumVal.name());
+        } else if (val instanceof Throwable throwable) {
+            out.append(throwable.getClass().getSimpleName());
             out.append(':');
-            out.append(((Throwable)val).getMessage());
+            out.append(throwable.getMessage());
+        } else if (val instanceof List<?> list) {
+            out.append('[');
+            var size = list.size();
+            if (size > 0) {
+                writeValue(list.get(0), out, true);
+                for (var i = 1; i < size; i++) {
+                    out.append(", ");
+                    writeValue(list.get(i), out, true);
+                }
+            }
+            out.append(']');
         } else {
             writeLongValue(String.valueOf(val), out);
         }
@@ -111,13 +124,13 @@ public class ValueFormatter extends MsgFormatter {
 
     /** Write bytes as hexa */
     protected void writeByteArray(@NotNull byte[] bytes, @NotNull final Appendable out) throws IOException {
-        final int length = bytes != null ? bytes.length : -1; // Length of the bytes
-        final int limit = getSizeLimit() >> 1;                // Limit for the bytes
-        final int half = (limit - 4) >> 1;
-        final int max = length > limit ? half : length;
+        var length = bytes != null ? bytes.length : -1;
+        var limit = getSizeLimit() >> 1;
+        var half = (limit - 4) >> 1;
+        var max = length > limit ? half : length;
 
-        for (int i = 0; i < max; i++ ) {
-            final int v = bytes[i] & 0xFF;
+        for (var i = 0; i < max; i++ ) {
+            var v = bytes[i] & 0xFF;
             out.append(HEX_ARRAY[v >>> 4]);
             out.append(HEX_ARRAY[v & 0x0F]);
         }
@@ -126,8 +139,8 @@ public class ValueFormatter extends MsgFormatter {
             out.append(String.valueOf(length));
             out.append(THREE_DOTS);
 
-            for (int i = length-half; i < length; i++ ) {
-                final int v = bytes[i] & 0xFF;
+            for (var i = length-half; i < length; i++ ) {
+                var v = bytes[i] & 0xFF;
                 out.append(HEX_ARRAY[v >>> 4]);
                 out.append(HEX_ARRAY[v & 0x0F]);
             }
@@ -136,9 +149,9 @@ public class ValueFormatter extends MsgFormatter {
 
     /** You can call the method from a child class */
     protected void writeLongValue(@NotNull final CharSequence value, @NotNull final Appendable out) throws IOException {
-        final int length = value != null ? value.length() : -1;
-        final int limit = getSizeLimit();
-        final int half = (limit - 4) >> 1;
+        var length = value != null ? value.length() : -1;
+        var limit = getSizeLimit();
+        var half = (limit - 4) >> 1;
         if (length > limit) {
             out.append(value, 0, half);
             out.append(THREE_DOTS);
@@ -157,7 +170,7 @@ public class ValueFormatter extends MsgFormatter {
 
     // --------------- STATIC METHODS ----------------------
 
-   /**
+    /**
      * Format the message, see the next correct asserts:
      * <pre class="pre">
      *  assertEquals("TEST"    , MsgFormatter.format("TE{}T", "S"));
@@ -166,12 +179,12 @@ public class ValueFormatter extends MsgFormatter {
      * </pre>
      * @param messageTemplate Template where argument position is marked by the {@code {}} characters.
      * @param arguments Optional arguments
-     * @return
+     * @return Formatted string
      */
     @NotNull
     public static <T> String format
-    ( @Nullable final String messageTemplate
-    , @Nullable final T... arguments) {
+    ( @Nullable final String messageTemplate,
+      @Nullable final T... arguments) {
         try {
             return new ValueFormatter().formatMsg(null, messageTemplate, arguments);
         } catch (IOException e) {
@@ -179,7 +192,7 @@ public class ValueFormatter extends MsgFormatter {
         }
     }
 
-   /**
+    /**
      * Format the SQL where makup character is {@code '?'}.
      * <pre class="pre">
      *  assertEquals("TEST"    , MsgFormatter.format("TE?T", "S"));
@@ -188,12 +201,12 @@ public class ValueFormatter extends MsgFormatter {
      * </pre>
      * @param sqlTemplate SQL template where argument position is marked by the {@code '?'} characters.
      * @param arguments Optional arguments
-     * @return
+     * @return Formatted SQL string
      */
     @NotNull
     public static <T> String formatSql
     ( @Nullable final String sqlTemplate
-    , @Nullable final T... arguments) {
+            , @Nullable final T... arguments) {
         try {
             return new ValueFormatter("?", "'").formatMsg(null, sqlTemplate, arguments);
         } catch (IOException e) {

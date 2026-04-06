@@ -8,7 +8,6 @@ import org.ujorm.core.KeyInfo;
 import org.ujorm.core.criterion.Criterion;
 import org.ujorm.core.criterion.Operator;
 import org.ujorm.core.criterion.ProxyValue;
-import org.ujorm.core.criterion.ValueCriterion;
 import org.ujorm.tools.common.Primitive;
 
 import java.util.Collection;
