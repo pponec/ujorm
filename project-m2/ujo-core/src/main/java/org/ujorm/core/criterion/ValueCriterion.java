@@ -86,16 +86,15 @@ public class ValueCriterion<U> extends Criterion  {
             case ENDS_CASE_INSENSITIVE:
             case CONTAINS:
             case CONTAINS_CASE_INSENSITIVE:
-                 checkCharSequence(key);
-                 checkCharSequence(value);
+                 checkType(CharSequence.class, key, value);
                  break;
             case IN:
             case NOT_IN:
                  makeArrayTest(value);
                  break;
             case CUSTOM_SQL:
-                 String template = value instanceof TemplateValue
-                      ? ((TemplateValue)value).getTemplate()
+                 String template = value instanceof TemplateValue tmpValue
+                      ? tmpValue.getTemplate()
                       : String.valueOf(value);
 
                  Assert.isFalse(value==null || template.trim().isEmpty(), "Value must not be empty");
@@ -138,14 +137,14 @@ public class ValueCriterion<U> extends Criterion  {
         };
     }
 
-    /** Test a value is an instance of CharSequence or a type Key is type of CharSequence.
-     * If parameter is not valid than method throws Exception.
-     */
-    protected void checkCharSequence(Object value) throws IllegalArgumentException {
-        final boolean ok = value instanceof CharSequence
-        || value instanceof Key key && key.isTypeOf(CharSequence.class);
-
-        Assert.isTrue(ok, "Key type must be a {}", CharSequence.class);
+    /** Test a value is an instance of clazz and */
+    protected void checkType(Class<?> clazz, Key<?,?> key, Object value) throws IllegalArgumentException {
+        if (!key.isTypeOf(clazz)) {
+            throw new IllegalArgumentException("The Key must be type of " + clazz.getSimpleName());
+        }
+        if (!key.type().isInstance(value)) {
+            throw new IllegalArgumentException("The Value must be type of " + clazz.getSimpleName());
+        }
     }
 
     /** Test a value is an instance of Iterable.

@@ -1,11 +1,11 @@
 /*
- *  Copyright 2007-2026 Pavel Ponec
+ * Copyright 2007-2026 Pavel Ponec
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -19,8 +19,6 @@ package org.ujorm.core.criterion;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.ujorm.core.Key;
-
-import org.ujorm.tools.Assert;
 
 import java.util.Objects;
 import java.util.function.Supplier;
@@ -38,10 +36,10 @@ public final class FunctionCriterion<U, T> extends ValueCriterion<U> {
      * @param operator Value operator
      * @param proxyValue An function for the value where the {@null} value is not supported in ORM. The class should be serialized.
      */
-    FunctionCriterion
-    (@NotNull final Key<U, ? extends Object> key
-            , @NotNull final Operator operator
-            , @NotNull final Supplier<T> proxyValue) {
+    FunctionCriterion(
+            @NotNull final Key<U, ?> key,
+            @NotNull final Operator operator,
+            @NotNull final Supplier<T> proxyValue) {
         super(key, operator, Objects.requireNonNull(proxyValue, "proxyValue"));
         switch (operator) {
             case ALWAYS_TRUE, ALWAYS_FALSE -> throw new IllegalArgumentException("Unsupported operator: " + operator);
@@ -49,23 +47,26 @@ public final class FunctionCriterion<U, T> extends ValueCriterion<U> {
     }
 
     /** Returns the right node of the parent */
-    @Override @Nullable
+    @Override
+    @Nullable
+    @SuppressWarnings("unchecked")
     public T getRightNode() {
         return ((Supplier<T>) super.value).get();
     }
 
-    /**
-     * Test a value is an instance of CharSequence or a type Key is type of CharSequence.
-     * If parameter is not valid than method throws Exception.
-     */
-    @Override
-    protected void makeCharSequenceTest(Object value) throws IllegalArgumentException {
-        Assert.isTrue(value instanceof Supplier, "Only {} is supported", Supplier.class);
+    /** Test a value is an instance of clazz and */
+    protected void checkType(Class<?> clazz, Key<?,?> key, Object valueSup) throws IllegalArgumentException {
+        if (valueSup instanceof Supplier supplier) {
+            super.checkType(clazz, key, supplier.get());
+        } else {
+            throw new IllegalArgumentException( "Only argumtn type of %s is supported".formatted(Supplier.class.getSimpleName()));
+        }
     }
 
     /** Freeze the criterion to an immutable implementation. */
+    @Override
     public ValueCriterion<U> freeze() {
-        return new ValueCriterion(this);
+        return new ValueCriterion<>(this);
     }
 
 }
