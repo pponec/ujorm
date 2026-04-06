@@ -60,7 +60,7 @@ public final class FunctionCriterion<U, T> extends ValueCriterion<U> {
             super.checkType(clazz, key, supplier.get());
         } else {
             var msg = "Only argument type of %s is supported"
-                    .formatted(Supplier.class.getSimpleName())
+                    .formatted(Supplier.class.getSimpleName());
             throw new IllegalArgumentException(msg);
         }
     }
