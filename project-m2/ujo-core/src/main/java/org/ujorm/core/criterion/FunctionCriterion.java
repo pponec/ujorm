@@ -55,8 +55,9 @@ public final class FunctionCriterion<U, T> extends ValueCriterion<U> {
     }
 
     /** Test a value is an instance of clazz and */
+    @Override
     protected void checkType(Class<?> clazz, Key<?,?> key, Object valueSup) throws IllegalArgumentException {
-        if (valueSup instanceof Supplier supplier) {
+        if (valueSup instanceof Supplier<?> supplier) {
             super.checkType(clazz, key, supplier.get());
         } else {
             var msg = "Only argument type of %s is supported"
