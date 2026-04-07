@@ -86,10 +86,12 @@ public class ValueCriterion<U> extends Criterion  {
                 break;
             case IN:
             case NOT_IN:
-                makeArrayTest(value);
+                checkArray(value);
                 break;
             case CUSTOM_SQL:
-                Objects.requireNonNull(value, "Template is required.");
+                if (! (value instanceof TemplateValue)) {
+                    throw new IllegalArgumentException("TemplateValue is expected");
+                }
                 break;
         }
 
@@ -143,7 +145,7 @@ public class ValueCriterion<U> extends Criterion  {
      * Test a value is an instance of Iterable.
      * If parameter is not valid than method throws Exception.
      */
-    protected final void makeArrayTest(Object value) throws IllegalArgumentException {
+    protected final void checkArray(Object value) throws IllegalArgumentException {
         Assert.isTrue(value instanceof Object[], "Value must be an Array type only");
     }
 
