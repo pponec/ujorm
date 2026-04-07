@@ -2,6 +2,7 @@ package org.ujorm.orm.dsl;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.ujorm.orm.model.QuotePair;
 import org.ujorm.orm.tutorial.domains.Employee;
 import org.ujorm.orm.tutorial.domains.MetaCity;
 import org.ujorm.orm.dsl.meta.MetaEmployee;
@@ -14,17 +15,18 @@ class DslQueryDemoTest {
 
     private Employee emp = new Employee();
     private MetaEmployee emps = new MetaEmployee();
+    private QuotePair quotePair = QuotePair.ofMsSqlServer();
 
     /** @Test  : Only demo */
     void demo() {
 
-        var select = new DslQuery<Employee>(connection());
+        var select = new DslQuery<Employee>(connection(), quotePair);
         select.column(MetaEmployee.id)
                 .column(MetaEmployee.name)
                 .column(MetaEmployee.city, MetaCity.name)
                 .column(MetaEmployee.boss, MetaEmployee.name)
                 .where(MetaEmployee.id.whereGt(1L))
-                .append("ORDER BY", MetaEmployee.id, "DESC" );
+                .sqlTail("ORDER BY", MetaEmployee.id, "DESC" );
 
         var bossAlias = MetaEmployee.as("b");
         var emplId2 = bossAlias.key(MetaEmployee.id);
@@ -46,17 +48,15 @@ class DslQueryDemoTest {
                 .column(MetaEmployee.city, MetaCity.name)
                 .column(MetaEmployee.boss, MetaEmployee.name)
                 .where(crnAll);
-
-
     }
 
     /** @Test  : Only demo */
     void count() {
 
-        var select = new DslQuery<Employee>(connection());
+        var select = new DslQuery<Employee>(connection(), quotePair);
         select.sql("SELECT COUNT(*)")
                 .where(MetaEmployee.id.whereGt(1L))
-                .append("ORDER BY", MetaEmployee.id, "DESC" );
+                .sqlTail("ORDER BY", MetaEmployee.id, "DESC" );
 
         var bossAlias = MetaEmployee.as("b");
         var emplId2 = bossAlias.key(MetaEmployee.id);

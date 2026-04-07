@@ -2,11 +2,13 @@ package org.ujorm.orm.tutorial;
 
 import org.junit.jupiter.api.*;
 import org.ujorm.orm.core.EntityManager;
+import org.ujorm.orm.dsl.DslQuery;
 import org.ujorm.orm.jdbc.ResultSetMapper;
 import org.ujorm.orm.tutorial.domains.*;
 import org.ujorm.orm.SqlQuery;
 
 import java.util.Comparator;
+import java.util.List;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -44,7 +46,7 @@ class TutorialTest extends AbstractDemo {
     /** Select employees and map columns by type-safe generated Meta classes. */
     @Test
     @Order(200)
-    void select() {
+    void select_by_labels() {
         var sql = """
                  SELECT e.id      AS ${e.id}
                  , e.name         AS ${e.name}
@@ -103,13 +105,37 @@ class TutorialTest extends AbstractDemo {
 
     /** Select an Entity by ID. */
     @Test
-    @Order(230)
+    @Order(220)
     void selectEntity_by_id() {
         var crud = CITY_EM.crud(connection());
         var barcelonaId = 1L;
         var barcelona = crud.findById(barcelonaId).orElseThrow();
         Assertions.assertNotNull(barcelona.id());
     }
+
+
+    /** DSL select by the column method. */
+    @Test
+    @Order(230)
+    void select_by_dsl() {
+
+        List<Employee> employees = DslQuery.run(connection(), EMPLOYEE_EM, query -> query
+                .sql("SELECT")
+                .column(MetaEmployee.id)
+                .column(MetaEmployee.name)
+                .column(MetaEmployee.city, MetaCity.name)
+                .column(MetaEmployee.city, MetaCity.countryCode)
+                .column(MetaEmployee.boss, MetaEmployee.name)
+                .where(MetaEmployee.id.whereEq(1L))
+                .streamMap(EMPLOYEE_MAPPER.mapper())
+                .toList()
+        );
+
+        assertEquals(3, employees.size());
+        assertEquals("Dave", employees.get(1).getName());
+        assertEquals("Ingrid", employees.get(1).getBoss().getName());
+    }
+
 
     /** Note the last argument of the update() method specifying the modified attribute. */
     @Test

@@ -17,7 +17,10 @@
 package org.ujorm.orm.dsl;
 
 import org.jetbrains.annotations.NotNull;
+import org.ujorm.core.DomainHandlerProvider;
+import org.ujorm.core.DomainHandlerService;
 import org.ujorm.core.criterion.Criterion;
+import org.ujorm.orm.core.EntityManager;
 import org.ujorm.orm.model.QuotePair;
 import org.ujorm.tools.jdbc.AbstractSqlQuery;
 import org.ujorm.tools.jdbc.SQLException;
@@ -59,23 +62,39 @@ public class DslQuery<D> extends AbstractSqlQuery<DslQuery<D>> {
     /** Empty key array */
     private static final Key<?,?>[] EMPTY = new Key<?,?>[0];
 
+    /** Handler service */
+    private final DomainHandlerService handlerService;
+
     /** Columns */
     private final DslQueryBuilder builder;
 
     private final QuotePair q;
-
     /** Sql Tail */
     @NotNull
-    private String sqlTail = "";
+    private CharSequence[] sqlTail;
 
     /**
      * Constructor with a database connection
      * @param dbConnection A database connection
      */
-    public DslQuery(@NotNull Connection dbConnection) {
+    public DslQuery(@NotNull Connection dbConnection,
+                    @NotNull QuotePair quote,
+                    @NotNull DomainHandlerService handlerService
+    ) {
         super(dbConnection);
-        q = QuotePair.ofMsSqlServer(); // TODO
+        this.handlerService = handlerService;
+        this.q = quote;
         builder = new DslQueryBuilder(new Writer());
+    }
+
+    /**
+     * Constructor with a database connection
+     * @param dbConnection A database connection
+     */
+    public DslQuery(@NotNull Connection dbConnection,
+                    @NotNull QuotePair quote
+    ) {
+        this(dbConnection, quote, DomainHandlerProvider.provider());
     }
 
     @Override
@@ -87,14 +106,15 @@ public class DslQuery<D> extends AbstractSqlQuery<DslQuery<D>> {
         return self();
     }
 
-    public DslQuery<D> where (@NotNull Criterion condition) {
+    /** Write a SQL condition. */
+    public DslQuery<D> where (@NotNull Criterion criterion) {
+        this.builder.where(criterion);
         return self();
     }
 
-    public DslQuery<D> append(@NotNull CharSequence... sqlTail) {
-        initWriter();
-        // TODO:
-        this.sqlTail = String.join(" ", sqlTail);
+    /** Append an optional rest of the SQL statement */
+    public DslQuery<D> sqlTail(@NotNull CharSequence... sqlTail) {
+        this.sqlTail = sqlTail;
         return self();
     }
 
@@ -157,12 +177,23 @@ public class DslQuery<D> extends AbstractSqlQuery<DslQuery<D>> {
     }
 
     /** Run a query statement */
-    public static <R> R run(Connection connection, final SqlFunction<DslQuery, R> fun) {
-        try (var query = new DslQuery(connection)) {
+    public static <R> R run(Connection connection, QuotePair quote, DomainHandlerService service, SqlFunction<DslQuery, R> fun) {
+        try (var query = new DslQuery<R>(connection, quote, service)) {
             return fun.applyFunction(query);
         } catch (Exception ex) {
             throw (ex instanceof RuntimeException re) ? re : new SqlException(ex);
         }
+    }
+
+    /** Run a query statement */
+    public static <R> R run(Connection connection, QuotePair quote, SqlFunction<DslQuery, R> fun) {
+        return run(connection, quote, DomainHandlerProvider.provider(), fun);
+    }
+
+
+    /** Run a query statement */
+    public static <R, V> R run(Connection connection, EntityManager<R, V> em, SqlFunction<DslQuery, R> fun) {
+        return run(connection, em.tableModel(connection).jdbc().quotes(), DomainHandlerProvider.provider(), fun);
     }
 
     public final class Writer implements DslQueryWriter {

@@ -42,7 +42,7 @@ public abstract class AbstractSqlQuery<T extends AbstractSqlQuery<T>> implements
     private static final Logger LOGGER = Logger.getLogger(AbstractSqlQuery.class.getName());
 
     @NotNull
-    private final Connection dbConnection;
+    protected final Connection dbConnection;
     @NotNull
     protected String sqlTemplate = "";
     @NotNull

@@ -23,7 +23,7 @@ import org.ujorm.core.Key;
 import java.util.Collection;
 import java.util.List;
 
-public interface CriterionProvider<DOMAIN, VALUE> {
+public interface CriterionProvider<VALUE> {
 
     /**
      * Create a new Criterion where this key value is related to a parameter value along the {@link Operator}.
