@@ -8,7 +8,6 @@ import org.ujorm.orm.tutorial.domains.*;
 import org.ujorm.orm.SqlQuery;
 
 import java.util.Comparator;
-import java.util.List;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -57,6 +56,7 @@ class TutorialTest extends AbstractDemo {
                  JOIN city c ON c.id = e.city_id
                  LEFT JOIN employee b ON b.id = e.boss_id
                  WHERE e.id > :employeeId
+                 ORDER BY e.id
                  """;
 
         var employees = SqlQuery.run(connection(), query -> query
@@ -85,6 +85,7 @@ class TutorialTest extends AbstractDemo {
                  JOIN city c ON c.id = e.city_id
                  LEFT JOIN employee b ON b.id = e.boss_id
                  WHERE e.id > :employeeId
+                 ORDER BY e.id
                  """;
 
         var employees = SqlQuery.run(connection(), query -> query
@@ -118,8 +119,7 @@ class TutorialTest extends AbstractDemo {
     @Test
     @Order(230)
     void select_by_dsl() {
-
-        List<Employee> employees = DslQuery.run(connection(), EMPLOYEE_EM, query -> query
+        var employees = DslQuery.run(connection(), EMPLOYEE_EM, query -> query
                 .sql("SELECT")
                 .column(MetaEmployee.id)
                 .column(MetaEmployee.name)
@@ -127,6 +127,7 @@ class TutorialTest extends AbstractDemo {
                 .column(MetaEmployee.city, MetaCity.countryCode)
                 .column(MetaEmployee.boss, MetaEmployee.name)
                 .where(MetaEmployee.id.whereEq(1L))
+                .tail("ORDER BY", MetaEmployee.id)
                 .streamMap(EMPLOYEE_MAPPER.mapper())
                 .toList()
         );

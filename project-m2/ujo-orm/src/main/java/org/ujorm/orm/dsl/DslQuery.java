@@ -115,7 +115,7 @@ public class DslQuery<D> extends AbstractSqlQuery<DslQuery<D>> {
     }
 
     /** Append an optional rest of the SQL statement */
-    public DslQuery<D> sqlTail(@NotNull CharSequence... sqlTail) {
+    public DslQuery<D> tail(@NotNull CharSequence... sqlTail) {
         this.sqlTail = sqlTail;
         return self();
     }

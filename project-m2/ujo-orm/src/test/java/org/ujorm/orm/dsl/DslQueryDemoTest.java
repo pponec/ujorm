@@ -1,7 +1,6 @@
 package org.ujorm.orm.dsl;
 
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
 import org.ujorm.orm.model.QuotePair;
 import org.ujorm.orm.tutorial.domains.Employee;
 import org.ujorm.orm.tutorial.domains.MetaCity;
@@ -26,7 +25,7 @@ class DslQueryDemoTest {
                 .column(MetaEmployee.city, MetaCity.name)
                 .column(MetaEmployee.boss, MetaEmployee.name)
                 .where(MetaEmployee.id.whereGt(1L))
-                .sqlTail("ORDER BY", MetaEmployee.id, "DESC" );
+                .tail("ORDER BY", MetaEmployee.id, "DESC" );
 
         var bossAlias = MetaEmployee.as("b");
         var emplId2 = bossAlias.key(MetaEmployee.id);
@@ -56,7 +55,7 @@ class DslQueryDemoTest {
         var select = new DslQuery<Employee>(connection(), quotePair);
         select.sql("SELECT COUNT(*)")
                 .where(MetaEmployee.id.whereGt(1L))
-                .sqlTail("ORDER BY", MetaEmployee.id, "DESC" );
+                .tail("ORDER BY", MetaEmployee.id, "DESC" );
 
         var bossAlias = MetaEmployee.as("b");
         var emplId2 = bossAlias.key(MetaEmployee.id);
