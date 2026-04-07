@@ -177,8 +177,8 @@ public class AliasedKey<T, V> implements Key<T, V> {
 
     @Override
     @NotNull
-    public Criterion whereSql(@NotNull String template) {
-        return Criterion.forSql(this, template);
+    public Criterion whereSql(@NotNull String template, V... values) {
+        return Criterion.forSql(this, template, values);
     }
 
     @Override

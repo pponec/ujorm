@@ -19,11 +19,11 @@ package org.ujorm.core.criterion;
  * Template value
  * @author Pavel Ponec
  */
-public record TemplateValue(
+public record TemplateValue<V>(
     /** Template by the format {@code "{0} > {1} OR {0} != {2}"} */
     String template,
     /** Criterion right value */
-    Object[] rightValue
+    V[] rightValue
 ) {
 
     @Override

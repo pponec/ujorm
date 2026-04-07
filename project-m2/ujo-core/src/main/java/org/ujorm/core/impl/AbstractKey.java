@@ -292,8 +292,8 @@ public abstract class AbstractKey<D, V> implements Key<D, V>, KeyInfo<V> {
 
     /** {@inheritDoc} */
     @Override
-    public Criterion whereSql(@Nullable final String template) {
-        return Criterion.forSql(this, template);
+    public Criterion whereSql(@Nullable final String template, @NotNull V... values) {
+        return Criterion.forSql(this, template, values);
     }
 
 

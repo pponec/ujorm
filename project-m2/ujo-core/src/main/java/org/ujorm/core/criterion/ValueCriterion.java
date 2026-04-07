@@ -172,7 +172,7 @@ public class ValueCriterion<U> extends Criterion  {
         };
     }
 
-    /** Is the operator have got value XFIXED or XSQL ? */
+    /** Is the operator have got value ALWAYS_TRUE, ALWAYS_FALSE or CUSTOM_SQL  */
     public final boolean isConstant() {
         return switch (operator) {
             case ALWAYS_TRUE, ALWAYS_FALSE, CUSTOM_SQL -> true;

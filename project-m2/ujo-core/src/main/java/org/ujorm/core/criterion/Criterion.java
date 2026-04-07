@@ -412,14 +412,15 @@ public abstract class Criterion {
     /**
      * The method creates a new Criterion for a native condition (called Native Criterion) in SQL statement format.
      * @param key The parameter is required by Ujorm to location a basic database table
-     * @param sqlCondition a SQL condition in the String format, the NULL value or empty string is not accepted
+     * @param sqlTemplate a SQL condition in the String format, the NULL value or empty string is not accepted
      * @see Operator#CUSTOM_SQL
      */
     @NotNull
-    public static <U> Criterion forSql(
-            @NotNull final Key<U,?> key,
-            @NotNull final String sqlCondition) {
-        return new ValueCriterion<>(key, Operator.CUSTOM_SQL, sqlCondition);
+    public static <U, V> Criterion forSql(
+            @NotNull final Key<U, V> key,
+            @NotNull final String sqlTemplate,
+            @NotNull final V... values) {
+        return new ValueCriterion<>(key, Operator.CUSTOM_SQL, new TemplateValue<>(sqlTemplate, values));
     }
 
     /**

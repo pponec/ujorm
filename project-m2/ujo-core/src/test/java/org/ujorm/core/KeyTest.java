@@ -200,7 +200,7 @@ class KeyTest {
         }
 
         @Override
-        public @NotNull Criterion whereSql(@NotNull String template) {
+        public @NotNull Criterion whereSql(@NotNull String template, String... values) {
             return null;
         }
     }

@@ -84,13 +84,12 @@ public interface CriterionProvider<VALUE> {
 
     /**
      * Creates a new {@code Criterion} with a custom SQL template.
-     * The template can contain the {@code ${COLUMN}} placeholder which will be replaced
-     * by the actual column name including its alias.
-     * Assign a value using the {@code DslQuery.bind()} method in the ORM module.
-     * @param template SQL template (e.g., {@code "UPPER(${COLUMN}) = 'JOE'"})
+     * The template can contain the {@code ${0}} placeholders which will be replaced
+     * by the actual column name (including its alias) and the next parameter values.
+     * @param template SQL template (e.g., {@code "UPPER({0}) = {1}"})
      * @return A new immutable Criterion
      */
-    @NotNull Criterion whereSql(@NotNull String template);
+    @NotNull Criterion whereSql(@NotNull String template, @NotNull VALUE... values);
 
     // --- DEFAULT METHODS ---
 
