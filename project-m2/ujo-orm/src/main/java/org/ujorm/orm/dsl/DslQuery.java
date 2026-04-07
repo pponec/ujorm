@@ -68,7 +68,9 @@ public class DslQuery<D> extends AbstractSqlQuery<DslQuery<D>> {
     /** Columns */
     private final DslQueryBuilder builder;
 
+    /** Column quotes */
     private final QuotePair q;
+
     /** Sql Tail */
     @NotNull
     private CharSequence[] sqlTail;
@@ -84,7 +86,7 @@ public class DslQuery<D> extends AbstractSqlQuery<DslQuery<D>> {
         super(dbConnection);
         this.handlerService = handlerService;
         this.q = quote;
-        builder = new DslQueryBuilder(new Writer());
+        this.builder = new DslQueryBuilder(new Writer());
     }
 
     /**
@@ -125,7 +127,7 @@ public class DslQuery<D> extends AbstractSqlQuery<DslQuery<D>> {
      * The provided metamodel attributes define a type-safe path to the specific property
      * (e.g., entity -> relation -> property) and are concatenated to form the final SQL column label.
      */
-    public DslQuery column(@NotNull Key<?,?> attr) {
+    public DslQuery<D> column(@NotNull Key<?,?> attr) {
         return putColumn(EMPTY, attr);
     }
 
@@ -134,8 +136,8 @@ public class DslQuery<D> extends AbstractSqlQuery<DslQuery<D>> {
      * The provided metamodel attributes define a type-safe path to the specific property
      * (e.g., entity -> relation -> property) and are concatenated to form the final SQL column label.
      */
-    public <V1> DslQuery column(@NotNull Key<D,V1> attr1,
-                                @NotNull Key<V1,?> attr2) {
+    public <V1> DslQuery<D> column(@NotNull Key<D,V1> attr1,
+                                   @NotNull Key<V1,?> attr2) {
         return putColumn(EMPTY, attr1, attr2);
     }
 
@@ -144,9 +146,9 @@ public class DslQuery<D> extends AbstractSqlQuery<DslQuery<D>> {
      * The provided metamodel attributes define a type-safe path to the specific property
      * (e.g., entity -> relation -> property) and are concatenated to form the final SQL column label.
      */
-    public <V1,V2> DslQuery column(@NotNull Key<D,V1> attr1,
-                                   @NotNull Key<V1,V2> attr2,
-                                   @NotNull Key<V2,?> attr3) {
+    public <V1,V2> DslQuery<D> column(@NotNull Key<D,V1> attr1,
+                                      @NotNull Key<V1,V2> attr2,
+                                      @NotNull Key<V2,?> attr3) {
         return putColumn(EMPTY, attr1, attr2, attr3);
     }
 
@@ -156,16 +158,16 @@ public class DslQuery<D> extends AbstractSqlQuery<DslQuery<D>> {
      * (e.g., entity -> relation -> property) and are concatenated to form the final SQL column label.
      */
     @SafeVarargs
-    public final <V1,V2,V3> DslQuery column(@NotNull Key<D,V1> attr1,
-                                            @NotNull Key<V1,V2> attr2,
-                                            @NotNull Key<V2,V3> attr3,
-                                            @NotNull Key<V3,?> attr4,
-                                            @NotNull Key<?,?>... attrs) {
+    public final <V1,V2,V3> DslQuery<D> column(@NotNull Key<D,V1> attr1,
+                                               @NotNull Key<V1,V2> attr2,
+                                               @NotNull Key<V2,V3> attr3,
+                                               @NotNull Key<V3,?> attr4,
+                                               @NotNull Key<?,?>... attrs) {
         return putColumn(attrs, attr1, attr2, attr3, attr4);
     }
 
     /** Validates and adds an expression to the internal map */
-    DslQuery putColumn(
+    DslQuery<D> putColumn(
             @NotNull Key<?,?>[] attrs,
             @NotNull Key<?,?>... keys
     ) {
@@ -174,26 +176,6 @@ public class DslQuery<D> extends AbstractSqlQuery<DslQuery<D>> {
         if (attrs != EMPTY) System.arraycopy(attrs, 0, result, keys.length, attrs.length);
         this.builder.column(result);
         return self();
-    }
-
-    /** Run a query statement */
-    public static <R> R run(Connection connection, QuotePair quote, DomainHandlerService service, SqlFunction<DslQuery, R> fun) {
-        try (var query = new DslQuery<R>(connection, quote, service)) {
-            return fun.applyFunction(query);
-        } catch (Exception ex) {
-            throw (ex instanceof RuntimeException re) ? re : new SqlException(ex);
-        }
-    }
-
-    /** Run a query statement */
-    public static <R> R run(Connection connection, QuotePair quote, SqlFunction<DslQuery, R> fun) {
-        return run(connection, quote, DomainHandlerProvider.provider(), fun);
-    }
-
-
-    /** Run a query statement */
-    public static <R, V> R run(Connection connection, EntityManager<R, V> em, SqlFunction<DslQuery, R> fun) {
-        return run(connection, em.tableModel(connection).jdbc().quotes(), DomainHandlerProvider.provider(), fun);
     }
 
     public final class Writer implements DslQueryWriter {
@@ -235,5 +217,24 @@ public class DslQuery<D> extends AbstractSqlQuery<DslQuery<D>> {
         public StringBuilder append(char str) {
             return writer.append(str);
         }
+    }
+
+    /** Run a query statement */
+    public static <D, R> R run(Connection connection, QuotePair quote, DomainHandlerService service, SqlFunction<DslQuery<D>, R> fun) {
+        try (var query = new DslQuery<D>(connection, quote, service)) {
+            return fun.applyFunction(query);
+        } catch (Exception ex) {
+            throw (ex instanceof RuntimeException re) ? re : new SqlException(ex);
+        }
+    }
+
+    /** Run a query statement */
+    public static <D, R> R run(Connection connection, QuotePair quote, SqlFunction<DslQuery<D>, R> fun) {
+        return run(connection, quote, DomainHandlerProvider.provider(), fun);
+    }
+
+    /** Run a query statement */
+    public static <D, V, R> R run(Connection connection, EntityManager<D, V> em, SqlFunction<DslQuery<D>, R> fun) {
+        return run(connection, em.tableModel(connection).jdbc().quotes(), DomainHandlerProvider.provider(), fun);
     }
 }
