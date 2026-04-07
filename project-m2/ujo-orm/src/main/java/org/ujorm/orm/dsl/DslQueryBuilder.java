@@ -26,8 +26,8 @@ import org.ujorm.core.criterion.BinaryCriterion;
 import org.ujorm.core.criterion.Criterion;
 import org.ujorm.core.criterion.FunctionCriterion;
 import org.ujorm.core.criterion.Operator;
+import org.ujorm.core.criterion.TemplateValue;
 import org.ujorm.core.criterion.ValueCriterion;
-import org.ujorm.orm.Config;
 
 import java.util.*;
 
@@ -239,22 +239,35 @@ public class DslQueryBuilder {
                 : domainAliases.getOrDefault(key.domainClass(), baseTableAlias);
 
         if (operator == Operator.CUSTOM_SQL) {
-            var template = String.valueOf(rightNode);
-            var placeholder = Operator.CUSTOM_SQL.term(); // "${COLUMN}"
-            var lastIndex = 0;
-            var index = template.indexOf(placeholder);
+            var template = rightNode instanceof TemplateValue<?> tv
+                    ? tv.template()
+                    : String.valueOf(rightNode);
 
-            if (index == -1) {
-                writer.append(template);
-            } else {
-                while (index != -1) {
-                    writer.append(template.substring(lastIndex, index));
-                    writer.writeColumnName(resolvedAlias, key);
-                    lastIndex = index + placeholder.length();
-                    index = template.indexOf(placeholder, lastIndex);
+            var placeholder1 = "{0}";
+            var lastIndex = 0;
+            var len = template.length();
+
+            while (lastIndex < len) {
+                var idx1 = template.indexOf(placeholder1, lastIndex);
+                var idx2 = template.indexOf(placeholder2, lastIndex);
+
+                int idx;
+                int placeholderLen;
+
+                if (idx1 != -1 && (idx2 == -1 || idx1 < idx2)) {
+                    idx = idx1;
+                    placeholderLen = placeholder1.length();
+                } else if (idx2 != -1) {
+                    idx = idx2;
+                } else {
+                    break;
                 }
-                writer.append(template.substring(lastIndex));
+
+                writer.append(template.substring(lastIndex, idx));
+                writer.writeColumnName(resolvedAlias, key);
+                lastIndex = idx + placeholderLen;
             }
+            writer.append(template.substring(lastIndex));
         } else {
             writer.writeColumnName(resolvedAlias, key);
             writer.append(SPACE).append(getSqlOperatorText(operator)).append(SPACE);
