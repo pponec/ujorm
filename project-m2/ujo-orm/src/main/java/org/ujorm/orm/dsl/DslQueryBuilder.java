@@ -242,7 +242,7 @@ public class DslQueryBuilder {
         } else {
             writer.writeColumnName(resolvedAlias, key);
             writer.append(SPACE).append(getSqlOperatorText(operator)).append(SPACE);
-            formatValue(rightNode);
+            writeValue(rightNode);
         }
     }
 
@@ -265,14 +265,14 @@ public class DslQueryBuilder {
                 case "*" -> {
                     for (var i = 0; i < values.size(); i++) {
                         if (i > 0) writer.append(", ");
-                        formatValue(values.get(i));
+                        writeValue(values.get(i));
                     }
                 }
                 default -> {
                     try {
                         var idx = Integer.parseInt(mark);
                         if (idx > 0 && idx <= values.size()) {
-                            formatValue(values.get(idx - 1));
+                            writeValue(values.get(idx - 1));
                             continue;
                         }
                     } catch (NumberFormatException ignored) {}
@@ -327,7 +327,7 @@ public class DslQueryBuilder {
     }
 
     /** Format scalar value or arrays directly to writer */
-    private void formatValue(Object value) {
+    public void writeValue(@Nullable  Object value) {
         if (value == null) {
             writer.append("NULL");
         } else if (value instanceof String str) {
@@ -349,7 +349,7 @@ public class DslQueryBuilder {
             if (!first) {
                 writer.append(", ");
             }
-            formatValue(item);
+            writeValue(item);
             first = false;
         }
         writer.append(")");
