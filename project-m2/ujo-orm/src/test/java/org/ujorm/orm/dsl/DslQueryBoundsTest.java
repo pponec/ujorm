@@ -107,7 +107,7 @@ class DslQueryBoundsTest {
     }
 
     private @NotNull DslQueryBuilder createBuilder(String ...sql) {
-        var dslWriter = new DslQueryBuilderTest.DslQueryWriterImpl(writer);
+        var dslWriter = new DslQueryBuilderTest.DslQueryWriterTestImpl(writer);
         dslWriter.append(String.join(" ", sql));
         return new DslQueryBuilder(dslWriter);
     }

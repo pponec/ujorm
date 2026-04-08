@@ -8,6 +8,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.ujorm.core.Key;
 import org.ujorm.core.criterion.Criterion;
+import org.ujorm.core.criterion.Operator;
+import org.ujorm.core.criterion.TemplateValue;
+import org.ujorm.core.criterion.ValueCriterion;
 import org.ujorm.orm.dsl.meta.MetaEmployee;
 import org.ujorm.orm.model.QuotePair;
 import org.ujorm.orm.tutorial.domains.MetaCity;
@@ -182,7 +185,7 @@ class DslQueryBuilderTest {
     }
 
     private @NotNull DslQueryBuilder getBuilder() {
-        return new DslQueryBuilder(new DslQueryWriterImpl(writer));
+        return new DslQueryBuilder(new DslQueryWriterTestImpl(writer));
     }
 
     /** Test that CUSTOM_SQL template correctly replaces the placeholder with the column name */
@@ -203,7 +206,7 @@ class DslQueryBuilderTest {
         Assertions.assertEquals(3, sql.length, () -> builder.toString());
         Assertions.assertEquals("SELECT [e.id] AS [id]", sql[i++]);
         Assertions.assertEquals("FROM [Employee] e"    , sql[i++]);
-        Assertions.assertEquals("WHERE UPPER([e.name]) = [Joe]", sql[i]);
+        Assertions.assertEquals("WHERE UPPER([e.name]) = ['Joe']", sql[i]);
     }
 
     /** Test that CUSTOM_SQL template correctly replaces multiple placeholders in a single string */
@@ -224,15 +227,14 @@ class DslQueryBuilderTest {
         Assertions.assertEquals(3, sql.length, () -> builder.toString());
         Assertions.assertEquals("SELECT [e.id] AS [id]", sql[i++]);
         Assertions.assertEquals("FROM [Employee] e"    , sql[i++]);
-        Assertions.assertEquals("WHERE [e.id] IS NOT NULL AND [e.id] IN ([3, 5])", sql[i]);
+        Assertions.assertEquals("WHERE [e.id] IS NOT NULL AND [e.id] IN ((3, 5))", sql[i]);
     }
-
 
     // --- CLASS ---
 
-    /** */
+    /** Query writer implementation for testing */
     @RequiredArgsConstructor
-    public static class DslQueryWriterImpl implements DslQueryWriter {
+    static class DslQueryWriterTestImpl implements DslQueryWriter {
 
         final StringBuilder writer;
         final QuotePair q = QuotePair.ofMsSqlServer();
@@ -263,9 +265,107 @@ class DslQueryBuilderTest {
             }
         }
 
-        /** Format scalar value or arrays directly to writer */
+        /** Write the condition to SQL */
         @Override
-        public void writeValue(Key<?,?> key, @Nullable  Object value) {
+        public void writeCondition(ValueCriterion<?> criterion, @NotNull String optionalAlias) {
+            var key = (Key<?, ?>) criterion.getLeftNode();
+            var operator = criterion.getOperator();
+            var value = criterion.getRightNode();
+
+            switch (operator) {
+                case ALWAYS_TRUE,
+                     ALWAYS_FALSE -> writer.append(operator.term());
+                case CUSTOM_SQL -> {
+                    if (value instanceof TemplateValue<?> tv) {
+                        appendCustomSql(optionalAlias, key, tv);
+                    }
+                }
+                case IN, NOT_IN -> {
+                    writeColumnName(optionalAlias, key);
+                    writer.append(' ').append(operator.term()).append(' ');
+                    writeValues(value);
+                }
+                default -> {
+                    writeColumnName(optionalAlias, key);
+                    writer.append(' ').append(operator.term()).append(' ');
+                    writeValue(value);
+                }
+            }
+        }
+
+        /** Format custom SQL templates */
+        private void appendCustomSql(String alias, Key<?, ?> key, TemplateValue<?> templateValue) {
+            var values = templateValue.valuesNonNull();
+            var template = templateValue.template();
+
+            var last = 0;
+            for (var start = template.indexOf('{'); start != -1; start = template.indexOf('{', last)) {
+                var end = template.indexOf('}', start);
+                if (end == -1) break;
+
+                writer.append(template.substring(last, start));
+                var mark = template.substring(start + 1, end);
+                last = end + 1;
+
+                switch (mark) {
+                    case "0" -> writeColumnName(alias, key);
+                    case "*" -> writeValues(values);
+                    default -> writeArrayAsSquareBrackets(values);
+                }
+            }
+            writer.append(template.substring(last));
+        }
+
+        /** Format arrays and collections into square brackets */
+        private void writeArrayAsSquareBrackets(Object value) {
+            if (value instanceof Iterable<?> list) {
+                writer.append('[');
+                var first = true;
+                for (var item : list) {
+                    if (!first) writer.append(", ");
+                    writeValue(item);
+                    first = false;
+                }
+                writer.append(']');
+            } else if (value instanceof Object[] array) {
+                writer.append('[');
+                for (var i = 0; i < array.length; i++) {
+                    if (i > 0) writer.append(", ");
+                    writeValue(array[i]);
+                }
+                writer.append(']');
+            } else {
+                writeValue(value);
+            }
+        }
+
+        /** Format scalar value or arrays with parentheses */
+        private void writeValues(@Nullable Object value) {
+            if (value instanceof Iterable<?> list) {
+                writer.append('(');
+                var first = true;
+                for (var item : list) {
+                    if (!first) writer.append(", ");
+                    writeValue(item);
+                    first = false;
+                }
+                writer.append(')');
+            } else if (value instanceof Object[] array) {
+                writer.append('(');
+                for (var i = 0; i < array.length; i++) {
+                    if (i > 0) writer.append(", ");
+                    writeValue(array[i]);
+                }
+                writer.append(')');
+            } else {
+                writer.append('(');
+                writeValue(value);
+                writer.append(')');
+            }
+        }
+
+        /** Format single scalar value */
+        private void writeValue(@Nullable Object value) {
             if (value == null) {
                 writer.append("NULL");
             } else if (value instanceof String str) {
@@ -275,11 +375,13 @@ class DslQueryBuilderTest {
             }
         }
 
+        @Override
         public StringBuilder append(String str) {
             writer.append(str);
             return writer;
         }
 
+        @Override
         public StringBuilder append(char str) {
             writer.append(str);
             return writer;

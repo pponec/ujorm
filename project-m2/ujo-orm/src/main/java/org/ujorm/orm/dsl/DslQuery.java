@@ -21,6 +21,7 @@ import org.jetbrains.annotations.Nullable;
 import org.ujorm.core.DomainHandlerProvider;
 import org.ujorm.core.DomainHandlerService;
 import org.ujorm.core.criterion.Criterion;
+import org.ujorm.core.criterion.ValueCriterion;
 import org.ujorm.orm.core.EntityManager;
 import org.ujorm.orm.model.QuotePair;
 import org.ujorm.tools.jdbc.AbstractSqlQuery;
@@ -209,10 +210,8 @@ public class DslQuery<D> extends AbstractSqlQuery<DslQuery<D>> {
             }
         }
 
-
-        /** Format scalar value or arrays directly to writer */
         @Override
-        public void writeValue(Key<?,?> key, @Nullable Object value) {
+        public void writeCondition(ValueCriterion<?> criterion, @NotNull String optionalAlias) {
             // TODO.pop
         }
 

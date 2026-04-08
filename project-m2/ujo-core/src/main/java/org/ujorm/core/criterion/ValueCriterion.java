@@ -20,6 +20,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.ujorm.core.Key;
 import org.ujorm.tools.Assert;
+import org.ujorm.tools.common.Array;
 
 import java.util.Objects;
 
@@ -102,7 +103,7 @@ public class ValueCriterion<U> extends Criterion  {
 
     /** Returns the left node of the parent */
     @Override
-    public final Key<?,?> getLeftNode() {
+    public final @NotNull Key<?,?> getLeftNode() {
         return key;
     }
 
@@ -114,7 +115,7 @@ public class ValueCriterion<U> extends Criterion  {
 
     /** Returns an operator */
     @Override
-    public final Operator getOperator() {
+    public final @NotNull Operator getOperator() {
         return operator;
     }
 
@@ -146,7 +147,7 @@ public class ValueCriterion<U> extends Criterion  {
      * If parameter is not valid than method throws Exception.
      */
     protected final void checkArray(Object value) throws IllegalArgumentException {
-        Assert.isTrue(value instanceof Object[], "Value must be an Array type only");
+        Assert.isTrue(value instanceof Array<?>, "Value must be an Array type");
     }
 
     /** This instance is an immutable implementation. */
@@ -207,7 +208,7 @@ public class ValueCriterion<U> extends Criterion  {
 
     /** Find a domain class type of {@code Class<UJO>} from its keys. */
     @Override
-    public Class<?> getDomain() {
+    public @NotNull Class<?> getDomain() {
         var keyNode = getLeftNode();
         return keyNode != null ? keyNode.domainClass() : Objects.class;
     }

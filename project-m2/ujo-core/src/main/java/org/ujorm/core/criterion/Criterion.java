@@ -22,8 +22,6 @@ import org.ujorm.core.Key;
 import org.ujorm.core.impl.AbstractKey;
 import org.ujorm.tools.common.Array;
 
-import java.util.Collection;
-import java.util.List;
 import java.util.Objects;
 
 /**
@@ -186,33 +184,6 @@ public abstract class Criterion {
         return false;
     }
 
-    /**
-     * Create new Criterion for operator IN to compare value to a list of constants.
-     * @param positive The false value uses the NOT_IN operator.
-     * @param key A direct or indirect Ujo key
-     * @param list A collection of the U values.
-     * @param relatedKey The one key related to the one attribute of TYPE object.
-     * @return The new immutable Criterion.
-     */
-    @NotNull
-    private static <U, ITEM, TYPE> Criterion whereIn(
-            final boolean positive,
-            @NotNull final Key<U,TYPE> key,
-            @NotNull final Collection<ITEM> list,
-            @NotNull final Key<ITEM, TYPE> relatedKey) {
-
-        if (list.isEmpty()) {
-            return Criterion.constant(key, !positive);
-        } else {
-            var it = list.iterator();
-            var values = new Object[list.size()];
-            for (int i = 0, max = values.length; i < max; i++) {
-                values[i] = relatedKey.getValue(it.next());
-            }
-            return new ValueCriterion<>(key, positive ? Operator.IN : Operator.NOT_IN, values);
-        }
-    }
-
     // ------ STATIC FACTORY --------
 
     /**
@@ -283,25 +254,25 @@ public abstract class Criterion {
     @NotNull
     public static <U, TYPE> Criterion whereIn(
             @NotNull final Key<U,TYPE> key,
-            @NotNull final Collection<TYPE> list) {
+            @NotNull final Array<TYPE> list) {
         return list.isEmpty()
                 ? Criterion.constant(key, false)
-                : new ValueCriterion<>(key, Operator.IN, list.toArray());
+                : new ValueCriterion<>(key, Operator.IN, list);
     }
 
     /**
      * Create new Criterion for operator IN to compare value to a list of constants.
      * @param key A direct or indirect Ujo key
-     * @param list A collection of the values. The collection argument can be the EMPTY, the Criterion result will be TRUE in this case.
+     * @param array A collection of the values. The collection argument can be the EMPTY, the Criterion result will be TRUE in this case.
      * @return The new immutable Criterion.
      */
     @NotNull
     public static <U, TYPE> Criterion whereNotIn(
             @NotNull final Key<U,TYPE> key,
-            @NotNull final Collection<TYPE> list) {
-        return list.isEmpty()
+            @NotNull final Array<TYPE> array) {
+        return array.isEmpty()
                 ? Criterion.constant(key, true)
-                : new ValueCriterion<>(key, Operator.NOT_IN, list.toArray());
+                : new ValueCriterion<>(key, Operator.NOT_IN, array);
     }
 
     /**
@@ -334,36 +305,6 @@ public abstract class Criterion {
         return list.length == 0
                 ? Criterion.constant(key, true)
                 : new ValueCriterion<>(key, Operator.NOT_IN, list);
-    }
-
-    /**
-     * Create new Criterion for operator IN to compare value to a list of constants.
-     * @param key A direct or indirect Ujo key
-     * @param list A collection of the U values. The collection argument can be the EMPTY, the Criterion result will be FALSE in this case.
-     * @param relatedKey The one key related to the one attribute of TYPE object.
-     * @return The new immutable Criterion.
-     */
-    @NotNull
-    public static <U, ITEM, TYPE> Criterion whereIn(
-            @NotNull final Key<U,TYPE> key,
-            @NotNull final Collection<ITEM> list,
-            @NotNull final Key<ITEM, TYPE> relatedKey) {
-        return whereIn(true, key, list, relatedKey);
-    }
-
-    /**
-     * Create new Criterion for operator IN to compare value to a list of constants.
-     * @param key A direct or indirect Ujo key
-     * @param list A collection of the U values. The collection argument can be the EMPTY, the Criterion result will be FALSE in this case.
-     * @param relatedKey The one key related to the one attribute of TYPE object.
-     * @return The new immutable Criterion.
-     */
-    @NotNull
-    public static <U, ITEM, TYPE> Criterion whereNotIn(
-            @NotNull final Key<U,TYPE> key,
-            @NotNull final Collection<ITEM> list,
-            @NotNull final Key<ITEM, TYPE> relatedKey) {
-        return whereIn(false, key, list, relatedKey);
     }
 
     /**

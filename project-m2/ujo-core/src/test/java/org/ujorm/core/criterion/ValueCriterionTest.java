@@ -3,6 +3,8 @@ package org.ujorm.core.criterion;
 import org.junit.jupiter.api.Test;
 import org.ujorm.core.criterion.domains.Employee;
 import org.ujorm.core.criterion.domains.MetaEmployee;
+import org.ujorm.tools.common.Array;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 /** Unit tests for ValueCriterion */
@@ -99,8 +101,7 @@ public class ValueCriterionTest {
     }
 
     /** Helper method to create array of objects */
-    public static Object[] createDummyArray() {
-        var result = new Object[]{ "A", "B" };
-        return result;
+    public static Array<String>createDummyArray() {
+        return Array.of("A", "B");
     }
 }

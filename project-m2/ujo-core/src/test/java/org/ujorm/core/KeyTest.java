@@ -7,8 +7,7 @@ import org.junit.jupiter.api.Test;
 import org.ujorm.core.criterion.Criterion;
 import org.ujorm.core.criterion.Operator;
 import org.ujorm.core.criterion.ProxyValue;
-
-import java.util.Collection;
+import org.ujorm.tools.common.Array;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -180,12 +179,12 @@ class KeyTest {
         }
 
         @Override
-        public @NotNull Criterion whereIn(@NotNull Collection<String> list) {
+        public @NotNull Criterion whereIn(@NotNull Array<String> array) {
             return null;
         }
 
         @Override
-        public @NotNull Criterion whereNotIn(@NotNull Collection<String> list) {
+        public @NotNull Criterion whereNotIn(@NotNull Array<String> array) {
             return null;
         }
 

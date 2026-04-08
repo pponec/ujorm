@@ -185,9 +185,14 @@ public abstract class AbstractSqlQuery<T extends AbstractSqlQuery<T>> implements
     }
 
     /** Assigns SQL parameter values. If reusing a statement, ensure the same number of parameters is set. */
-    public T bindObject(final boolean enabled, @NotNull final String key, final JDBCType jdbcType, final Object... values) {
+    public T bindObject(final boolean enabled, @NotNull final String key, final JDBCType jdbcType, @NotNull final Object... values) {
+        return bindObject(enabled, key, jdbcType, Array.of(values));
+    }
+
+    /** Assigns SQL parameter values. If reusing a statement, ensure the same number of parameters is set. */
+    public T bindObject(final boolean enabled, @NotNull final String key, final JDBCType jdbcType, @NotNull final Array<Object> values) {
         if (enabled) {
-            params.put(key, new ParamValue(jdbcType, Array.of(values)));
+            params.put(key, new ParamValue(jdbcType, values));
         }
         return self();
     }

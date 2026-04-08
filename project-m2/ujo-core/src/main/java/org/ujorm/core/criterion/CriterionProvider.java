@@ -19,6 +19,7 @@ package org.ujorm.core.criterion;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.ujorm.core.Key;
+import org.ujorm.tools.common.Array;
 
 import java.util.Collection;
 import java.util.List;
@@ -66,14 +67,14 @@ public interface CriterionProvider<VALUE> {
      * @param list A collection of the values. The collection argument can be the EMPTY, the Criterion result will be FALSE in this case.
      * @return The new immutable Criterion.
      */
-    @NotNull Criterion whereIn(@NotNull Collection<VALUE> list);
+    @NotNull Criterion whereIn(@NotNull Array<VALUE> list);
 
     /**
      * Create new Criterion where this key value is not in any of parameter values.
      * @param list A collection of the values. The collection argument can be the EMPTY, the Criterion result will be TRUE in this case.
      * @return The new immutable Criterion.
      */
-    @NotNull Criterion whereNotIn(@NotNull Collection<VALUE> list);
+    @NotNull Criterion whereNotIn(@NotNull Array<VALUE> list);
 
     /** Create a new Criterion for all values. The method evaluate(ujo) always returns TRUE. */
     @NotNull Criterion whereTrue();
@@ -137,7 +138,7 @@ public interface CriterionProvider<VALUE> {
      */
     @SuppressWarnings("unchecked")
     @NotNull default Criterion whereIn(@NotNull final VALUE... values) {
-        return whereIn(List.of(values));
+        return whereIn(Array.of(values));
     }
 
     /**
@@ -147,7 +148,7 @@ public interface CriterionProvider<VALUE> {
      */
     @SuppressWarnings("unchecked")
     @NotNull default Criterion whereNotIn(@NotNull final VALUE... values) {
-        return whereNotIn(List.of(values));
+        return whereNotIn(Array.of(values));
     }
 
     /** Create a new Criterion where this key value does not equal the value. @see Operator#NOT_EQ */

@@ -48,7 +48,7 @@ public class BinaryCriterion extends Criterion {
 
     /** Returns the left node of the parent */
     @Override
-    public final Criterion getLeftNode() {
+    public final @NotNull Criterion getLeftNode() {
         return crn1;
     }
 
@@ -60,7 +60,7 @@ public class BinaryCriterion extends Criterion {
 
     /** Returns an operator */
     @Override
-    public final BinaryOperator getOperator() {
+    public final @NotNull BinaryOperator getOperator() {
         return operator;
     }
 
@@ -95,7 +95,7 @@ public class BinaryCriterion extends Criterion {
      * @return returns Method returns the {@code Ujo.class} instance if no domain was found.
      */
     @Override
-    public Class<?> getDomain() {
+    public @NotNull Class<?> getDomain() {
         if (domain == null) {
             final Class<?> c1 = getLeftNode().getDomain();
             final Class<?> c2 = getRightNode().getDomain();

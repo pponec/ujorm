@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -38,9 +38,10 @@ import java.util.stream.Stream;
  *
  * @author Pavel Ponec
  */
-public final class Array<T> implements Serializable {
+public final class Array<T> implements Serializable, Iterable<T> {
 
-    protected final T[] array;
+    @NotNull
+    private final T[] array;
 
     /** Internal constructor */
     protected Array(@NotNull final T[] array) {
@@ -78,6 +79,13 @@ public final class Array<T> implements Serializable {
         return Stream.of(array);
     }
 
+    /** Returns an iterator over elements of type T */
+    @NotNull
+    @Override
+    public Iterator<T> iterator() {
+        return new Itr();
+    }
+
     /** Negative index value is supported, the index out of the range returns the {@code null} value. */
     @NotNull
     public Optional<T> get(final int i) {
@@ -110,7 +118,7 @@ public final class Array<T> implements Serializable {
     /** No validations for the best performance */
     @Nullable
     public T getFirstValue(@Nullable T defaultValue) {
-        return array.length >=0 ? array[0] : defaultValue;
+        return array.length > 0 ? array[0] : defaultValue;
     }
 
     @NotNull
@@ -121,7 +129,7 @@ public final class Array<T> implements Serializable {
     /** No validations for the best performance */
     @Nullable
     public T getLastValue(@Nullable T defaultValue) {
-        return array.length >=0 ? array[array.length - 1] : defaultValue;
+        return array.length > 0 ? array[array.length - 1] : defaultValue;
     }
 
 
@@ -181,7 +189,31 @@ public final class Array<T> implements Serializable {
     @NotNull
     @Override
     public String toString() {
-        return Arrays.asList(array).toString();
+        var result = new StringBuilder(64).append('[');
+        for (var i = 0; i < array.length; i++) {
+            result.append(i == 0 ? "" : ", ");
+            result.append(array[i]);
+        }
+        return result.append(']').toString();
+    }
+
+    /** An optimized iterator */
+    private class Itr implements Iterator<T> {
+        /** Index of element to be returned by subsequent call to next */
+        private int index = 0;
+
+        @Override
+        public boolean hasNext() {
+            return index != array.length;
+        }
+
+        @Override
+        public T next() {
+            if (index >= array.length) {
+                throw new NoSuchElementException();
+            }
+            return array[index++];
+        }
     }
 
     /** Factory method */

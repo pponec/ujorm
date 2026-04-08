@@ -24,9 +24,6 @@ import org.ujorm.core.Key;
 import org.ujorm.core.criterion.AbstractOperator;
 import org.ujorm.core.criterion.BinaryCriterion;
 import org.ujorm.core.criterion.Criterion;
-import org.ujorm.core.criterion.FunctionCriterion;
-import org.ujorm.core.criterion.Operator;
-import org.ujorm.core.criterion.TemplateValue;
 import org.ujorm.core.criterion.ValueCriterion;
 
 import java.util.*;
@@ -210,7 +207,10 @@ public class DslQueryBuilder {
 
     /** Recursive evaluation of the criterion tree */
     private void buildCriterionTree(Criterion crn, boolean isRoot) {
-        if (crn instanceof BinaryCriterion binCrn) {
+        if (crn instanceof ValueCriterion<?> valCrn) {
+            var alias = resolveAlias(valCrn.getLeftNode());
+            writer.writeCondition(valCrn, alias);
+        } else if (crn instanceof BinaryCriterion binCrn) {
             if (!isRoot) {
                 writer.append("(");
             }
@@ -220,52 +220,18 @@ public class DslQueryBuilder {
             if (!isRoot) {
                 writer.append(")");
             }
-        } else if (crn instanceof FunctionCriterion<?, ?> funCrn) {
-            appendSimpleCriterion(funCrn.getLeftNode(), funCrn.getOperator(), funCrn.getRightNode());
-        } else if (crn instanceof ValueCriterion<?> valCrn) {
-            appendSimpleCriterion(valCrn.getLeftNode(), valCrn.getOperator(), valCrn.getRightNode());
+        } else {
+            throw new IllegalArgumentException("Unsupported criterion: " + crn);
         }
     }
 
-    /**
-     * Append simple criterion to writer.
-     * Special handling for {@link Operator#CUSTOM_SQL} templates.
-     */
-    private void appendSimpleCriterion(Object leftNode, Enum<?> operator, Object rightNode) {
-        var key = (Key<?, ?>) leftNode;
+    /** Resolve table alias from a Key */
+    @NotNull
+    private String resolveAlias(Key<?, ?> key) {
         var resolvedAlias = key instanceof AliasedKey<?,?> akey
                 ? akey.tableAlias()
                 : domainAliases.getOrDefault(key.domainClass(), baseTableAlias);
-
-        if (operator == Operator.CUSTOM_SQL && rightNode instanceof TemplateValue<?> tv) {
-            appendCustomSql(resolvedAlias, key, tv);
-        } else {
-            writer.writeColumnName(resolvedAlias, key);
-            writer.append(SPACE).append(getSqlOperatorText(operator)).append(SPACE);
-            writer.writeValue(key, rightNode);
-        }
-    }
-
-    /** Evaluates and appends a custom SQL template with its placeholders. */
-    public void appendCustomSql(String alias, Key<?, ?> key, TemplateValue<?> templateValue) {
-        var values = templateValue.valuesNonNull();
-        var template = templateValue.template();
-
-        var last = 0;
-        for (var start = template.indexOf('{'); start != -1; start = template.indexOf('{', last)) {
-            var end = template.indexOf('}', start);
-            if (end == -1) break;
-
-            writer.append(template.substring(last, start));
-            var mark = template.substring(start + 1, end);
-            last = end + 1;
-
-            switch (mark) {
-                case "0" -> writer.writeColumnName(alias, key);
-                default -> writer.writeValue(key, values);
-            }
-        }
-        writer.append(template.substring(last));
+        return resolvedAlias != null ? resolvedAlias : "";
     }
 
     /** Extract base table class from criterion */

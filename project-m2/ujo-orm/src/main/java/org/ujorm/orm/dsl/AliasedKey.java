@@ -7,6 +7,7 @@ import org.ujorm.core.KeyInfo;
 import org.ujorm.core.criterion.Criterion;
 import org.ujorm.core.criterion.Operator;
 import org.ujorm.core.criterion.ProxyValue;
+import org.ujorm.tools.common.Array;
 
 import java.util.Collection;
 
@@ -124,14 +125,14 @@ public class AliasedKey<T, V> implements Key<T, V> {
 
     /** {@inheritDoc} */
     @Override
-    public Criterion whereIn(@NotNull final Collection<V> list) {
-        return Criterion.whereIn(this, list);
+    public Criterion whereIn(@NotNull final Array<V> array) {
+        return Criterion.whereIn(this, array);
     }
 
     /** {@inheritDoc} */
     @Override
-    public Criterion whereNotIn(@NotNull final Collection<V> list) {
-        return Criterion.whereNotIn(this, list);
+    public Criterion whereNotIn(@NotNull final Array<V> array) {
+        return Criterion.whereNotIn(this, array);
     }
 
     /** {@inheritDoc} */
