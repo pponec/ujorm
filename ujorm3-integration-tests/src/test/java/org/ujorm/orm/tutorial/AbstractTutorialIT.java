@@ -11,6 +11,7 @@ import org.ujorm.orm.tutorial.domains.City;
 import org.ujorm.orm.tutorial.domains.Employee;
 import org.ujorm.orm.tutorial.domains.MetaCity;
 import org.ujorm.orm.tutorial.domains.MetaEmployee;
+import org.ujorm.orm.utils.EntityContext;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
@@ -43,8 +44,9 @@ public abstract class AbstractTutorialIT {
 
     @BeforeAll
     void setupDatabase() throws SQLException {
-        employeeEm = EntityManager.of(Employee.class);
-        cityEm = EntityManager.of(City.class);
+        var ctx = EntityContext.ofDefault();
+        employeeEm = ctx.entityManager(Employee.class);
+        cityEm = ctx.entityManager(City.class);
 
         dbConnection = dataSource.getConnection();
         dbConnection.setAutoCommit(false);

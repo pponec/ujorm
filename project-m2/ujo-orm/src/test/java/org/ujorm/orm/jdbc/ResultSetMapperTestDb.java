@@ -5,9 +5,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.ujorm.core.DomainHandlerProvider;
 import org.ujorm.orm.core.AbstractDaoTest;
-import org.ujorm.orm.core.EntityManager;
 import org.ujorm.orm.demo.City;
 import org.ujorm.orm.demo.Employee;
+import org.ujorm.orm.utils.EntityContext;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -16,14 +16,17 @@ import java.time.LocalDate;
 /** Tests a logic of column aliases processing in ResultSetMapper */
 class ResultSetMapperTestDb extends AbstractDaoTest {
 
+    private EntityContext ctx = EntityContext.ofDefault();
+    private final Class<Long> idType = Long.class;
+
     City cityOriginal = null;
     Employee employeeOriginal = null;
 
     /** Set up the database connection and initialize tables before each test. */
     @BeforeEach
     void setUp() throws SQLException {
-        var cityDao = EntityManager.of(City.class, Long.class).crud(dbConnection);
-        var emplDao = EntityManager.of(Employee.class, Long.class).crud(dbConnection);
+        var cityDao = ctx.entityManager(City.class, idType).crud(dbConnection);
+        var emplDao = ctx.entityManager(Employee.class, idType).crud(dbConnection);
         cityOriginal = cityDao.insert(new City(2L, "California", "US", 36.7783, -119.4179));
         employeeOriginal = emplDao.insert(createEmployee(1L, "EmplA", cityOriginal));
     }
@@ -80,7 +83,7 @@ class ResultSetMapperTestDb extends AbstractDaoTest {
              WHERE id = ?
             """;
         var resultSet = getEmployeeResultSet(sql, 1L);
-        var entityManager = EntityManager.of(Employee.class, Long.class);
+        var entityManager = ctx.entityManager(Employee.class, idType);
 
         Assertions.assertTrue(resultSet.next(), "ResultSet should contain at least one row");
         var employee = entityManager.map(resultSet);
@@ -102,7 +105,7 @@ class ResultSetMapperTestDb extends AbstractDaoTest {
              WHERE id = ?
             """;
         var resultSet = getEmployeeResultSet(sql, 1L);
-        var entityManager = EntityManager.of(Employee.class, Long.class);
+        var entityManager = ctx.entityManager(Employee.class, idType);
         var mapper = entityManager.mapper();
 
         Assertions.assertTrue(resultSet.next(), "ResultSet should contain at least one row");

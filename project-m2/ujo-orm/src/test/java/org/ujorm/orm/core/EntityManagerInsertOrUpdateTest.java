@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.ujorm.orm.demo.City;
 import org.ujorm.orm.demo.Employee;
+import org.ujorm.orm.utils.EntityContext;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -15,13 +16,16 @@ import java.util.stream.Stream;
 /** Tests for stream-based batch inserts and insertOrUpdate operations */
 class EntityManagerInsertOrUpdateTest extends AbstractDaoTest {
 
+    private EntityContext ctx = EntityContext.ofDefault();
+    private final Class<Long> idType = Long.class;
+
     // --- TESTS FOR insertBatch (Stream) ---
 
     @Test
     void insertBatch_Stream() {
-        var cityDao = EntityManager.of(City.class, Long.class).crud(dbConnection);
+        var cityDao = ctx.entityManager(City.class, idType).crud(dbConnection);
         var city = cityDao.insert(new City(null, "California", "US", 36.7783, -119.4179));
-        var emplDao = EntityManager.of(Employee.class, Long.class).crud(dbConnection);
+        var emplDao = ctx.entityManager(Employee.class, idType).crud(dbConnection);
 
         var newEmployees = Stream.of(
                 createEmployee("EmplA", city),
@@ -47,9 +51,9 @@ class EntityManagerInsertOrUpdateTest extends AbstractDaoTest {
 
     @Test
     void insertOrUpdate_AllNew_GoesToInsert() {
-        var cityDao = EntityManager.of(City.class, Long.class).crud(dbConnection);
+        var cityDao = ctx.entityManager(City.class, idType).crud(dbConnection);
         var city = cityDao.insert(new City(null, "Texas", "US", 31.9686, -99.9018));
-        var emplDao = EntityManager.of(Employee.class, Long.class).crud(dbConnection);
+        var emplDao = ctx.entityManager(Employee.class, idType).crud(dbConnection);
 
         var newEmployees = Stream.of(
                 createEmployee("NewEmpl1", city),
@@ -66,9 +70,9 @@ class EntityManagerInsertOrUpdateTest extends AbstractDaoTest {
 
     @Test
     void insertOrUpdate_AllExisting_GoesToUpdate() {
-        var cityDao = EntityManager.of(City.class, Long.class).crud(dbConnection);
+        var cityDao = ctx.entityManager(City.class, idType).crud(dbConnection);
         var city = cityDao.insert(new City(null, "Nevada", "US", 38.8026, -116.4194));
-        var emplDao = EntityManager.of(Employee.class, Long.class).crud(dbConnection);
+        var emplDao = ctx.entityManager(Employee.class, idType).crud(dbConnection);
 
         // Nejprve záznamy reálně vložíme, abychom získali ID
         var emp1 = emplDao.insert(createEmployee("OldEmpl1", city));
@@ -91,9 +95,9 @@ class EntityManagerInsertOrUpdateTest extends AbstractDaoTest {
 
     @Test
     void insertOrUpdate_Mixed_CorrectlyRoutes() {
-        var cityDao = EntityManager.of(City.class, Long.class).crud(dbConnection);
+        var cityDao = ctx.entityManager(City.class, idType).crud(dbConnection);
         var city = cityDao.insert(new City(null, "Utah", "US", 39.3210, -111.0937));
-        var emplDao = EntityManager.of(Employee.class, Long.class).crud(dbConnection);
+        var emplDao = ctx.entityManager(Employee.class, idType).crud(dbConnection);
 
         // 1 existující záznam (k updatu)
         var existingEmp = emplDao.insert(createEmployee("Mixed-Old", city));
@@ -116,9 +120,9 @@ class EntityManagerInsertOrUpdateTest extends AbstractDaoTest {
 
     @Test
     void insertOrUpdate_WithSpecificProperties() {
-        var cityDao = EntityManager.of(City.class, Long.class).crud(dbConnection);
+        var cityDao = ctx.entityManager(City.class, idType).crud(dbConnection);
         var city = cityDao.insert(new City(null, "Oregon", "US", 43.8041, -120.5542));
-        var emplDao = EntityManager.of(Employee.class, Long.class).crud(dbConnection);
+        var emplDao = ctx.entityManager(Employee.class, idType).crud(dbConnection);
 
         var existingEmp = emplDao.insert(createEmployee("PropEmpl", city));
 

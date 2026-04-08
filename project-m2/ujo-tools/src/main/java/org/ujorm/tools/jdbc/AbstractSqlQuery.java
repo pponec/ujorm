@@ -70,20 +70,21 @@ public abstract class AbstractSqlQuery<T extends AbstractSqlQuery<T>> implements
         return (T) this;
     }
 
-    /** Init builder */
-    protected StringBuilder initWriter() {
+    /** Get builder */
+    @NotNull
+    protected StringBuilder getWriter(boolean reset) {
         if (_writer == null) {
             _writer = new StringBuilder(64);
-        } else {
+        } else if (reset) {
             _writer.setLength(0);
         }
         return _writer;
     }
 
     /** Sets a new SQL template and resets current parameters. Any existing resources are closed. */
-    public T sql(@NotNull String... sqlLines) {
+    public T sql(@NotNull CharSequence... sqlLines) {
         close();
-        sqlTemplate = sqlLines.length == 1 ? sqlLines[0] : String.join("\n", sqlLines);
+        sqlTemplate = sqlLines.length == 1 ? sqlLines[0].toString() : String.join("\n", sqlLines);
         return self();
     }
 
@@ -347,7 +348,7 @@ public abstract class AbstractSqlQuery<T extends AbstractSqlQuery<T>> implements
 
     @NotNull
     protected String buildSql(List<ParamValue> sqlValues, boolean includingValues) {
-        final var sqlBuffer = initWriter();
+        final var sqlBuffer = getWriter(true);
         final var matcher = SQL_MARK.matcher(sqlTemplate);
         final var missingKeys = new HashSet<String>();
 
@@ -411,7 +412,7 @@ public abstract class AbstractSqlQuery<T extends AbstractSqlQuery<T>> implements
     ) {}
 
     /** SQL parameter values */
-    record ParamValue(
+    protected record ParamValue(
             /** Returns the JDBC Type */
             @NotNull JDBCType jdbcType,
             /** Returns the parameter values */

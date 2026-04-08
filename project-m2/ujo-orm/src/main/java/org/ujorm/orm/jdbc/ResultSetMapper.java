@@ -6,8 +6,8 @@ import org.ujorm.core.*;
 import org.ujorm.core.csv.CsvLineSplitter;
 import org.ujorm.core.impl.AbstractUjo;
 import org.ujorm.orm.Config;
+import org.ujorm.orm.utils.JdbcUtils;
 import org.ujorm.tools.common.Primitive;
-import org.ujorm.tools.jdbc.JdbcUtils;
 import org.ujorm.tools.jdbc.AbstractSqlQuery.SqlFunction;
 
 import java.sql.ResultSet;

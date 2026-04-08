@@ -3,9 +3,9 @@ package org.ujorm.orm.core;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.ujorm.orm.Config;
-import org.ujorm.orm.UjormServiceProvider;
 import org.ujorm.orm.demo.City;
 import org.ujorm.orm.demo.Employee;
+import org.ujorm.orm.utils.EntityContext;
 
 import java.time.LocalDate;
 import java.util.stream.Stream;
@@ -15,11 +15,12 @@ import java.util.stream.Stream;
  */
 class EntityManagerBatchTest extends AbstractDaoTest {
 
-    private final Class<Long> pkType = Long.class;
+    private final EntityContext ctx = EntityContext.ofDefault();
+    private final Class<Long> idType = Long.class;
 
     @Test
     void testBatchInsertWithAndWithoutIds() {
-        var cityDao = EntityManager.of(City.class, pkType).crud(dbConnection);
+        var cityDao = ctx.entityManager(City.class, idType).crud(dbConnection);
 
         // Mix of cities with and without predefined IDs
         var city1 = new City(null, "Prague", "CZ", 50.0755, 14.4378);
@@ -51,7 +52,7 @@ class EntityManagerBatchTest extends AbstractDaoTest {
 
     @Test
     void testBatchInsertExceedingChunkLimit() {
-        var cityDao = EntityManager.of(City.class, pkType).crud(dbConnection);
+        var cityDao = ctx.entityManager(City.class, idType).crud(dbConnection);
 
         // Create a large number of cities to force batch chunking
         int totalCities = 1200;
@@ -77,11 +78,11 @@ class EntityManagerBatchTest extends AbstractDaoTest {
 
     @Test
     void testBatchDelete() {
-        var cityDao = EntityManager.of(City.class, pkType).crud(dbConnection);
+        var cityDao = ctx.entityManager(City.class, idType).crud(dbConnection);
         var cityInp = new City(null, "California", "US", 36.7783, -119.4179);
         var city = cityDao.insert(cityInp);
 
-        var emplDao = EntityManager.of(Employee.class, pkType).crud(dbConnection);
+        var emplDao = ctx.entityManager(Employee.class, idType).crud(dbConnection);
 
         // Prepare employees
         var emp1 = emplDao.insert(createEmployee("Emp-A", city));
@@ -105,9 +106,9 @@ class EntityManagerBatchTest extends AbstractDaoTest {
 
     @Test
     void testBatchDeleteExceedingChunkLimit() {
-        var cityDao = EntityManager.of(City.class, pkType).crud(dbConnection);
+        var cityDao = ctx.entityManager(City.class, idType).crud(dbConnection);
         var city = cityDao.insert(new City(null, "California", "US", 36.7783, -119.4179));
-        var emplDao = EntityManager.of(Employee.class, pkType).crud(dbConnection);
+        var emplDao = ctx.entityManager(Employee.class, idType).crud(dbConnection);
 
         // Create 1100 employees
         int totalEmployees = 1100;
@@ -129,7 +130,7 @@ class EntityManagerBatchTest extends AbstractDaoTest {
 
     @Test
     void testEmptyAndNullBatches() {
-        var cityDao = EntityManager.of(City.class, pkType).crud(dbConnection);
+        var cityDao = ctx.entityManager(City.class, idType).crud(dbConnection);
 
         // Empty array
         var result1 = cityDao.insert(new City[0]);
@@ -149,7 +150,7 @@ class EntityManagerBatchTest extends AbstractDaoTest {
     /** Tests batch delete operation using a stream that ends with a null value. */
     @Test
     void testBatchDeleteWithTrailingNull() {
-        var cityDao = EntityManager.of(City.class, pkType).crud(dbConnection);
+        var cityDao = ctx.entityManager(City.class, idType).crud(dbConnection);
         var city1 = cityDao.insert(new City(null, "Prague", "CZ", 50.0755, 14.4378));
         var city2 = cityDao.insert(new City(null, "Brno", "CZ", 49.1951, 16.6068));
 
@@ -185,15 +186,12 @@ class EntityManagerBatchTest extends AbstractDaoTest {
         org.mockito.Mockito.when(customConfig.getBatchSize()).thenReturn(3);
 
         // 3. Create a Context with this mocked config
-        var customContext = new org.ujorm.orm.impl.Context(
-                customConfig,
-                org.ujorm.core.DomainHandlerProvider.provider(),
-                new org.ujorm.orm.service.CommonService()
-        );
+        var ctx = EntityContext.of(customConfig);
+
 
         // 4. Initialize managers for both City and Employee
-        var cityDao = UjormServiceProvider.crud(City.class, dbConnection, Long.class);
-        var employeeDao = UjormServiceProvider.crud(Employee.class, dbConnection, Long.class);
+        var cityDao = ctx.crud(City.class, idType, dbConnection);
+        var employeeDao = ctx.crud(Employee.class, idType, dbConnection);
 
         // --- Execution ---
 

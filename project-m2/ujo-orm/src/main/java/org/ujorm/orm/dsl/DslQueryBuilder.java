@@ -16,7 +16,6 @@
  */
 package org.ujorm.orm.dsl;
 
-import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.ujorm.core.DomainHandlerProvider;
@@ -35,7 +34,6 @@ import java.util.*;
  *
  * @since 2.26
  */
-@RequiredArgsConstructor
 public class DslQueryBuilder {
 
     /** New Line Character */
@@ -62,11 +60,16 @@ public class DslQueryBuilder {
     /** Extracted base table alias */
     private String baseTableAlias;
 
-    /** Quoters */
-    private final DslQueryWriter writer;
+    /** DSL Writer */
+    private final DslQueryWriter dslWriter;
 
     @NotNull
     private Criterion criterion = Criterion.forAll();
+
+    /** Constructor */
+    public DslQueryBuilder(@NotNull DslQueryWriter dslWriter) {
+        this.dslWriter = dslWriter;
+    }
 
     /** Adds a description of a single column composed of sequentially linked components. */
     public void column(Key<?, ?>... column) {
@@ -80,7 +83,7 @@ public class DslQueryBuilder {
 
     /** Build the query */
     public StringBuilder build() {
-        var result = writer.append("");
+        var result = dslWriter.append("");
         if (result.isEmpty()) {
             result.append("SELECT ");
         }
@@ -143,7 +146,7 @@ public class DslQueryBuilder {
             }
 
             if (colIdx > 0) {
-                writer.append(NEW_LINE).append(", ");
+                dslWriter.append(NEW_LINE).append(", ");
             }
 
             var finalKey = keyPath[keyPath.length - 1];
@@ -151,7 +154,7 @@ public class DslQueryBuilder {
                     ? akey.tableAlias()
                     : currentAlias;
 
-            writer.writeColumnName(finalAlias, finalKey, keyPath);
+            dslWriter.writeColumnName(finalAlias, finalKey, keyPath);
         }
     }
 
@@ -171,19 +174,19 @@ public class DslQueryBuilder {
             baseTableAlias = generateAlias(entityClass.getSimpleName());
         }
 
-        writer.append(NEW_LINE).append("FROM ");
-        writer.writeTableName(baseTableAlias, entityClass);
+        dslWriter.append(NEW_LINE).append("FROM ");
+        dslWriter.writeTableName(baseTableAlias, entityClass);
     }
 
     /** Inner/outer joins according to isRequired method */
     public void buildJoins() {
         for (var join : joins) {
-            writer.append(NEW_LINE).append(join.required() ? "INNER JOIN " : "OUTER JOIN ");
-            writer.writeTableName(join.targetAlias(), join.targetClass());
-            writer.append(" ON ");
-            writer.writeColumnName(join.targetAlias(), findRelatedPrimaryKey(join.relationKey()));
-            writer.append(" = ");
-            writer.writeColumnName(join.sourceAlias(), join.relationKey());
+            dslWriter.append(NEW_LINE).append(join.required() ? "INNER JOIN " : "OUTER JOIN ");
+            dslWriter.writeTableName(join.targetAlias(), join.targetClass());
+            dslWriter.append(" ON ");
+            dslWriter.writeColumnName(join.targetAlias(), findRelatedPrimaryKey(join.relationKey()));
+            dslWriter.append(" = ");
+            dslWriter.writeColumnName(join.sourceAlias(), join.relationKey());
         }
     }
 
@@ -193,7 +196,7 @@ public class DslQueryBuilder {
             switch (valCrn.getOperator()) {
                 case ALWAYS_TRUE -> { return; }
                 case ALWAYS_FALSE -> {
-                    writer.append(NEW_LINE).append("WHERE ")
+                    dslWriter.append(NEW_LINE).append("WHERE ")
                             .append(getSqlOperatorText(valCrn.getOperator()));
                     return;
                 }
@@ -201,24 +204,24 @@ public class DslQueryBuilder {
             }
         }
 
-        writer.append(NEW_LINE).append("WHERE ");
+        dslWriter.append(NEW_LINE).append("WHERE ");
         buildCriterionTree(this.criterion, true);
     }
 
     /** Recursive evaluation of the criterion tree */
     private void buildCriterionTree(Criterion crn, boolean isRoot) {
         if (crn instanceof ValueCriterion<?> valCrn) {
-            var alias = resolveAlias(valCrn.getLeftNode());
-            writer.writeCondition(valCrn, alias);
+            var alias = findTableAlias(valCrn.getLeftNode());
+            dslWriter.writeCondition(valCrn, alias);
         } else if (crn instanceof BinaryCriterion binCrn) {
             if (!isRoot) {
-                writer.append("(");
+                dslWriter.append("(");
             }
             buildCriterionTree(binCrn.getLeftNode(), false);
-            writer.append(SPACE).append(getSqlOperatorText(binCrn.getOperator())).append(SPACE);
+            dslWriter.append(SPACE).append(getSqlOperatorText(binCrn.getOperator())).append(SPACE);
             buildCriterionTree(binCrn.getRightNode(), false);
             if (!isRoot) {
-                writer.append(")");
+                dslWriter.append(")");
             }
         } else {
             throw new IllegalArgumentException("Unsupported criterion: " + crn);
@@ -227,11 +230,10 @@ public class DslQueryBuilder {
 
     /** Resolve table alias from a Key */
     @NotNull
-    private String resolveAlias(Key<?, ?> key) {
+    public String findTableAlias(@NotNull Key<?, ?> key) {
         var result = key instanceof AliasedKey<?,?> akey
                 ? akey.tableAlias()
                 : domainAliases.getOrDefault(key.domainClass(), baseTableAlias);
-
         if (result == null) {
             throw new IllegalStateException("No alias found for the key: " + key.fullName());
         }

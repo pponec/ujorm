@@ -18,13 +18,13 @@ package org.ujorm.orm.model;
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 import org.ujorm.core.DomainHandler;
+import org.ujorm.core.DomainHandlerProvider;
 import org.ujorm.core.Key;
 import org.ujorm.core.generator.TableIdentifier;
 import org.ujorm.orm.Config;
-import org.ujorm.orm.impl.Context;
+import org.ujorm.orm.utils.JdbcUtils;
 import org.ujorm.tools.Check;
 import org.ujorm.tools.common.StreamUtils;
-import org.ujorm.tools.jdbc.JdbcUtils;
 import org.ujorm.tools.jdbc.SQLExceptionBuilder;
 
 import java.sql.Connection;
@@ -42,7 +42,7 @@ import java.util.logging.Logger;
 public class TableModelBuilder<D> {
     private static final Logger LOGGER = Logger.getLogger(TableModelBuilder.class.getName());
     private final DomainHandler<D> handler;
-    private final Context ctx;
+    private final Config config;
 
     /** Map a database columns where the key is lower-case */
     private Map<String, String> dbColumMapLowerCase;
@@ -59,7 +59,7 @@ public class TableModelBuilder<D> {
                 .filter(c -> c != pk)
                 .toList();
         var isOracleDb = getDbVendor(initConnection);
-        var sqlQuote = getSqlQuote(initConnection, ctx.config());
+        var sqlQuote = getSqlQuote(initConnection, config);
         var jdbc = new Jdbc(isOracleDb, sqlQuote);
         var tableName = softTableModel.merge(realTableModel).getQualifiedName();
         return new TableModel(handler, pk, columns, tableName, insertedColumns, jdbc);
@@ -234,8 +234,8 @@ public class TableModelBuilder<D> {
         var jdbcType = (JDBCType) null;
         var foreignKey = (Key<V,?>) null;
         if (key.info().foreignKey()) {
-            var foreignHandler = ctx.domainService().getHandler(key.type());
-            var acceptDefaultPk = ctx.config().acceptDefaultPk();
+            var foreignHandler = DomainHandlerProvider.getHandler(key.type());
+            var acceptDefaultPk = config.acceptDefaultPk();
             foreignKey = foreignHandler.findPrimaryKey(acceptDefaultPk);
             jdbcType = JdbcUtils.findJdbcType(foreignKey.type());
         } else {
@@ -255,7 +255,7 @@ public class TableModelBuilder<D> {
             if (col.pk()) return col;
         }
         var firstColumn = columns.get(0);
-        if (ctx.config().acceptDefaultPk()) {
+        if (config.acceptDefaultPk()) {
             return firstColumn;
         } else {
             var msg = "No primary key was found by to annotation in " + firstColumn.key().domainClass();
@@ -264,7 +264,7 @@ public class TableModelBuilder<D> {
     }
 
     /** Static builder */
-    public static <D> TableModel<D> build(DomainHandler<D> handler, Context ctx, Connection initConnection) {
-        return new TableModelBuilder<>(handler, ctx).build(initConnection);
+    public static <D> TableModel<D> build(DomainHandler<D> handler, Config config, Connection initConnection) {
+        return new TableModelBuilder<>(handler, config).build(initConnection);
     }
 }

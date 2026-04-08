@@ -10,6 +10,7 @@ import java.util.function.Function;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+/** ORM Configuration */
 public class Config {
 
     private static final Logger LOGGER = Logger.getLogger(Config.class.getName());

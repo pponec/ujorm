@@ -17,21 +17,21 @@
 package org.ujorm.orm.dsl;
 
 import org.jetbrains.annotations.NotNull;
-import org.ujorm.core.DomainHandlerProvider;
-import org.ujorm.core.DomainHandlerService;
 import org.ujorm.core.Key;
 import org.ujorm.core.criterion.Criterion;
 import org.ujorm.core.criterion.TemplateValue;
 import org.ujorm.core.criterion.ValueCriterion;
 import org.ujorm.orm.core.EntityManager;
 import org.ujorm.orm.model.QuotePair;
+import org.ujorm.orm.utils.JdbcUtils;
 import org.ujorm.tools.common.Array;
 import org.ujorm.tools.jdbc.AbstractSqlQuery;
-import org.ujorm.tools.jdbc.JdbcUtils;
 import org.ujorm.tools.jdbc.SQLException;
 
 import java.sql.Connection;
 import java.sql.JDBCType;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A fluent wrapper over {@link java.sql.PreparedStatement}
@@ -67,14 +67,19 @@ public class DslQuery<D> extends AbstractSqlQuery<DslQuery<D>> {
     /** Empty key array */
     private static final Key<?,?>[] EMPTY = new Key<?,?>[0];
 
-    /** Handler service */
-    private final DomainHandlerService handlerService;
+    /** Entity manager */
+    private final EntityManager<D,?> entityManager;
 
     /** Columns */
     private final DslQueryBuilder builder;
 
     /** Column quotes */
-    private final QuotePair q;
+    @NotNull
+    private QuotePair q = QuotePair.ofDefault();
+
+    /** Sql Tail */
+    @NotNull
+    private CharSequence[] sqlHead;
 
     /** Sql Tail */
     @NotNull
@@ -87,24 +92,11 @@ public class DslQuery<D> extends AbstractSqlQuery<DslQuery<D>> {
      * Constructor with a database connection
      * @param dbConnection A database connection
      */
-    public DslQuery(@NotNull Connection dbConnection,
-                    @NotNull QuotePair quote,
-                    @NotNull DomainHandlerService handlerService
-    ) {
+    public DslQuery(@NotNull Connection dbConnection, @NotNull EntityManager<D, ?> entityManager) {
         super(dbConnection);
-        this.handlerService = handlerService;
-        this.q = quote;
-        this.builder = new DslQueryBuilder(new Writer());
-    }
-
-    /**
-     * Constructor with a database connection
-     * @param dbConnection A database connection
-     */
-    public DslQuery(@NotNull Connection dbConnection,
-                    @NotNull QuotePair quote
-    ) {
-        this(dbConnection, quote, DomainHandlerProvider.provider());
+        var dslWriter = new DslWriter(getWriter(true));
+        this.builder = new DslQueryBuilder(dslWriter);
+        this.entityManager = entityManager;
     }
 
     @Override
@@ -116,11 +108,9 @@ public class DslQuery<D> extends AbstractSqlQuery<DslQuery<D>> {
 
     /** Head of the SQL where default is SELECT. */
     @Override
-    public DslQuery<D> sql(@NotNull String... sqlHead) {
-        initWriter();
-        // TODO:
-        var sql = String.join(" ", sqlHead);
-        super.sql(sql);
+    public DslQuery<D> sql(@NotNull CharSequence... sqlHead) {
+        super.sql("");
+        this.sqlHead = sqlHead;
         return self();
     }
 
@@ -194,9 +184,46 @@ public class DslQuery<D> extends AbstractSqlQuery<DslQuery<D>> {
         return self();
     }
 
-    public final class Writer implements DslQueryWriter {
+    private void writeParts(CharSequence[] items) {
+        var writer = getWriter(false);
+        for (int i = 0; i < items.length; i++) {
+            if (i > 0) {
+                writer.append(' ');
+            }
+            var item = items[i];
+            writer.append(item);
 
-        final StringBuilder writer = initWriter();
+        }
+    }
+
+    @NotNull
+    @Override
+    protected String buildSql(List<ParamValue> sqlValues, boolean includingValues) {
+        if (sqlValues instanceof ArrayList<ParamValue> array) {
+            array.ensureCapacity(10);
+        }
+        var sqlWriter = getWriter(true);
+        var baseEntityClass = entityManager.getDomainClass();
+        var tableModel = entityManager.getTableModelService().getTableModel(baseEntityClass, dbConnection);
+        this.q = tableModel.jdbc().quotes(); // Assign real quotes.
+
+        writeParts(sqlHead);
+        builder.build();
+        writeParts(sqlTail);
+        sqlTemplate = sqlWriter.toString();
+
+        return super.buildSql(sqlValues, includingValues);
+    }
+
+    // --- INNER CLASSES ---
+
+    public final class DslWriter implements DslQueryWriter {
+
+        final StringBuilder writer;
+
+        public DslWriter(StringBuilder writer) {
+            this.writer = writer;
+        }
 
         /** Write database table name. */
         @Override
@@ -297,21 +324,12 @@ public class DslQuery<D> extends AbstractSqlQuery<DslQuery<D>> {
     }
 
     /** Run a query statement */
-    public static <D, R> R run(Connection connection, QuotePair quote, DomainHandlerService service, SqlFunction<DslQuery<D>, R> fun) {
-        try (var query = new DslQuery<D>(connection, quote, service)) {
+    public static <D, R> R run(Connection connection, EntityManager<D, ?> em, SqlFunction<DslQuery<D>, R> fun) {
+        try (var query = new DslQuery<D>(connection, em)) {
             return fun.applyFunction(query);
         } catch (Exception ex) {
             throw (ex instanceof RuntimeException re) ? re : new SqlException(ex);
         }
     }
 
-    /** Run a query statement */
-    public static <D, R> R run(Connection connection, QuotePair quote, SqlFunction<DslQuery<D>, R> fun) {
-        return run(connection, quote, DomainHandlerProvider.provider(), fun);
-    }
-
-    /** Run a query statement */
-    public static <D, V, R> R run(Connection connection, EntityManager<D, V> em, SqlFunction<DslQuery<D>, R> fun) {
-        return run(connection, em.tableModel(connection).jdbc().quotes(), DomainHandlerProvider.provider(), fun);
-    }
 }

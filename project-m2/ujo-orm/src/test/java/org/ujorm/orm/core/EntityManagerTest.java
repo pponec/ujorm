@@ -5,17 +5,19 @@ import org.junit.jupiter.api.Test;
 import org.ujorm.core.SnapshotProvider;
 import org.ujorm.orm.demo.City;
 import org.ujorm.orm.demo.Employee;
+import org.ujorm.orm.utils.EntityContext;
 
 import java.time.LocalDate;
 import java.util.stream.Stream;
 
 class EntityManagerTest extends AbstractDaoTest {
 
+    private EntityContext ctx = EntityContext.ofDefault();
     private final Class<Long> pkType = Long.class;
 
     @Test
     void crud() {
-        var cityDao = EntityManager.of(City.class, pkType).crud(dbConnection);
+        var cityDao = ctx.entityManager(City.class, pkType).crud(dbConnection);
         var cityInp = new City(null, "California", "US", 36.7783, -119.4179);
         var cityOut = cityDao.insert(cityInp);
         Assertions.assertNotNull(cityOut.id());
@@ -30,7 +32,7 @@ class EntityManagerTest extends AbstractDaoTest {
         Assertions.assertSame(cityInp, cityOut);
 
         // Employee A
-        var emplDao = EntityManager.of(Employee.class, pkType).crud(dbConnection);
+        var emplDao = ctx.entityManager(Employee.class, pkType).crud(dbConnection);
         var employeeInp = createEmployee("EmplA", cityInp);
         var employeeOut = emplDao.insert(employeeInp);
         Assertions.assertNotNull(employeeOut.getId());
@@ -61,7 +63,7 @@ class EntityManagerTest extends AbstractDaoTest {
 
     @Test
     void readRecord() {
-        var cityDao = EntityManager.of(City.class, pkType).crud(dbConnection);
+        var cityDao = ctx.entityManager(City.class, pkType).crud(dbConnection);
         var cityInp = new City(null, "California", "US", 36.7783, -119.4179);
         var cityOut = cityDao.insert(cityInp);
         Assertions.assertNotNull(cityOut.id());
@@ -86,7 +88,7 @@ class EntityManagerTest extends AbstractDaoTest {
     /** Tests the fail-fast behavior when passing null arguments to Crud methods. */
     @Test
     void testFailFastOnNullParameters() {
-        var cityDao = EntityManager.of(City.class, pkType).crud(dbConnection);
+        var cityDao = ctx.entityManager(City.class, pkType).crud(dbConnection);
         var noSnapshost = (Stream<SnapshotProvider>) null;
 
         Assertions.assertThrows(RuntimeException.class, () -> cityDao.insert((City) null));

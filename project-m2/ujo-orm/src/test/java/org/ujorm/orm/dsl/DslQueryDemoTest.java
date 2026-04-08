@@ -1,17 +1,20 @@
 package org.ujorm.orm.dsl;
 
 import org.junit.jupiter.api.Assertions;
+import org.ujorm.orm.core.EntityManager;
 import org.ujorm.orm.model.QuotePair;
 import org.ujorm.orm.tutorial.domains.Employee;
 import org.ujorm.orm.tutorial.domains.MetaCity;
 import org.ujorm.orm.dsl.meta.MetaEmployee;
+import org.ujorm.orm.utils.EntityContext;
 
 import java.sql.Connection;
 
 class DslQueryDemoTest {
 
 
-
+    private EntityContext ctx = EntityContext.ofDefault();
+    private EntityManager<Employee, Long> employeeEm = ctx.entityManager(Employee.class);
     private Employee emp = new Employee();
     private MetaEmployee emps = new MetaEmployee();
     private QuotePair quotePair = QuotePair.ofMsSqlServer();
@@ -19,7 +22,7 @@ class DslQueryDemoTest {
     /** @Test  : Only demo */
     void demo() {
 
-        var select = new DslQuery<Employee>(connection(), quotePair);
+        var select = new DslQuery<>(connection(), employeeEm);
         select.column(MetaEmployee.id)
                 .column(MetaEmployee.name)
                 .column(MetaEmployee.city, MetaCity.name)
@@ -52,7 +55,7 @@ class DslQueryDemoTest {
     /** @Test  : Only demo */
     void count() {
 
-        var select = new DslQuery<Employee>(connection(), quotePair);
+        var select = new DslQuery<Employee>(connection(), employeeEm);
         select.sql("SELECT COUNT(*)")
                 .where(MetaEmployee.id.whereGt(1L))
                 .tail("ORDER BY", MetaEmployee.id, "DESC" );

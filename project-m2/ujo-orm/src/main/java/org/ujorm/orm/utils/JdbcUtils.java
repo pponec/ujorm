@@ -1,12 +1,16 @@
-package org.ujorm.tools.jdbc;
+package org.ujorm.orm.utils;
+
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.ujorm.core.DomainHandler;
+import org.ujorm.tools.jdbc.SQLExceptionBuilder;
 
 import java.sql.JDBCType;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Iterator;
+import java.util.Objects;
 import java.util.Spliterator;
 import java.util.Spliterators;
 import java.util.function.Consumer;
@@ -16,32 +20,10 @@ import java.util.stream.StreamSupport;
 /** Common JDBC Utilities */
 public final class JdbcUtils {
 
-    private static final JdbcUtils JDBC = new JdbcUtils();
+    private static final JdbcTypeProvider JDBC = new JdbcTypeProvider();
 
     private JdbcUtils() {
         // Utility class should not be instantiated
-    }
-
-    @FunctionalInterface
-    public interface SqlConsumer<T> extends Consumer<T> {
-        @Override
-        default void accept(final T t) {
-            try {
-                acceptResultSet(t);
-            } catch (Exception ex) {
-                throw (ex instanceof RuntimeException re) ? re : new IllegalStateException(ex);
-            }
-        }
-        void acceptResultSet(T t) throws Exception;
-    }
-
-    /** A subclass of the undeclared exception class {@link IllegalStateException}. */
-    public static final class SqlException extends IllegalStateException {
-        private SqlException(Throwable cause, String... messages) {
-            super((messages.length > 0 || cause == null)
-                    ? String.join(" ", messages)
-                    : cause.getMessage(), cause);
-        }
     }
 
     /** Safely closes the current ResultSet and starts tracking the new one. */
@@ -77,7 +59,29 @@ public final class JdbcUtils {
         return result;
     }
 
-    public static JDBCType findJdbcType(Class clazz) {
+    public static JDBCType findJdbcType(Class<?> clazz) {
         return JDBC.findJdbcType(clazz);
+    }
+
+    /** Build a property change set */
+    @NotNull
+    public static <D> BitSet findChanges(@NotNull D domain, @NotNull D snapshot, @NotNull DomainHandler<D> handler) {
+        if (domain == null || snapshot == null) {
+            var msg = "The %s object type of %s is required".formatted(
+                    domain == null ? "domain" : "snapshot",
+                    handler.getDomainClass().getSimpleName());
+            throw new IllegalArgumentException(msg);
+        }
+
+        var keys = handler.getKeyList();
+        var result = BitSet.of(keys.size());
+        for (var key : handler.getKeyList()) {
+            var v1 = key.getValue(domain);
+            var v2 = key.getValue(snapshot);
+            if (!Objects.equals(v1, v2)) {
+                result.setValue(key.index(), true);
+            }
+        }
+        return result;
     }
 }

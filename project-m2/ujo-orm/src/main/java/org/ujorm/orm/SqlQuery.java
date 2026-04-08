@@ -92,7 +92,7 @@ public class SqlQuery extends AbstractSqlQuery<SqlQuery> {
     }
 
     @Override
-    public SqlQuery sql(@NotNull String... sqlLines) {
+    public SqlQuery sql(@NotNull CharSequence... sqlLines) {
         super.sql(sqlLines);
         this.hasColumnsMode = this.sqlTemplate != null && this.sqlTemplate.contains("${" + COLUMNS_MARK + "}");
         return this;
@@ -143,7 +143,7 @@ public class SqlQuery extends AbstractSqlQuery<SqlQuery> {
             columnLabels = new LinkedHashMap<>();
         }
 
-        var builder = initWriter();
+        var builder = getWriter(true);
         int labelOffset = 0;
 
         if (isColumn) {

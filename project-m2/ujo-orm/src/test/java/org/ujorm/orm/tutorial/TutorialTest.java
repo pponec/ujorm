@@ -6,6 +6,7 @@ import org.ujorm.orm.dsl.DslQuery;
 import org.ujorm.orm.jdbc.ResultSetMapper;
 import org.ujorm.orm.tutorial.domains.*;
 import org.ujorm.orm.SqlQuery;
+import org.ujorm.orm.utils.EntityContext;
 
 import java.util.Comparator;
 import java.util.logging.Level;
@@ -21,9 +22,10 @@ import static org.junit.jupiter.api.Assertions.*;
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class TutorialTest extends AbstractDemo {
 
+    private static final EntityContext CTX = EntityContext.ofDefault();
+    private static final EntityManager<Employee, Long> EMPLOYEE_EM = CTX.entityManager(Employee.class);
+    private static final EntityManager<City, Long> CITY_EM = CTX.entityManager(City.class);
     private static final ResultSetMapper<Employee> EMPLOYEE_MAPPER = ResultSetMapper.of(Employee.class);
-    private static final EntityManager<Employee, Long> EMPLOYEE_EM = EntityManager.of(Employee.class);
-    private static final EntityManager<City, Long> CITY_EM = EntityManager.of(City.class);
 
     @Test
     @Order(100)

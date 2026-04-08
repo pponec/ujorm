@@ -18,18 +18,17 @@ package org.ujorm.orm.core;
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.ujorm.core.DomainHandler;
-import org.ujorm.core.Key;
-import org.ujorm.core.SnapshotProvider;
+import org.ujorm.core.*;
 import org.ujorm.core.impl.AbstractUjo;
+import org.ujorm.orm.Config;
 import org.ujorm.orm.Crud;
 import org.ujorm.orm.SqlQuery;
-import org.ujorm.orm.impl.Context;
 import org.ujorm.orm.jdbc.ResultSetMapper;
 import org.ujorm.orm.model.ColumnModel;
 import org.ujorm.orm.model.QuotePair;
 import org.ujorm.orm.model.TableModel;
-import org.ujorm.orm.model.TableModelBuilder;
+import org.ujorm.orm.utils.EntityContext;
+import org.ujorm.orm.utils.JdbcUtils;
 import org.ujorm.orm.utils.StatementCache;
 import org.ujorm.tools.Check;
 import org.ujorm.tools.jdbc.AbstractSqlQuery.SqlFunction;
@@ -57,20 +56,24 @@ public final class EntityManager<D, V> {
     private static final Logger LOGGER = Logger.getLogger(EntityManager.class.getName());
 
     private final DomainHandler<D> domainHandler;
+    private final TableModelService tableModelService;
     private final ResultSetMapper<D> resultSetMapper;
-    private final Context ctx;
+    private final Config config;
     private final Utilities utilities;
 
     /** Lazy initialized TableModel. Use {@link #tableModel()} method to access it safely. */
     private volatile TableModel<D> _tableModel;
 
     public EntityManager(
-            @NotNull Class<D> domainClass,
-            @NotNull Context context,
-            @NotNull ResultSetMapper<D> resultSetMapper) {
-        this.domainHandler = context.domainService().getHandler(domainClass);
-        this.ctx = context;
+            @NotNull DomainHandler<D> domainHandler,
+            @NotNull TableModelService tableModelService,
+            @NotNull ResultSetMapper<D> resultSetMapper,
+            @NotNull Config config
+    ) {
+        this.domainHandler = domainHandler;
+        this.tableModelService = tableModelService;
         this.resultSetMapper = resultSetMapper;
+        this.config = config;
         this.utilities = new Utilities();
     }
 
@@ -129,13 +132,14 @@ public final class EntityManager<D, V> {
     /** Initializes TableModel if not already done. */
     private void initModel(@NotNull Connection connection) {
         if (this._tableModel == null) {
-            synchronized (ctx) {
+            synchronized (utilities) {
                 if (this._tableModel == null) {
-                    this._tableModel = TableModelBuilder.build(domainHandler, ctx, connection);
+                    this._tableModel = tableModelService.getTableModel(
+                            getDomainClass(), connection);
                     LOGGER.log(Level.INFO, () ->
                             "Lazy initialization of %s was triggered for the %s entity.".formatted(
                                     TableModel.class.getSimpleName(),
-                                    EntityManager.this.domainHandler.getDomainClass().getSimpleName()
+                                    getDomainClass().getSimpleName()
                             ));
                 }
             }
@@ -148,9 +152,21 @@ public final class EntityManager<D, V> {
         return new CrudImpl(connection);
     }
 
+    /** Package private method */
+    @NotNull
+    public TableModelService getTableModelService() {
+        return this.tableModelService;
+    }
+
+    /** Package private method */
+    @NotNull
+    public Class<D> getDomainClass() {
+        return this.domainHandler.getDomainClass();
+    }
+
     /** Default batch size */
     public int defaultBatchSize() {
-        return ctx.config().getBatchSize();
+        return config.getBatchSize();
     }
 
     /** Thread-safe access to the TableModel. */
@@ -195,10 +211,10 @@ public final class EntityManager<D, V> {
 
         /** Checks autoCommit state and logs a warning once per instance if enabled. */
         public void checkAutoCommit(@NotNull Connection connection) throws SQLException {
-            if (!autoCommitLogged && ctx.config().isAutoCommitWarned() && connection.getAutoCommit()) {
+            if (!autoCommitLogged && config.isAutoCommitWarned() && connection.getAutoCommit()) {
                 var msg = ("Connection has autoCommit=true in the entity '%s'. " +
                         "Batch operations will be significantly slower and lack transactional safety.")
-                        .formatted(domainHandler.getDomainClass().getName());
+                        .formatted(getDomainClass().getName());
                 LOGGER.warning(msg);
                 autoCommitLogged = true;
             }
@@ -206,7 +222,7 @@ public final class EntityManager<D, V> {
 
         /** Returns a safe limit for batch operations (insert, update, select). */
         public int getBatchLimit() {
-            var limit = ctx.config().getBatchSize();
+            var limit = config.getBatchSize();
             return limit > 0 ? limit : 500;
         }
 
@@ -339,7 +355,7 @@ public final class EntityManager<D, V> {
                 if (batch) {
                     checkAutoCommit(connection);
                 }
-                if (ctx.config().isPrintSql()) {
+                if (config.isPrintSql()) {
                     LOGGER.info(sql::toString);
                 }
                 return fun.applyFunction(ps);
@@ -552,8 +568,8 @@ public final class EntityManager<D, V> {
             sql.append(Check.hasLength(whereCondition) ? whereCondition : "1=1");
             try (var query = new SqlQuery(dbconnection, getQuote())) {
                 query.sql(sql.toString());
-                query.fetchSize(ctx.config().getBatchSize());
-                query.log(ctx.config().isPrintSql() ? Level.INFO : null, false);
+                query.fetchSize(config.getBatchSize());
+                query.log(config.isPrintSql() ? Level.INFO : null, false);
                 return fun.applyFunction(query);
             } catch (Exception ex) {
                 throw (ex instanceof RuntimeException re) ? re : SQLExceptionBuilder.build(ex);
@@ -618,11 +634,11 @@ public final class EntityManager<D, V> {
                 while (iterator.hasNext()) {
                     index++;
                     var domain_ = iterator.next();
-                    if (domain_ == null || !domainHandler.getDomainClass().isInstance(domain_)) {
+                    if (domain_ == null || !getDomainClass().isInstance(domain_)) {
                         var msg = domain_ == null
                                 ? "The entity at index %s must not be null.".formatted(index)
                                 : "The entity at index %s must be of type %s.".formatted(index,
-                                domainHandler.getDomainClass().getSimpleName());
+                                getDomainClass().getSimpleName());
                         throw new IllegalArgumentException(msg);
                     }
                     var domain = (D) domain_;
@@ -631,7 +647,7 @@ public final class EntityManager<D, V> {
                         throw new IllegalStateException(("Missing snapshot for entity at index %s. " +
                                 "Call saveSnapshot() before update.").formatted(index));
                     }
-                    var changes = ctx.commonService().findChanges(domain, snapshot, domainHandler);
+                    var changes = JdbcUtils.findChanges(domain, snapshot, domainHandler);
                     var modifiedIdx = changes.getActive();
 
                     if (modifiedIdx.length == 0) {
@@ -648,7 +664,7 @@ public final class EntityManager<D, V> {
                     var statement = cache.get(changes);
                     if (statement == null) {
                         var sql = utilities.buildUpdateSql(modifiedKeys);
-                        if (ctx.config().isPrintSql()) {
+                        if (config.isPrintSql()) {
                             LOGGER.info(sql);
                         }
                         statement = dbconnection.prepareStatement(sql);
@@ -834,7 +850,7 @@ public final class EntityManager<D, V> {
                     genKeys = emptyPk;
                     cols = tableModel().createInsertedColumns(pkVal);
                     var sql = utilities.buildInsertSql(cols);
-                    if (ctx.config().isPrintSql()) LOGGER.info(sql);
+                    if (config.isPrintSql()) LOGGER.info(sql);
                     ps = !emptyPk
                             ? dbconnection.prepareStatement(sql)
                             : tableModel().jdbc().isOracleDb()
@@ -897,33 +913,28 @@ public final class EntityManager<D, V> {
 
     // --- Static methods ---
 
-    /** Factory method */
-    public static <D, V> EntityManager<D,V> of(@NotNull Class<D> domainClass) {
-        return of(domainClass, (Class<V>) null);
+    /** Base Factory Method */
+    public static <D, V> EntityManager<D,V> of(@NotNull Class<D> domainClass, @NotNull TableModelService tableModelService, Config config) {
+        var handler = DomainHandlerProvider.getHandler(domainClass);
+        var rsMapper = ResultSetMapper.of(domainClass, config);
+        return new EntityManager<D, V>(handler, tableModelService, rsMapper, config);
     }
 
     /** Factory method */
-    public static <D, V> EntityManager<D, V> of(@NotNull Class<D> domainClass, @Nullable Class<V> type) {
-        var context = Context.ofDefault();
-        return new EntityManager<>(domainClass, context, ResultSetMapper.of(domainClass, context.config()));
+    public static <D, V> EntityManager<D, V> of(@NotNull Class<D> domainClass, @Nullable Class<V> idTypeIgnored, @NotNull TableModelService tableModelService, @NotNull Config config) {
+        return of(domainClass, tableModelService, config);
     }
 
     /** Factory method */
-    public static <D, V> EntityManager<D,V> of(@NotNull Class<D> domainClass, @NotNull Context context, @NotNull ResultSetMapper<D> resultSetMapper) {
-        return new EntityManager<>(domainClass, context, resultSetMapper);
+    public static <D, V> EntityManager<D,V> of(@NotNull Class<D> domainClass, @NotNull TableModelService tableModelService, @NotNull EntityContext context) {
+        return of(domainClass, tableModelService, context.config());
     }
 
-    /** Factory method with provided connection */
-    public static <D, V> EntityManager<D,V> of(@NotNull Class<D> domainClass, @NotNull Connection connection, @NotNull Context context, @NotNull ResultSetMapper<D> resultSetMapper) {
-        var manager = new EntityManager<D, V>(domainClass, context, resultSetMapper);
-        manager.initModel(connection);
-        return manager;
+    /** Factory method with initialization */
+    public static <D, V> EntityManager<D,V> of(@NotNull Class<D> domainClass, @NotNull TableModelService tableModelService, @NotNull EntityContext context, @NotNull Connection dbConnection) {
+        var result = EntityManager.<D,V>of(domainClass, tableModelService, context);
+        result.initModel(dbConnection);
+        return result;
     }
 
-    /** Factory method with provided connection */
-    public static <D, V> EntityManager<D,V> of(@NotNull Class<D> domainClass, @NotNull Connection connection, @NotNull Context context) {
-        var manager = new EntityManager<D, V>(domainClass, context, ResultSetMapper.of(domainClass, context.config()));
-        manager.initModel(connection);
-        return manager;
-    }
 }

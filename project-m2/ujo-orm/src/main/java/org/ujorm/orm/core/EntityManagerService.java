@@ -2,10 +2,8 @@ package org.ujorm.orm.core;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.ujorm.core.DomainHandlerProvider;
 import org.ujorm.orm.Config;
-import org.ujorm.orm.impl.Context;
-import org.ujorm.orm.service.CommonService;
+
 import java.util.concurrent.ConcurrentHashMap;
 
 /** Service provides meta models of domain objects */
@@ -25,23 +23,14 @@ public class EntityManagerService {
      * The {@code ConcurrentHashMap} is still strictly required to guarantee memory visibility and safe,
      * lock-free reads during the initial non-synchronized check.
      */
-    private final ConcurrentHashMap<Class<?>, EntityManager<?,?>> map;
-    private final Context context;
+    private final ConcurrentHashMap<Class<?>, EntityManager<?,?>> entityMap;
+    private final TableModelService tableModelService;
+    private final Config config;
 
-    public EntityManagerService(Context context) {
-        this.map = new ConcurrentHashMap<>();
-        this.context = context;
-    }
-
-    /** Get Entity Manager */
-    @NotNull
-    public <D, V> EntityManager<D,V> entityManagerFromSingleton(
-            @NotNull Class<D> domainClass,
-            @Nullable Class<V> idType) throws UnsupportedOperationException{
-        if (!context.config().isEnabledUjormServiceProvider()) {
-            throw new UnsupportedOperationException("Access is disabled by configuration");
-        }
-        return entityManager(domainClass, idType);
+    public EntityManagerService(TableModelService tableModelService, Config config) {
+        this.entityMap = new ConcurrentHashMap<>();
+        this.tableModelService = tableModelService;
+        this.config = config;
     }
 
     /**
@@ -54,36 +43,21 @@ public class EntityManagerService {
     public <D, V> EntityManager<D,V> entityManager(
             @NotNull Class<D> domainClass,
             @Nullable Class<V> ignoredIdType) {
-        var result = (EntityManager<D,V>) map.get(domainClass);
+        var result = (EntityManager<D,V>) entityMap.get(domainClass);
         if (result == null) {
-            synchronized (map) {
-                result = (EntityManager<D,V>) map.get(domainClass);
+            synchronized (entityMap) {
+                result = (EntityManager<D,V>) entityMap.get(domainClass);
                 if (result == null) {
-                    result = EntityManager.of(domainClass);
-                    map.put(domainClass, result);
+                    result = EntityManager.of(domainClass, tableModelService, config);
+                    entityMap.put(domainClass, result);
                 }
             }
         }
         return result;
     }
 
-    public static EntityManagerService of() {
-        var context = new Context(
-                Config.ofDefault(),
-                DomainHandlerProvider.provider(),
-                new CommonService());
-        return new EntityManagerService(context);
-    }
-
-    public static final EntityManagerService ofSingleton(Config config) {
-        if (!config.isEnabledUjormServiceProvider()) {
-            throw new UnsupportedOperationException("Access is disabled by configuration");
-        }
-        var context = new Context(
-                config,
-                DomainHandlerProvider.provider(),
-                new CommonService());
-        return new EntityManagerService(context);
+    public static EntityManagerService of(TableModelService tableModelService, Config config) {
+        return new EntityManagerService(tableModelService, config);
     }
 
 }

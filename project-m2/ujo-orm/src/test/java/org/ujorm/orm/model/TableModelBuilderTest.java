@@ -23,7 +23,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.ujorm.core.DomainHandler;
 import org.ujorm.core.generator.TableIdentifier;
 import org.ujorm.orm.Config;
-import org.ujorm.orm.impl.Context;
 
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
@@ -41,8 +40,6 @@ class TableModelBuilderTest {
     @Mock
     private DomainHandler<Object> mockHandler;
     @Mock
-    private Context mockContext;
-    @Mock
     private Connection mockConnection;
     @Mock
     private DatabaseMetaData mockMetaData;
@@ -54,8 +51,8 @@ class TableModelBuilderTest {
 
     @BeforeEach
     void setUp() {
-        builder = new TableModelBuilder<>(mockHandler, mockContext);
         config = new Config();
+        builder = new TableModelBuilder<>(mockHandler, config);
     }
 
     @Test
