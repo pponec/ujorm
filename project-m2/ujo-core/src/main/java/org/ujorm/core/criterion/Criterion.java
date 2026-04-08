@@ -417,13 +417,11 @@ public abstract class Criterion {
      * Supported placeholders in the template:
      * <ul>
      *   <li>{@code {0}} : Replaced by the database column name (mapped from the key).</li>
-     *   <li>{@code {1}} : Replaced by the first value from the {@code values} array.</li>
-     *   <li>{@code {2}} : Replaced by the second value, and so on.</li>
      *   <li>{@code {*}} : Replaced by all values joined by a comma (e.g., for {@code IN} operator).</li>
      * </ul>
      * * Example of use:
      * <pre>{@code
-     * Criterion.forSql(MetaEmployee.name, "UPPER({0}) = {1}", "JOE")
+     * Criterion.forSql(MetaEmployee.name, "UPPER({0}) = {*}", "JOE")
      * Criterion.forSql(MetaEmployee.id, "{0} IN ({*})", 1, 2, 3)
      * }</pre>
      * @param key The parameter is required by Ujorm to locate a basic database table

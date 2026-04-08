@@ -87,14 +87,12 @@ public interface CriterionProvider<VALUE> {
      * Supported placeholders in the template:
      * <ul>
      * <li>{@code {0}} : Replaced by the database column name (including its alias).</li>
-     * <li>{@code {1}} : Replaced by the first value from the {@code values} array.</li>
-     * <li>{@code {2}} : Replaced by the second value, and so on.</li>
      * <li>{@code {*}} : Replaced by all values joined by a comma.</li>
      * </ul>
      *
      * Example of use:
      * <pre>{@code
-     *   employee.whereSql("UPPER({0}) = {1}", "JOE")
+     *   employee.whereSql("UPPER({0}) = {*}", "JOE")
      *   employee.whereSql("{0} IN ({*})", 1, 2, 3)
      * }</pre>
      *
