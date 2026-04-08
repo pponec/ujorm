@@ -3,6 +3,7 @@ package org.ujorm.tools.jdbc;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.sql.JDBCType;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Iterator;
@@ -14,6 +15,8 @@ import java.util.stream.StreamSupport;
 
 /** Common JDBC Utilities */
 public final class JdbcUtils {
+
+    private static final JdbcUtils JDBC = new JdbcUtils();
 
     private JdbcUtils() {
         // Utility class should not be instantiated
@@ -72,5 +75,9 @@ public final class JdbcUtils {
         var result = StreamSupport.stream(spliterator, false).onClose(() -> closeResultSet(rs));
 
         return result;
+    }
+
+    public static JDBCType findJdbcType(Class clazz) {
+        return JDBC.findJdbcType(clazz);
     }
 }

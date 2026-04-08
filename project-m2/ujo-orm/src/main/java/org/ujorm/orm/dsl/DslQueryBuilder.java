@@ -228,10 +228,14 @@ public class DslQueryBuilder {
     /** Resolve table alias from a Key */
     @NotNull
     private String resolveAlias(Key<?, ?> key) {
-        var resolvedAlias = key instanceof AliasedKey<?,?> akey
+        var result = key instanceof AliasedKey<?,?> akey
                 ? akey.tableAlias()
                 : domainAliases.getOrDefault(key.domainClass(), baseTableAlias);
-        return resolvedAlias != null ? resolvedAlias : "";
+
+        if (result == null) {
+            throw new IllegalStateException("No alias found for the key: " + key.fullName());
+        }
+        return result;
     }
 
     /** Extract base table class from criterion */

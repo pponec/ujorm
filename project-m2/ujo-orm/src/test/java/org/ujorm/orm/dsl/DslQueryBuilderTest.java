@@ -8,7 +8,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.ujorm.core.Key;
 import org.ujorm.core.criterion.Criterion;
-import org.ujorm.core.criterion.Operator;
 import org.ujorm.core.criterion.TemplateValue;
 import org.ujorm.core.criterion.ValueCriterion;
 import org.ujorm.orm.dsl.meta.MetaEmployee;
@@ -267,7 +266,7 @@ class DslQueryBuilderTest {
 
         /** Write the condition to SQL */
         @Override
-        public void writeCondition(ValueCriterion<?> criterion, @NotNull String optionalAlias) {
+        public void writeCondition(ValueCriterion<?> criterion, @NotNull String alias) {
             var key = (Key<?, ?>) criterion.getLeftNode();
             var operator = criterion.getOperator();
             var value = criterion.getRightNode();
@@ -277,16 +276,16 @@ class DslQueryBuilderTest {
                      ALWAYS_FALSE -> writer.append(operator.term());
                 case CUSTOM_SQL -> {
                     if (value instanceof TemplateValue<?> tv) {
-                        appendCustomSql(optionalAlias, key, tv);
+                        appendCustomSql(alias, key, tv);
                     }
                 }
                 case IN, NOT_IN -> {
-                    writeColumnName(optionalAlias, key);
+                    writeColumnName(alias, key);
                     writer.append(' ').append(operator.term()).append(' ');
                     writeValues(value);
                 }
                 default -> {
-                    writeColumnName(optionalAlias, key);
+                    writeColumnName(alias, key);
                     writer.append(' ').append(operator.term()).append(' ');
                     writeValue(value);
                 }

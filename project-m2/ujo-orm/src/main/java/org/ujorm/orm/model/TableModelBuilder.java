@@ -22,9 +22,9 @@ import org.ujorm.core.Key;
 import org.ujorm.core.generator.TableIdentifier;
 import org.ujorm.orm.Config;
 import org.ujorm.orm.impl.Context;
-import org.ujorm.orm.utils.JdbcTypeProvider;
 import org.ujorm.tools.Check;
 import org.ujorm.tools.common.StreamUtils;
+import org.ujorm.tools.jdbc.JdbcUtils;
 import org.ujorm.tools.jdbc.SQLExceptionBuilder;
 
 import java.sql.Connection;
@@ -43,7 +43,6 @@ public class TableModelBuilder<D> {
     private static final Logger LOGGER = Logger.getLogger(TableModelBuilder.class.getName());
     private final DomainHandler<D> handler;
     private final Context ctx;
-    private final JdbcTypeProvider jdbcTypeProvider = new JdbcTypeProvider();
 
     /** Map a database columns where the key is lower-case */
     private Map<String, String> dbColumMapLowerCase;
@@ -238,9 +237,9 @@ public class TableModelBuilder<D> {
             var foreignHandler = ctx.domainService().getHandler(key.type());
             var acceptDefaultPk = ctx.config().acceptDefaultPk();
             foreignKey = foreignHandler.findPrimaryKey(acceptDefaultPk);
-            jdbcType = jdbcTypeProvider.findJdbcType(foreignKey);
+            jdbcType = JdbcUtils.findJdbcType(foreignKey.type());
         } else {
-            jdbcType = jdbcTypeProvider.findJdbcType(key);
+            jdbcType = JdbcUtils.findJdbcType(key.type());
         }
         var columnName = dbColumMapLowerCase.get(key.info().columnLabel().toLowerCase(Locale.ENGLISH));
         if (Check.isEmpty(columnName)) {

@@ -40,9 +40,9 @@ public interface DslQueryWriter {
     /**
      * Format condition to SQL.
      * @param criterion The value criterion to format.
-     * @param optionalAlias Empty String means: use a default alias.
+     * @param alias A table alias.
      */
-    void writeCondition(@NotNull ValueCriterion<?> criterion, @NotNull String optionalAlias);
+    void writeCondition(@NotNull ValueCriterion<?> criterion, @NotNull String alias);
 
     /** Append string to writer. */
     StringBuilder append(String str);

@@ -17,16 +17,18 @@
 package org.ujorm.orm.dsl;
 
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import org.ujorm.core.DomainHandlerProvider;
 import org.ujorm.core.DomainHandlerService;
+import org.ujorm.core.Key;
 import org.ujorm.core.criterion.Criterion;
+import org.ujorm.core.criterion.TemplateValue;
 import org.ujorm.core.criterion.ValueCriterion;
 import org.ujorm.orm.core.EntityManager;
 import org.ujorm.orm.model.QuotePair;
+import org.ujorm.tools.common.Array;
 import org.ujorm.tools.jdbc.AbstractSqlQuery;
+import org.ujorm.tools.jdbc.JdbcUtils;
 import org.ujorm.tools.jdbc.SQLException;
-import org.ujorm.core.Key;
 
 import java.sql.Connection;
 
@@ -193,7 +195,7 @@ public class DslQuery<D> extends AbstractSqlQuery<DslQuery<D>> {
                     .append(' ').append(tableAlias);
         }
 
-        /** Write database column name. */
+        /** Write database column name. If labes ares available, append labes for the SQL SELECT statement. */
         @Override
         public void writeColumnName(@NotNull String tableAlias, @NotNull Key<?,?> column, Key<?,?>... labels) {
             writer.append(q.open()).append(tableAlias).append('.').append(column.name()).append(q.close());
@@ -211,8 +213,31 @@ public class DslQuery<D> extends AbstractSqlQuery<DslQuery<D>> {
         }
 
         @Override
-        public void writeCondition(ValueCriterion<?> criterion, @NotNull String optionalAlias) {
-            // TODO.pop
+        public void writeCondition(ValueCriterion<?> criterion, @NotNull String alias) {
+            var key = (Key<?, ?>) criterion.getLeftNode();
+            var operator = criterion.getOperator();
+            var value = criterion.getRightNode();
+            var placeholder = alias + '_' + key.name();
+            var jdbcType = JdbcUtils.findJdbcType(key.type());
+
+            bindObject(true, placeholder, jdbcType, value instanceof Array<?> ar ? ar :  Array.of(value));
+
+            switch (operator) {
+                case ALWAYS_FALSE -> writer.append(operator.term());
+                case CUSTOM_SQL -> {
+                    if (value instanceof TemplateValue<?> tv) {
+                        writer.append(' ').append(operator.term()).append(" :").append(placeholder);
+                    }
+                }
+                case IN, NOT_IN -> {
+                    writeColumnName(alias, key, EMPTY);
+                    writer.append(' ').append(operator.term()).append(" :").append(placeholder);
+                }
+                default -> {
+                    writeColumnName(alias, key, EMPTY);
+                    writer.append(' ').append(operator.term()).append(" :").append(placeholder);
+                }
+            }
         }
 
         @Override
