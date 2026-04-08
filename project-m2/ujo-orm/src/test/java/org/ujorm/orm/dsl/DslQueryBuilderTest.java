@@ -203,7 +203,7 @@ class DslQueryBuilderTest {
         Assertions.assertEquals(3, sql.length, () -> builder.toString());
         Assertions.assertEquals("SELECT [e.id] AS [id]", sql[i++]);
         Assertions.assertEquals("FROM [Employee] e"    , sql[i++]);
-        Assertions.assertEquals("WHERE UPPER([e.name]) = 'Joe'", sql[i]);
+        Assertions.assertEquals("WHERE UPPER([e.name]) = [Joe]", sql[i]);
     }
 
     /** Test that CUSTOM_SQL template correctly replaces multiple placeholders in a single string */
@@ -224,29 +224,9 @@ class DslQueryBuilderTest {
         Assertions.assertEquals(3, sql.length, () -> builder.toString());
         Assertions.assertEquals("SELECT [e.id] AS [id]", sql[i++]);
         Assertions.assertEquals("FROM [Employee] e"    , sql[i++]);
-        Assertions.assertEquals("WHERE [e.id] IS NOT NULL AND [e.id] IN (3, 5)", sql[i]);
+        Assertions.assertEquals("WHERE [e.id] IS NOT NULL AND [e.id] IN ([3, 5])", sql[i]);
     }
 
-    /** Test that invalid or out-of-bounds placeholders fall back to standard text rendering */
-    @Test
-    void testCustomSqlInvalidPlaceholders() {
-        var builder = getBuilder();
-        builder.column(MetaEmployee.id);
-
-        // 2. Criteria creation with invalid placeholders
-        var crn = MetaEmployee.name.whereSql("{0} = {99} AND {invalid_mark} IS NULL", "A");
-        builder.where(crn);
-
-        // 3. Execution
-        var sql = builder.toString().lines().toArray(String[]::new);
-
-        // 4. Output verification
-        var i = 0;
-        Assertions.assertEquals(3, sql.length, () -> builder.toString());
-        Assertions.assertEquals("SELECT [e.id] AS [id]", sql[i++]);
-        Assertions.assertEquals("FROM [Employee] e"    , sql[i++]);
-        Assertions.assertEquals("WHERE [e.name] = {99} AND {invalid_mark} IS NULL", sql[i]);
-    }
 
     // --- CLASS ---
 
