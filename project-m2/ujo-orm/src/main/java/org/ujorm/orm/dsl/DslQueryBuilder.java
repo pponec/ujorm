@@ -242,7 +242,7 @@ public class DslQueryBuilder {
         } else {
             writer.writeColumnName(resolvedAlias, key);
             writer.append(SPACE).append(getSqlOperatorText(operator)).append(SPACE);
-            writeValue(rightNode);
+            writeValue(key, rightNode);
         }
     }
 
@@ -265,14 +265,14 @@ public class DslQueryBuilder {
                 case "*" -> {
                     for (var i = 0; i < values.size(); i++) {
                         if (i > 0) writer.append(", ");
-                        writeValue(values.get(i));
+                        writeValue(key, values.get(i));
                     }
                 }
                 default -> {
                     try {
                         var idx = Integer.parseInt(mark);
                         if (idx > 0 && idx <= values.size()) {
-                            writeValue(values.get(idx - 1));
+                            writeValue(key, values.get(idx - 1));
                             continue;
                         }
                     } catch (NumberFormatException ignored) {}
@@ -327,29 +327,29 @@ public class DslQueryBuilder {
     }
 
     /** Format scalar value or arrays directly to writer */
-    public void writeValue(@Nullable  Object value) {
+    public void writeValue(Key<?,?> key, @Nullable  Object value) {
         if (value == null) {
             writer.append("NULL");
         } else if (value instanceof String str) {
             writer.append("'").append(str).append("'");
         } else if (value instanceof Object[] arr) {
-            formatIterable(Arrays.asList(arr));
+            formatIterable(key, Arrays.asList(arr));
         } else if (value instanceof Iterable<?> it) {
-            formatIterable(it);
+            formatIterable(key, it);
         } else {
             writer.append(value);
         }
     }
 
     /** Helper to format iterables directly to writer */
-    private void formatIterable(Iterable<?> it) {
+    private void formatIterable(Key<?,?> key, Iterable<?> it) {
         writer.append("(");
         var first = true;
         for (var item : it) {
             if (!first) {
                 writer.append(", ");
             }
-            writeValue(item);
+            writeValue(key, item);
             first = false;
         }
         writer.append(")");
