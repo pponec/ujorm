@@ -31,6 +31,7 @@ import org.ujorm.tools.jdbc.JdbcUtils;
 import org.ujorm.tools.jdbc.SQLException;
 
 import java.sql.Connection;
+import java.sql.JDBCType;
 
 /**
  * A fluent wrapper over {@link java.sql.PreparedStatement}
@@ -79,6 +80,9 @@ public class DslQuery<D> extends AbstractSqlQuery<DslQuery<D>> {
     @NotNull
     private CharSequence[] sqlTail;
 
+    /** Counter of the placeholders */
+    private int placeholderCounter;
+
     /**
      * Constructor with a database connection
      * @param dbConnection A database connection
@@ -104,10 +108,18 @@ public class DslQuery<D> extends AbstractSqlQuery<DslQuery<D>> {
     }
 
     @Override
-    public DslQuery<D> sql(@NotNull String... sqlItems) {
+    public void close() {
+        super.close();
+        sqlTail = null;
+        placeholderCounter = 10;
+    }
+
+    /** Head of the SQL where default is SELECT. */
+    @Override
+    public DslQuery<D> sql(@NotNull String... sqlHead) {
         initWriter();
         // TODO:
-        var sql = String.join(" ", sqlItems);
+        var sql = String.join(" ", sqlHead);
         super.sql(sql);
         return self();
     }
@@ -195,7 +207,7 @@ public class DslQuery<D> extends AbstractSqlQuery<DslQuery<D>> {
                     .append(' ').append(tableAlias);
         }
 
-        /** Write database column name. If labes ares available, append labes for the SQL SELECT statement. */
+        /** Write database column name. If labels are available, append labels for the SQL SELECT statement. */
         @Override
         public void writeColumnName(@NotNull String tableAlias, @NotNull Key<?,?> column, Key<?,?>... labels) {
             writer.append(q.open()).append(tableAlias).append('.').append(column.name()).append(q.close());
@@ -217,27 +229,54 @@ public class DslQuery<D> extends AbstractSqlQuery<DslQuery<D>> {
             var key = (Key<?, ?>) criterion.getLeftNode();
             var operator = criterion.getOperator();
             var value = criterion.getRightNode();
-            var placeholder = alias + '_' + key.name();
+            var placeholder = alias + '_' + key.name() + '_' + System.identityHashCode(criterion);
             var jdbcType = JdbcUtils.findJdbcType(key.type());
 
-            bindObject(true, placeholder, jdbcType, value instanceof Array<?> ar ? ar :  Array.of(value));
-
             switch (operator) {
-                case ALWAYS_FALSE -> writer.append(operator.term());
+                case ALWAYS_TRUE, ALWAYS_FALSE -> writer.append(operator.term());
                 case CUSTOM_SQL -> {
                     if (value instanceof TemplateValue<?> tv) {
-                        writer.append(' ').append(operator.term()).append(" :").append(placeholder);
+                        appendColumn(alias, key, placeholder, jdbcType, tv);
                     }
                 }
                 case IN, NOT_IN -> {
                     writeColumnName(alias, key, EMPTY);
-                    writer.append(' ').append(operator.term()).append(" :").append(placeholder);
+                    writer.append(' ').append(operator.term()).append(" (:").append(placeholder).append(')');
+                    bindObject(true, placeholder, jdbcType, value instanceof Array<?> ar ? ar : Array.of(value));
                 }
                 default -> {
                     writeColumnName(alias, key, EMPTY);
                     writer.append(' ').append(operator.term()).append(" :").append(placeholder);
+                    bindObject(true, placeholder, jdbcType, value instanceof Array<?> ar ? ar : Array.of(value));
                 }
             }
+        }
+
+        /** Format custom SQL templates with named parameters */
+        private void appendColumn(String alias, Key<?, ?> key, String placeholderPrefix, JDBCType jdbcType, TemplateValue<?> templateValue) {
+            var template = templateValue.template();
+            var last = 0;
+            var i = 0;
+            while ((i = template.indexOf('{', i)) != -1) {
+                if (i + 2 < template.length() && template.charAt(i + 2) == '}') {
+                    var mark = template.charAt(i + 1);
+                    if (mark == '0' || mark == '1') {
+                        writer.append(template, last, i); // Appends without substring allocation!
+                        if (mark == '0') {
+                            writeColumnName(alias, key, EMPTY);
+                        } else {
+                            var placeholder = placeholderPrefix + placeholderCounter++;
+                            writer.append(':').append(placeholder);
+                            bindObject(true, placeholder, jdbcType, templateValue.valuesNonNull());
+                        }
+                        i += 3;
+                        last = i;
+                        continue;
+                    }
+                }
+                i++;
+            }
+            writer.append(template, last, template.length());
         }
 
         @Override

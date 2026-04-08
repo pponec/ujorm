@@ -27,7 +27,7 @@ import java.util.List;
  * replaced during the query building process. The expected placeholders are:
  * <ul>
  * <li>{@code {0}} : Replaced by the corresponding database column name.</li>
- * <li>{@code {*}} : Replaced by all items of the parameter list, separated by commas.
+ * <li>{@code {1}} : Replaced by all items of the parameter list, separated by commas.
  * Typically used in SQL expressions like {@code name IN (1, 2, 3)}.</li>
  * </ul>
  *
