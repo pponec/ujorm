@@ -13,8 +13,10 @@ import java.util.Set;
 
 /** Generates metamodel from entities during the compilation phase using APT. */
 @SupportedAnnotationTypes({
-        "javax.persistence.Entity", "javax.persistence.Table",
-        "jakarta.persistence.Entity", "jakarta.persistence.Table"
+        "javax.persistence.Entity",
+        "javax.persistence.Table",
+        "jakarta.persistence.Entity",
+        "jakarta.persistence.Table"
 })
 @SupportedOptions({"ujorm.prefix", "ujorm.suffix"})
 public class UjormMetaProcessor extends AbstractProcessor {
@@ -241,11 +243,13 @@ public class UjormMetaProcessor extends AbstractProcessor {
                 result.append("import ").append(canonicalName).append(";\n");
             }
 
+            result.append("import javax.annotation.processing.Generated;\n");
             result.append("import org.ujorm.core.Key;\n");
             result.append("import org.ujorm.core.DomainHandler;\n");
             result.append("import org.ujorm.core.DomainHandlerProvider;\n\n");
 
             result.append("/** Auto-generated metamodel for ").append(originalName).append(" */\n");
+            result.append("@Generated(\"").append(getClass().getCanonicalName()).append("\")\n");
             result.append("public abstract class ").append(newClassName).append(" {\n\n");
 
             result.append("    private static final DomainHandler<").append(originalName)

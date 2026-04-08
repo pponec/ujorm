@@ -18,6 +18,7 @@ package org.ujorm.tools.jdbc;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.ujorm.tools.common.Array;
 import java.math.BigDecimal;
 import java.sql.*;
 import java.sql.SQLException;
@@ -186,7 +187,7 @@ public abstract class AbstractSqlQuery<T extends AbstractSqlQuery<T>> implements
     /** Assigns SQL parameter values. If reusing a statement, ensure the same number of parameters is set. */
     public T bindObject(final boolean enabled, @NotNull final String key, final JDBCType jdbcType, final Object... values) {
         if (enabled) {
-            params.put(key, new ParamValue(jdbcType, values));
+            params.put(key, new ParamValue(jdbcType, Array.of(values)));
         }
         return self();
     }
@@ -350,10 +351,10 @@ public abstract class AbstractSqlQuery<T extends AbstractSqlQuery<T>> implements
             final var param = params.get(key);
             if (param != null) {
                 matcher.appendReplacement(sqlBuffer, "");
-                for (int i = 0; i < param.values().length; i++) {
+                for (int i = 0, max = param.values().size(); i < max; i++) {
                     if (i > 0) sqlBuffer.append(',');
-                    sqlBuffer.append(includingValues ? "[" + param.values()[i] + "]" : "?");
-                    sqlValues.add(i == 0 ? param : new ParamValue(param.jdbcType(), param.values()[i]));
+                    sqlBuffer.append(includingValues ? "[" + param.getValue(i) + "]" : "?");
+                    sqlValues.add(i == 0 ? param : new ParamValue(param.jdbcType(), Array.of(param.getValue(i))));
                 }
             } else {
                 matcher.appendReplacement(sqlBuffer, Matcher.quoteReplacement(matcher.group()));
@@ -409,11 +410,15 @@ public abstract class AbstractSqlQuery<T extends AbstractSqlQuery<T>> implements
             /** Returns the JDBC Type */
             @NotNull JDBCType jdbcType,
             /** Returns the parameter values */
-            @NotNull Object... values
+            @NotNull Array<Object> values
     ) {
         /** Returns the first value from the values array */
         public Object first() {
-            return values.length > 0 ? values[0] : null;
+            return values.getFirstValue(null);
+        }
+
+        public Object getValue(int index) {
+            return values.getValue(index);
         }
     }
 
