@@ -17,8 +17,11 @@
 package org.ujorm.orm.dsl;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.ujorm.core.Key;
 import org.ujorm.tools.jdbc.SQLException;
+
+import java.util.Arrays;
 
 /**
  * A fluent wrapper over {@link java.sql.PreparedStatement}
@@ -35,6 +38,9 @@ public interface DslQueryWriter {
 
     /** Write database column name. */
     void writeColumnName(@NotNull String tableAlias, @NotNull Key<?,?> column, Key<?,?>... labels);
+
+    /** Format value to writer */
+    void writeValue(Key<?,?> key, @Nullable Object value);
 
     StringBuilder append(String str);
 

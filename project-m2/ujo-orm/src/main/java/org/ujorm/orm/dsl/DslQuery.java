@@ -17,6 +17,7 @@
 package org.ujorm.orm.dsl;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.ujorm.core.DomainHandlerProvider;
 import org.ujorm.core.DomainHandlerService;
 import org.ujorm.core.criterion.Criterion;
@@ -206,6 +207,13 @@ public class DslQuery<D> extends AbstractSqlQuery<DslQuery<D>> {
                 }
                 writer.append(q.close());
             }
+        }
+
+
+        /** Format scalar value or arrays directly to writer */
+        @Override
+        public void writeValue(Key<?,?> key, @Nullable Object value) {
+            // TODO.pop
         }
 
         @Override

@@ -122,9 +122,9 @@ public class DslQueryBuilder {
                     String targetAlias;
                     var nextKey = keyPath[i + 1];
 
-                    var aliasedKey = nextKey instanceof AliasedKey ak
+                    var aliasedKey = nextKey instanceof AliasedKey<?,?> ak
                             ? ak
-                            : (relKey instanceof AliasedKey akRel ? akRel : null);
+                            : (relKey instanceof AliasedKey<?,?> akRel ? akRel : null);
 
                     if (aliasedKey != null) {
                         targetAlias = aliasedKey.tableAlias();
@@ -150,7 +150,7 @@ public class DslQueryBuilder {
             }
 
             var finalKey = keyPath[keyPath.length - 1];
-            var finalAlias = finalKey instanceof AliasedKey akey
+            var finalAlias = finalKey instanceof AliasedKey<?,?> akey
                     ? akey.tableAlias()
                     : currentAlias;
 
@@ -233,7 +233,7 @@ public class DslQueryBuilder {
      */
     private void appendSimpleCriterion(Object leftNode, Enum<?> operator, Object rightNode) {
         var key = (Key<?, ?>) leftNode;
-        var resolvedAlias = key instanceof AliasedKey akey
+        var resolvedAlias = key instanceof AliasedKey<?,?> akey
                 ? akey.tableAlias()
                 : domainAliases.getOrDefault(key.domainClass(), baseTableAlias);
 
@@ -242,12 +242,12 @@ public class DslQueryBuilder {
         } else {
             writer.writeColumnName(resolvedAlias, key);
             writer.append(SPACE).append(getSqlOperatorText(operator)).append(SPACE);
-            writeValue(key, rightNode);
+            writer.writeValue(key, rightNode);
         }
     }
 
     /** Evaluates and appends a custom SQL template with its placeholders. */
-    private void appendCustomSql(String alias, Key<?, ?> key, TemplateValue<?> templateValue) {
+    public void appendCustomSql(String alias, Key<?, ?> key, TemplateValue<?> templateValue) {
         var values = templateValue.valuesNonNull();
         var template = templateValue.template();
 
@@ -262,22 +262,7 @@ public class DslQueryBuilder {
 
             switch (mark) {
                 case "0" -> writer.writeColumnName(alias, key);
-                case "*" -> {
-                    for (var i = 0; i < values.size(); i++) {
-                        if (i > 0) writer.append(", ");
-                        writeValue(key, values.get(i));
-                    }
-                }
-                default -> {
-                    try {
-                        var idx = Integer.parseInt(mark);
-                        if (idx > 0 && idx <= values.size()) {
-                            writeValue(key, values.get(idx - 1));
-                            continue;
-                        }
-                    } catch (NumberFormatException ignored) {}
-                    writer.append(template.substring(start, last)); // Fallback for invalid placeholders
-                }
+                default -> writer.writeValue(key, values);
             }
         }
         writer.append(template.substring(last));
@@ -324,35 +309,6 @@ public class DslQueryBuilder {
                 return candidate;
             }
         }
-    }
-
-    /** Format scalar value or arrays directly to writer */
-    public void writeValue(Key<?,?> key, @Nullable  Object value) {
-        if (value == null) {
-            writer.append("NULL");
-        } else if (value instanceof String str) {
-            writer.append("'").append(str).append("'");
-        } else if (value instanceof Object[] arr) {
-            formatIterable(key, Arrays.asList(arr));
-        } else if (value instanceof Iterable<?> it) {
-            formatIterable(key, it);
-        } else {
-            writer.append(value);
-        }
-    }
-
-    /** Helper to format iterables directly to writer */
-    private void formatIterable(Key<?,?> key, Iterable<?> it) {
-        writer.append("(");
-        var first = true;
-        for (var item : it) {
-            if (!first) {
-                writer.append(", ");
-            }
-            writeValue(key, item);
-            first = false;
-        }
-        writer.append(")");
     }
 
     /** Find a relation key */

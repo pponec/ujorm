@@ -2,6 +2,7 @@ package org.ujorm.orm.dsl;
 
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -279,6 +280,18 @@ class DslQueryBuilderTest {
                     writer.append(labels[i].name());
                 }
                 writer.append(q.close());
+            }
+        }
+
+        /** Format scalar value or arrays directly to writer */
+        @Override
+        public void writeValue(Key<?,?> key, @Nullable  Object value) {
+            if (value == null) {
+                writer.append("NULL");
+            } else if (value instanceof String str) {
+                writer.append("'").append(str).append("'");
+            } else {
+                writer.append(value);
             }
         }
 
