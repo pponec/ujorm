@@ -111,7 +111,7 @@ public class DslQuery<D> extends AbstractSqlQuery<DslQuery<D>> {
     public void close() {
         super.close();
         sqlTail = null;
-        placeholderCounter = 10;
+        placeholderCounter = 0;
     }
 
     /** Head of the SQL where default is SELECT. */
@@ -229,22 +229,23 @@ public class DslQuery<D> extends AbstractSqlQuery<DslQuery<D>> {
             var key = (Key<?, ?>) criterion.getLeftNode();
             var operator = criterion.getOperator();
             var value = criterion.getRightNode();
-            var placeholder = alias + '_' + key.name() + '_' + System.identityHashCode(criterion);
             var jdbcType = JdbcUtils.findJdbcType(key.type());
 
             switch (operator) {
                 case ALWAYS_TRUE, ALWAYS_FALSE -> writer.append(operator.term());
                 case CUSTOM_SQL -> {
                     if (value instanceof TemplateValue<?> tv) {
-                        appendColumn(alias, key, placeholder, jdbcType, tv);
+                        appendColumn(alias, key, jdbcType, tv);
                     }
                 }
                 case IN, NOT_IN -> {
+                    var placeholder = nextPlaceholder(alias, key);
                     writeColumnName(alias, key, EMPTY);
                     writer.append(' ').append(operator.term()).append(" (:").append(placeholder).append(')');
                     bindObject(true, placeholder, jdbcType, value instanceof Array<?> ar ? ar : Array.of(value));
                 }
                 default -> {
+                    var placeholder = nextPlaceholder(alias, key);
                     writeColumnName(alias, key, EMPTY);
                     writer.append(' ').append(operator.term()).append(" :").append(placeholder);
                     bindObject(true, placeholder, jdbcType, value instanceof Array<?> ar ? ar : Array.of(value));
@@ -253,7 +254,7 @@ public class DslQuery<D> extends AbstractSqlQuery<DslQuery<D>> {
         }
 
         /** Format custom SQL templates with named parameters */
-        private void appendColumn(String alias, Key<?, ?> key, String placeholderPrefix, JDBCType jdbcType, TemplateValue<?> templateValue) {
+        private void appendColumn(String alias, Key<?, ?> key, JDBCType jdbcType, TemplateValue<?> templateValue) {
             var template = templateValue.template();
             var last = 0;
             var i = 0;
@@ -265,7 +266,7 @@ public class DslQuery<D> extends AbstractSqlQuery<DslQuery<D>> {
                         if (mark == '0') {
                             writeColumnName(alias, key, EMPTY);
                         } else {
-                            var placeholder = placeholderPrefix + placeholderCounter++;
+                            var placeholder = nextPlaceholder(alias, key);
                             writer.append(':').append(placeholder);
                             bindObject(true, placeholder, jdbcType, templateValue.valuesNonNull());
                         }
@@ -277,6 +278,11 @@ public class DslQuery<D> extends AbstractSqlQuery<DslQuery<D>> {
                 i++;
             }
             writer.append(template, last, template.length());
+        }
+
+        /** Generate next unique placeholder parameter name */
+        private String nextPlaceholder(String alias, Key<?, ?> key) {
+            return alias + '_' + key.name() + '_' + (placeholderCounter++);
         }
 
         @Override
