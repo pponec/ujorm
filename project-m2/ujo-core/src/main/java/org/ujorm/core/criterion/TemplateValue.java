@@ -16,6 +16,7 @@
 package org.ujorm.core.criterion;
 
 import org.jetbrains.annotations.NotNull;
+import org.ujorm.tools.common.Array;
 
 import java.util.List;
 
@@ -45,13 +46,13 @@ public record TemplateValue<V>(
         /** Returns the criterion right value list used for placeholder replacement.
          * @return the list of parameter values
          */
-        List<V> values
+        Array<V> values
 
 ) {
 
     @NotNull
-    public List<V> valuesNonNull() {
-        return values != null ? values : List.of();
+    public Array<V> valuesNonNull() {
+        return values != null ? values : Array.of();
     }
 
     @Override

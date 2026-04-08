@@ -20,6 +20,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.ujorm.core.Key;
 import org.ujorm.core.impl.AbstractKey;
+import org.ujorm.tools.common.Array;
 
 import java.util.Collection;
 import java.util.List;
@@ -436,7 +437,7 @@ public abstract class Criterion {
             @NotNull final Key<U, V> key,
             @NotNull final String sqlTemplate,
             @NotNull final V... values) {
-        return new ValueCriterion<>(key, Operator.CUSTOM_SQL, new TemplateValue<>(sqlTemplate, List.of(values)));
+        return new ValueCriterion<>(key, Operator.CUSTOM_SQL, new TemplateValue<>(sqlTemplate, Array.of(values)));
     }
 
     /**
