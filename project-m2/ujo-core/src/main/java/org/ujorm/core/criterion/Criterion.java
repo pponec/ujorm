@@ -22,6 +22,7 @@ import org.ujorm.core.Key;
 import org.ujorm.core.impl.AbstractKey;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -411,8 +412,23 @@ public abstract class Criterion {
 
     /**
      * The method creates a new Criterion for a native condition (called Native Criterion) in SQL statement format.
-     * @param key The parameter is required by Ujorm to location a basic database table
-     * @param sqlTemplate a SQL condition in the String format, the NULL value or empty string is not accepted
+     * <p>
+     * Supported placeholders in the template:
+     * <ul>
+     *   <li>{@code {0}} : Replaced by the database column name (mapped from the key).</li>
+     *   <li>{@code {1}} : Replaced by the first value from the {@code values} array.</li>
+     *   <li>{@code {2}} : Replaced by the second value, and so on.</li>
+     *   <li>{@code {*}} : Replaced by all values joined by a comma (e.g., for {@code IN} operator).</li>
+     * </ul>
+     * * Example of use:
+     * <pre>{@code
+     * Criterion.forSql(MetaEmployee.name, "UPPER({0}) = {1}", "JOE")
+     * Criterion.forSql(MetaEmployee.id, "{0} IN ({*})", 1, 2, 3)
+     * }</pre>
+     * @param key The parameter is required by Ujorm to locate a basic database table
+     * @param sqlTemplate A SQL condition in the String format, the NULL value or empty string is not accepted
+     * @param values Optional parameters for the placeholders
+     * @return A new Criterion instance
      * @see Operator#CUSTOM_SQL
      */
     @NotNull
@@ -420,7 +436,7 @@ public abstract class Criterion {
             @NotNull final Key<U, V> key,
             @NotNull final String sqlTemplate,
             @NotNull final V... values) {
-        return new ValueCriterion<>(key, Operator.CUSTOM_SQL, new TemplateValue<>(sqlTemplate, values));
+        return new ValueCriterion<>(key, Operator.CUSTOM_SQL, new TemplateValue<>(sqlTemplate, List.of(values)));
     }
 
     /**

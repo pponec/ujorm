@@ -63,7 +63,7 @@ public enum Operator implements AbstractOperator {
     USER(""),
 
     /**
-     * A custom SQL operator where the placeholder {@code {0} is replaced by the real column name and {1} is repaced by the first value.
+     * A custom SQL operator where the placeholder {@code {0}} is replaced by the real column name and {@code {1}} is repalced by the first value.
      * The right-hand value of the Criterion is used as the SQL template with values.
      * <br>Note: Not a standard SQL operator.
      */

@@ -158,7 +158,8 @@ public class DslQueryBuilder {
         }
     }
 
-    /** Build the FROM clause. Find a basic domain model using:
+    /**
+     * Build the FROM clause. Find a basic domain model using:
      * <br/> the first select column or
      * <br/> the first criterion column of
      */
@@ -189,9 +190,7 @@ public class DslQueryBuilder {
         }
     }
 
-    /**
-     * Build the WHERE clause traversing the Criterion tree.
-     */
+    /** Build the WHERE clause traversing the Criterion tree. */
     public void buildWhere() {
         if (this.criterion instanceof ValueCriterion<?> valCrn) {
             switch (valCrn.getOperator()) {
@@ -238,31 +237,50 @@ public class DslQueryBuilder {
                 ? akey.tableAlias()
                 : domainAliases.getOrDefault(key.domainClass(), baseTableAlias);
 
-        if (operator == Operator.CUSTOM_SQL) {
-            var template = rightNode instanceof TemplateValue<?> tv
-                    ? tv.template()
-                    : String.valueOf(rightNode);
-
-            var placeholder = "{0}";
-            var lastIndex = 0;
-            var index = template.indexOf(placeholder);
-
-            if (index == -1) {
-                writer.append(template);
-            } else {
-                while (index != -1) {
-                    writer.append(template.substring(lastIndex, index));
-                    writer.writeColumnName(resolvedAlias, key);
-                    lastIndex = index + placeholder.length();
-                    index = template.indexOf(placeholder, lastIndex);
-                }
-                writer.append(template.substring(lastIndex));
-            }
+        if (operator == Operator.CUSTOM_SQL && rightNode instanceof TemplateValue<?> tv) {
+            appendCustomSql(resolvedAlias, key, tv);
         } else {
             writer.writeColumnName(resolvedAlias, key);
             writer.append(SPACE).append(getSqlOperatorText(operator)).append(SPACE);
             formatValue(rightNode);
         }
+    }
+
+    /** Evaluates and appends a custom SQL template with its placeholders. */
+    private void appendCustomSql(String alias, Key<?, ?> key, TemplateValue<?> templateValue) {
+        var values = templateValue.valuesNonNull();
+        var template = templateValue.template();
+
+        var last = 0;
+        for (var start = template.indexOf('{'); start != -1; start = template.indexOf('{', last)) {
+            var end = template.indexOf('}', start);
+            if (end == -1) break;
+
+            writer.append(template.substring(last, start));
+            var mark = template.substring(start + 1, end);
+            last = end + 1;
+
+            switch (mark) {
+                case "0" -> writer.writeColumnName(alias, key);
+                case "*" -> {
+                    for (var i = 0; i < values.size(); i++) {
+                        if (i > 0) writer.append(", ");
+                        formatValue(values.get(i));
+                    }
+                }
+                default -> {
+                    try {
+                        var idx = Integer.parseInt(mark);
+                        if (idx > 0 && idx <= values.size()) {
+                            formatValue(values.get(idx - 1));
+                            continue;
+                        }
+                    } catch (NumberFormatException ignored) {}
+                    writer.append(template.substring(start, last)); // Fallback for invalid placeholders
+                }
+            }
+        }
+        writer.append(template.substring(last));
     }
 
     /** Extract base table class from criterion */

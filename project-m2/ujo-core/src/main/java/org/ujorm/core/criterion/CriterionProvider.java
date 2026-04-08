@@ -81,16 +81,29 @@ public interface CriterionProvider<VALUE> {
     /** Create a new Criterion for no values. The method evaluate(method) always returns FALSE. */
     @NotNull Criterion whereFalse();
 
-
     /**
      * Creates a new {@code Criterion} with a custom SQL template.
-     * The template can contain the {@code ${0}} placeholders which will be replaced
-     * by the actual column name (including its alias) and the next parameter values.
+     * <p>
+     * Supported placeholders in the template:
+     * <ul>
+     * <li>{@code {0}} : Replaced by the database column name (including its alias).</li>
+     * <li>{@code {1}} : Replaced by the first value from the {@code values} array.</li>
+     * <li>{@code {2}} : Replaced by the second value, and so on.</li>
+     * <li>{@code {*}} : Replaced by all values joined by a comma.</li>
+     * </ul>
+     *
+     * Example of use:
+     * <pre>{@code
+     *   employee.whereSql("UPPER({0}) = {1}", "JOE")
+     *   employee.whereSql("{0} IN ({*})", 1, 2, 3)
+     * }</pre>
+     *
      * @param template SQL template (e.g., {@code "UPPER({0}) = {1}"})
+     * @param values Optional parameters for the placeholders
      * @return A new immutable Criterion
      */
-    @NotNull Criterion whereSql(@NotNull String template, @NotNull VALUE... values);
-
+    @NotNull
+    Criterion whereSql(@NotNull String template, @NotNull VALUE... values);
     // --- DEFAULT METHODS ---
 
     /**

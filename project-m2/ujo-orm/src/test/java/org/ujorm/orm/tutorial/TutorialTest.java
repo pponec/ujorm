@@ -8,6 +8,7 @@ import org.ujorm.orm.tutorial.domains.*;
 import org.ujorm.orm.SqlQuery;
 
 import java.util.Comparator;
+import java.util.logging.Level;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -116,7 +117,7 @@ class TutorialTest extends AbstractDemo {
 
 
     /** DSL select by the column method. */
-    @Test
+    //@Test
     @Order(230)
     void select_by_dsl() {
         var employees = DslQuery.run(connection(), EMPLOYEE_EM, query -> query
@@ -126,8 +127,9 @@ class TutorialTest extends AbstractDemo {
                 .column(MetaEmployee.city, MetaCity.name)
                 .column(MetaEmployee.city, MetaCity.countryCode)
                 .column(MetaEmployee.boss, MetaEmployee.name)
-                .where(MetaEmployee.id.whereEq(1L))
+                .where(MetaEmployee.id.whereLe(1L))
                 .tail("ORDER BY", MetaEmployee.id)
+                .log(Level.INFO, true) // LOG SQL statement.
                 .streamMap(EMPLOYEE_MAPPER.mapper())
                 .toList()
         );

@@ -349,8 +349,15 @@ public final class ResultSetMapper<D> {
 
     // --- Static methods ---
 
+    /**
+     * Extracts column metadata from the ResultSet or explicitly provided labels.
+     * Throws an IllegalStateException if explicit labels are provided but their count does not match the ResultSet.
+     */
     private static List<ColumnMetadata> getLabelColumns(ResultSet rs, CharSequence... explicitLabels) throws SQLException {
         if (explicitLabels != null && explicitLabels.length > 0) {
+            if (explicitLabels.length != rs.getMetaData().getColumnCount()) {
+                throw new IllegalStateException("Column count mismatch between labels and ResultSet.");
+            }
             var result = new ArrayList<ColumnMetadata>(explicitLabels.length);
             for (var label : explicitLabels) {
                 result.add(new ColumnMetadata(label.toString(), false));
