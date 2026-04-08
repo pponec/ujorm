@@ -38,7 +38,7 @@ import java.util.stream.Stream;
  *
  * @author Pavel Ponec
  */
-public class Array<T> implements Serializable {
+public final class Array<T> implements Serializable {
 
     protected final T[] array;
 
@@ -85,6 +85,12 @@ public class Array<T> implements Serializable {
         return Optional.ofNullable(j >= 0 && j < array.length ? array[j] : null);
     }
 
+    /** No validations for the best performance */
+    @Nullable
+    public T getValue(final int i) {
+        return array[i];
+    }
+
     /** Negative index is supported */
     public T getItem(final int i) {
         return array[i >= 0 ? i : array.length + i];
@@ -95,9 +101,34 @@ public class Array<T> implements Serializable {
         return get(0);
     }
 
+    /** No validations for the best performance */
+    @Nullable
+    public T getFirstValue() {
+        return array[0];
+    }
+
+    /** No validations for the best performance */
+    @Nullable
+    public T getFirstValue(@Nullable T defaultValue) {
+        return array.length >=0 ? array[0] : defaultValue;
+    }
+
     @NotNull
     public Optional<T> getLast() {
         return get(-1);
+    }
+
+    /** No validations for the best performance */
+    @Nullable
+    public T getLastValue(@Nullable T defaultValue) {
+        return array.length >=0 ? array[array.length - 1] : defaultValue;
+    }
+
+
+    /** No validations for the best performance */
+    @Nullable
+    public T getLastValue() {
+        return array[array.length - 1];
     }
 
     public Array<T> removeFirst() {
