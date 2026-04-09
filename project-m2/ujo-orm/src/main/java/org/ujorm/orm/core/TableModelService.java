@@ -4,7 +4,9 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.ujorm.core.DomainHandlerProvider;
 import org.ujorm.core.DomainHandlerService;
+import org.ujorm.core.Key;
 import org.ujorm.orm.Config;
+import org.ujorm.orm.model.ColumnModel;
 import org.ujorm.orm.model.TableModel;
 import org.ujorm.orm.model.TableModelBuilder;
 
@@ -51,6 +53,11 @@ public class TableModelService {
     }
 
     @NotNull
+    public <D, V> ColumnModel<D, V> getColumnModel(Key<D, V> key, Connection dbConnection) {
+        return getTableModel(key.domainClass(), dbConnection).getColumnOfKey(key);
+    }
+
+    @NotNull
     @SuppressWarnings("unchecked")
     public <D> TableModel<D> getTableModel(Class<D> domainClass, Connection connection) {
         var result = (TableModel<D>) tableMap.get(domainClass);
@@ -67,7 +74,6 @@ public class TableModelService {
     }
 
     @NotNull
-    @SuppressWarnings("unchecked")
     private <D> TableModel<D> createTableModel(Class<D> domainClass, Connection connection) {
         var handler = domainService.getHandler(domainClass);
         return TableModelBuilder.build(handler, config, connection);

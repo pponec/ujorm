@@ -184,17 +184,6 @@ public class DslQuery<D> extends AbstractSqlQuery<DslQuery<D>> {
         return self();
     }
 
-    private void writeParts(CharSequence[] items) {
-        var writer = getWriter(false);
-        for (int i = 0; i < items.length; i++) {
-            if (i > 0) {
-                writer.append(' ');
-            }
-            var item = items[i];
-            writer.append(item);
-
-        }
-    }
 
     @NotNull
     @Override
@@ -207,12 +196,37 @@ public class DslQuery<D> extends AbstractSqlQuery<DslQuery<D>> {
         var tableModel = entityManager.getTableModelService().getTableModel(baseEntityClass, dbConnection);
         this.q = tableModel.jdbc().quotes(); // Assign real quotes.
 
-        writeParts(sqlHead);
+        writeSqlParts(sqlHead);
         builder.build();
-        writeParts(sqlTail);
+        writeSqlParts(sqlTail);
         sqlTemplate = sqlWriter.toString();
 
         return super.buildSql(sqlValues, includingValues);
+    }
+
+
+    private void writeSqlParts(CharSequence[] items) {
+        if (items.length == 0) return;
+        var tableService = entityManager.getTableModelService();
+        var writer = getWriter(false);
+
+        for (int i = 0; i < items.length; i++) {
+            if (i > 0) {
+                writer.append(' ');
+            }
+            var item = items[i];
+            if (item instanceof Key<?,?> key) {
+                var tableAlias = builder.findTableAlias(key);
+                var tableModel = tableService.getColumnModel(key, dbConnection);
+                writer.append(q.open()).append(tableAlias).append('.').append("column").append(q.close());
+
+
+
+                this.entityManager.tableModel(dbConnection);
+            } else if (item != null) {
+                writer.append(item);
+            }
+        }
     }
 
     // --- INNER CLASSES ---

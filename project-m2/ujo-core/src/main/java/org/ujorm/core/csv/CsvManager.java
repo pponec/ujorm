@@ -41,7 +41,7 @@ public class CsvManager<D> {
     }
 
     /** Only direct mapping for data without headers */
-    public Stream<D> convertByOrder(Stream<String> lines) {
+    public <V> Stream<D> convertByOrder(Stream<String> lines) {
         return lines.map( line -> {
             var result = AbstractUjo.of(domainHandler);
             var texts = splitter.split(line, maxFields);
@@ -49,11 +49,11 @@ public class CsvManager<D> {
             for (int i = 0; i < max; i++) {
                 var text = texts[i];
                 var keyFun = keyFuns[i];
-                var key = (Key<D, Object>) keyFun.key;
+                var key = (Key<D, V>) keyFun.key;
                 var value = (!text.isEmpty() || key.type().equals(String.class))
                         ? keyFun.fun.apply(text)
                         : null;
-                result.setValue(key, value);
+                result.setValue(key, (V) value);
             }
             return result.buildDomain();
         });

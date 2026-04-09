@@ -259,11 +259,12 @@ public final class EntityManager<D, V> {
         }
 
         /** Set values to the Prepared Statement */
-        public void setValuesToStatement(D domain, List<ColumnModel<D, Object>> columns, PreparedStatement ps) throws SQLException {
+        @SuppressWarnings("unchecked")
+        public void setValuesToStatement(D domain, List<ColumnModel<D, ?>> columns, PreparedStatement ps) throws SQLException {
             for (var i = 0; i < columns.size(); i++) {
                 var column = columns.get(i);
                 var value = column.valueOf(domain);
-                var foreignKey = column.foreignKey();
+                var foreignKey = (Key<Object, Object>) column.foreignKey();
                 if (foreignKey != null && value != null) {
                     value = foreignKey.getValue(value);
                 }
@@ -285,7 +286,7 @@ public final class EntityManager<D, V> {
         }
 
         /** Set both column values and PK to the Prepared Statement for UPDATE queries */
-        public void setValuesAndPkToStatement(D domain, List<ColumnModel<D, Object>> columns, PreparedStatement ps) throws SQLException {
+        public void setValuesAndPkToStatement(D domain, List<ColumnModel<D, ?>> columns, PreparedStatement ps) throws SQLException {
             setValuesToStatement(domain, columns, ps);
             setPkToStatement(domain, columns.size() + 1, ps);
         }
@@ -304,7 +305,7 @@ public final class EntityManager<D, V> {
         }
 
         /** Builds an SQL INSERT statement for the specified columns. */
-        public String buildInsertSql(@NotNull List<ColumnModel<D, Object>> columns) {
+        public String buildInsertSql(@NotNull List<ColumnModel<D, ?>> columns) {
             var q = getQuote();
             var tableName = tableModel().tableName();
             var sql = new StringBuilder(256)
@@ -319,7 +320,7 @@ public final class EntityManager<D, V> {
         }
 
         /** Builds an SQL UPDATE statement for the specified columns. */
-        public String buildUpdateSql(@NotNull List<ColumnModel<D, Object>> columns) {
+        public String buildUpdateSql(@NotNull List<ColumnModel<D, ?>> columns) {
             var q = getQuote();
             var tableName = tableModel().tableName();
             var sql = new StringBuilder(256)
@@ -337,7 +338,7 @@ public final class EntityManager<D, V> {
         /** Builds an SQL UPDATE statement for the specified keys. */
         public String buildUpdateSql(Key<D, ?>[] keys) {
             var model = tableModel();
-            var columns = new java.util.ArrayList<ColumnModel<D, Object>>(keys.length);
+            var columns = new java.util.ArrayList<ColumnModel<D, ?>>(keys.length);
             for (var key : keys) {
                 columns.add(model.getColumn(key.index()));
             }
@@ -369,7 +370,7 @@ public final class EntityManager<D, V> {
         /** Write column name. */
         public void write(
                 final StringBuilder writer,
-                final List<ColumnModel<D,Object>> columns,
+                final List<ColumnModel<D,?>> columns,
                 final String separator,
                 final QuotePair q
         ) {
@@ -692,7 +693,7 @@ public final class EntityManager<D, V> {
         @SafeVarargs
         private final void updateInternalBinding(PreparedStatement statement, D entity, Key<D, ?>... keys) throws SQLException {
             var model = tableModel();
-            var columns = new ArrayList<ColumnModel<D, Object>>(keys.length);
+            var columns = new ArrayList<ColumnModel<D, ?>>(keys.length);
             for (var key : keys) {
                 columns.add(model.getColumn(key.index()));
             }
@@ -706,7 +707,7 @@ public final class EntityManager<D, V> {
          * @param columns Optional list of property names to update. If empty, all properties are updated (excluding id).
          * @return The number of affected rows.
          */
-        private long updateInternal(@NotNull D domain, List<ColumnModel<D, Object>> columns) {
+        private long updateInternal(@NotNull D domain, List<ColumnModel<D, ?>> columns) {
             var sql = utilities.buildUpdateSql(columns);
             return utilities.run(false, dbconnection, sql, false, ps -> {
                 utilities.setValuesAndPkToStatement(domain, columns, ps);
@@ -723,7 +724,7 @@ public final class EntityManager<D, V> {
          * @param columns A list of column models defining which specific attributes should be updated.
          * @return The total number of rows affected by the batch execution.
          */
-        private long updateStreamInternal(@NotNull Stream<D> domains, @NotNull List<ColumnModel<D, Object>> columns) {
+        private long updateStreamInternal(@NotNull Stream<D> domains, @NotNull List<ColumnModel<D, ?>> columns) {
             var sql = utilities.buildUpdateSql(columns);
             var limit = utilities.getBatchLimit();
 
@@ -824,7 +825,7 @@ public final class EntityManager<D, V> {
             private final boolean msSqlWorkaround = tableModel().jdbc().isMsSqlSrv();
             private PreparedStatement ps = null;
             private Boolean genKeys = null;
-            private List<ColumnModel<D, Object>> cols = null;
+            private List<ColumnModel<D, ?>> cols = null;
 
             /**
              * Adds a domain entity to the current batch.

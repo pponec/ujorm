@@ -63,8 +63,8 @@ public record ColumnModel<D,V>(
 
     /** Return a domain Key for a common value type. */
     @SuppressWarnings("unchecked")
-    public Key<D,Object> keyObject() {
-        return (Key<D,Object>) key;
+    public Key<D, ?> keyObject() {
+        return key;
     }
 
     /** Returns a full name */

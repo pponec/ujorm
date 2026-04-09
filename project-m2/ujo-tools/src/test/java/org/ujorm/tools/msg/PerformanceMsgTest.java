@@ -209,7 +209,7 @@ class PerformanceMsgTest {
         String expected = "On 2017-01-15, we spent 254.00 EUR.";
         String template = "On ${DAY,%tF}, we spent ${PRICE,%.2f} EUR.";
         MessageService instance = new MessageService();
-        Map<String,Object> params = instance.map
+        Map<String, Object> params = instance.map
               ( "DAY", LocalDateTime.of(2017, Month.JANUARY, 15, 12, 30)
               , "PRICE", new BigDecimal("254"));
         String result = new MessageService().format(template, params);
