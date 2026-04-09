@@ -7,11 +7,9 @@ import org.ujorm.orm.SqlQuery;
 import org.ujorm.orm.core.EntityManager;
 import org.ujorm.orm.dsl.meta.*;
 import org.ujorm.orm.utils.EntityContext;
-
 import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 /** DslQuery test class with shared connection */
@@ -27,13 +25,31 @@ class DslQueryTest extends AbstractDslQueryTest {
                 .column(QEmployee.id)
                 .column(QEmployee.name)
                 .column(QEmployee.city, QCity.name)
+                .column(QEmployee.boss, QEmployee.name)
                 .where(QEmployee.id.whereGt(1L))
                 .tail("ORDER BY", QEmployee.id);
 
-        var sql = query.toString();
-        assertNotNull(sql);
-        System.out.println("<<SQL>>\n" + sql);
+
+        var sqlTempl = query.sqlTemplate();
+        assertNotNull(sqlTempl);
+        var sql = sqlTempl.lines().toArray(String[]::new);
+
+        int i = 0;
+        assertEquals("SELECT e.\"ID\" AS \"id\"", sql[i++]);
+        assertEquals(", e.\"NAME\" AS \"name\"", sql[i++]);
+        assertEquals(", c.\"NAME\" AS \"city.name\"", sql[i++]);
+        assertEquals(" b.\"NAME\" AS \"boss.name\"", sql[i++]);
+        assertEquals("FROM \"EMPLOYEE\" e", sql[i++]);
+        assertEquals("INNER JOIN \"CITY\" c ON c.\"ID\" = e.\"CITY_ID\"", sql[i++]);
+        assertEquals("oUTER JOIN \"EMPLOYEE\" b ON b.\"ID\" = e.\"BOSS_ID\"", sql[i++]);
+        assertEquals("WHERE e.\"ID\" > :e_id_0", sql[i++]);
+        assertEquals("ORDER BY e.\"ID\"", sql[i++]);
+
+        System.out.println("<<SQL>>\n" + sqlTempl);
     }
+
+    // -------------
+
 
     /** Initialize database schema */
     protected void initSchema(Connection connection) {
