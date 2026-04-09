@@ -1,31 +1,28 @@
 package org.ujorm.orm.dsl;
 
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.mockito.Answers;
+import org.ujorm.orm.SqlQuery;
 import org.ujorm.orm.core.EntityManager;
-import org.ujorm.orm.model.QuotePair;
 import org.ujorm.orm.dsl.meta.*;
+import org.ujorm.orm.utils.EntityContext;
 
 import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
-/** DslQuery test class */
-class DslQueryTest {
+/** DslQuery test class with shared connection */
+class DslQueryTest extends AbstractDslQueryTest {
 
-    /** Default table alias */
-    private static final String ALIAS = "t";
+    private final EntityContext ctx = EntityContext.ofDefault();
+    private final EntityManager<Employee, Long> entityManager = ctx.entityManager(Employee.class);
 
-    /** Test a SELECT statement generation for Employee and City */
     @Test
     void testSelectEmployeeWithCity() {
-        var connection = mock(Connection.class);
-        // Passing the connection inside so the mocks can be properly paired
-        var entityManager = getEntityManager(connection);
-
-        var query = new DslQuery<>(connection, entityManager);
+        var query = new DslQuery<>(connection(), entityManager);
         query.sql("SELECT")
                 .column(QEmployee.id)
                 .column(QEmployee.name)
@@ -34,38 +31,40 @@ class DslQueryTest {
                 .tail("ORDER BY", QEmployee.id);
 
         var sql = query.toString();
-
         assertNotNull(sql);
-        System.out.println("<<SQL>>\n" + sql); // Print the query to the console for visual inspection
+        System.out.println("<<SQL>>\n" + sql);
     }
 
-    /**
-     * Get a mocked EntityManager with deep stubs
-     * @param connection Database connection
-     * @return Mocked EntityManager
-     */
-    @SuppressWarnings({"unchecked", "rawtypes"})
-    private static EntityManager<Employee, Long> getEntityManager(Connection connection) {
-        // Crucial change: RETURNS_DEEP_STUBS saves us from creating a bunch of intermediate steps
-        var em = mock(EntityManager.class, Answers.RETURNS_DEEP_STUBS);
-
-        // 1. Setup the base domain class
-        when(em.getDomainClass()).thenReturn((Class) Employee.class);
-
-        // 2. Resolve the path to the TableModel and its properties
-        var tableService = em.getTableModelService();
-        var tableModel = tableService.getTableModel(Employee.class, connection);
-
-        when(tableModel.tableName()).thenReturn("EMPLOYEE");
-        when(tableModel.jdbc().quotes()).thenReturn(QuotePair.ofDefault());
-
-        // 3. Mock ColumnModels for all keys used in the query
-        when(tableService.getColumnModel(QEmployee.id, connection).name()).thenReturn("eID");
-        when(tableService.getColumnModel(QEmployee.name, connection).name()).thenReturn("eNAME");
-        when(tableService.getColumnModel(QEmployee.city, connection).name()).thenReturn("eCITY_ID");
-        when(tableService.getColumnModel(QCity.id, connection).name()).thenReturn("cID");
-        when(tableService.getColumnModel(QCity.name, connection).name()).thenReturn("cNAME");
-
-        return em;
+    /** Initialize database schema */
+    protected void initSchema(Connection connection) {
+        try (var query = new SqlQuery(connection)) {
+            query.sql("""
+                    CREATE TABLE city
+                    ( id BIGINT AUTO_INCREMENT PRIMARY KEY
+                    , name VARCHAR(50) NOT NULL
+                    , country_code VARCHAR(2) NOT NULL
+                    )
+                    """).execute();
+            query.sql("""
+                    CREATE TABLE employee
+                    ( id BIGINT AUTO_INCREMENT PRIMARY KEY
+                    , name VARCHAR(50) NOT NULL
+                    , boss_id BIGINT NULL
+                    , city_id BIGINT NOT NULL
+                    )
+                    """).execute();
+            query.sql("""
+                    ALTER TABLE employee ADD CONSTRAINT fk_employee_boss_id__id
+                    FOREIGN KEY (boss_id)
+                    REFERENCES employee(id)
+                    ON DELETE RESTRICT ON UPDATE RESTRICT;
+                    """).execute();
+            query.sql("""
+                    ALTER TABLE employee ADD CONSTRAINT fk_employee_city_id__id
+                    FOREIGN KEY (city_id)
+                    REFERENCES city(id)
+                    ON DELETE CASCADE ON UPDATE RESTRICT;
+                    """).execute();
+        }
     }
 }
