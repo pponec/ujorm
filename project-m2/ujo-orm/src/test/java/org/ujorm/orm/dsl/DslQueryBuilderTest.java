@@ -10,9 +10,8 @@ import org.ujorm.core.Key;
 import org.ujorm.core.criterion.Criterion;
 import org.ujorm.core.criterion.TemplateValue;
 import org.ujorm.core.criterion.ValueCriterion;
-import org.ujorm.orm.dsl.meta.MetaEmployee;
 import org.ujorm.orm.model.QuotePair;
-import org.ujorm.orm.tutorial.domains.MetaCity;
+import org.ujorm.orm.dsl.meta.*;
 
 class DslQueryBuilderTest {
 
@@ -28,14 +27,14 @@ class DslQueryBuilderTest {
         var builder = getBuilder();
 
         // 1. Column definition (generates base alias 'e' and joins 'c' for city, 'b' for boss)
-        builder.column(MetaEmployee.id);
-        builder.column(MetaEmployee.name);
-        builder.column(MetaEmployee.city, MetaCity.name);
-        builder.column(MetaEmployee.boss, MetaEmployee.name);
+        builder.column(QEmployee.id);
+        builder.column(QEmployee.name);
+        builder.column(QEmployee.city, QCity.name);
+        builder.column(QEmployee.boss, QEmployee.name);
 
         // 2. Criteria creation
-        var crn1 = MetaEmployee.name.whereEq("Joe");
-        var crn2 = MetaCity.name.whereEq("Prague");
+        var crn1 = QEmployee.name.whereEq("Joe");
+        var crn2 = QCity.name.whereEq("Prague");
         var crnAll = crn1.and(crn2);
 
         builder.where(crnAll);
@@ -59,18 +58,18 @@ class DslQueryBuilderTest {
     @Test
     void testBasicSelectWithJoinsAndWhereExt() {
         var builder = getBuilder();
-        var metaBossName = MetaEmployee.as("bb", MetaEmployee.name);
+        var metaBossName = QEmployee.as("bb", QEmployee.name);
 
         // 1. Column definition (generates base alias 'e' and joins 'c' for city, 'bb' for boss)
-        builder.column(MetaEmployee.id);
-        builder.column(MetaEmployee.name);
-        builder.column(MetaEmployee.city, MetaCity.name);
-        builder.column(MetaEmployee.boss, metaBossName);
+        builder.column(QEmployee.id);
+        builder.column(QEmployee.name);
+        builder.column(QEmployee.city, QCity.name);
+        builder.column(QEmployee.boss, metaBossName);
 
         // 2. Criteria creation
-        var crn1 = MetaEmployee.id.whereLe(0L);
-        var crn2 = MetaCity.id.whereIn(1L, 2L);
-        var crn3 = MetaCity.name.whereEq("Joe");
+        var crn1 = QEmployee.id.whereLe(0L);
+        var crn2 = QCity.id.whereIn(1L, 2L);
+        var crn3 = QCity.name.whereEq("Joe");
         var crn4 = metaBossName.whereEq("Black");
         var crnAll = crn1.and(crn2).or(crn3.and(crn4));
 
@@ -96,8 +95,8 @@ class DslQueryBuilderTest {
     @Test
     void testStandaloneAlwaysTrue() {
         var builder = getBuilder();
-        builder.column(MetaEmployee.id);
-        builder.where(MetaEmployee.id.whereTrue());
+        builder.column(QEmployee.id);
+        builder.where(QEmployee.id.whereTrue());
 
         // 3. Execution
         var sql = builder.toString().lines().toArray(String[]::new);
@@ -113,8 +112,8 @@ class DslQueryBuilderTest {
     @Test
     void testStandaloneAlwaysFalse() {
         var builder = getBuilder();
-        builder.column(MetaEmployee.id);
-        builder.where(MetaEmployee.id.whereFalse());
+        builder.column(QEmployee.id);
+        builder.where(QEmployee.id.whereFalse());
 
         // 3. Execution
         var sql = builder.toString().lines().toArray(String[]::new);
@@ -131,10 +130,10 @@ class DslQueryBuilderTest {
     @Test
     void testNestedConstantRestriction() {
         var builder = getBuilder();
-        builder.column(MetaEmployee.id);
+        builder.column(QEmployee.id);
 
-        var crn1 = MetaEmployee.id.whereGt(100L);
-        var crn2 = MetaEmployee.name.whereTrue();
+        var crn1 = QEmployee.id.whereGt(100L);
+        var crn2 = QEmployee.name.whereTrue();
         var crnAll = crn1.and(crn2);
 
         builder.where(crnAll);
@@ -154,7 +153,7 @@ class DslQueryBuilderTest {
     @Test
     void testCriterionForAllOmission() {
         var builder = getBuilder();
-        builder.column(MetaEmployee.id);
+        builder.column(QEmployee.id);
         builder.where(Criterion.forAll());
 
         // 3. Execution
@@ -179,7 +178,7 @@ class DslQueryBuilderTest {
         // 4. Output verification
         var i = 0;
         Assertions.assertEquals(2, sql.length, () -> builder.toString());
-        Assertions.assertEquals("SELECT "           , sql[i++]);
+        Assertions.assertEquals("SELECT"           , sql[i++]);
         Assertions.assertEquals("FROM [Object] o"   , sql[i++]);
     }
 
@@ -191,10 +190,10 @@ class DslQueryBuilderTest {
     @Test
     void testCustomSqlTemplate() {
         var builder = getBuilder();
-        builder.column(MetaEmployee.id);
+        builder.column(QEmployee.id);
 
         // 2. Criteria creation using a template
-        var crn = MetaEmployee.name.whereSql("UPPER({0}) = {1}", "Joe");
+        var crn = QEmployee.name.whereSql("UPPER({0}) = {1}", "Joe");
         builder.where(crn);
 
         // 3. Execution
@@ -212,10 +211,10 @@ class DslQueryBuilderTest {
     @Test
     void testCustomSqlMultiTemplate() {
         var builder = getBuilder();
-        builder.column(MetaEmployee.id);
+        builder.column(QEmployee.id);
 
         // 2. Criteria creation with multiple placeholders
-        var crn = MetaEmployee.id.whereSql("{0} IS NOT NULL AND {0} IN ({*})", 3L, 5L);
+        var crn = QEmployee.id.whereSql("{0} IS NOT NULL AND {0} IN ({*})", 3L, 5L);
         builder.where(crn);
 
         // 3. Execution

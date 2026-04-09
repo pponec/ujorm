@@ -63,7 +63,7 @@ public class SqlBuilder extends AbstractSqlQuery<SqlBuilder> {
         try (var query = new SqlBuilder(connection)) {
             return fun.applyFunction(query);
         } catch (Exception ex) {
-            throw (ex instanceof RuntimeException re) ? re : new SqlException(ex);
+            throw (ex instanceof RuntimeException re) ? re : SQLExceptionBuilder.build(ex);
         }
     }
 }

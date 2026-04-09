@@ -435,7 +435,7 @@ public abstract class AbstractSqlQuery<T extends AbstractSqlQuery<T>> implements
             try {
                 return applyFunction(resultSet);
             } catch (Exception ex) {
-                throw (ex instanceof RuntimeException re) ? re : new SqlException(ex);
+                throw (ex instanceof RuntimeException re) ? re : SQLExceptionBuilder.build(ex);
             }
         }
         @NotNull

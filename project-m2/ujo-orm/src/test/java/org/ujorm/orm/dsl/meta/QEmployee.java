@@ -1,22 +1,23 @@
 package org.ujorm.orm.dsl.meta;
 
-import org.ujorm.orm.dsl.TableAlias;
-import org.ujorm.orm.tutorial.domains.Employee;
-import javax.annotation.processing.Generated;
-import org.ujorm.core.Key;
 import org.ujorm.core.DomainHandler;
 import org.ujorm.core.DomainHandlerProvider;
+import org.ujorm.core.Key;
+import org.ujorm.orm.dsl.TableAlias;
 
-/** Auto-generated metamodel for Employee */
+import javax.annotation.processing.Generated;
+
+/** Auto-generated metamodel for DEmployee */
 @Generated("org.ujorm.maven.UjormMetaProcessor.SourceGenerator")
-public class MetaEmployee {
+public abstract class QEmployee {
 
     private static final DomainHandler<Employee> meta = DomainHandlerProvider.getHandler(Employee.class);
 
     public static final Key<Employee, Long> id = meta.getKey("id");
     public static final Key<Employee, String> name = meta.getKey("name");
-    public static final Key<Employee, org.ujorm.orm.tutorial.domains.City> city = meta.getKey("city");
-    public static final Key<Employee, org.ujorm.orm.tutorial.domains.Employee> boss = meta.getKey("boss");
+    public static final Key<Employee, City> city = meta.getKey("city");
+    public static final Key<Employee, Employee> boss = meta.getKey("boss");
+
 
     /** Creates a table alias for the Employee entity */
     public static TableAlias<Employee> as(String alias) {
@@ -28,3 +29,4 @@ public class MetaEmployee {
         return as(alias).key(key);
     }
 }
+

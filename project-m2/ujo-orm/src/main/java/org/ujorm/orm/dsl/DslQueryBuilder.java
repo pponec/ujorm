@@ -85,7 +85,7 @@ public class DslQueryBuilder {
     public StringBuilder build() {
         var result = dslWriter.append("");
         if (result.isEmpty()) {
-            result.append("SELECT ");
+            result.append("SELECT");
         }
         buildColumns();
         buildTable();
@@ -145,8 +145,11 @@ public class DslQueryBuilder {
                 currentAlias = joinMap.get(subPath).targetAlias();
             }
 
+            // Centralized logic for column prefixes:
             if (colIdx > 0) {
                 dslWriter.append(NEW_LINE).append(", ");
+            } else {
+                dslWriter.append(SPACE);
             }
 
             var finalKey = keyPath[keyPath.length - 1];

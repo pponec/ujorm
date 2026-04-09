@@ -6,8 +6,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.ujorm.core.criterion.Criterion;
 import org.ujorm.core.criterion.Operator;
-import org.ujorm.orm.tutorial.domains.MetaCity;
-import org.ujorm.orm.dsl.meta.MetaEmployee;
+import org.ujorm.orm.dsl.meta.QCity;
+import org.ujorm.orm.dsl.meta.QEmployee;
+import org.ujorm.orm.tutorial.domains.*;
 
 class DslQueryBoundsTest {
 
@@ -33,12 +34,12 @@ class DslQueryBoundsTest {
     @Test
     void testDomainAliasResolutionInWhereClause() {
         var builder = createBuilder();
-        builder.column(MetaEmployee.id);
-        builder.column(MetaEmployee.city, MetaCity.name);
+        builder.column(QEmployee.id);
+        builder.column(QEmployee.city, QCity.name);
 
-        // The criterion is placed on MetaCity, but the user doesn't pass an explicitly aliased key.
-        // DslBuilder should dynamically figure out that MetaCity matches the joined table alias.
-        var crn = Criterion.where(MetaCity.name, Operator.EQ, "Prague");
+        // The criterion is placed on QCity, but the user doesn't pass an explicitly aliased key.
+        // DslBuilder should dynamically figure out that QCity matches the joined table alias.
+        var crn = Criterion.where(QCity.name, Operator.EQ, "Prague");
         builder.where(crn);
 
         var sql = builder.toString().lines().toArray(String[]::new);
@@ -56,9 +57,9 @@ class DslQueryBoundsTest {
     @Test
     void testNullValueHandling() {
         var builder = createBuilder();
-        builder.column(MetaEmployee.id);
+        builder.column(QEmployee.id);
 
-        var crn = Criterion.whereNull(MetaEmployee.name); // Usually maps to Operator.EQ and null value
+        var crn = Criterion.whereNull(QEmployee.name); // Usually maps to Operator.EQ and null value
         builder.where(crn);
 
         var sql = builder.toString().lines().toArray(String[]::new);
@@ -74,7 +75,7 @@ class DslQueryBoundsTest {
     @Test
     void testConstantCriterionForAll() {
         var builder = createBuilder();
-        builder.column(MetaEmployee.id);
+        builder.column(QEmployee.id);
 
         // Simulating 1=1 or always true
         builder.where(Criterion.forAll());
@@ -91,7 +92,7 @@ class DslQueryBoundsTest {
     @Test
     void testConstantCriterionForNone() {
         var builder = createBuilder();
-        builder.column(MetaEmployee.id);
+        builder.column(QEmployee.id);
 
         // Simulating 1=0 or always false
         builder.where(Criterion.forNone());

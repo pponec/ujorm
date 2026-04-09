@@ -22,6 +22,7 @@ import org.ujorm.core.Key;
 import org.ujorm.orm.model.QuotePair;
 import org.ujorm.tools.Check;
 import org.ujorm.tools.jdbc.AbstractSqlQuery;
+import org.ujorm.tools.jdbc.SQLExceptionBuilder;
 import org.ujorm.tools.msg.MessageService;
 
 import java.sql.Connection;
@@ -283,7 +284,7 @@ public class SqlQuery extends AbstractSqlQuery<SqlQuery> {
         try (var query = new SqlQuery(connection)) {
             return fun.applyFunction(query);
         } catch (Exception ex) {
-            throw (ex instanceof RuntimeException re) ? re : new SqlException(ex);
+            throw (ex instanceof RuntimeException re) ? re : SQLExceptionBuilder.build(ex);
         }
     }
 }

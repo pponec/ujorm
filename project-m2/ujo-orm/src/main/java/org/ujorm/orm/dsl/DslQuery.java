@@ -27,6 +27,7 @@ import org.ujorm.orm.utils.JdbcUtils;
 import org.ujorm.tools.common.Array;
 import org.ujorm.tools.jdbc.AbstractSqlQuery;
 import org.ujorm.tools.jdbc.SQLException;
+import org.ujorm.tools.jdbc.SQLExceptionBuilder;
 
 import java.sql.Connection;
 import java.sql.JDBCType;
@@ -73,6 +74,9 @@ public class DslQuery<D> extends AbstractSqlQuery<DslQuery<D>> {
     /** Columns */
     private final DslQueryBuilder builder;
 
+    /** Columns */
+    private final DslWriter dslWriter;
+
     /** Column quotes */
     @NotNull
     private QuotePair q = QuotePair.ofDefault();
@@ -94,7 +98,7 @@ public class DslQuery<D> extends AbstractSqlQuery<DslQuery<D>> {
      */
     public DslQuery(@NotNull Connection dbConnection, @NotNull EntityManager<D, ?> entityManager) {
         super(dbConnection);
-        var dslWriter = new DslWriter(getWriter(true));
+        this.dslWriter = new DslWriter(getWriter(true));
         this.builder = new DslQueryBuilder(dslWriter);
         this.entityManager = entityManager;
     }
@@ -204,27 +208,19 @@ public class DslQuery<D> extends AbstractSqlQuery<DslQuery<D>> {
         return super.buildSql(sqlValues, includingValues);
     }
 
-
     private void writeSqlParts(CharSequence[] items) {
-        if (items.length == 0) return;
-        var tableService = entityManager.getTableModelService();
-        var writer = getWriter(false);
+        if (items == null || items.length == 0) return;
+        var writer = dslWriter.append("");
+        if (!writer.isEmpty()) writer.append('\n');
 
-        for (int i = 0; i < items.length; i++) {
-            if (i > 0) {
-                writer.append(' ');
-            }
+        for (var i = 0; i < items.length; i++) {
             var item = items[i];
+            if (i > 0) dslWriter.append(' ');
             if (item instanceof Key<?,?> key) {
-                var tableAlias = builder.findTableAlias(key);
-                var tableModel = tableService.getColumnModel(key, dbConnection);
-                writer.append(q.open()).append(tableAlias).append('.').append("column").append(q.close());
-
-
-
-                this.entityManager.tableModel(dbConnection);
-            } else if (item != null) {
-                writer.append(item);
+                var alias = builder.findTableAlias(key);
+                dslWriter.writeColumnName(alias, key, EMPTY);
+            } else {
+                dslWriter.append(item);
             }
         }
     }
@@ -242,19 +238,20 @@ public class DslQuery<D> extends AbstractSqlQuery<DslQuery<D>> {
         /** Write database table name. */
         @Override
         public void writeTableName(@NotNull String tableAlias, @NotNull Class<?> entityClass) {
+            var tableModel = entityManager.getTableModelService().getTableModel(entityClass, dbConnection);
             writer.append(q.open())
-                    .append(entityClass.getSimpleName())
+                    .append(tableModel.tableName())
                     .append(q.close())
                     .append(' ').append(tableAlias);
         }
 
         /** Write database column name. If labels are available, append labels for the SQL SELECT statement. */
         @Override
-        public void writeColumnName(@NotNull String tableAlias, @NotNull Key<?,?> column, Key<?,?>... labels) {
-            writer.append(q.open()).append(tableAlias).append('.').append(column.name()).append(q.close());
+        public void writeColumnName(@NotNull String tableAlias, @NotNull Key<?,?> key, Key<?,?>... labels) {
+            var columnModel = entityManager.getTableModelService().getColumnModel(key, dbConnection);
+            writer.append(tableAlias).append('.').append(q.open()).append(columnModel.name()).append(q.close());
 
-            var printLabel = labels.length > 0;
-            if (printLabel) {
+            if (labels.length > 0) {
                 writer.append(" AS ");
                 writer.append(q.open());
                 for (var i = 0; i < labels.length; i++) {
@@ -337,12 +334,14 @@ public class DslQuery<D> extends AbstractSqlQuery<DslQuery<D>> {
         }
     }
 
+    // --- STATIC METHODS ---
+
     /** Run a query statement */
     public static <D, R> R run(Connection connection, EntityManager<D, ?> em, SqlFunction<DslQuery<D>, R> fun) {
         try (var query = new DslQuery<D>(connection, em)) {
             return fun.applyFunction(query);
         } catch (Exception ex) {
-            throw (ex instanceof RuntimeException re) ? re : new SqlException(ex);
+            throw (ex instanceof RuntimeException re) ? re : SQLExceptionBuilder.build(ex);
         }
     }
 
