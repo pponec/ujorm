@@ -249,7 +249,7 @@ public class UjormMetaProcessor extends AbstractProcessor {
             result.append("import org.ujorm.core.DomainHandlerProvider;\n");
             result.append("import org.ujorm.orm.dsl.TableAlias;\n\n");
 
-            result.append("/** Auto-generated metamodel for ").append(originalName).append(" */\n");
+            result.append("/** Auto-generated metamodel for the {@code ").append(originalName).append("} domain class. */\n");
             result.append("@Generated(\"").append(getClass().getCanonicalName()).append("\")\n");
             result.append("public abstract class ").append(newClassName).append(" {\n\n");
 
@@ -293,14 +293,14 @@ public class UjormMetaProcessor extends AbstractProcessor {
                 var typeName = getTypeName(field.asType());
 
                 if (isRecord) {
-                    result.append("    /** The ").append(fieldName).append(" property */\n");
+                    result.append("    /** The {@code ").append(fieldName).append("} property descriptor. */\n");
                 }
 
                 result.append("    public static final Key<").append(originalName).append(", ").append(typeName).append("> ")
                         .append(fieldName).append(" = meta.getKey(\"").append(fieldName).append("\");\n");
             }
 
-            result.append("\n    /** Creates a table alias for the ").append(originalName).append(" entity */\n");
+            result.append("\n    /** Creates a table alias for the {@code ").append(originalName).append("} domain class. */\n");
             result.append("    public static TableAlias<").append(originalName).append("> as(String alias) {\n");
             result.append("        return TableAlias.of(alias);\n");
             result.append("    }\n");
