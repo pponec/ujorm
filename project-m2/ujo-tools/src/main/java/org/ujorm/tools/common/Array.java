@@ -222,4 +222,10 @@ public final class Array<T> implements Serializable, Iterable<T> {
     public static <T> Array<T> of(@NotNull final T... items) {
         return new Array<>(items);
     }
+
+    /** Converts the value safely to an Object Array to prevent varargs method resolution issues. */
+    @SuppressWarnings("unchecked")
+    public static Array<Object> ofObject(Object value) {
+        return value instanceof Array<?> ar ? (Array<Object>) ar : Array.of(value);
+    }
 }

@@ -55,11 +55,4 @@ public class ResultSetMapperService {
         return new ResultSetMapperService(Config.ofDefault());
     }
 
-    public static ResultSetMapperService ofSingleton(Config config) {
-        if (!config.isEnabledUjormServiceProvider()) {
-            throw new UnsupportedOperationException("Access is disabled by configuration");
-        }
-        return of(config);
-    }
-
 }

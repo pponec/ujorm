@@ -42,9 +42,6 @@ public class Config {
     /** Print warnings, if Connection autocommit is true in batch operations. */
     public static final Key<Boolean> autoCommitWarned = meta.key("autoCommitWarned", true);
 
-    /** Enable or disable the service of the {@link org.ujorm.orm.UjormServiceProvider} object. */
-    public static final Key<Boolean> enabledUjormServiceProvider = meta.key("enabledUjormServiceProvider", true);
-
     /** Enable quoting the SQL columns.
      * @see #quotePair
      */
@@ -110,7 +107,6 @@ public class Config {
     public int getBatchSize() { return batchSize.getValue(values); }
     public boolean isPrintSql() { return printSql.getValue(values); }
     public boolean isAutoCommitWarned() { return autoCommitWarned.getValue(values); }
-    public boolean isEnabledUjormServiceProvider() { return enabledUjormServiceProvider.getValue(values); }
     public boolean isEnableSqlQuoting() { return enableSqlQuoting.getValue(values); }
     public String getQuotePair() { return quotePair.getValue(values); }
     /** @deprecated For jUnit test only */

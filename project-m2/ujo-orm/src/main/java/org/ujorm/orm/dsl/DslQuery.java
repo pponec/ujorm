@@ -282,13 +282,13 @@ public class DslQuery<D> extends AbstractSqlQuery<DslQuery<D>> {
                     var placeholder = nextPlaceholder(alias, key);
                     writeColumnName(alias, key, EMPTY);
                     writer.append(' ').append(operator.term()).append(" (:").append(placeholder).append(')');
-                    bindObject(true, placeholder, jdbcType, value instanceof Array<?> ar ? ar : Array.of(value));
+                    bindObject(true, placeholder, jdbcType, Array.ofObject(value));
                 }
                 default -> {
                     var placeholder = nextPlaceholder(alias, key);
                     writeColumnName(alias, key, EMPTY);
                     writer.append(' ').append(operator.term()).append(" :").append(placeholder);
-                    bindObject(true, placeholder, jdbcType, value instanceof Array<?> ar ? ar : Array.of(value));
+                    bindObject(true, placeholder, jdbcType, Array.ofObject(value));
                 }
             }
         }

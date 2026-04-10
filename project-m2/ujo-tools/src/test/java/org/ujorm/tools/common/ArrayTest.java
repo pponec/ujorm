@@ -2,6 +2,8 @@ package org.ujorm.tools.common;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import java.util.ArrayList;
+import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
 /**
@@ -63,6 +65,15 @@ class ArrayTest {
         Assertions.assertEquals(undef, array.get(-9).orElse(undef));
     }
 
+    /** Test of the getValue method */
+    @Test
+    void getValue() {
+        Assertions.assertEquals('A', array.getValue(0));
+        Assertions.assertEquals('C', array.getValue(2));
+        Assertions.assertThrows(ArrayIndexOutOfBoundsException.class, () -> array.getValue(5));
+        Assertions.assertThrows(ArrayIndexOutOfBoundsException.class, () -> empty.getValue(0));
+    }
+
     /** Test of the getItem method with positive and negative indices */
     @Test
     void getItem() {
@@ -83,11 +94,41 @@ class ArrayTest {
         Assertions.assertEquals(undef, empty.getFirst().orElse(undef));
     }
 
+    /** Test of the getFirstValue method without arguments */
+    @Test
+    void getFirstValue() {
+        Assertions.assertEquals('A', array.getFirstValue());
+        Assertions.assertThrows(ArrayIndexOutOfBoundsException.class, () -> empty.getFirstValue());
+    }
+
+    /** Test of the getFirstValue method with default value */
+    @Test
+    void getFirstValueDefault() {
+        Assertions.assertEquals('A', array.getFirstValue(undef));
+        Assertions.assertEquals(undef, empty.getFirstValue(undef));
+        Assertions.assertNull(empty.getFirstValue(null));
+    }
+
     /** Test of the getLast method */
     @Test
     void getLast() {
         Assertions.assertEquals('E', array.getLast().orElse(undef));
         Assertions.assertEquals(undef, empty.getLast().orElse(undef));
+    }
+
+    /** Test of the getLastValue method with default value */
+    @Test
+    void getLastValueDefault() {
+        Assertions.assertEquals('E', array.getLastValue(undef));
+        Assertions.assertEquals(undef, empty.getLastValue(undef));
+        Assertions.assertNull(empty.getLastValue(null));
+    }
+
+    /** Test of the getLastValue method without arguments */
+    @Test
+    void getLastValue() {
+        Assertions.assertEquals('E', array.getLastValue());
+        Assertions.assertThrows(ArrayIndexOutOfBoundsException.class, () -> empty.getLastValue());
     }
 
     /** Test of the removeFirst method */
@@ -191,6 +232,22 @@ class ArrayTest {
         Assertions.assertTrue(emptyList.isEmpty());
     }
 
+    /** Test of the iterator method */
+    @Test
+    void testIterator() {
+        var result = new ArrayList<Character>();
+        for (var item : array) {
+            result.add(item);
+        }
+        Assertions.assertEquals(array.size(), result.size());
+        Assertions.assertEquals('A', result.get(0));
+        Assertions.assertEquals('E', result.get(4));
+
+        var it = empty.iterator();
+        Assertions.assertFalse(it.hasNext());
+        Assertions.assertThrows(NoSuchElementException.class, it::next);
+    }
+
     /** Test of the hashCode method */
     @Test
     void testHashCode() {
@@ -214,6 +271,22 @@ class ArrayTest {
     void testToString() {
         Assertions.assertEquals("[A, B, C, D, E]", array.toString());
         Assertions.assertEquals("[]", empty.toString());
+    }
+
+    /** Test of the static factory method ofObject */
+    @Test
+    void ofObject() {
+        var obj = "Hello";
+        var result = Array.ofObject(obj);
+        Assertions.assertEquals(1, result.size());
+        Assertions.assertEquals(obj, result.getItem(0));
+
+        var wrapped = Array.ofObject(array);
+        Assertions.assertSame(array, wrapped);
+
+        var nullResult = Array.ofObject(null);
+        Assertions.assertEquals(1, nullResult.size());
+        Assertions.assertNull(nullResult.getItem(0));
     }
 
     /** Factory method for a testing array */
