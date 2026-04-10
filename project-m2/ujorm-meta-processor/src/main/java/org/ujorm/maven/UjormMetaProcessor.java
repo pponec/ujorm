@@ -246,7 +246,8 @@ public class UjormMetaProcessor extends AbstractProcessor {
             result.append("import javax.annotation.processing.Generated;\n");
             result.append("import org.ujorm.core.Key;\n");
             result.append("import org.ujorm.core.DomainHandler;\n");
-            result.append("import org.ujorm.core.DomainHandlerProvider;\n\n");
+            result.append("import org.ujorm.core.DomainHandlerProvider;\n");
+            result.append("import org.ujorm.orm.dsl.TableAlias;\n\n");
 
             result.append("/** Auto-generated metamodel for ").append(originalName).append(" */\n");
             result.append("@Generated(\"").append(getClass().getCanonicalName()).append("\")\n");
@@ -299,6 +300,10 @@ public class UjormMetaProcessor extends AbstractProcessor {
                         .append(fieldName).append(" = meta.getKey(\"").append(fieldName).append("\");\n");
             }
 
+            result.append("\n    /** Creates a table alias for the ").append(originalName).append(" entity */\n");
+            result.append("    public static TableAlias<").append(originalName).append("> as(String alias) {\n");
+            result.append("        return TableAlias.of(alias);\n");
+            result.append("    }\n");
             result.append("}\n");
             return result.toString();
         }
