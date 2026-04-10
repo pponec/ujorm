@@ -6,15 +6,12 @@ import org.ujorm.core.Key;
 import java.util.Objects;
 
 /** Generic wrapper for SQL table aliases */
-public final class TableAlias<T> {
-
-    @NotNull
-    private final String alias;
-
-    /** Constructor */
-    private TableAlias(@NotNull String alias) {
-        this.alias = Objects.requireNonNull(alias, "alias");
-    }
+public record TableAlias<T> (
+        /** Name of the SQL table alias */
+        @NotNull String alias,
+        /** Original domain class */
+        @NotNull Class<T> domainClass
+) implements CharSequence {
 
     /** Wraps a domain property with this table alias */
     public <V> AliasedKey<T, V> key(@NotNull final Key<T, V> key) {
@@ -22,14 +19,18 @@ public final class TableAlias<T> {
         return new AliasedKey<>(this, originalKey);
     }
 
-    /** Returns the SQL table alias */
-    @NotNull
-    public String alias() {
-        return alias;
+    @Override
+    public int length() {
+        return alias.length();
     }
 
-    /** Factory method */
-    public static <T> TableAlias<T> of(@NotNull final String alias) {
-        return new TableAlias<>(alias);
+    @Override
+    public char charAt(int index) {
+        return alias.charAt(index);
+    }
+
+    @Override
+    public @NotNull CharSequence subSequence(int start, int end) {
+        return alias.subSequence(start, end);
     }
 }
