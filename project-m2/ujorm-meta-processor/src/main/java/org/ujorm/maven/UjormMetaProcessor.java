@@ -18,11 +18,12 @@ import java.util.Set;
         "jakarta.persistence.Entity",
         "jakarta.persistence.Table"
 })
-@SupportedOptions({"ujorm.prefix", "ujorm.suffix"})
+@SupportedOptions({"ujorm.prefix", "ujorm.suffix", "ujorm.metaPackage"})
 public class UjormMetaProcessor extends AbstractProcessor {
 
     private String prefix = "Meta";
     private String suffix = "";
+    private String metaPackage = "";
     private final Set<String> processedClasses = new HashSet<>();
 
     @Override
@@ -38,10 +39,15 @@ public class UjormMetaProcessor extends AbstractProcessor {
             var s = options.get("ujorm.suffix");
             if (s != null) suffix = s;
         }
+        if (options.containsKey("ujorm.metaPackage")) {
+            var p = options.get("ujorm.metaPackage");
+            if (p != null) metaPackage = p;
+        }
 
         // Safety fallback against null values injected by Maven
         if (prefix == null) prefix = "";
         if (suffix == null) suffix = "";
+        if (metaPackage == null) metaPackage = "";
 
         processingEnv.getMessager().printMessage(Diagnostic.Kind.NOTE, "Ujorm3 APT Processor initialized.");
     }
@@ -58,7 +64,7 @@ public class UjormMetaProcessor extends AbstractProcessor {
      */
     @Override
     public Set<String> getSupportedOptions() {
-        return Set.of("ujorm.prefix", "ujorm.suffix");
+        return Set.of("ujorm.prefix", "ujorm.suffix", "ujorm.metaPackage");
     }
 
     @Override
@@ -94,7 +100,14 @@ public class UjormMetaProcessor extends AbstractProcessor {
 
     /** Processes a single annotated class or record and generates the metamodel source file. */
     private void processClassElement(TypeElement classElement) {
-        var targetPackage = processingEnv.getElementUtils().getPackageOf(classElement).getQualifiedName().toString();
+        var originalPackage = processingEnv.getElementUtils().getPackageOf(classElement).getQualifiedName().toString();
+
+        // Relative package is supported only
+        var subPackage = metaPackage.trim().replaceFirst("^\\.", "");
+        var targetPackage = subPackage.isEmpty()
+                ? originalPackage
+                : originalPackage + "." + subPackage;
+
         var originalName = classElement.getSimpleName().toString();
         var newClassName = prefix + originalName + suffix;
         var fullClassName = targetPackage + "." + newClassName;
@@ -293,7 +306,7 @@ public class UjormMetaProcessor extends AbstractProcessor {
                 var typeName = getTypeName(field.asType());
 
                 if (isRecord) {
-                    result.append("    /** The {@code ").append(fieldName).append("} property descriptor. */\n");
+                    result.append("    /** The {@code ").append(fieldName).append("} property descriptor */\n");
                 }
 
                 result.append("    public static final Key<").append(originalName).append(", ").append(typeName).append("> ")
