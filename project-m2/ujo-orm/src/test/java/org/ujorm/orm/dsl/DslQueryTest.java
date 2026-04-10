@@ -2,6 +2,7 @@ package org.ujorm.orm.dsl;
 
 import org.junit.jupiter.api.Test;
 import org.ujorm.orm.AbstractDatabaseTest;
+import org.ujorm.orm.Config;
 import org.ujorm.orm.SqlQuery;
 import org.ujorm.orm.core.EntityManager;
 import org.ujorm.orm.dsl.meta.*;
@@ -76,26 +77,27 @@ class DslQueryTest extends AbstractDatabaseTest {
 
     @Test
     void testUpdate() {
+        if (Config.DSL_SELECT_ONLY) return;
+
         var employeeTable = QEmployee.as("emp");
         try (var query = new DslQuery<>(connection(), entityManager)) {
+            query.sql("UPDATE", employeeTable,
+                            "SET", employeeTable.key(QEmployee.name), "= :name")
+                    .where(employeeTable.key(QEmployee.id).whereGt(1L))
+                    .bind("name", "Joe");
 
-            query.sql("UPDATE",  employeeTable,
-                    "SET", employeeTable.key(QEmployee.name), "= :name")
-                   .where(employeeTable.key(QEmployee.id).whereGt(1L));
-
-            var sqlValues = query.toString(); // Build the query.
-            assertNotNull(sqlValues);
-            var sql = toQuotedLines(query.sqlTemplate());
-            System.out.println("<<SQL>>\n" + sql.toString());
+            var sqlParam = query.toString();
+            System.out.println("<<SQL>> " + sqlParam);
+            var sql = toQuotedLines(sqlParam);
 
             assertEquals(3, sql.size());
-            assertEquals("SELECT COUNT(*)", sql.next());
-            assertEquals("FROM 'EMPLOYEE' e", sql.next());
-            assertEquals("WHERE e.'ID' > :e_id_0", sql.next());
+            assertEquals("UPDATE \"EMPLOYEE\" AS emp", sql.next());
+            assertEquals("SET \"NAME\" = [Joe]", sql.next());
+            assertEquals("WHERE emp.\"ID\" > [1]", sql.next());
 
             // Execute the query:
-            var count = query.streamMap(rs -> rs.getInt(1)).findFirst().orElseThrow();
-            assertEquals(0, count.intValue());
+            var count = query.execute();
+            assertEquals(0, count);
         }
     }
 

@@ -210,7 +210,8 @@ public class DslQuery<D> extends AbstractSqlQuery<DslQuery<D>> {
         return super.buildSql(sqlValues, includingValues);
     }
 
-    private void writeSqlParts(CharSequence[] items) {
+    /** Print plain texts, database table or columns */
+    void writeSqlParts(CharSequence[] items) {
         if (items == null || items.length == 0) return;
         var writer = dslWriter.append("");
         if (!writer.isEmpty()) writer.append('\n');
@@ -221,6 +222,13 @@ public class DslQuery<D> extends AbstractSqlQuery<DslQuery<D>> {
             if (item instanceof Key<?,?> key) {
                 var alias = builder.findTableAlias(key);
                 dslWriter.writeColumnName(alias, key, EMPTY);
+            } else if (item instanceof TableAlias tableAlias) { // Config.DSL_SELECT_ONLY ?
+                var tableModel = entityManager.getTableModelService()
+                        .getTableModel(tableAlias.domainClass(), dbConnection);
+                dslWriter.append(q.open()).append(tableModel.tableName()).append(q.close());
+                if (!tableAlias.alias().isEmpty()) {
+                    dslWriter.append(' ').append(tableAlias.alias());
+                }
             } else {
                 dslWriter.append(item);
             }
