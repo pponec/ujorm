@@ -2,6 +2,8 @@ package org.ujorm.orm.utils;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Arrays;
+
 /** Helper class for iterating over text lines. */
 public class Lines {
 
@@ -43,5 +45,10 @@ public class Lines {
     /** Count or the rows */
     public int size() {
         return lines.length;
+    }
+
+    @Override
+    public String toString() {
+        return String.join("\n", lines);
     }
 }

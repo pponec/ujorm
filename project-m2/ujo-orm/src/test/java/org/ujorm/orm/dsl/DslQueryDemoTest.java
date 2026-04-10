@@ -35,7 +35,7 @@ class DslQueryDemoTest {
 
         //---
 
-        var bossNameKey = QEmployee.as("b", QEmployee.name);
+        var bossNameKey = QEmployee.as("b").key(QEmployee.name);
 
         var crn1 = QEmployee.name.whereEq("Joe");
         var crn2 = QCity.name.whereEq("Prague");

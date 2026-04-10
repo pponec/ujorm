@@ -12,12 +12,12 @@ public final class TableAlias<T> {
     private final String alias;
 
     /** Constructor */
-    public TableAlias(@NotNull String alias) {
+    private TableAlias(@NotNull String alias) {
         this.alias = Objects.requireNonNull(alias, "alias");
     }
 
     /** Wraps a domain property with this table alias */
-    public <V> AliasedKey<T, V> key(@NotNull Key<T, V> key) {
+    public <V> AliasedKey<T, V> key(@NotNull final Key<T, V> key) {
         var originalKey = (key instanceof AliasedKey akey) ? akey.originalKey() : key;
         return new AliasedKey<>(this, originalKey);
     }
@@ -26,5 +26,10 @@ public final class TableAlias<T> {
     @NotNull
     public String alias() {
         return alias;
+    }
+
+    /** Factory method */
+    public static <T> TableAlias<T> of(@NotNull final String alias) {
+        return new TableAlias<>(alias);
     }
 }

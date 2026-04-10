@@ -67,7 +67,7 @@ public abstract class AbstractDatabaseTest {
     protected abstract void initSchema(Connection connection);
 
     /** Splits text into lines and replaces double quotes with single quotes. */
-    protected Lines toLines(String sql) {
+    protected Lines toQuotedLines(String sql) {
         return Lines.ofQuoted(sql);
     }
 
