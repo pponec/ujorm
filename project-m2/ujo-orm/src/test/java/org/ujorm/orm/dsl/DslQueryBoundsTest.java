@@ -1,7 +1,6 @@
 package org.ujorm.orm.dsl;
 
 import org.jetbrains.annotations.NotNull;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.ujorm.core.criterion.Criterion;
@@ -9,6 +8,8 @@ import org.ujorm.core.criterion.Operator;
 import org.ujorm.orm.dsl.meta.QCity;
 import org.ujorm.orm.dsl.meta.QEmployee;
 import org.ujorm.orm.tutorial.domains.*;
+import org.ujorm.orm.utils.Lines;
+import static org.junit.jupiter.api.Assertions.*;
 
 class DslQueryBoundsTest {
 
@@ -22,13 +23,11 @@ class DslQueryBoundsTest {
     @Test
     void testEmptyColumnsList() {
         var builder = createBuilder("SELECT *");
-        var sql = builder.toString().lines().toArray(String[]::new);
+        var sql = Lines.of(builder.toString());
 
-        var i = 0;
-        Assertions.assertEquals(2, sql.length, () -> builder.toString());
-        Assertions.assertEquals("SELECT *", sql[i++]);
-        Assertions.assertEquals("FROM [Object] o", sql[i++]);
-        Assertions.assertEquals(i, sql.length);
+        assertEquals(2, sql.size(), () -> builder.toString());
+        assertEquals("SELECT *", sql.next());
+        assertEquals("FROM [Object] o", sql.next());
     }
 
     @Test
@@ -42,16 +41,14 @@ class DslQueryBoundsTest {
         var crn = Criterion.where(QCity.name, Operator.EQ, "Prague");
         builder.where(crn);
 
-        var sql = builder.toString().lines().toArray(String[]::new);
+        var sql = Lines.of(builder.toString());
 
-        var i = 0;
-        Assertions.assertEquals(5, sql.length, () -> builder.toString());
-        Assertions.assertEquals("SELECT [e.id] AS [id]", sql[i++]);
-        Assertions.assertEquals(", [c.name] AS [city.name]", sql[i++]);
-        Assertions.assertEquals("FROM [Employee] e", sql[i++]);
-        Assertions.assertEquals("INNER JOIN [City] c ON [c.id] = [e.city]", sql[i++]);
-        Assertions.assertEquals("WHERE [c.name] = 'Prague'", sql[i++]);
-        Assertions.assertEquals(i, sql.length);
+        assertEquals(5, sql.size(), () -> builder.toString());
+        assertEquals("SELECT [e.id] AS [id]", sql.next());
+        assertEquals(", [c.name] AS [city.name]", sql.next());
+        assertEquals("FROM [Employee] e", sql.next());
+        assertEquals("INNER JOIN [City] c ON [c.id] = [e.city]", sql.next());
+        assertEquals("WHERE [c.name] = 'Prague'", sql.next());
     }
 
     @Test
@@ -62,14 +59,12 @@ class DslQueryBoundsTest {
         var crn = Criterion.whereNull(QEmployee.name); // Usually maps to Operator.EQ and null value
         builder.where(crn);
 
-        var sql = builder.toString().lines().toArray(String[]::new);
+        var sql = Lines.of(builder.toString());
 
-        var i = 0;
-        Assertions.assertEquals(3, sql.length, () -> builder.toString());
-        Assertions.assertEquals("SELECT [e.id] AS [id]", sql[i++]);
-        Assertions.assertEquals("FROM [Employee] e", sql[i++]);
-        Assertions.assertEquals("WHERE [e.name] = NULL", sql[i++]);
-        Assertions.assertEquals(i, sql.length);
+        assertEquals(3, sql.size(), () -> builder.toString());
+        assertEquals("SELECT [e.id] AS [id]", sql.next());
+        assertEquals("FROM [Employee] e", sql.next());
+        assertEquals("WHERE [e.name] = NULL", sql.next());
     }
 
     @Test
@@ -80,13 +75,11 @@ class DslQueryBoundsTest {
         // Simulating 1=1 or always true
         builder.where(Criterion.forAll());
 
-        var sql = builder.toString().lines().toArray(String[]::new);
+        var sql = Lines.of(builder.toString());
 
-        var i = 0;
-        Assertions.assertEquals(2, sql.length, () -> builder.toString());
-        Assertions.assertEquals("SELECT [e.id] AS [id]", sql[i++]);
-        Assertions.assertEquals("FROM [Employee] e", sql[i++]);
-        Assertions.assertEquals(i, sql.length, "Globally true criterion should skip generating WHERE clause");
+        assertEquals(2, sql.size(), () -> builder.toString());
+        assertEquals("SELECT [e.id] AS [id]", sql.next());
+        assertEquals("FROM [Employee] e", sql.next());
     }
 
     @Test
@@ -97,14 +90,12 @@ class DslQueryBoundsTest {
         // Simulating 1=0 or always false
         builder.where(Criterion.forNone());
 
-        var sql = builder.toString().lines().toArray(String[]::new);
+        var sql = Lines.of(builder.toString());
 
-        var i = 0;
-        Assertions.assertEquals(3, sql.length, () -> builder.toString());
-        Assertions.assertEquals("SELECT [e.id] AS [id]", sql[i++]);
-        Assertions.assertEquals("FROM [Employee] e", sql[i++]);
-        Assertions.assertEquals("WHERE 1=0", sql[i++]);
-        Assertions.assertEquals(i, sql.length, "Globally false criterion should generate a safe fail block");
+        assertEquals(3, sql.size(), () -> builder.toString());
+        assertEquals("SELECT [e.id] AS [id]", sql.next());
+        assertEquals("FROM [Employee] e", sql.next());
+        assertEquals("WHERE 1=0", sql.next());
     }
 
     private @NotNull DslQueryBuilder createBuilder(String ...sql) {

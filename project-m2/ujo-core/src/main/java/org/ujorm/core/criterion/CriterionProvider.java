@@ -21,9 +21,6 @@ import org.jetbrains.annotations.Nullable;
 import org.ujorm.core.Key;
 import org.ujorm.tools.common.Array;
 
-import java.util.Collection;
-import java.util.List;
-
 public interface CriterionProvider<VALUE> {
 
     /**

@@ -3,7 +3,6 @@ package org.ujorm.orm.dsl;
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.ujorm.core.Key;
@@ -12,6 +11,8 @@ import org.ujorm.core.criterion.TemplateValue;
 import org.ujorm.core.criterion.ValueCriterion;
 import org.ujorm.orm.model.QuotePair;
 import org.ujorm.orm.dsl.meta.*;
+import org.ujorm.orm.utils.Lines;
+import static org.junit.jupiter.api.Assertions.*;
 
 class DslQueryBuilderTest {
 
@@ -40,19 +41,18 @@ class DslQueryBuilderTest {
         builder.where(crnAll);
 
         // 3. Execution
-        var sql = builder.toString().lines().toArray(String[]::new);
+        var sql = Lines.of(builder.toString());
 
         // 4. Output verification
-        var i = 0;
-        Assertions.assertEquals(8, sql.length, () -> builder.toString());
-        Assertions.assertEquals("SELECT [e.id] AS [id]"     , sql[i++]);
-        Assertions.assertEquals(", [e.name] AS [name]"      , sql[i++]);
-        Assertions.assertEquals(", [c.name] AS [city.name]" , sql[i++]);
-        Assertions.assertEquals(", [b.name] AS [boss.name]" , sql[i++]);
-        Assertions.assertEquals("FROM [Employee] e"         , sql[i++]);
-        Assertions.assertEquals("INNER JOIN [City] c ON [c.id] = [e.city]", sql[i++]);
-        Assertions.assertEquals("OUTER JOIN [Employee] b ON [b.id] = [e.boss]", sql[i++]);
-        Assertions.assertEquals("WHERE [e.name] = 'Joe' AND [c.name] = 'Prague'", sql[i]);
+        assertEquals(8, sql.size(), () -> builder.toString());
+        assertEquals("SELECT [e.id] AS [id]"     , sql.next());
+        assertEquals(", [e.name] AS [name]"      , sql.next());
+        assertEquals(", [c.name] AS [city.name]" , sql.next());
+        assertEquals(", [b.name] AS [boss.name]" , sql.next());
+        assertEquals("FROM [Employee] e"         , sql.next());
+        assertEquals("INNER JOIN [City] c ON [c.id] = [e.city]", sql.next());
+        assertEquals("OUTER JOIN [Employee] b ON [b.id] = [e.boss]", sql.next());
+        assertEquals("WHERE [e.name] = 'Joe' AND [c.name] = 'Prague'", sql.next());
     }
 
     @Test
@@ -76,19 +76,18 @@ class DslQueryBuilderTest {
         builder.where(crnAll);
 
         // 3. Execution
-        var sql = builder.toString().lines().toArray(String[]::new);
+        var sql = Lines.of(builder.toString());
 
         // 4. Output verification
-        var i = 0;
-        Assertions.assertEquals(8, sql.length, () -> builder.toString());
-        Assertions.assertEquals("SELECT [e.id] AS [id]"     , sql[i++]);
-        Assertions.assertEquals(", [e.name] AS [name]"      , sql[i++]);
-        Assertions.assertEquals(", [c.name] AS [city.name]" , sql[i++]);
-        Assertions.assertEquals(", [bb.name] AS [boss.name]", sql[i++]);
-        Assertions.assertEquals("FROM [Employee] e"         , sql[i++]);
-        Assertions.assertEquals("INNER JOIN [City] c ON [c.id] = [e.city]", sql[i++]);
-        Assertions.assertEquals("OUTER JOIN [Employee] bb ON [bb.id] = [e.boss]", sql[i++]);
-        Assertions.assertEquals("WHERE ([e.id] <= 0 AND [c.id] IN (1, 2)) OR ([c.name] = 'Joe' AND [bb.name] = 'Black')", sql[i]);
+        assertEquals(8, sql.size(), () -> builder.toString());
+        assertEquals("SELECT [e.id] AS [id]"     , sql.next());
+        assertEquals(", [e.name] AS [name]"      , sql.next());
+        assertEquals(", [c.name] AS [city.name]" , sql.next());
+        assertEquals(", [bb.name] AS [boss.name]", sql.next());
+        assertEquals("FROM [Employee] e"         , sql.next());
+        assertEquals("INNER JOIN [City] c ON [c.id] = [e.city]", sql.next());
+        assertEquals("OUTER JOIN [Employee] bb ON [bb.id] = [e.boss]", sql.next());
+        assertEquals("WHERE ([e.id] <= 0 AND [c.id] IN (1, 2)) OR ([c.name] = 'Joe' AND [bb.name] = 'Black')", sql.next());
     }
 
     /** Test that the WHERE clause is omitted when the root criterion is ALWAYS_TRUE */
@@ -99,13 +98,12 @@ class DslQueryBuilderTest {
         builder.where(QEmployee.id.whereTrue());
 
         // 3. Execution
-        var sql = builder.toString().lines().toArray(String[]::new);
+        var sql = Lines.of(builder.toString());
 
         // 4. Output verification
-        var i = 0;
-        Assertions.assertEquals(2, sql.length, () -> builder.toString());
-        Assertions.assertEquals("SELECT [e.id] AS [id]", sql[i++]);
-        Assertions.assertEquals("FROM [Employee] e"    , sql[i++]);
+        assertEquals(2, sql.size(), () -> builder.toString());
+        assertEquals("SELECT [e.id] AS [id]", sql.next());
+        assertEquals("FROM [Employee] e"    , sql.next());
     }
 
     /** Test that the WHERE clause contains only the constant when the root criterion is ALWAYS_FALSE */
@@ -116,14 +114,13 @@ class DslQueryBuilderTest {
         builder.where(QEmployee.id.whereFalse());
 
         // 3. Execution
-        var sql = builder.toString().lines().toArray(String[]::new);
+        var sql = Lines.of(builder.toString());
 
         // 4. Output verification
-        var i = 0;
-        Assertions.assertEquals(3, sql.length, () -> builder.toString());
-        Assertions.assertEquals("SELECT [e.id] AS [id]", sql[i++]);
-        Assertions.assertEquals("FROM [Employee] e"    , sql[i++]);
-        Assertions.assertEquals("WHERE 1=0"            , sql[i++]);
+        assertEquals(3, sql.size(), () -> builder.toString());
+        assertEquals("SELECT [e.id] AS [id]", sql.next());
+        assertEquals("FROM [Employee] e"    , sql.next());
+        assertEquals("WHERE 1=0"            , sql.next());
     }
 
     /** Test that nested constant criteria are not specially handled and fall back to standard column rendering */
@@ -139,14 +136,13 @@ class DslQueryBuilderTest {
         builder.where(crnAll);
 
         // 3. Execution
-        var sql = builder.toString().lines().toArray(String[]::new);
+        var sql = Lines.of(builder.toString());
 
         // 4. Output verification
-        var i = 0;
-        Assertions.assertEquals(3, sql.length, () -> builder.toString());
-        Assertions.assertEquals("SELECT [e.id] AS [id]", sql[i++]);
-        Assertions.assertEquals("FROM [Employee] e"    , sql[i++]);
-        Assertions.assertEquals("WHERE [e.id] > 100", sql[i++]);
+        assertEquals(3, sql.size(), () -> builder.toString());
+        assertEquals("SELECT [e.id] AS [id]", sql.next());
+        assertEquals("FROM [Employee] e"    , sql.next());
+        assertEquals("WHERE [e.id] > 100", sql.next());
     }
 
     /** Test that the default Criterion.forAll() behaves the same as ALWAYS_TRUE and omits the WHERE clause */
@@ -157,13 +153,12 @@ class DslQueryBuilderTest {
         builder.where(Criterion.forAll());
 
         // 3. Execution
-        var sql = builder.toString().lines().toArray(String[]::new);
+        var sql = Lines.of(builder.toString());
 
         // 4. Output verification
-        var i = 0;
-        Assertions.assertEquals(2, sql.length, () -> builder.toString());
-        Assertions.assertEquals("SELECT [e.id] AS [id]", sql[i++]);
-        Assertions.assertEquals("FROM [Employee] e"    , sql[i++]);
+        assertEquals(2, sql.size(), () -> builder.toString());
+        assertEquals("SELECT [e.id] AS [id]", sql.next());
+        assertEquals("FROM [Employee] e"    , sql.next());
     }
 
     /** Test that an empty columns list results in a SELECT clause without specific columns */
@@ -173,13 +168,12 @@ class DslQueryBuilderTest {
         builder.where(Criterion.forAll());
 
         // 3. Execution
-        var sql = builder.toString().lines().toArray(String[]::new);
+        var sql = Lines.of(builder.toString());
 
         // 4. Output verification
-        var i = 0;
-        Assertions.assertEquals(2, sql.length, () -> builder.toString());
-        Assertions.assertEquals("SELECT"           , sql[i++]);
-        Assertions.assertEquals("FROM [Object] o"   , sql[i++]);
+        assertEquals(2, sql.size(), () -> builder.toString());
+        assertEquals("SELECT"           , sql.next());
+        assertEquals("FROM [Object] o"   , sql.next());
     }
 
     private @NotNull DslQueryBuilder getBuilder() {
@@ -197,14 +191,13 @@ class DslQueryBuilderTest {
         builder.where(crn);
 
         // 3. Execution
-        var sql = builder.toString().lines().toArray(String[]::new);
+        var sql = Lines.of(builder.toString());
 
         // 4. Output verification
-        var i = 0;
-        Assertions.assertEquals(3, sql.length, () -> builder.toString());
-        Assertions.assertEquals("SELECT [e.id] AS [id]", sql[i++]);
-        Assertions.assertEquals("FROM [Employee] e"    , sql[i++]);
-        Assertions.assertEquals("WHERE UPPER([e.name]) = ['Joe']", sql[i]);
+        assertEquals(3, sql.size(), () -> builder.toString());
+        assertEquals("SELECT [e.id] AS [id]", sql.next());
+        assertEquals("FROM [Employee] e"    , sql.next());
+        assertEquals("WHERE UPPER([e.name]) = ['Joe']", sql.next());
     }
 
     /** Test that CUSTOM_SQL template correctly replaces multiple placeholders in a single string */
@@ -218,14 +211,13 @@ class DslQueryBuilderTest {
         builder.where(crn);
 
         // 3. Execution
-        var sql = builder.toString().lines().toArray(String[]::new);
+        var sql = Lines.of(builder.toString());
 
         // 4. Output verification
-        var i = 0;
-        Assertions.assertEquals(3, sql.length, () -> builder.toString());
-        Assertions.assertEquals("SELECT [e.id] AS [id]", sql[i++]);
-        Assertions.assertEquals("FROM [Employee] e"    , sql[i++]);
-        Assertions.assertEquals("WHERE [e.id] IS NOT NULL AND [e.id] IN ((3, 5))", sql[i]);
+        assertEquals(3, sql.size(), () -> builder.toString());
+        assertEquals("SELECT [e.id] AS [id]", sql.next());
+        assertEquals("FROM [Employee] e"    , sql.next());
+        assertEquals("WHERE [e.id] IS NOT NULL AND [e.id] IN ((3, 5))", sql.next());
     }
 
     // --- CLASS ---

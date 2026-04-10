@@ -1,8 +1,7 @@
 package org.ujorm.orm.dsl;
 
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.ujorm.orm.AbstractDatabaseTest;
 import org.ujorm.orm.SqlQuery;
 import org.ujorm.orm.core.EntityManager;
 import org.ujorm.orm.dsl.meta.*;
@@ -13,7 +12,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 /** DslQuery test class with shared connection */
-class DslQueryTest extends AbstractDslQueryTest {
+class DslQueryTest extends AbstractDatabaseTest {
 
     private final EntityContext ctx = EntityContext.ofDefault();
     private final EntityManager<Employee, Long> entityManager = ctx.entityManager(Employee.class);
@@ -32,18 +31,17 @@ class DslQueryTest extends AbstractDslQueryTest {
 
         var sqlTempl = query.sqlTemplate();
         assertNotNull(sqlTempl);
-        var sql = sqlTempl.lines().toArray(String[]::new);
+        var sql = toLines(sqlTempl);
 
-        int i = 0;
-        assertEquals("SELECT e.\"ID\" AS \"id\"", sql[i++]);
-        assertEquals(", e.\"NAME\" AS \"name\"", sql[i++]);
-        assertEquals(", c.\"NAME\" AS \"city.name\"", sql[i++]);
-        assertEquals(" b.\"NAME\" AS \"boss.name\"", sql[i++]);
-        assertEquals("FROM \"EMPLOYEE\" e", sql[i++]);
-        assertEquals("INNER JOIN \"CITY\" c ON c.\"ID\" = e.\"CITY_ID\"", sql[i++]);
-        assertEquals("oUTER JOIN \"EMPLOYEE\" b ON b.\"ID\" = e.\"BOSS_ID\"", sql[i++]);
-        assertEquals("WHERE e.\"ID\" > :e_id_0", sql[i++]);
-        assertEquals("ORDER BY e.\"ID\"", sql[i++]);
+        assertEquals("SELECT e.'ID' AS 'id'", sql.next());
+        assertEquals(", e.'NAME' AS 'name'", sql.next());
+        assertEquals(", c.'NAME' AS 'city.name'", sql.next());
+        assertEquals(" b.'NAME' AS 'boss.name'", sql.next());
+        assertEquals("FROM 'EMPLOYEE' e", sql.next());
+        assertEquals("INNER JOIN 'CITY' c ON c.'ID' = e.'CITY_ID'", sql.next());
+        assertEquals("OUTER JOIN 'EMPLOYEE' b ON b.'ID' = e.'BOSS_ID'", sql.next());
+        assertEquals("WHERE e.'ID' > :e_id_0", sql.next());
+        assertEquals("ORDER BY e.'ID'", sql.next());
 
         System.out.println("<<SQL>>\n" + sqlTempl);
     }

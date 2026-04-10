@@ -1,8 +1,9 @@
-package org.ujorm.orm.dsl;
+package org.ujorm.orm;
 
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.TestInstance;
+import org.ujorm.orm.utils.Lines;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -12,7 +13,7 @@ import static org.junit.jupiter.api.TestInstance.Lifecycle;
 
 /** Abstract parent for DSL tests managing H2 lifecycle */
 @TestInstance(Lifecycle.PER_CLASS)
-abstract class AbstractDslQueryTest {
+public abstract class AbstractDatabaseTest {
 
     /** Datatabase configuration */
     final DatabaseParam db = new DatabaseParam(
@@ -64,6 +65,11 @@ abstract class AbstractDslQueryTest {
      * @param connection Database connection to use for schema creation.
      */
     protected abstract void initSchema(Connection connection);
+
+    /** Splits text into lines and replaces double quotes with single quotes. */
+    protected Lines toLines(String sql) {
+        return Lines.ofQuoted(sql);
+    }
 
     /**
      * Database parameters
