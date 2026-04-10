@@ -44,12 +44,9 @@ class DslQueryTest extends AbstractDatabaseTest {
         assertEquals("OUTER JOIN 'EMPLOYEE' b ON b.'ID' = e.'BOSS_ID'", sql.next());
         assertEquals("WHERE e.'ID' > :e_id_0", sql.next());
         assertEquals("ORDER BY e.'ID'", sql.next());
-
-
     }
 
     // -------------
-
 
     /** Initialize database schema */
     protected void initSchema(Connection connection) {
