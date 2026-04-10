@@ -47,7 +47,7 @@ class DslQueryBoundsTest {
         assertEquals("SELECT [e.id] AS [id]", sql.next());
         assertEquals(", [c.name] AS [city.name]", sql.next());
         assertEquals("FROM [Employee] e", sql.next());
-        assertEquals("INNER JOIN [City] c ON [c.id] = [e.city]", sql.next());
+        assertEquals("JOIN [City] c ON [c.id] = [e.city]", sql.next());
         assertEquals("WHERE [c.name] = 'Prague'", sql.next());
     }
 

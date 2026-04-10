@@ -50,8 +50,8 @@ class DslQueryBuilderTest {
         assertEquals(", [c.name] AS [city.name]" , sql.next());
         assertEquals(", [b.name] AS [boss.name]" , sql.next());
         assertEquals("FROM [Employee] e"         , sql.next());
-        assertEquals("INNER JOIN [City] c ON [c.id] = [e.city]", sql.next());
-        assertEquals("OUTER JOIN [Employee] b ON [b.id] = [e.boss]", sql.next());
+        assertEquals("JOIN [City] c ON [c.id] = [e.city]", sql.next());
+        assertEquals("LEFT JOIN [Employee] b ON [b.id] = [e.boss]", sql.next());
         assertEquals("WHERE [e.name] = 'Joe' AND [c.name] = 'Prague'", sql.next());
     }
 
@@ -85,8 +85,8 @@ class DslQueryBuilderTest {
         assertEquals(", [c.name] AS [city.name]" , sql.next());
         assertEquals(", [bb.name] AS [boss.name]", sql.next());
         assertEquals("FROM [Employee] e"         , sql.next());
-        assertEquals("INNER JOIN [City] c ON [c.id] = [e.city]", sql.next());
-        assertEquals("OUTER JOIN [Employee] bb ON [bb.id] = [e.boss]", sql.next());
+        assertEquals("JOIN [City] c ON [c.id] = [e.city]", sql.next());
+        assertEquals("LEFT JOIN [Employee] bb ON [bb.id] = [e.boss]", sql.next());
         assertEquals("WHERE ([e.id] <= 0 AND [c.id] IN (1, 2)) OR ([c.name] = 'Joe' AND [bb.name] = 'Black')", sql.next());
     }
 

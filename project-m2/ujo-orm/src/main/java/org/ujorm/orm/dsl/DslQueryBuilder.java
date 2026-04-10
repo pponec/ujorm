@@ -184,7 +184,7 @@ public class DslQueryBuilder {
     /** Inner/outer joins according to isRequired method */
     public void buildJoins() {
         for (var join : joins) {
-            dslWriter.append(NEW_LINE).append(join.required() ? "INNER JOIN " : "OUTER JOIN ");
+            dslWriter.append(NEW_LINE).append(join.required() ? "JOIN " : "LEFT JOIN ");
             dslWriter.writeTableName(join.targetAlias(), join.targetClass());
             dslWriter.append(" ON ");
             dslWriter.writeColumnName(join.targetAlias(), findRelatedPrimaryKey(join.relationKey()));
