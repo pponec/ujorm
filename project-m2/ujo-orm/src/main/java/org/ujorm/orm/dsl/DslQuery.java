@@ -188,22 +188,24 @@ public class DslQuery<D> extends AbstractSqlQuery<DslQuery<D>> {
         return self();
     }
 
-
     @NotNull
     @Override
     protected String buildSql(List<ParamValue> sqlValues, boolean includingValues) {
+        if (sqlTemplate.isEmpty()) {
+            var sqlWriter = getWriter(true);
+            var baseEntityClass = entityManager.getDomainClass();
+            var tableModel = entityManager.getTableModelService().getTableModel(baseEntityClass, dbConnection);
+            this.q = tableModel.jdbc().quotes(); // Assign real quotes.
+
+            writeSqlParts(sqlHead);
+            builder.build();
+            writeSqlParts(sqlTail);
+            sqlTemplate = sqlWriter.toString();
+        }
+
         if (sqlValues instanceof ArrayList<ParamValue> array) {
             array.ensureCapacity(10);
         }
-        var sqlWriter = getWriter(true);
-        var baseEntityClass = entityManager.getDomainClass();
-        var tableModel = entityManager.getTableModelService().getTableModel(baseEntityClass, dbConnection);
-        this.q = tableModel.jdbc().quotes(); // Assign real quotes.
-
-        writeSqlParts(sqlHead);
-        builder.build();
-        writeSqlParts(sqlTail);
-        sqlTemplate = sqlWriter.toString();
 
         return super.buildSql(sqlValues, includingValues);
     }
