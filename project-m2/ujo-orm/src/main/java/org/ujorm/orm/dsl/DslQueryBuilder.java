@@ -119,15 +119,14 @@ public class DslQueryBuilder {
                 if (!joinMap.containsKey(subPath)) {
                     var targetClass = relKey.type();
                     var isReq = relKey.info().required();
-                    String targetAlias;
                     var nextKey = keyPath[i + 1];
+                    String targetAlias;
 
-                    var aliasedKey = nextKey instanceof AliasedKey<?,?> ak
-                            ? ak
-                            : (relKey instanceof AliasedKey<?,?> akRel ? akRel : null);
-
-                    if (aliasedKey != null) {
-                        targetAlias = aliasedKey.tableAlias();
+                    if (!nextKey.tableAlias().isEmpty()) {
+                        targetAlias = nextKey.tableAlias();
+                        usedAliases.add(targetAlias);
+                    } else if (!relKey.tableAlias().isEmpty()) {
+                        targetAlias = relKey.tableAlias();
                         usedAliases.add(targetAlias);
                     } else {
                         targetAlias = keyNameCounts.contains(relKeyName)
@@ -153,9 +152,9 @@ public class DslQueryBuilder {
             }
 
             var finalKey = keyPath[keyPath.length - 1];
-            var finalAlias = finalKey instanceof AliasedKey<?,?> akey
-                    ? akey.tableAlias()
-                    : currentAlias;
+            var finalAlias = finalKey.tableAlias().isEmpty()
+                    ? currentAlias
+                    : finalKey.tableAlias();
 
             dslWriter.writeColumnName(finalAlias, finalKey, keyPath);
         }
@@ -234,9 +233,9 @@ public class DslQueryBuilder {
     /** Resolve table alias from a Key */
     @NotNull
     public String findTableAlias(@NotNull Key<?, ?> key) {
-        var result = key instanceof AliasedKey<?,?> akey
-                ? akey.tableAlias()
-                : domainAliases.getOrDefault(key.domainClass(), baseTableAlias);
+        var result = key.tableAlias().isEmpty()
+                ? domainAliases.getOrDefault(key.domainClass(), baseTableAlias)
+                : key.tableAlias();
         if (result == null) {
             throw new IllegalStateException("No alias found for the key: " + key.fullName());
         }
@@ -299,15 +298,15 @@ public class DslQueryBuilder {
 
     /** Record representing a parsed JOIN relationship. */
     record JoinModel(
-            /** Relation key property */
+            /** Returns relation key */
             Key<?, ?> relationKey,
-            /** Source alias property */
+            /** Returns source alias */
             String sourceAlias,
-            /** Target alias property */
+            /** Returns target alias */
             String targetAlias,
-            /** Target class property */
+            /** Returns target class */
             Class<?> targetClass,
-            /** Is required property */
+            /** Returns true if required */
             boolean required
     ) {}
 
