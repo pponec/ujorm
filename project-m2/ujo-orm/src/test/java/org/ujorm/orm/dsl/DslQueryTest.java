@@ -32,7 +32,7 @@ class DslQueryTest extends AbstractDatabaseTest {
 
             var sqlValues = query.toString(); // Build the query.
             var sqlTempl = query.sqlTemplate();
-            System.out.println("<<SQL>>\n" + sqlTempl);
+            System.out.println("<<SQL>>\n" + sqlValues);
             assertNotNull(sqlValues, "sqlValues");
             assertNotNull(sqlTempl, "sqlTempl");
 
@@ -45,6 +45,7 @@ class DslQueryTest extends AbstractDatabaseTest {
             assertEquals("JOIN 'CITY' c ON c.'ID' = e.'CITY_ID'", sql.next());
             assertEquals("LEFT JOIN 'EMPLOYEE' b ON b.'ID' = e.'BOSS_ID'", sql.next());
             assertEquals("WHERE e.'ID' > :e_id_0", sql.next());
+            assertEquals("WHERE e.'ID' > [1]", toLines(sqlValues).get(-2), "Check value");
             assertEquals("ORDER BY e.'ID'", sql.next());
 
             // Execute the query:

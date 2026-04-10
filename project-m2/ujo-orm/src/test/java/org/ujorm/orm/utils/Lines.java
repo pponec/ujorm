@@ -19,10 +19,10 @@ public class Lines {
         return index < lines.length ? lines[index++] : "";
     }
 
-    /** Sets the index and returns the line at that position. */
+    /** Sets the index and returns the line at that position. Zero index takes the last items. */
     @NotNull
     public String get(int index) {
-        this.index = index;
+        this.index = index < 0 ? lines.length + index : index;
         return next();
     }
 
