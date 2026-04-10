@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
+import static org.ujorm.maven.UjormMetaProcessor.Const.*;
 
 /** Generates metamodel from entities during the compilation phase using APT. */
 @SupportedAnnotationTypes({
@@ -18,9 +19,12 @@ import java.util.Set;
         "jakarta.persistence.Entity",
         "jakarta.persistence.Table"
 })
-@SupportedOptions({"ujorm.prefix", "ujorm.suffix", "ujorm.metaPackage"})
+@SupportedOptions({
+        PARAM_PREFIX,
+        PARAM_SUFFIX,
+        PARAM_META_PACKAGE
+})
 public class UjormMetaProcessor extends AbstractProcessor {
-
     private String prefix = "Meta";
     private String suffix = "";
     private String metaPackage = "";
@@ -31,16 +35,16 @@ public class UjormMetaProcessor extends AbstractProcessor {
         super.init(processingEnv);
         var options = processingEnv.getOptions();
 
-        if (options.containsKey("ujorm.prefix")) {
-            var p = options.get("ujorm.prefix");
+        if (options.containsKey(PARAM_PREFIX)) {
+            var p = options.get(PARAM_PREFIX);
             if (p != null) prefix = p;
         }
-        if (options.containsKey("ujorm.suffix")) {
-            var s = options.get("ujorm.suffix");
+        if (options.containsKey(PARAM_SUFFIX)) {
+            var s = options.get(PARAM_SUFFIX);
             if (s != null) suffix = s;
         }
-        if (options.containsKey("ujorm.metaPackage")) {
-            var p = options.get("ujorm.metaPackage");
+        if (options.containsKey(PARAM_META_PACKAGE)) {
+            var p = options.get(PARAM_META_PACKAGE);
             if (p != null) metaPackage = p;
         }
 
@@ -64,7 +68,7 @@ public class UjormMetaProcessor extends AbstractProcessor {
      */
     @Override
     public Set<String> getSupportedOptions() {
-        return Set.of("ujorm.prefix", "ujorm.suffix", "ujorm.metaPackage");
+        return Set.of(PARAM_PREFIX, PARAM_SUFFIX, PARAM_META_PACKAGE);
     }
 
     @Override
@@ -190,7 +194,6 @@ public class UjormMetaProcessor extends AbstractProcessor {
                 // Safe and exact way to read annotation values in APT
                 var isNone = false;
                 for (var entry : am.getElementValues().entrySet()) {
-                    // entry.getValue() represents the actual set value, e.g., lombok.AccessLevel.NONE
                     if (entry.getValue().toString().contains("NONE")) {
                         isNone = true;
                         break;
@@ -320,5 +323,12 @@ public class UjormMetaProcessor extends AbstractProcessor {
             result.append("}\n");
             return result.toString();
         }
+    }
+
+    /** Parameter constants */
+    static final class Const {
+        static final String PARAM_PREFIX = "ujorm.prefix";
+        static final String PARAM_SUFFIX = "ujorm.suffix";
+        static final String PARAM_META_PACKAGE = "ujorm.metaPackage";
     }
 }
