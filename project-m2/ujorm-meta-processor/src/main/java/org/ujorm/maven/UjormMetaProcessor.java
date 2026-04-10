@@ -322,7 +322,7 @@ public class UjormMetaProcessor extends AbstractProcessor {
 
             result.append("\n    /** Creates a table alias for the {@code ").append(originalName).append("} domain class. */\n");
             result.append("    public static TableAlias<").append(originalName).append("> as(String alias) {\n");
-            result.append("        return TableAlias.of(alias);\n");
+            result.append("        return new TableAlias<>(alias, ").append(originalName).append(".class);\n");
             result.append("    }\n");
             result.append("}\n");
             return result.toString();

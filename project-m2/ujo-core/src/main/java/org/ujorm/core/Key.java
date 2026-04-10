@@ -114,6 +114,11 @@ public interface Key<DOMAIN, VALUE> extends CharSequence, Comparable<Key>, Crite
      */
     short index();
 
+    /** Returns table alias, default is an empty text. */
+    default @NotNull String tableAlias() {
+        return "";
+    }
+
     /** Returns a name of the key. */
     @Override
     String toString();

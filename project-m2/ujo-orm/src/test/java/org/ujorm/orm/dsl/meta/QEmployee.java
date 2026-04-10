@@ -20,7 +20,7 @@ public abstract class QEmployee {
 
     /** Creates a table alias for the Employee entity */
     public static TableAlias<Employee> as(String alias) {
-        return TableAlias.of(alias);
+        return new TableAlias<>(alias, Employee.class);
     }
 }
 

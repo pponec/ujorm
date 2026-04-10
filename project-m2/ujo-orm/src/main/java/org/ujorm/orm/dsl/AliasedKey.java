@@ -24,7 +24,8 @@ public class AliasedKey<T, V> implements Key<T, V> {
     }
 
     /** Returns the bound table alias */
-    public String tableAlias() {
+    @Override
+    public @NotNull String tableAlias() {
         return tableAlias.alias();
     }
 

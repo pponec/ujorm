@@ -13,10 +13,10 @@ public record TableAlias<T> (
         @NotNull Class<T> domainClass
 ) implements CharSequence {
 
-    /** Wraps a domain property with this table alias */
-    public <V> AliasedKey<T, V> key(@NotNull final Key<T, V> key) {
+    /** Wraps a domain property with this table alias. If the alias is empty, return the original key */
+    public <V> Key<T, V> key(@NotNull final Key<T, V> key) {
         var originalKey = (key instanceof AliasedKey akey) ? akey.originalKey() : key;
-        return new AliasedKey<>(this, originalKey);
+        return originalKey.name().isEmpty() ? originalKey : new AliasedKey<>(this, originalKey);
     }
 
     @Override
@@ -32,5 +32,10 @@ public record TableAlias<T> (
     @Override
     public @NotNull CharSequence subSequence(int start, int end) {
         return alias.subSequence(start, end);
+    }
+
+    @Override
+    public String toString() {
+        return domainClass.getSimpleName() + (!alias.isEmpty() ? " [" + alias + ']' : "");
     }
 }

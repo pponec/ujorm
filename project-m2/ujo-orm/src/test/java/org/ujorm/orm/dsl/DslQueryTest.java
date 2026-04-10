@@ -74,6 +74,31 @@ class DslQueryTest extends AbstractDatabaseTest {
         }
     }
 
+    @Test
+    void testUpdate() {
+        var employeeTable = QEmployee.as("emp");
+        try (var query = new DslQuery<>(connection(), entityManager)) {
+
+            query.sql("UPDATE",  employeeTable,
+                    "SET", employeeTable.key(QEmployee.name), "= :name")
+                   .where(employeeTable.key(QEmployee.id).whereGt(1L));
+
+            var sqlValues = query.toString(); // Build the query.
+            assertNotNull(sqlValues);
+            var sql = toQuotedLines(query.sqlTemplate());
+            System.out.println("<<SQL>>\n" + sql.toString());
+
+            assertEquals(3, sql.size());
+            assertEquals("SELECT COUNT(*)", sql.next());
+            assertEquals("FROM 'EMPLOYEE' e", sql.next());
+            assertEquals("WHERE e.'ID' > :e_id_0", sql.next());
+
+            // Execute the query:
+            var count = query.streamMap(rs -> rs.getInt(1)).findFirst().orElseThrow();
+            assertEquals(0, count.intValue());
+        }
+    }
+
 
     @Test
     void testUpdateCount() {
