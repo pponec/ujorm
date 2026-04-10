@@ -5,6 +5,7 @@ import org.ujorm.orm.AbstractDatabaseTest;
 import org.ujorm.orm.SqlQuery;
 import org.ujorm.orm.core.EntityManager;
 import org.ujorm.orm.dsl.meta.*;
+import org.ujorm.orm.jdbc.ResultSetMapper;
 import org.ujorm.orm.utils.EntityContext;
 import java.sql.Connection;
 
@@ -16,34 +17,40 @@ class DslQueryTest extends AbstractDatabaseTest {
 
     private final EntityContext ctx = EntityContext.ofDefault();
     private final EntityManager<Employee, Long> entityManager = ctx.entityManager(Employee.class);
+    private final ResultSetMapper<Employee> employeeMapper = ResultSetMapper.of(Employee.class);
 
     @Test
     void testSelectEmployeeWithCity() {
-        var query = new DslQuery<>(connection(), entityManager);
-        query.sql("SELECT")
-                .column(QEmployee.id)
-                .column(QEmployee.name)
-                .column(QEmployee.city, QCity.name)
-                .column(QEmployee.boss, QEmployee.name)
-                .where(QEmployee.id.whereGt(1L))
-                .tail("ORDER BY", QEmployee.id);
+        try (var query = new DslQuery<>(connection(), entityManager)) {
+            query.sql("SELECT")
+                    .column(QEmployee.id)
+                    .column(QEmployee.name)
+                    .column(QEmployee.city, QCity.name)
+                    .column(QEmployee.boss, QEmployee.name)
+                    .where(QEmployee.id.whereGt(1L))
+                    .tail("ORDER BY", QEmployee.id);
 
-        var sqlValues = query.toString(); // Build the query.
-        var sqlTempl = query.sqlTemplate();
-        System.out.println("<<SQL>>\n" + sqlTempl);
-        assertNotNull(sqlValues, "sqlValues");
-        assertNotNull(sqlTempl, "sqlTempl");
+            var sqlValues = query.toString(); // Build the query.
+            var sqlTempl = query.sqlTemplate();
+            System.out.println("<<SQL>>\n" + sqlTempl);
+            assertNotNull(sqlValues, "sqlValues");
+            assertNotNull(sqlTempl, "sqlTempl");
 
-        var sql = toLines(sqlTempl);
-        assertEquals("SELECT e.'ID' AS 'id'", sql.next());
-        assertEquals(", e.'NAME' AS 'name'", sql.next());
-        assertEquals(", c.'NAME' AS 'city.name'", sql.next());
-        assertEquals(", b.'NAME' AS 'boss.name'", sql.next());
-        assertEquals("FROM 'EMPLOYEE' e", sql.next());
-        assertEquals("INNER JOIN 'CITY' c ON c.'ID' = e.'CITY_ID'", sql.next());
-        assertEquals("OUTER JOIN 'EMPLOYEE' b ON b.'ID' = e.'BOSS_ID'", sql.next());
-        assertEquals("WHERE e.'ID' > :e_id_0", sql.next());
-        assertEquals("ORDER BY e.'ID'", sql.next());
+            var sql = toLines(sqlTempl);
+            assertEquals("SELECT e.'ID' AS 'id'", sql.next());
+            assertEquals(", e.'NAME' AS 'name'", sql.next());
+            assertEquals(", c.'NAME' AS 'city.name'", sql.next());
+            assertEquals(", b.'NAME' AS 'boss.name'", sql.next());
+            assertEquals("FROM 'EMPLOYEE' e", sql.next());
+            assertEquals("INNER JOIN 'CITY' c ON c.'ID' = e.'CITY_ID'", sql.next());
+            assertEquals("OUTER JOIN 'EMPLOYEE' b ON b.'ID' = e.'BOSS_ID'", sql.next());
+            assertEquals("WHERE e.'ID' > :e_id_0", sql.next());
+            assertEquals("ORDER BY e.'ID'", sql.next());
+
+            // Execute the query:
+            var employees = query.streamMap(employeeMapper.mapper()).toList();
+            assertEquals(0,employees.size());
+        }
     }
 
     // -------------
