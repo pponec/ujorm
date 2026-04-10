@@ -28,22 +28,24 @@ class DslQueryTest extends AbstractDatabaseTest {
                 .where(QEmployee.id.whereGt(1L))
                 .tail("ORDER BY", QEmployee.id);
 
-
+        var sqlValues = query.toString(); // Build the query.
         var sqlTempl = query.sqlTemplate();
-        assertNotNull(sqlTempl);
-        var sql = toLines(sqlTempl);
+        System.out.println("<<SQL>>\n" + sqlTempl);
+        assertNotNull(sqlValues, "sqlValues");
+        assertNotNull(sqlTempl, "sqlTempl");
 
+        var sql = toLines(sqlTempl);
         assertEquals("SELECT e.'ID' AS 'id'", sql.next());
         assertEquals(", e.'NAME' AS 'name'", sql.next());
         assertEquals(", c.'NAME' AS 'city.name'", sql.next());
-        assertEquals(" b.'NAME' AS 'boss.name'", sql.next());
+        assertEquals(", b.'NAME' AS 'boss.name'", sql.next());
         assertEquals("FROM 'EMPLOYEE' e", sql.next());
         assertEquals("INNER JOIN 'CITY' c ON c.'ID' = e.'CITY_ID'", sql.next());
         assertEquals("OUTER JOIN 'EMPLOYEE' b ON b.'ID' = e.'BOSS_ID'", sql.next());
         assertEquals("WHERE e.'ID' > :e_id_0", sql.next());
         assertEquals("ORDER BY e.'ID'", sql.next());
 
-        System.out.println("<<SQL>>\n" + sqlTempl);
+
     }
 
     // -------------
