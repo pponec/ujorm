@@ -318,9 +318,10 @@ However, if you prefer a safer, strongly-typed coding style, you can optionally 
                     </path>
                 </annotationProcessorPaths>
                 <compilerArgs>
-                    <!-- Optional: attributes for APT Ujorm3 -->
+                    <!-- Optional attributes for APT Ujorm3: -->
                     <arg>-Aujorm.prefix=Meta</arg>
                     <arg>-Aujorm.suffix=</arg>
+                    <arg>-Aujorm.metaPackage=.</arg>
                 </compilerArgs>
             </configuration>
         </plugin>
