@@ -25,9 +25,13 @@ import static org.ujorm.maven.UjormMetaProcessor.Const.*;
         PARAM_META_PACKAGE
 })
 public class UjormMetaProcessor extends AbstractProcessor {
+    /** Prefix of the generated domain classes */
     private String prefix = "Meta";
+    /** Suffix of the generated domain classes */
     private String suffix = "";
+    /** Relative package of the generated domain classes */
     private String metaPackage = "";
+    /** Set of processed classes to prevent duplicates */
     private final Set<String> processedClasses = new HashSet<>();
 
     @Override
