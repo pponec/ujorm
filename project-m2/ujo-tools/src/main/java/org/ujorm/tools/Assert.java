@@ -89,6 +89,15 @@ public abstract class Assert {
         }
     }
 
+    /** Checks if the argument is {@code true}. */
+    public static <M> void isTrue(final boolean condition, @Nullable final Supplier<String> message)
+            throws IllegalArgumentException {
+        if (!condition) {
+            throw new IllegalArgumentException(message.get());
+        }
+    }
+
+
     /** Checks if the value is not {@code null} and the predicate is valid. */
     public static <V,M> void isTrueRequired
     ( @Nullable final V condition
@@ -222,6 +231,14 @@ public abstract class Assert {
             throws IllegalArgumentException {
         if (condition) {
             throw new IllegalArgumentException(format(message));
+        }
+    }
+
+    /** Checks if the argument is {@code false}. */
+    public static void isFalse(final boolean condition, @Nullable final Supplier<String> message)
+            throws IllegalArgumentException {
+        if (condition) {
+            throw new IllegalArgumentException(message.get());
         }
     }
 

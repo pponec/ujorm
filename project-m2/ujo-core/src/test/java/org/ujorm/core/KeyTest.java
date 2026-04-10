@@ -93,6 +93,11 @@ class KeyTest {
     static class EmployeeNameKey implements Key<Employee, String> {
 
         @Override
+        public Key<Employee, String> self() {
+            return this;
+        }
+
+        @Override
         public String name() {
             return "firstName";
         }
@@ -161,46 +166,6 @@ class KeyTest {
                     return "DummyKeyInfo";
                 }
             };
-        }
-
-        @Override
-        public @NotNull Criterion where(@NotNull Operator operator, @Nullable String s) {
-            return null;
-        }
-
-        @Override
-        public @NotNull Criterion where(@NotNull Operator operator, @NotNull ProxyValue<String> proxyValue) {
-            return null;
-        }
-
-        @Override
-        public @NotNull Criterion where(@NotNull Operator operator, @NotNull Key<?, String> value) {
-            return null;
-        }
-
-        @Override
-        public @NotNull Criterion whereIn(@NotNull Array<String> array) {
-            return null;
-        }
-
-        @Override
-        public @NotNull Criterion whereNotIn(@NotNull Array<String> array) {
-            return null;
-        }
-
-        @Override
-        public @NotNull Criterion whereTrue() {
-            return null;
-        }
-
-        @Override
-        public @NotNull Criterion whereFalse() {
-            return null;
-        }
-
-        @Override
-        public @NotNull Criterion whereSql(@NotNull String template, String... values) {
-            return null;
         }
     }
 }

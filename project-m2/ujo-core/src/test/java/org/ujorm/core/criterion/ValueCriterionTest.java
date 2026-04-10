@@ -73,7 +73,7 @@ public class ValueCriterionTest {
 
     /** Test constant property evaluation */
     @Test
-    public void testIsConstant() {
+    public void testIsForConstant() {
         var criterion = new ValueCriterion<>(MetaEmployee.name, Operator.EQ, TEST_NAME);
         assertFalse(criterion.isConstant());
 

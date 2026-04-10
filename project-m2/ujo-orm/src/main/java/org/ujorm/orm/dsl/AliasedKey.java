@@ -9,8 +9,6 @@ import org.ujorm.core.criterion.Operator;
 import org.ujorm.core.criterion.ProxyValue;
 import org.ujorm.tools.common.Array;
 
-import java.util.Collection;
-
 /** Represents a domain key bound to a specific SQL table alias */
 public class AliasedKey<T, V> implements Key<T, V> {
 
@@ -21,6 +19,12 @@ public class AliasedKey<T, V> implements Key<T, V> {
     public AliasedKey(TableAlias<T> tableAlias, Key<T, V> originalKey) {
         this.tableAlias = tableAlias;
         this.originalKey = originalKey;
+    }
+
+    /** For the Criterion implementations */
+    @Override
+    public @NotNull Key<T, V> self() {
+        return this;
     }
 
     /** Returns the bound table alias */
@@ -84,113 +88,6 @@ public class AliasedKey<T, V> implements Key<T, V> {
     @Override
     public String toString() {
         return tableAlias() + ':' + originalKey.name();
-    }
-
-    // --- CRITERIONS ---
-
-    /** {@inheritDoc} */
-    @Override
-    public Criterion where(@NotNull final Operator operator, @Nullable final V value) {
-        return Criterion.where(this, operator, value);
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public Criterion where(@NotNull final Operator operator, @Nullable final ProxyValue<V> proxyValue) {
-        return Criterion.where(this, operator, proxyValue);
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public Criterion where(@NotNull final Operator operator, Key<?, V> value) {
-        return Criterion.where(this, operator, value);
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public Criterion whereEq(@Nullable final V value) {
-        return Criterion.where(this, value);
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public Criterion whereEq(@NotNull final Key<?, V> value) {
-        return Criterion.where(this, Operator.EQ, value);
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public Criterion whereEq(@NotNull final ProxyValue<V> proxyValue) {
-        return Criterion.where(this, Operator.EQ, proxyValue);
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public Criterion whereIn(@NotNull final Array<V> array) {
-        return Criterion.whereIn(this, array);
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public Criterion whereNotIn(@NotNull final Array<V> array) {
-        return Criterion.whereNotIn(this, array);
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public Criterion whereNull() {
-        return Criterion.whereNull(this);
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public Criterion whereNotNull() {
-        return Criterion.whereNotNull(this);
-    }
-
-    @Override
-    public Criterion whereNeq(@Nullable final V value) {
-        return Criterion.where(this, Operator.NOT_EQ, value);
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public Criterion whereGt(@Nullable final V value) {
-        return Criterion.where(this, Operator.GT, value);
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public Criterion whereGe(@Nullable final V value) {
-        return Criterion.where(this, Operator.GE, value);
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public Criterion whereLt(@Nullable final V value) {
-        return Criterion.where(this, Operator.LT, value);
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public Criterion whereLe(@Nullable final V value) {
-        return Criterion.where(this, Operator.LE, value);
-    }
-
-    @Override
-    @NotNull
-    public Criterion whereSql(@NotNull String template, V... values) {
-        return Criterion.forSql(this, template, values);
-    }
-
-    @Override
-    public @NotNull Criterion whereTrue() {
-        return Criterion.forAll(this);
-    }
-
-    @Override
-    public @NotNull Criterion whereFalse() {
-        return Criterion.forNone(this);
     }
 
 }

@@ -35,7 +35,7 @@ import java.util.Objects;
  * @see Ujo
  */
 @Unmodifiable
-public interface Key<DOMAIN, VALUE> extends CharSequence, Comparable<Key>, CriterionProvider<VALUE> {
+public interface Key<DOMAIN, VALUE> extends CharSequence, Comparable<Key>, CriterionProvider<DOMAIN, VALUE> {
 
     /** Returns the name of the Key (e.g., "name"). */
     @NotNull String name();

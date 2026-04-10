@@ -56,7 +56,7 @@ class DslQueryBoundsTest {
         var builder = createBuilder();
         builder.column(QEmployee.id);
 
-        var crn = Criterion.whereNull(QEmployee.name); // Usually maps to Operator.EQ and null value
+        var crn = Criterion.whereEq(QEmployee.name, null);
         builder.where(crn);
 
         var sql = Lines.of(builder.toString());
@@ -64,7 +64,7 @@ class DslQueryBoundsTest {
         assertEquals(3, sql.size(), () -> builder.toString());
         assertEquals("SELECT [e.id] AS [id]", sql.next());
         assertEquals("FROM [Employee] e", sql.next());
-        assertEquals("WHERE [e.name] = NULL", sql.next());
+        assertEquals("WHERE [e.name] = NULL", sql.next()); // Value will be relaced by the placeholder.
     }
 
     @Test

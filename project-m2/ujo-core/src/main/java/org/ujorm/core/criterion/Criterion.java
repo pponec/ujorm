@@ -184,10 +184,10 @@ public abstract class Criterion {
         return false;
     }
 
-    // ------ STATIC FACTORY --------
+    // ------ STATIC FACTORY METHODS --------
 
     /**
-     * New criterion instance
+     * Common method factory
      * @param key Key
      * @param operator Operator
      * @param value The parameter value
@@ -202,7 +202,7 @@ public abstract class Criterion {
     }
 
     /**
-     * New criterion instance
+     * Comon method factory for the Proxy
      * @param key Key
      * @param operator Operator
      * @param proxyValue A function for the value
@@ -210,7 +210,7 @@ public abstract class Criterion {
      * @see ProxyValue A proxy for the value
      */
     @NotNull
-    public static <U, TYPE> Criterion where(
+    public static <U, TYPE> Criterion whereProxy(
             @NotNull final Key<U,TYPE> key,
             @NotNull final Operator operator,
             @NotNull final ProxyValue<TYPE> proxyValue) {
@@ -225,7 +225,7 @@ public abstract class Criterion {
      * @return A new criterion
      */
     @NotNull
-    public static <U, TYPE> Criterion where(
+    public static <U, TYPE> Criterion whereKey(
             @NotNull final Key<U,TYPE> key,
             @NotNull final Operator operator,
             @Nullable final Key<?,TYPE> value) {
@@ -239,117 +239,59 @@ public abstract class Criterion {
      * @return The new immutable Criterion
      */
     @NotNull
-    public static <U, TYPE> Criterion where(
+    public static <U, TYPE> Criterion whereEq(
             @NotNull final Key<U,TYPE> key,
             @Nullable final TYPE value) {
-        return new ValueCriterion<>(key, null, value);
+        return where(key, Operator.EQ, value);
     }
 
     /**
      * Create new Criterion for operator IN to compare value to a list of constants.
      * @param key A direct or indirect Ujo key
-     * @param list A collection of the values. The collection argument can be the EMPTY, the Criterion result will be FALSE in this case.
+     * @param array A collection of the values. The collection argument can be the EMPTY, the Criterion result will be FALSE in this case.
      * @return The new immutable Criterion.
      */
     @NotNull
     public static <U, TYPE> Criterion whereIn(
-            @NotNull final Key<U,TYPE> key,
-            @NotNull final Array<TYPE> list) {
-        return list.isEmpty()
-                ? Criterion.constant(key, false)
-                : new ValueCriterion<>(key, Operator.IN, list);
-    }
-
-    /**
-     * Create new Criterion for operator IN to compare value to a list of constants.
-     * @param key A direct or indirect Ujo key
-     * @param array A collection of the values. The collection argument can be the EMPTY, the Criterion result will be TRUE in this case.
-     * @return The new immutable Criterion.
-     */
-    @NotNull
-    public static <U, TYPE> Criterion whereNotIn(
+            boolean positive,
             @NotNull final Key<U,TYPE> key,
             @NotNull final Array<TYPE> array) {
-        return array.isEmpty()
-                ? Criterion.constant(key, true)
-                : new ValueCriterion<>(key, Operator.NOT_IN, array);
-    }
-
-    /**
-     * Create new Criterion for operator IN to compare value to a list of constants
-     * @param key A reference to a related entity
-     * @param list A collection of the values. The collection argument can be the EMPTY, the Criterion result will be FALSE in this case.
-     * @return The new immutable Criterion
-     */
-    @SafeVarargs
-    @NotNull
-    public static <U, TYPE> Criterion whereIn(
-            @NotNull final Key<U,TYPE> key,
-            @NotNull final TYPE... list) {
-        return list.length == 0
-                ? Criterion.constant(key, false)
-                : new ValueCriterion<>(key, Operator.IN, list);
+        return switch (array.size()) {
+            case 0 -> Criterion.forConstant(key, !positive);
+            case 1 -> new ValueCriterion<>(key, positive ? Operator.EQ : Operator.NOT_EQ, array.get(0));
+            default -> new ValueCriterion<>(key, positive ? Operator.IN : Operator.NOT_IN, array);
+        };
     }
 
     /**
      * Create new Criterion for operator IN to compare value to a list of constants.
-     * @param key A key direct or indirect Ujo key
-     * @param list A collection of the values. The collection argument can be the EMPTY, the Criterion result will be TRUE in this case.
+     * @param key A direct or indirect Ujo key
+     * @param array A collection of the values. The collection argument can be the EMPTY, the Criterion result will be FALSE in this case.
      * @return The new immutable Criterion.
      */
-    @SafeVarargs
     @NotNull
-    public static <U, TYPE> Criterion whereNotIn(
-            @NotNull final Key<U,TYPE> key,
-            @NotNull final TYPE... list) {
-        return list.length == 0
-                ? Criterion.constant(key, true)
-                : new ValueCriterion<>(key, Operator.NOT_IN, list);
+    public static <U, TYPE> Criterion whereInArray(
+            boolean positive,
+            @NotNull final Key<U, TYPE> key,
+            @NotNull final TYPE... array) {
+        return switch (array.length) {
+            case 0 -> Criterion.forConstant(key, !positive);
+            case 1 -> new ValueCriterion<>(key, positive ? Operator.EQ : Operator.NOT_EQ, array[0]);
+            default -> new ValueCriterion<>(key, positive ? Operator.IN : Operator.NOT_IN, Array.of(array));
+        };
     }
 
     /**
-     * New equals instance
+     * New equals instance for the key.
      * @param key Key
-     * @param value Value or Key can be type a direct of indirect (for a relation) key
+     * @param keyValue Value or Key can be type a direct of indirect (for a relation) key
      * @return The new immutable Criterion
      */
     @NotNull
-    public static <U, TYPE> Criterion where(
+    public static <U, TYPE> Criterion whereKey(
             @NotNull final Key<U,TYPE> key,
-            @Nullable final Key<U,TYPE> value) {
-        return new ValueCriterion<>(key, null, value);
-    }
-
-    /**
-     * Create new Criterion where a key value equals to the NULL.
-     * @param key Key
-     * @see Operator#EQ
-     */
-    @NotNull
-    public static <U, TYPE> Criterion whereNull(@NotNull final Key<U,TYPE> key) {
-        return new ValueCriterion<>(key, Operator.EQ, (TYPE) null);
-    }
-
-    /**
-     * Create new Criterion where a key value not equals to the NULL.
-     * @param key Key
-     * @see Operator#NOT_EQ
-     */
-    @NotNull
-    public static <U, TYPE> Criterion whereNotNull(@NotNull final Key<U,TYPE> key) {
-        return new ValueCriterion<>(key, Operator.NOT_EQ, (TYPE) null);
-    }
-
-    /**
-     * This is a constant criterion independent of an entity.
-     * @deprecated The method is deprecated in the ORM, use an alternative method.
-     */
-    @Deprecated
-    @SuppressWarnings("unchecked")
-    public static <U> Criterion where(final boolean value) {
-        return value
-                ? ValueCriterion.TRUE
-                : ValueCriterion.FALSE;
+            @Nullable final Key<U,TYPE> keyValue) {
+        return new ValueCriterion<>(key, Operator.EQ, keyValue);
     }
 
     /**
@@ -385,15 +327,16 @@ public abstract class Criterion {
      */
     @NotNull
     public static <U> Criterion forAll(@NotNull final Key<U,?> key) {
-        return constant(key, true);
+        return forConstant(key, true);
     }
 
     /**
      * This is a constant criterion independent of the key value or the ujo entity.
      */
     @NotNull
+    @Deprecated
     public static Criterion forAll() {
-        return constant(DUMMY_KEY, true);
+        return forConstant(DUMMY_KEY, true);
     }
 
     /**
@@ -402,24 +345,38 @@ public abstract class Criterion {
      */
     @NotNull
     public static <U> Criterion forNone(@NotNull final Key<U,?> key) {
-        return constant(key, false);
+        return forConstant(key, false);
     }
 
     /**
      * This is a constant criterion independent of the key value or the ujo entity.
      */
     @NotNull
+    @Deprecated
     public static Criterion forNone() {
-        return constant(DUMMY_KEY, false);
+        return forConstant(DUMMY_KEY, false);
     }
     /**
      * This is a special constant criterion independent of the key or the ujo entity.
      * @param key The parameter is required by Ujorm to location a basic database table
      */
     @NotNull
-    public static <U> Criterion constant(@NotNull final Key<U,?> key, final boolean constant) {
+    public static <U> Criterion forConstant(@NotNull final Key<U,?> key, final boolean constant) {
         return new ValueCriterion<>(key, constant ? Operator.ALWAYS_TRUE : Operator.ALWAYS_FALSE, constant);
     }
+
+//    /**
+//     * This is a constant criterion independent of an entity.
+//     * @deprecated The method is deprecated in the ORM, use an alternative method.
+//     */
+//    @Deprecated
+//    @SuppressWarnings("unchecked")
+//    public static <U> Criterion forConstant(final boolean positive) {
+//        return positive
+//                ? ValueCriterion.TRUE
+//                : ValueCriterion.FALSE;
+//    }
+
 
     private static @NotNull AbstractKey<Object, Object> createDummyKey() {
         return new AbstractKey<>(0, "", Object.class, "", false, false, false, false) {

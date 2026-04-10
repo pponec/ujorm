@@ -74,26 +74,18 @@ public class ValueCriterion<U> extends Criterion  {
             operator = Operator.EQ;  // The default operator.
         }
 
-        // A validation test:
+        // Validation tests:
         switch (operator) {
-            case EQUALS_CASE_INSENSITIVE:
-            case STARTS:
-            case STARTS_CASE_INSENSITIVE:
-            case ENDS:
-            case ENDS_CASE_INSENSITIVE:
-            case CONTAINS:
-            case CONTAINS_CASE_INSENSITIVE:
-                checkType(String.class, key, value);
-                break;
-            case IN:
-            case NOT_IN:
-                checkArray(value);
-                break;
-            case CUSTOM_SQL:
-                if (! (value instanceof TemplateValue)) {
-                    throw new IllegalArgumentException("TemplateValue is expected");
-                }
-                break;
+            case EQUALS_CASE_INSENSITIVE,
+                 STARTS,
+                 STARTS_CASE_INSENSITIVE,
+                 ENDS,
+                 ENDS_CASE_INSENSITIVE,
+                 CONTAINS,
+                 CONTAINS_CASE_INSENSITIVE -> checkType(String.class, key, value);
+            case IN, NOT_IN -> checkArray(value);
+            case CUSTOM_SQL -> Assert.isTrue(value instanceof TemplateValue,
+                    () -> "%s is expected".formatted(TemplateValue.class));
         }
 
         this.key = (Key<U, Object>) key;

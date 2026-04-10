@@ -21,7 +21,23 @@ import org.jetbrains.annotations.Nullable;
 import org.ujorm.core.Key;
 import org.ujorm.tools.common.Array;
 
-public interface CriterionProvider<VALUE> {
+public interface CriterionProvider<DOMAIN, VALUE> {
+
+    /** Returns a current instance of the Key for the default Criterion implementations */
+    @NotNull Key<DOMAIN, VALUE> self();
+
+    /**
+     * Create a new Criterion where this key value is related to a parameter value along the {@link Operator}.
+     * @param operator Operator
+     * <ul>
+     * <li>VALUE - the parameter value</li>
+     * <li>Key - reference to a related entity</li>
+     * </ul>
+     * @return A new criterion
+     */
+    @NotNull default Criterion where(@NotNull Operator operator, @Nullable VALUE value) {
+        return Criterion.where(self(), operator, value);
+    }
 
     /**
      * Create a new Criterion where this key value is related to a parameter value along the {@link Operator}.
@@ -33,19 +49,9 @@ public interface CriterionProvider<VALUE> {
      * </ul>
      * @return A new criterion
      */
-    @NotNull Criterion where(@NotNull Operator operator, @Nullable VALUE value);
-
-    /**
-     * Create a new Criterion where this key value is related to a parameter value along the {@link Operator}.
-     * @param operator Operator
-     * <ul>
-     * <li>VALUE - the parameter value</li>
-     * <li>Key - reference to a related entity</li>
-     * <li>List&lt;TYPE&gt; - list of values (TODO - this type is planned in the future)</li>
-     * </ul>
-     * @return A new criterion
-     */
-    @NotNull Criterion where(@NotNull Operator operator, @NotNull ProxyValue<VALUE> proxyValue);
+    @NotNull default Criterion where(@NotNull Operator operator, @NotNull ProxyValue<VALUE> proxyValue) {
+        return Criterion.whereProxy(self(), operator, proxyValue);
+    }
 
     /**
      * Create a new Criterion where this key is related to the value along the parameter {@link Operator}.
@@ -57,27 +63,37 @@ public interface CriterionProvider<VALUE> {
      * </ul>
      * @return A new criterion
      */
-    @NotNull Criterion where(@NotNull Operator operator, @NotNull Key<?, VALUE> value);
+    @NotNull default Criterion where(@NotNull Operator operator, @NotNull Key<?, VALUE> value) {
+        return Criterion.whereKey(self(), operator, value);
+    }
 
     /**
      * Create new Criterion where this key value is in the one of parameter values.
-     * @param list A collection of the values. The collection argument can be the EMPTY, the Criterion result will be FALSE in this case.
+     * @param array A collection of the values. The collection argument can be the EMPTY, the Criterion result will be FALSE in this case.
      * @return The new immutable Criterion.
      */
-    @NotNull Criterion whereIn(@NotNull Array<VALUE> list);
+    @NotNull default Criterion whereIn(@NotNull Array<VALUE> array) {
+        return Criterion.whereIn(true, self(), array);
+    }
 
     /**
      * Create new Criterion where this key value is not in any of parameter values.
-     * @param list A collection of the values. The collection argument can be the EMPTY, the Criterion result will be TRUE in this case.
+     * @param array A collection of the values. The collection argument can be the EMPTY, the Criterion result will be TRUE in this case.
      * @return The new immutable Criterion.
      */
-    @NotNull Criterion whereNotIn(@NotNull Array<VALUE> list);
+    @NotNull default Criterion whereNotIn(@NotNull Array<VALUE> array) {
+        return Criterion.whereIn(false, self(), array);
+    }
 
     /** Create a new Criterion for all values. The method evaluate(ujo) always returns TRUE. */
-    @NotNull Criterion whereTrue();
+    @NotNull default Criterion whereTrue() {
+        return Criterion.forConstant(self(), true);
+    }
 
     /** Create a new Criterion for no values. The method evaluate(method) always returns FALSE. */
-    @NotNull Criterion whereFalse();
+    @NotNull default Criterion whereFalse() {
+        return  Criterion.forConstant(self(), false);
+    }
 
     /**
      * Creates a new {@code Criterion} with a custom SQL template.
@@ -99,7 +115,10 @@ public interface CriterionProvider<VALUE> {
      * @return A new immutable Criterion
      */
     @NotNull
-    Criterion whereSql(@NotNull String template, @NotNull VALUE... values);
+    default Criterion whereSql(@NotNull String template, @NotNull VALUE... values) {
+        return  Criterion.forSql(self(), template, values);
+    }
+
     // --- DEFAULT METHODS ---
 
     /**
@@ -135,7 +154,7 @@ public interface CriterionProvider<VALUE> {
      */
     @SuppressWarnings("unchecked")
     @NotNull default Criterion whereIn(@NotNull final VALUE... values) {
-        return whereIn(Array.of(values));
+        return Criterion.whereInArray(true, self(), values);
     }
 
     /**
@@ -145,7 +164,7 @@ public interface CriterionProvider<VALUE> {
      */
     @SuppressWarnings("unchecked")
     @NotNull default Criterion whereNotIn(@NotNull final VALUE... values) {
-        return whereNotIn(Array.of(values));
+        return Criterion.whereInArray(false, self(), values);
     }
 
     /** Create a new Criterion where this key value does not equal the value. @see Operator#NOT_EQ */

@@ -11,7 +11,6 @@ import org.ujorm.core.criterion.ProxyValue;
 import org.ujorm.tools.common.Array;
 import org.ujorm.tools.common.Primitive;
 
-import java.util.Collection;
 import java.util.Map;
 
 /**
@@ -198,114 +197,10 @@ public abstract class AbstractKey<D, V> implements Key<D, V>, KeyInfo<V> {
         return this;
     }
 
-    // --- CRITERIONS ---
-
-
-    /** {@inheritDoc} */
+    /** For the Criterion implementations */
     @Override
-    public Criterion where(@NotNull final Operator operator, @Nullable final V value) {
-        return Criterion.where(this, operator, value);
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public Criterion where(@NotNull final Operator operator, @Nullable final ProxyValue<V> proxyValue) {
-        return Criterion.where(this, operator, proxyValue);
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public Criterion where(@NotNull final Operator operator, Key<?, V> value) {
-        return Criterion.where(this, operator, value);
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public Criterion whereEq(@Nullable final V value) {
-        return Criterion.where(this, value);
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public Criterion whereEq(@NotNull final Key<?, V> value) {
-        return Criterion.where(this, Operator.EQ, value);
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public Criterion whereEq(@NotNull final ProxyValue<V> proxyValue) {
-        return Criterion.where(this, Operator.EQ, proxyValue);
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public Criterion whereIn(@NotNull final Array<V> array) {
-        return Criterion.whereIn(this, array);
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public Criterion whereNotIn(@NotNull final Array<V> array) {
-        return Criterion.whereNotIn(this, array);
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public Criterion whereNull() {
-        return Criterion.whereNull(this);
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public Criterion whereNotNull() {
-        return Criterion.whereNotNull(this);
-    }
-
-    @Override
-    public Criterion whereNeq(@Nullable final V value) {
-        return Criterion.where(this, Operator.NOT_EQ, value);
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public Criterion whereGt(@Nullable final V value) {
-        return Criterion.where(this, Operator.GT, value);
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public Criterion whereGe(@Nullable final V value) {
-        return Criterion.where(this, Operator.GE, value);
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public Criterion whereLt(@Nullable final V value) {
-        return Criterion.where(this, Operator.LT, value);
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public Criterion whereLe(@Nullable final V value) {
-        return Criterion.where(this, Operator.LE, value);
-    }
-
-
-    /** {@inheritDoc} */
-    @Override
-    public Criterion whereSql(@Nullable final String template, @NotNull V... values) {
-        return Criterion.forSql(this, template, values);
-    }
-
-
-    @Override
-    public @NotNull Criterion whereTrue() {
-        return Criterion.forAll(this);
-    }
-
-    @Override
-    public @NotNull Criterion whereFalse() {
-        return Criterion.forNone(this);
+    public Key<D,V> self() {
+        return this;
     }
 
     /** Creates a new exception for missing setters. */
