@@ -164,6 +164,12 @@ public final class EntityManager<D, V> {
         return this.domainHandler.getDomainClass();
     }
 
+    /** Package private method */
+    @NotNull
+    public DomainHandler<D> getDomainHandler() {
+        return this.domainHandler;
+    }
+
     /** Default batch size */
     public int defaultBatchSize() {
         return config.getBatchSize();

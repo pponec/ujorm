@@ -132,6 +132,14 @@ public class DslQuery<D> extends AbstractSqlQuery<DslQuery<D>> {
 
     // ------- COLUMNS -------
 
+    /** Add all properties of the main domain objects */
+    public DslQuery<D> columnsOfDomain() {
+        for (Key<D,?> key : entityManager.getDomainHandler().getKeyList()) {
+            this.builder.column(key);
+        }
+        return this;
+    }
+
     /**
      * Add a SQL column definition dynamically to replace the {@code ${COLUMNS} } placeholder.
      * The provided metamodel attributes define a type-safe path to the specific property
@@ -193,7 +201,7 @@ public class DslQuery<D> extends AbstractSqlQuery<DslQuery<D>> {
     protected String buildSql(List<ParamValue> sqlValues, boolean includingValues) {
         if (sqlTemplate.isEmpty()) {
             var sqlWriter = getWriter(true);
-            var baseEntityClass = entityManager.getDomainClass();
+            var baseEntityClass = entityManager.getDomainHandler().getDomainClass();
             var tableModel = entityManager.getTableModelService().getTableModel(baseEntityClass, dbConnection);
             this.q = tableModel.jdbc().quotes(); // Assign real quotes.
 
