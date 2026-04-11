@@ -424,7 +424,7 @@ public abstract class AbstractSqlQuery<T extends AbstractSqlQuery<T>> implements
         }
 
         public Object getValue(int index) {
-            return values.getValue(index);
+            return values.get(index);
         }
     }
 

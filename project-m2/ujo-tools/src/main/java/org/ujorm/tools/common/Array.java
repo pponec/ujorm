@@ -88,25 +88,25 @@ public final class Array<T> implements Serializable, Iterable<T> {
 
     /** Negative index value is supported, the index out of the range returns the {@code null} value. */
     @NotNull
-    public Optional<T> get(final int i) {
+    public Optional<T> getOptional(final int i) {
         var j = i >= 0 ? i : array.length + i;
         return Optional.ofNullable(j >= 0 && j < array.length ? array[j] : null);
     }
 
     /** No validations for the best performance */
     @Nullable
-    public T getValue(final int i) {
+    public T get(final int i) {
         return array[i];
     }
 
     /** Negative index is supported */
-    public T getItem(final int i) {
+    public T getValue(final int i) {
         return array[i >= 0 ? i : array.length + i];
     }
 
     @NotNull
     public Optional<T> getFirst() {
-        return get(0);
+        return getOptional(0);
     }
 
     /** No validations for the best performance */
@@ -123,7 +123,7 @@ public final class Array<T> implements Serializable, Iterable<T> {
 
     @NotNull
     public Optional<T> getLast() {
-        return get(-1);
+        return getOptional(-1);
     }
 
     /** No validations for the best performance */
