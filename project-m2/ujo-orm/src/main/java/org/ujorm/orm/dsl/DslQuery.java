@@ -133,9 +133,11 @@ public class DslQuery<D> extends AbstractSqlQuery<DslQuery<D>> {
     // ------- COLUMNS -------
 
     /** Add all properties of the main domain objects */
-    public DslQuery<D> columnsOfDomain() {
+    public DslQuery<D> columnsOfDomain(boolean includingForeignKeys) {
         for (Key<D,?> key : entityManager.getDomainHandler().getKeyList()) {
-            this.builder.column(key);
+            if (includingForeignKeys || !key.info().foreignKey()) {
+                this.builder.column(key);
+            }
         }
         return this;
     }
