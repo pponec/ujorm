@@ -195,7 +195,7 @@ You can run and modify this test locally: [TutorialTest.java](project-m2/ujo-orm
   <img src="docs/images/OrmApi.svg" width="700" height="400" alt="OrmApi Class Diagram">
 </p>
 
-* **SqlQuery:** A facade over `PreparedStatement` with no external dependencies.
+* **SqlQuery:** A facade over `PreparedStatement` with no external dependencies; alternatively, use the `DslQuery` class for a more type-safe way to build SQL SELECT statements.
 * **ResultSetMapper:** Converts `Stream<ResultSet>` to objects (JavaBeans or Records).
 * **EntityManager:** The core component that handles mapping and creates `Crud` objects for standard operations.
 
