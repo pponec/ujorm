@@ -38,8 +38,11 @@ public class Config {
     /** Batch size for the INSERT */
     public static final Key<Integer> batchSize = meta.key("batchSize", 512);
 
-    /** Prints all SQL templates to the log. */
-    public static final Key<Boolean> printSql = meta.key("printSql", true);
+    /** Log level for the SQL STATEMENTS logs. */
+    public static final Key<Level> logSqlLevel = meta.key("logSqlLevel", Level.INFO);
+
+    /** Log parameters of the SQL statement. */
+    public static final Key<Boolean> logSqlParams = meta.key("logSqlParams", false);
 
     /** Print warnings, if Connection autocommit is true in batch operations. */
     public static final Key<Boolean> autoCommitWarned = meta.key("autoCommitWarned", true);
@@ -69,13 +72,11 @@ public class Config {
     /** The object is locked and immutable. */
     private boolean locked = false;
 
-    /** Temporary Map of functions */
-    private Map<Class<?>, Function<String, ?>> funMap = Map.copyOf(CsvConfig.initConverterMap());
-
     public Config() {
         var properties = loadProperties();
+        var converters = CsvConfig.initConverterMap();
         for (var key : meta.keys) {
-            loadKey(key, properties);
+            loadKey(key, properties, converters);
         }
     }
 
@@ -98,7 +99,6 @@ public class Config {
     /** Lock the configuration for further writes */
     public Config lock() {
         this.locked = true;
-        this.funMap = null;
         return this;
     }
 
@@ -107,7 +107,8 @@ public class Config {
     public boolean acceptDefaultPk() { return acceptDefaultPk.getValue(values); }
     public int getMaxCacheSize() { return maxCacheSize.getValue(values); }
     public int getBatchSize() { return batchSize.getValue(values); }
-    public boolean isPrintSql() { return printSql.getValue(values); }
+    public Level getLogSqlLevel() { return logSqlLevel.getValue(values); }
+    public boolean isLogSqlParams() { return logSqlParams.getValue(values); }
     public boolean isAutoCommitWarned() { return autoCommitWarned.getValue(values); }
     public boolean isEnableSqlQuoting() { return enableSqlQuoting.getValue(values); }
     public String getQuotePair() { return quotePair.getValue(values); }
@@ -119,7 +120,11 @@ public class Config {
     // --- Loading and conversion logic ---
 
     /** Loads value from System properties or file properties */
-    private <V> void loadKey(Key<V> key, Properties props) {
+    private <V> void loadKey(
+            @NotNull Key<V> key,
+            @NotNull Properties props,
+            @NotNull Map<Class<?>, Function<String, ?>> converters
+    ) {
         var fullKey = PREFIX + key.name();
         var value = System.getProperty(fullKey);
 
@@ -127,15 +132,19 @@ public class Config {
             value = props.getProperty(fullKey);
         }
         if (value != null) {
-            setValue(key, convertValue(key, value));
+            setValue(key, convertValue(key, value, converters));
         }
     }
 
     /** Converts string to the type of the default value */
     @SuppressWarnings("unchecked")
-    private <V> V convertValue(@NotNull Key<V> key, @NotNull String value) {
+    private <V> V convertValue(
+            @NotNull Key<V> key,
+            @NotNull String value,
+            @NotNull Map<Class<?>, Function<String, ?>> converters
+    ) {
         var type = Primitive.wrapPrimitive(key.type());
-        var converter = (Function<String, ?>) funMap.get(type);
+        var converter = (Function<String, ?>) converters.get(type);
         if (converter == null) {
             var msg = "Parameter %s has no converter for type %s".formatted(key.name, key.type());
             throw new IllegalStateException(msg);
