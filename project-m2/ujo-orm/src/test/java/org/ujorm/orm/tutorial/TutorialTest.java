@@ -7,9 +7,6 @@ import org.ujorm.orm.jdbc.ResultSetMapper;
 import org.ujorm.orm.tutorial.domains.*;
 import org.ujorm.orm.SqlQuery;
 import org.ujorm.orm.utils.EntityContext;
-
-import java.util.Comparator;
-import java.util.logging.Level;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -114,7 +111,7 @@ class TutorialTest extends AbstractDemo {
         var employees = DslQuery.run(connection(), EMPLOYEE_EM, query -> query
                 .sql("SELECT")
                 .columnsOfDomain(true)
-                .column(MetaEmployee.city, MetaCity.countryCode)
+                .column(MetaEmployee.city, MetaCity.name)
                 .column(MetaEmployee.city, MetaCity.countryCode)
                 .column(MetaEmployee.boss, MetaEmployee.name)
                 .where(MetaEmployee.id.whereGe(1L))
@@ -164,23 +161,27 @@ class TutorialTest extends AbstractDemo {
     @Order(400)
     void delete() {
         var employeeCrud = EMPLOYEE_EM.crud(connection());
+        var qBossId = MetaEmployee.as("b").key(MetaEmployee.id);
+        var criterion = MetaEmployee.id.whereGe(1L);
 
-        var allEmployees = employeeCrud
-                .selectWhere("id > :id", query -> query
-                        .bind("id", 0L)
-                        .streamMap(EMPLOYEE_EM.mapper())
-                        .sorted(Comparator.comparing(e -> e.getBoss() == null))
-                        .toList());
+        try (var query = new DslQuery<>(connection(), EMPLOYEE_EM)) {
+            var employees = query.sql("SELECT")
+                    .column(MetaEmployee.id)
+                    .column(MetaEmployee.boss, qBossId) // Build the relation
+                    .where(criterion)
+                    .tail("ORDER BY", qBossId, "DESC NULLS LAST") // Bosses last
+                    .streamMap(EMPLOYEE_MAPPER.mapper())
+                    .toList();
 
-        employeeCrud.delete(allEmployees.stream());
+            employeeCrud.delete(employees.stream());
 
-        var count = SqlQuery.run(connection(), query -> query
-                .sql("SELECT COUNT(*) FROM employee WHERE id >= :id")
-                .bind("id", 0L)
-                .streamMap(rs -> rs.getInt(1))
-                .findFirst()
-                .orElseThrow());
-        assertEquals(0, count);
+            var count = query.sql("SELECT COUNT(*)")
+                    .where(criterion)
+                    .streamMap(rs -> rs.getInt(1))
+                    .findFirst().orElseThrow();
+
+            assertEquals(0, count);
+        }
     }
 
     /** Create all database tables first. */

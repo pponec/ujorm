@@ -26,7 +26,7 @@ To maintain a high utility-to-code ratio and minimize bugs, Ujorm3 intentionally
   This unlocks the full performance and feature set of your specific database engine.
 
 <div align="center">
-<img src="docs/images/benchmark-graph.svg" alt="Benchmark graph" width="400" />
+<img src="docs/images/benchmark-graph.svg" alt="Benchmark graph" width="500" />
 </div>
 
 Ujorm3 outperforms popular ORM competitors across virtually all performance metrics while maintaining a minimal memory footprint.
@@ -59,8 +59,9 @@ Mapping an object and inserting it into the database takes just a few lines of c
 Ujorm3 seamlessly supports standard Jakarta annotations and modern Java Records.
 
 ```java
+/** Quick start demonstration */
 void quickStart() {
-    var crud = CITY_EM.crud(connection());
+    var crud = CITY_EM.crud(connection()); // the method provides: java.sql.Connection
     var saved = crud.insert(new City(null, "Barcelona", "ES"));
     var barcelona = crud.findById(saved.id()).orElseThrow();
 }
@@ -71,47 +72,41 @@ void quickStart() {
 ## Basic CRUD Operations
 
 Basic mapping utilizes standard Jakarta annotations (`@Table`, `@Column`).
-Advanced SELECT queries with JOINs use a dot-notation alias format (e.g., `city.name`) directly in the native SQL.
 Entities do not need to be registered beforehand, and multiple classes can map to the same database table.
 
 ### SELECT
 
-The library allows you to write native SQL queries while maintaining type safety.
-By using the generated `Meta` classes for aliases (`${...}`), you prevent SQL typos and ensure safe mapping.
-The conversion from the `ResultSet` to the domain object is entirely explicit, which inherently eliminates the N+1 query problem.
+The library offers a type-safe `DslQuery` builder for constructing SQL queries smoothly in Java, while still fully supporting the classic `SqlQuery` for writing raw native SQL.
+Both approaches utilize the generated `Meta` classes for mapping and aliases, preventing SQL typos and ensuring compile-time safety.
+Because the library intentionally avoids lazy-loading, the explicit conversion from the `ResultSet` to the domain object inherently prevents the N+1 query problem.
 
 ```java
 static final ResultSetMapper<Employee> EMPLOYEE_MAPPER = ResultSetMapper.of(Employee.class);
 
-void select() {
-    var sql = """
-            SELECT ${COLUMNS}
-            FROM employee e
-            JOIN city c ON c.id = e.city_id
-            LEFT JOIN employee b ON b.id = e.boss_id
-            WHERE e.id > :employeeId
-            """;
-
-    var employees = SqlQuery.run(connection(), query -> query
-            .sql(sql)
-            .column("e.id", MetaEmployee.id)
-            .column("e.name", MetaEmployee.name)
-            .column("c.name", MetaEmployee.city, MetaCity.name)
-            .column("c.country_code", MetaEmployee.city, MetaCity.countryCode)
-            .column("b.name", MetaEmployee.boss, MetaEmployee.name)
-            .bind("employeeId", 0L)
+/** Select demonstration */
+List<Employee> select() {
+    return DslQuery.run(connection(), EMPLOYEE_EM, query -> query
+            .sql("SELECT")
+            .columnsOfDomain(true)
+            .column(MetaEmployee.city, MetaCity.name)
+            .column(MetaEmployee.city, MetaCity.countryCode)
+            .column(MetaEmployee.boss, MetaEmployee.name)
+            .where(MetaEmployee.id.whereGe(1L))
+            .tail("ORDER BY", MetaEmployee.id)
             .streamMap(EMPLOYEE_MAPPER.mapper())
-            .toList());
+            .toList()
+    );
 }
 ```
 
-In addition to the `column()` method, the API provides a `label()` method.
-While `column()` works with the runtime-replaced `${COLUMNS}` placeholder, `label()` requires explicit placeholders (e.g., `SELECT e.id AS ${e.id}`).
-These are resolved and properly quoted at runtime, keeping the query structure transparent and easy to test in database clients.
-Note that these two approaches cannot be combined within a single query.
+If you need full control over building the SQL SELECT statement, use the `SqlQuery` class.
+This class provides an API with methods for type-safe insertion of database columns or just their labels.
+The individual approaches differ only in the way the SQL query is constructed.
 
-Database columns can also be mapped without metamodel keys by using dot-notation for property names (e.g., `"city.name"`).
-Note that these expressions must be enclosed in the quotes required by your database vendor.
+Regardless of the chosen approach, the database columns are ultimately mapped to entities using column aliases in the format: `"city.name"`.
+The resulting `ResultSet` is also mapped to entities using this same mechanism via the **`ResultSetMapper`** class.
+
+A more detailed overview of the available query options, including advanced use cases of `SqlQuery` and other implementations of `DslQuery`, can be found in the [TutorialTest.java](project-m2/ujo-orm/src/test/java/org/ujorm/orm/tutorial/TutorialTest.java) class.
 
 ### INSERT
 
@@ -165,21 +160,27 @@ If the original version of the domain object is provided, the library automatica
 
 ### DELETE
 
-The `selectWhere` method enables retrieving entities without listing individual columns in the SELECT statement.
-Within this block, the `SqlQuery` instance allows you to map the result set using the `streamMap` method.
+To maintain database integrity, entities must often be deleted in a specific order (e.g., subordinates before their bosses).
+The `DslQuery` class provides a type-safe way to fetch entities with the necessary ordering.
+Using the `tail` method, you can append native SQL fragments like `ORDER BY` to ensure that self-referencing relationships are handled correctly during bulk deletion.
 
 ```java
 void delete() {
     var employeeCrud = EMPLOYEE_EM.crud(connection());
+    var qBossId = MetaEmployee.as("b").key(MetaEmployee.id);
+    var criterion = MetaEmployee.id.whereGe(1L);
 
-    var allEmployees = employeeCrud
-            .selectWhere("id > :id", builder -> builder
-                    .bind("id", 0L)
-                    .streamMap(EMPLOYEE_EM::map)
-                    .sorted(Comparator.comparing(e -> e.getBoss() == null))
-                    .toList());
+    try (var query = new DslQuery<>(connection(), EMPLOYEE_EM)) {
+        var employees = query.sql("SELECT")
+                .column(MetaEmployee.id)
+                .column(MetaEmployee.boss, qBossId) // Build the relation
+                .where(criterion)
+                .tail("ORDER BY", qBossId, "DESC NULLS LAST") // Bosses last
+                .streamMap(EMPLOYEE_MAPPER.mapper())
+                .toList();
 
-    employeeCrud.delete(allEmployees.stream());
+        employeeCrud.delete(employees.stream());
+    }
 }
 ```
 
@@ -268,6 +269,7 @@ The library includes automated integration tests for PostgreSQL, MySQL, MariaDB,
 
 Performance tests comparing Ujorm3 to Hibernate, Jdbi, Exposed, and MyBatis were executed using an H2 database on Java 25.
 To ensure an objective methodology, scenarios and implementations were designed by the **Gemini Pro AI** model.
+The complete source code for these benchmarks is entirely open-source and fully auditable on GitHub, ensuring maximum transparency.
 
 **Conclusions:**
 * **Execution Speed:** Ujorm3 consistently ranks at the top across all tested database operations.

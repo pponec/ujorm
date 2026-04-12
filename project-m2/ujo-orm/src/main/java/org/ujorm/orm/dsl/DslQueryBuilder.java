@@ -24,7 +24,6 @@ import org.ujorm.core.criterion.AbstractOperator;
 import org.ujorm.core.criterion.BinaryCriterion;
 import org.ujorm.core.criterion.Criterion;
 import org.ujorm.core.criterion.ValueCriterion;
-
 import java.util.*;
 
 /**
@@ -34,7 +33,7 @@ import java.util.*;
  *
  * @since 2.26
  */
-public class DslQueryBuilder {
+public class DslQueryBuilder implements AutoCloseable {
 
     /** New Line Character */
     private static final char NEW_LINE = '\n';
@@ -289,6 +288,18 @@ public class DslQueryBuilder {
     protected Key<?,?> findRelatedPrimaryKey(Key<?,?> foreignKey) {
         var acceptDefaultPk = true;
         return DomainHandlerProvider.getHandler(foreignKey.domainClass()).findPrimaryKey(acceptDefaultPk);
+    }
+
+    /** Close the inner states */
+    @Override
+    public void close() {
+        columns.clear();
+        usedAliases.clear();
+        joinMap.clear();
+        joins.clear();
+        domainAliases.clear();
+        criterion = Criterion.forAll();
+        baseTableAlias = null;
     }
 
     @Override

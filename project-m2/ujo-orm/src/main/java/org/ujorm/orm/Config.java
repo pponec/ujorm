@@ -38,7 +38,7 @@ public class Config {
     /** Batch size for the INSERT */
     public static final Key<Integer> batchSize = meta.key("batchSize", 512);
 
-    /** Log level for the SQL STATEMENTS logs. */
+    /** Log level for SQL statement logging. To disable SQL logs, use the {@code OFF} value. */
     public static final Key<Level> logSqlLevel = meta.key("logSqlLevel", Level.INFO);
 
     /** Log parameters of the SQL statement. */

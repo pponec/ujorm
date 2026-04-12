@@ -17,6 +17,7 @@
 package org.ujorm.orm.dsl;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.ujorm.core.Key;
 import org.ujorm.core.criterion.Criterion;
 import org.ujorm.core.criterion.TemplateValue;
@@ -82,11 +83,11 @@ public class DslQuery<D> extends AbstractSqlQuery<DslQuery<D>> {
     private QuotePair q = QuotePair.ofDefault();
 
     /** Sql Tail */
-    @NotNull
+    @Nullable
     private CharSequence[] sqlHead;
 
     /** Sql Tail */
-    @NotNull
+    @Nullable
     private CharSequence[] sqlTail;
 
     /** Counter of the placeholders */
@@ -108,8 +109,10 @@ public class DslQuery<D> extends AbstractSqlQuery<DslQuery<D>> {
     @Override
     public void close() {
         super.close();
+        sqlHead = null;
         sqlTail = null;
         placeholderCounter = 0;
+        builder.close();
     }
 
     /** Head of the SQL where default is SELECT. */
@@ -126,7 +129,22 @@ public class DslQuery<D> extends AbstractSqlQuery<DslQuery<D>> {
         return self();
     }
 
-    /** Append an optional rest of the SQL statement */
+    /**
+     * Append an optional rest of the SQL statement.
+     * The method allows mixing raw SQL fragments (String) with Meta objects
+     * to ensure type-safe column names and automatic aliasing.
+     * <p>
+     * Usage examples:
+     * <pre>{@code
+     * query.tail("ORDER BY", MetaEmployee.name, "DESC NULLS LAST");
+     * query.tail("FOR UPDATE");
+     * query.tail("GROUP BY", MetaEmployee.city, "HAVING COUNT(*) > 1");
+     * query.tail("LIMIT 10 OFFSET 5");
+     * }</pre>
+     *
+     * @param sqlTail SQL fragments or Meta objects (e.g. {@code Key})
+     * @return The same instance
+     */
     public DslQuery<D> tail(@NotNull CharSequence... sqlTail) {
         this.sqlTail = sqlTail;
         return self();
