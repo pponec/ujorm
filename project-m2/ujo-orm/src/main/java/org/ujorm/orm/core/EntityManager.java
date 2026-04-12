@@ -170,6 +170,12 @@ public final class EntityManager<D, V> {
         return this.domainHandler;
     }
 
+    /** Package private method */
+    @NotNull
+    public Config getConfig() {
+        return this.config;
+    }
+
     /** Default batch size */
     public int defaultBatchSize() {
         return config.getBatchSize();
@@ -362,8 +368,9 @@ public final class EntityManager<D, V> {
                 if (batch) {
                     checkAutoCommit(connection);
                 }
-                if (config.isPrintSql()) {
-                    LOGGER.info(sql::toString);
+                final var logLevel = config.getLogSqlLevel();
+                if (!Level.OFF.equals(logLevel)) {
+                    LOGGER.log(logLevel, sql::toString);
                 }
                 return fun.applyFunction(ps);
             } catch (SQLException ex) {
@@ -576,7 +583,7 @@ public final class EntityManager<D, V> {
             try (var query = new SqlQuery(dbconnection, getQuote())) {
                 query.sql(sql.toString());
                 query.fetchSize(config.getBatchSize());
-                query.log(config.isPrintSql() ? Level.INFO : null, false);
+                query.log(config.getLogSqlLevel(), config.isLogSqlParams());
                 return fun.applyFunction(query);
             } catch (Exception ex) {
                 throw (ex instanceof RuntimeException re) ? re : SQLExceptionBuilder.build(ex);
@@ -671,9 +678,7 @@ public final class EntityManager<D, V> {
                     var statement = cache.get(changes);
                     if (statement == null) {
                         var sql = utilities.buildUpdateSql(modifiedKeys);
-                        if (config.isPrintSql()) {
-                            LOGGER.info(sql);
-                        }
+                        LOGGER.log(config.getLogSqlLevel(), sql);
                         statement = dbconnection.prepareStatement(sql);
                         result += cache.put(changes, statement);
                     }
@@ -857,7 +862,7 @@ public final class EntityManager<D, V> {
                     genKeys = emptyPk;
                     cols = tableModel().createInsertedColumns(pkVal);
                     var sql = utilities.buildInsertSql(cols);
-                    if (config.isPrintSql()) LOGGER.info(sql);
+                    LOGGER.log(config.getLogSqlLevel(), sql);
                     ps = !emptyPk
                             ? dbconnection.prepareStatement(sql)
                             : tableModel().jdbc().isOracleDb()

@@ -101,6 +101,8 @@ public class DslQuery<D> extends AbstractSqlQuery<DslQuery<D>> {
         this.dslWriter = new DslWriter(getWriter(true));
         this.builder = new DslQueryBuilder(dslWriter);
         this.entityManager = entityManager;
+        var config = entityManager.getConfig();
+        this.log(config.getLogSqlLevel(), config.isLogSqlParams());
     }
 
     @Override

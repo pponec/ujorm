@@ -1,8 +1,6 @@
 package org.ujorm.core.csv;
 
-import org.jetbrains.annotations.Nullable;
 import org.ujorm.tools.common.Primitive;
-
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.net.URI;
@@ -14,6 +12,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 import java.util.function.Function;
+import java.util.logging.Level;
 
 public record CsvConfig(
         Map<Class<?>, Function<String, ?>> converterMap,
@@ -48,6 +47,7 @@ public record CsvConfig(
         result.put(String.class, Function.identity());
         result.put(URI.class, URI::create);
         result.put(UUID.class, UUID::fromString);
+        result.put(Level.class, Level::parse);
         return result.build();
     }
 
@@ -58,9 +58,9 @@ public record CsvConfig(
         /** Registers all converters for primitive types and their corresponding wrapper classes. */
         private void putAllPrimitives() {
             var localMap = Primitive.ofAllToMap(
-                        Primitive::objectClass,
-                        Primitive::textParser
-                    );
+                    Primitive::objectClass,
+                    Primitive::textParser
+            );
             map.putAll(localMap);
         }
 

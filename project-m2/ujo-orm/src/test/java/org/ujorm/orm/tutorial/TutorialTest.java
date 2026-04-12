@@ -124,14 +124,11 @@ class TutorialTest extends AbstractDemo {
     void select_by_dsl() {
         var employees = DslQuery.run(connection(), EMPLOYEE_EM, query -> query
                 .sql("SELECT")
-                .column(MetaEmployee.id)
-                .column(MetaEmployee.name)
-                .column(MetaEmployee.city, MetaCity.name)
+                .columnsOfDomain(true)
                 .column(MetaEmployee.city, MetaCity.countryCode)
                 .column(MetaEmployee.boss, MetaEmployee.name)
                 .where(MetaEmployee.id.whereLe(1L))
                 .tail("ORDER BY", MetaEmployee.id)
-                .log(Level.INFO, true) // LOG SQL statement.
                 .streamMap(EMPLOYEE_MAPPER.mapper())
                 .toList()
         );
