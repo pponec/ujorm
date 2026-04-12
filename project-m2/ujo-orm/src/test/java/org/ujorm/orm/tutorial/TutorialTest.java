@@ -107,24 +107,14 @@ class TutorialTest extends AbstractDemo {
         assertEquals("Ingrid", employees.get(1).getBoss().getName());
     }
 
-    /** Select an Entity by ID. */
+    /** DSL select by the column method. */
     @Test
     @Order(220)
-    void selectEntity_by_id() {
-        var crud = CITY_EM.crud(connection());
-        var barcelonaId = 1L;
-        var barcelona = crud.findById(barcelonaId).orElseThrow();
-        Assertions.assertNotNull(barcelona.id());
-    }
-
-
-    /** DSL select by the column method. */
-    //@Test
-    @Order(230)
     void select_by_dsl() {
         var employees = DslQuery.run(connection(), EMPLOYEE_EM, query -> query
                 .sql("SELECT")
                 .columnsOfDomain(true)
+                .column(MetaEmployee.city, MetaCity.countryCode)
                 .column(MetaEmployee.city, MetaCity.countryCode)
                 .column(MetaEmployee.boss, MetaEmployee.name)
                 .where(MetaEmployee.id.whereLe(1L))
@@ -136,6 +126,16 @@ class TutorialTest extends AbstractDemo {
         assertEquals(3, employees.size());
         assertEquals("Dave", employees.get(1).getName());
         assertEquals("Ingrid", employees.get(1).getBoss().getName());
+    }
+
+    /** Select an Entity by ID. */
+    @Test
+    @Order(230)
+    void selectEntity_by_id() {
+        var crud = CITY_EM.crud(connection());
+        var barcelonaId = 1L;
+        var barcelona = crud.findById(barcelonaId).orElseThrow();
+        Assertions.assertNotNull(barcelona.id());
     }
 
 
