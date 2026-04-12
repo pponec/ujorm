@@ -117,7 +117,7 @@ class TutorialTest extends AbstractDemo {
                 .column(MetaEmployee.city, MetaCity.countryCode)
                 .column(MetaEmployee.city, MetaCity.countryCode)
                 .column(MetaEmployee.boss, MetaEmployee.name)
-                .where(MetaEmployee.id.whereLe(1L))
+                .where(MetaEmployee.id.whereGe(1L))
                 .tail("ORDER BY", MetaEmployee.id)
                 .streamMap(EMPLOYEE_MAPPER.mapper())
                 .toList()
