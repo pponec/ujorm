@@ -247,8 +247,9 @@ public abstract class Criterion {
 
     /**
      * Create new Criterion for operator IN to compare value to a list of constants.
+     * @param positive A sign of the Criterion: true for IN, false for NOT IN.
      * @param key A direct or indirect Ujo key
-     * @param array A collection of the values. The collection argument can be the EMPTY, the Criterion result will be FALSE in this case.
+     * @param array A collection of the values. If the argument is EMPTY, the result is TRUE for the negative sign and FALSE for the positive sign.
      * @return The new immutable Criterion.
      */
     @NotNull

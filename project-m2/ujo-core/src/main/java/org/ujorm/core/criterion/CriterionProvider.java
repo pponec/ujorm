@@ -69,7 +69,7 @@ public interface CriterionProvider<DOMAIN, VALUE> {
 
     /**
      * Create new Criterion where this key value is in the one of parameter values.
-     * @param array A collection of the values. The collection argument can be the EMPTY, the Criterion result will be FALSE in this case.
+     * @param array A collection of the values. If the argument is EMPTY, the result is always FALSE.
      * @return The new immutable Criterion.
      */
     @NotNull default Criterion whereIn(@NotNull Array<VALUE> array) {
@@ -78,7 +78,7 @@ public interface CriterionProvider<DOMAIN, VALUE> {
 
     /**
      * Create new Criterion where this key value is not in any of parameter values.
-     * @param array A collection of the values. The collection argument can be the EMPTY, the Criterion result will be TRUE in this case.
+     * @param array A collection of the values. If the argument is EMPTY, the result is always TRUE.
      * @return The new immutable Criterion.
      */
     @NotNull default Criterion whereNotIn(@NotNull Array<VALUE> array) {
