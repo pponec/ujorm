@@ -95,11 +95,11 @@ final EntityManager<Employee, Long> EMPLOYEE_EM = CTX.entityManager(Employee.cla
 
 List<Employee> select() {
     return SelectQuery.run(connection(), EMPLOYEE_EM, query -> query
-            .sql("SELECT")                                  // Optional: "SELECT" is the default
+            .sql("SELECT")                                // Optional: "SELECT" is the default
             .columnsOfDomain(true)
-            .column(MetaEmployee.city, MetaCity.name)       // INNER JOIN (nullable = false)
+            .column(MetaEmployee.city, MetaCity.name)     // INNER JOIN (nullable = false)
             .column(MetaEmployee.city, MetaCity.countryCode)  
-            .column(MetaEmployee.boss, MetaEmployee.name)   // LEFT JOIN (nullable = true)
+            .column(MetaEmployee.boss, MetaEmployee.name) // LEFT JOIN (nullable = true)
             .where(MetaEmployee.id.whereGe(1L))
             .tail("ORDER BY", MetaEmployee.id)
             .toList()
