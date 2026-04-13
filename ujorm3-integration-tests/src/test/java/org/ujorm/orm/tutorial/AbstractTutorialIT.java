@@ -7,10 +7,12 @@ import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.ujorm.orm.SqlQuery;
 import org.ujorm.orm.core.EntityManager;
+import org.ujorm.orm.dsl.SelectQuery;
 import org.ujorm.orm.tutorial.domains.City;
 import org.ujorm.orm.tutorial.domains.Employee;
 import org.ujorm.orm.tutorial.domains.MetaCity;
 import org.ujorm.orm.tutorial.domains.MetaEmployee;
+import org.ujorm.orm.utils.EntityContext;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
@@ -43,8 +45,9 @@ public abstract class AbstractTutorialIT {
 
     @BeforeAll
     void setupDatabase() throws SQLException {
-        employeeEm = EntityManager.of(Employee.class);
-        cityEm = EntityManager.of(City.class);
+        var ctx = EntityContext.ofDefault();
+        employeeEm = ctx.entityManager(Employee.class);
+        cityEm = ctx.entityManager(City.class);
 
         dbConnection = dataSource.getConnection();
         dbConnection.setAutoCommit(false);
@@ -171,6 +174,26 @@ public abstract class AbstractTutorialIT {
             assertEquals("Ingrid", employees.get(1).getBoss().getName());
             assertEquals("WHERE e.id > [0]", lines.getLast());
         }
+    }
+
+    /** DSL select by the column method. */
+    @Test
+    @Order(220)
+    void select_query() {
+        var employees = SelectQuery.run(connection(), employeeEm, query -> query
+                .sql("SELECT")
+                .columnsOfDomain(true)
+                .column(MetaEmployee.city, MetaCity.name)
+                .column(MetaEmployee.city, MetaCity.countryCode)
+                .column(MetaEmployee.boss, MetaEmployee.name)
+                .where(MetaEmployee.id.whereGe(1L))
+                .tail("ORDER BY", MetaEmployee.id)
+                .toList()
+        );
+
+        assertEquals(3, employees.size());
+        assertEquals("Dave", employees.get(1).getName());
+        assertEquals("Ingrid", employees.get(1).getBoss().getName());
     }
 
     /** Note the last argument of the update() method specifying the modified attribute. */

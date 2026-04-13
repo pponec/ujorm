@@ -2,15 +2,14 @@ package org.ujorm.orm.tutorial;
 
 import org.junit.jupiter.api.*;
 import org.ujorm.orm.core.EntityManager;
+import org.ujorm.orm.dsl.SelectQuery;
 import org.ujorm.orm.jdbc.ResultSetMapper;
 import org.ujorm.orm.tutorial.domains.*;
 import org.ujorm.orm.SqlQuery;
-
-import java.util.Comparator;
+import org.ujorm.orm.utils.EntityContext;
 import java.util.stream.Stream;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Ujorm3: Lightweight, fast, and transparent ORM.
@@ -18,11 +17,12 @@ import static org.junit.jupiter.api.Assertions.assertNull;
  * Note: These tests run sequentially to demonstrate an entity lifecycle.
  */
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-public class TutorialTest extends AbstractDemo {
+class TutorialTest extends AbstractDemo {
 
+    private static final EntityContext CTX = EntityContext.ofDefault();
+    private static final EntityManager<Employee, Long> EMPLOYEE_EM = CTX.entityManager(Employee.class);
+    private static final EntityManager<City, Long> CITY_EM = CTX.entityManager(City.class);
     private static final ResultSetMapper<Employee> EMPLOYEE_MAPPER = ResultSetMapper.of(Employee.class);
-    private static final EntityManager<Employee, Long> EMPLOYEE_EM = EntityManager.of(Employee.class);
-    private static final EntityManager<City, Long> CITY_EM = EntityManager.of(City.class);
 
     @Test
     @Order(100)
@@ -38,12 +38,14 @@ public class TutorialTest extends AbstractDemo {
 
         employeeCrud.insert(emplIngrid);
         employeeCrud.insert(emplDave, emplCarol);
+
+        assertNotNull(emplIngrid.getId());
     }
 
     /** Select employees and map columns by type-safe generated Meta classes. */
     @Test
     @Order(200)
-    void select() {
+    void select_by_labels() {
         var sql = """
                  SELECT e.id      AS ${e.id}
                  , e.name         AS ${e.name}
@@ -54,6 +56,7 @@ public class TutorialTest extends AbstractDemo {
                  JOIN city c ON c.id = e.city_id
                  LEFT JOIN employee b ON b.id = e.boss_id
                  WHERE e.id > :employeeId
+                 ORDER BY e.id
                  """;
 
         var employees = SqlQuery.run(connection(), query -> query
@@ -82,6 +85,7 @@ public class TutorialTest extends AbstractDemo {
                  JOIN city c ON c.id = e.city_id
                  LEFT JOIN employee b ON b.id = e.boss_id
                  WHERE e.id > :employeeId
+                 ORDER BY e.id
                  """;
 
         var employees = SqlQuery.run(connection(), query -> query
@@ -100,6 +104,26 @@ public class TutorialTest extends AbstractDemo {
         assertEquals("Ingrid", employees.get(1).getBoss().getName());
     }
 
+    /** DSL select by the column method. */
+    @Test
+    @Order(220)
+    void select_query() {
+        var employees = SelectQuery.run(connection(), EMPLOYEE_EM, query -> query
+                .sql("SELECT")
+                .columnsOfDomain(true)
+                .column(MetaEmployee.city, MetaCity.name)
+                .column(MetaEmployee.city, MetaCity.countryCode)
+                .column(MetaEmployee.boss, MetaEmployee.name)
+                .where(MetaEmployee.id.whereGe(1L))
+                .tail("ORDER BY", MetaEmployee.id)
+                .toList()
+        );
+
+        assertEquals(3, employees.size());
+        assertEquals("Dave", employees.get(1).getName());
+        assertEquals("Ingrid", employees.get(1).getBoss().getName());
+    }
+
     /** Select an Entity by ID. */
     @Test
     @Order(230)
@@ -109,6 +133,7 @@ public class TutorialTest extends AbstractDemo {
         var barcelona = crud.findById(barcelonaId).orElseThrow();
         Assertions.assertNotNull(barcelona.id());
     }
+
 
     /** Note the last argument of the update() method specifying the modified attribute. */
     @Test
@@ -135,23 +160,26 @@ public class TutorialTest extends AbstractDemo {
     @Order(400)
     void delete() {
         var employeeCrud = EMPLOYEE_EM.crud(connection());
+        var qBossId = MetaEmployee.as("b").key(MetaEmployee.id);
+        var criterion = MetaEmployee.id.whereGe(1L);
 
-        var allEmployees = employeeCrud
-                .selectWhere("id > :id", query -> query
-                        .bind("id", 0L)
-                        .streamMap(EMPLOYEE_EM.mapper())
-                        .sorted(Comparator.comparing(e -> e.getBoss() == null))
-                        .toList());
+        try (var query = new SelectQuery<>(connection(), EMPLOYEE_EM)) {
+            var employees = query.sql("SELECT")
+                    .column(MetaEmployee.id)
+                    .column(MetaEmployee.boss, qBossId) // Build the relation
+                    .where(criterion)
+                    .tail("ORDER BY", qBossId, "DESC NULLS LAST") // Bosses last
+                    .toList();
 
-        employeeCrud.delete(allEmployees.stream());
+            employeeCrud.delete(employees.stream());
 
-        var count = SqlQuery.run(connection(), query -> query
-                .sql("SELECT COUNT(*) FROM employee WHERE id >= :id")
-                .bind("id", 0L)
-                .streamMap(rs -> rs.getInt(1))
-                .findFirst()
-                .orElseThrow());
-        assertEquals(0, count);
+            var count = query.sql("SELECT COUNT(*)")
+                    .where(criterion)
+                    .streamMap(rs -> rs.getInt(1))
+                    .findFirst().orElseThrow();
+
+            assertEquals(0, count);
+        }
     }
 
     /** Create all database tables first. */

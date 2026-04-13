@@ -39,7 +39,7 @@ import static org.junit.jupiter.api.Assertions.*;
  * Tests of the Message implementation
  * @author Pavel Ponec
  */
-public class PerformanceMsgTest {
+class PerformanceMsgTest {
 
     /** Iterations for s performance tests */
     private static final int MAX_COUNT = 1; // 5_000_000;
@@ -66,58 +66,62 @@ public class PerformanceMsgTest {
     public void testMessagePerformance_3args() {
         System.out.println("testMessage_3args");
         Map<Class, Long> result = new LinkedHashMap<>();
-        String template = "~~~{}~~~{}~~~{}~~~";
-        String temp2ate = "~~~%s~~~%s~~~%s~~~";
-        String temp3ate = "~~~{0}~~~{1}~~~{2}~~~";
-        String temp4ate = "~~~${0}~~~${1}~~~${2}~~~";
+        var template = "~~~{}~~~{}~~~{}~~~";
+        var temp2ate = "~~~%s~~~%s~~~%s~~~";
+        var temp3ate = "~~~{0}~~~{1}~~~{2}~~~";
+        var temp4ate = "~~~${0}~~~${1}~~~${2}~~~";
         Object[] arguments = {"A","B","C"};
-        Map<String, Object> mapArgs = new MessageService().map
-               ( "0", arguments[0]
-               , "1", arguments[1]
-               , "2", arguments[2]);
+        var mapArgs = new MessageService().map
+                ( "0", arguments[0]
+                , "1", arguments[1]
+                , "2", arguments[2]);
 
-        LocalDateTime beg = LocalDateTime.now();
+        var beg = LocalDateTime.now();
         for (int i = 0; i < MAX_COUNT; i++) {
-            String msg = MsgFormatter.format(template, arguments);
+            var msg = MsgFormatter.format(template, arguments);
+            // Use the variable to prevent Dead Code Elimination (JIT optimization):
             if (msg != null) { continue; }
-
         }
         result.put(MsgFormatter.class, beg.until(LocalDateTime.now(), ChronoUnit.MILLIS));
 
         beg = LocalDateTime.now();
         for (int i = 0; i < MAX_COUNT; i++) {
-            String msg = MessageFormatter.arrayFormat(template, arguments).getMessage();
+            var msg = MessageFormatter.arrayFormat(template, arguments).getMessage();
+            // Use the variable to prevent Dead Code Elimination (JIT optimization):
             if (msg != null) { continue; }
-
         }
         result.put(MessageFormatter.class, beg.until(LocalDateTime.now(), ChronoUnit.MILLIS));
 
         beg = LocalDateTime.now();
         for (int i = 0; i < MAX_COUNT; i++) {
-            String msg = new Formatter().format(temp2ate, arguments).toString();
-            if (msg != null) { continue; }
-
+            try (var formatter = new Formatter()) {
+                var msg = formatter.format(temp2ate, arguments).toString();
+                // Use the variable to prevent Dead Code Elimination (JIT optimization):
+                if (msg != null) { continue; }
+            }
         }
         result.put(Formatter.class, beg.until(LocalDateTime.now(), ChronoUnit.MILLIS));
 
         beg = LocalDateTime.now();
         for (int i = 0; i < MAX_COUNT; i++) {
-            String msg = MessageFormat.format(temp3ate, arguments);
+            var msg = MessageFormat.format(temp3ate, arguments);
             if (msg != null) { continue; }
         }
         result.put(MessageFormat.class, beg.until(LocalDateTime.now(), ChronoUnit.MILLIS));
 
         beg = LocalDateTime.now();
         for (int i = 0; i < MAX_COUNT; i++) {
-            String msg = new MessageService().format(temp4ate, mapArgs);
+            var msg = new MessageService().format(temp4ate, mapArgs);
+            // Use the variable to prevent Dead Code Elimination (JIT optimization):
             if (msg != null) { continue; }
         }
         result.put(MessageService.class, beg.until(LocalDateTime.now(), ChronoUnit.MILLIS));
 
         System.out.println(PREFIX + "MAX_COUNT\t: " + MAX_COUNT + SUFFIX);
-        for (Class formatter : result.keySet()) {
-            System.out.println(buildResult(formatter, result));
+        for (var formatterClass : result.keySet()) {
+            System.out.println(buildResult(formatterClass, result));
         }
+        assertTrue(true);
     }
 
     /**
@@ -146,7 +150,6 @@ public class PerformanceMsgTest {
         for (int i = 0; i < MAX_COUNT; i++) {
             String msg = MessageFormatter.format(template, argument1, argument2).getMessage();
             if (msg != null) { continue; }
-
         }
         result.put(MessageFormatter.class, beg.until(LocalDateTime.now(), ChronoUnit.MILLIS));
 
@@ -155,6 +158,7 @@ public class PerformanceMsgTest {
         for (Class formatter : result.keySet()) {
             System.out.println(buildResult(formatter, result));
         }
+        assertTrue(true);
     }
 
     /** Calculate percent */
@@ -205,7 +209,7 @@ public class PerformanceMsgTest {
         String expected = "On 2017-01-15, we spent 254.00 EUR.";
         String template = "On ${DAY,%tF}, we spent ${PRICE,%.2f} EUR.";
         MessageService instance = new MessageService();
-        Map<String,Object> params = instance.map
+        Map<String, Object> params = instance.map
               ( "DAY", LocalDateTime.of(2017, Month.JANUARY, 15, 12, 30)
               , "PRICE", new BigDecimal("254"));
         String result = new MessageService().format(template, params);

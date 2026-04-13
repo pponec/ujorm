@@ -201,12 +201,12 @@ public class XmlPrinter extends AbstractWriter {
     }
 
     /** Create XmlPrinter for UTF-8 */
-    public static XmlPrinter forHtml(@NotNull final Object httpServletResponse) throws IOException {
+    public static XmlPrinter forHtml(@NotNull final Object httpServletResponse) {
         return forHtml(httpServletResponse, HtmlConfig.ofDefault());
     }
 
     /** Create XmlPrinter for UTF-8 */
-    public static XmlPrinter forNiceHtml(@NotNull final Object httpServletResponse) throws IOException {
+    public static XmlPrinter forNiceHtml(@NotNull final Object httpServletResponse) {
         var config = HtmlConfig.ofDefault();
         config.setNiceFormat();
         return forHtml(httpServletResponse, config);
@@ -226,7 +226,7 @@ public class XmlPrinter extends AbstractWriter {
             @NotNull final Charset charset,
             @NotNull final String indentationSpace,
             final boolean noCache
-    ) throws IOException {
+    ) {
         var config = HtmlConfig.ofDefault();
         config.setCharset(charset);
         config.setIndentationSpace(indentationSpace);
@@ -240,7 +240,7 @@ public class XmlPrinter extends AbstractWriter {
     public static XmlPrinter forHtml(
             @NotNull final Object httpServletResponse,
             @NotNull final HtmlConfig config
-    ) throws IOException {
+    ) {
         try {
             var writer = createWriter(
                     httpServletResponse,

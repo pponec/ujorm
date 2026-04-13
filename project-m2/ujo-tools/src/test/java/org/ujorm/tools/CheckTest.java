@@ -27,7 +27,7 @@ import static org.junit.jupiter.api.Assertions.*;
  * Test of the Check class
  * @author Pavel Ponec
  */
-public class CheckTest {
+class CheckTest {
 
     /** Test of basic methods and demonstration. */
     @Test

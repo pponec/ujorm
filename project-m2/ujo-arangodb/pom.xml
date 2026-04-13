@@ -7,15 +7,10 @@
         <artifactId>oss-parent</artifactId>
         <version>9</version>
     </parent>
-    <!--<parent>
-        <groupId>org.ujorm</groupId>
-        <artifactId>ujo</artifactId>
-        <version>3.0.0-RC3</version>
-    </parent>-->
 
     <groupId>org.ujorm</groupId>
     <artifactId>ujo-arangodb</artifactId>
-    <version>3.0.0-RC3</version>
+    <version>3.0.0-RC4</version>
     <packaging>jar</packaging>
     <url>http://ujorm.org</url>
     <name>ujo-arangodb</name>
@@ -29,13 +24,14 @@
     </contributors>
 
     <properties>
-        <revision>3.0.0-RC3</revision>
+        <revision>3.0.0-RC4</revision>
         <java.version>17</java.version>
         <maven.compiler.target>${java.version}</maven.compiler.target>
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <maven.compiler.encoding>UTF-8</maven.compiler.encoding>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <junit.version>5.12.2</junit.version>
+        <mockito.version>5.21.0</mockito.version>
     </properties>
 
     <licenses>
@@ -92,8 +88,8 @@
 
         <dependency>
             <groupId>org.mockito</groupId>
-            <artifactId>mockito-all</artifactId>
-            <version>1.10.19</version>
+            <artifactId>mockito-junit-jupiter</artifactId>
+            <version>${mockito.version}</version>
             <scope>test</scope>
         </dependency>
 

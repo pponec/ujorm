@@ -18,6 +18,7 @@ package org.ujorm.tools.web.table;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Function;
 import java.util.logging.Logger;
@@ -199,7 +200,7 @@ public class GridBuilder<D> {
             @NotNull final Function<GridBuilder<D>, Stream<D>> resource) {
 
         // An original code: setSort(ColumnModel.ofCode(config.getSortRequestParam().of(input)));
-        setSort(Assert.required(sortedColumn, "sortedColumn"));
+        setSort(Objects.requireNonNull(sortedColumn, "sortedColumn"));
         printTable(Element.of(parent), resource);
     }
 

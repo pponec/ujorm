@@ -8,7 +8,7 @@ import org.ujorm.tools.web.request.HttpContext;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class GeneratedHtmlTest {
+class GeneratedHtmlTest {
 
     /** Generated for use with: org.ujorm:ujo-web:2.30 (2026-02-08) */
     public String htmlGenerator() {

@@ -217,7 +217,7 @@ public class DefaultHtmlConfig extends DefaultXmlConfig implements HtmlConfig {
      * @deprecated
      */
     @Deprecated
-    public DefaultHtmlConfig setRawHeaderText(@Nullable final String rawHeaderText) {
+    public DefaultHtmlConfig setRawHeaderText(@NotNull final String rawHeaderText) {
         this.rawHeaderText = Assert.required(rawHeaderText, REQUIRED_MSG, "rawHeaderText");
         return this;
     }

@@ -25,7 +25,7 @@ import static org.junit.jupiter.api.Assertions.*;
  *
  * @author Pavel Ponec
  */
-public class SafelyEqualableTest {
+class SafelyEqualableTest {
 
     @Test
     public void testSomeMethod() {

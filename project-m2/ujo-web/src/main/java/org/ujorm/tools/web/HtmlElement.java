@@ -56,7 +56,7 @@ public class HtmlElement extends AbstractHtmlElement {
     @NotNull
     public static HtmlElement niceOf(
             @NotNull final Appendable writer,
-            @Nullable final HtmlConfig myConfig
+            @NotNull final HtmlConfig myConfig
     ) throws IllegalStateException {
         var conf = (DefaultHtmlConfig) new DefaultHtmlConfig(myConfig).setNiceFormat();
         return AbstractHtmlElement.of(writer, conf);

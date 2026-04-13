@@ -18,6 +18,7 @@ package org.ujorm.tools.web.report;
 import java.time.Duration;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.function.BiConsumer;
 import java.util.logging.Logger;
 import org.jetbrains.annotations.NotNull;
@@ -169,32 +170,32 @@ public class ReportBuilderConfigImpl<D> implements ReportBuilderConfig<D> {
     }
 
     public ReportBuilderConfigImpl<D> setCssLink(@NotNull final String cssLink) {
-        this.cssLink = Assert.required(cssLink, "cssLink");
+        this.cssLink = Objects.requireNonNull(cssLink, "cssLink");
         return this;
     }
 
     public ReportBuilderConfigImpl<D> setJqueryLink(@NotNull final String jqueryLink) {
-        this.jqueryLink = Assert.required(jqueryLink, "jqueryLink");
+        this.jqueryLink = Objects.requireNonNull(jqueryLink, "jqueryLink");
         return this;
     }
 
     public ReportBuilderConfigImpl<D> setIdleDelay(@NotNull final Duration idleDelay) {
-        this.idleDelay = Assert.required(idleDelay, "idleDelay");
+        this.idleDelay = Objects.requireNonNull(idleDelay, "idleDelay");
         return this;
     }
 
     public ReportBuilderConfigImpl<D> setAjaxRequestParam(@NotNull final HttpParameter ajaxRequestParam) {
-        this.ajaxRequestParam = Assert.required(ajaxRequestParam, "ajaxRequestParam");
+        this.ajaxRequestParam = Objects.requireNonNull(ajaxRequestParam, "ajaxRequestParam");
         return this;
     }
 
     public ReportBuilderConfigImpl<D> setSortRequestParam(@NotNull final HttpParameter sortRequestParam) {
-        this.sortRequestParam = Assert.required(sortRequestParam, "sortRequestParam");
+        this.sortRequestParam = Objects.requireNonNull(sortRequestParam, "sortRequestParam");
         return this;
     }
 
     public ReportBuilderConfigImpl<D> setAjaxReadyMessage(@NotNull final CharSequence ajaxReadyMessage) {
-        this.ajaxReadyMessage = Assert.hasLength(ajaxReadyMessage, "ajaxReadyMessage");
+        this.ajaxReadyMessage = Objects.requireNonNull(ajaxReadyMessage, "ajaxReadyMessage");
         return this;
     }
 
@@ -214,12 +215,12 @@ public class ReportBuilderConfigImpl<D> implements ReportBuilderConfig<D> {
     }
 
     public ReportBuilderConfigImpl<D> setTableSelector(@NotNull final CharSequence tableSelector) {
-        this.tableSelector = Assert.required(tableSelector, "tableSelector");
+        this.tableSelector = Objects.requireNonNull(tableSelector, "tableSelector");
         return this;
     }
 
     public ReportBuilderConfigImpl<D> setTableCssClass(@NotNull final List<CharSequence> tableCssClass) {
-        this.tableCssClass = Assert.required(tableCssClass, "tableCssClass");
+        this.tableCssClass = Objects.requireNonNull(tableCssClass, "tableCssClass");
         return this;
     }
 

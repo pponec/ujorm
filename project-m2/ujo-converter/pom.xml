@@ -7,7 +7,7 @@
 
     <groupId>org.ujorm</groupId>
     <artifactId>ujo-converter</artifactId>
-    <version>3.0.0-RC3</version>
+    <version>3.0.0-RC4</version>
     <packaging>jar</packaging>
     <name>ujo-converter</name>
     <description>Convert HTML code to Java Elements</description>
@@ -34,7 +34,7 @@
     </scm>
 
     <properties>
-        <revision>3.0.0-RC3</revision>
+        <revision>3.0.0-RC4</revision>
         <java.version>17</java.version>
         <maven.compiler.target>${java.version}</maven.compiler.target>
         <maven.compiler.source>${java.version}</maven.compiler.source>
@@ -42,6 +42,8 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <spring.version>5.3.15</spring.version>
         <junit.version>5.12.2</junit.version>
+        <mockito.version>5.21.0</mockito.version>
+        <sonar.coverage.exclusions>**/HtmlToJavaConverter.java</sonar.coverage.exclusions>
     </properties>
 
     <dependencies>
@@ -49,12 +51,12 @@
         <dependency>
             <groupId>org.ujorm</groupId>
             <artifactId>ujo-tools</artifactId>
-            <version>3.0.0-RC3</version>
+            <version>3.0.0-RC4</version>
         </dependency>
         <dependency>
             <groupId>org.ujorm</groupId>
             <artifactId>ujo-web</artifactId>
-            <version>3.0.0-RC3</version>
+            <version>3.0.0-RC4</version>
         </dependency>
 
         <!-- Html5 Parser -->
@@ -81,8 +83,8 @@
 
         <dependency>
             <groupId>org.mockito</groupId>
-            <artifactId>mockito-all</artifactId>
-            <version>1.10.19</version>
+            <artifactId>mockito-junit-jupiter</artifactId>
+            <version>${mockito.version}</version>
             <scope>test</scope>
         </dependency>
 

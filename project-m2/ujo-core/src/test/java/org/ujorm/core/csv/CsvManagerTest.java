@@ -9,6 +9,7 @@ import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+@SuppressWarnings("java:S5786")
 public class CsvManagerTest {
 
     private Stream<String> source() {

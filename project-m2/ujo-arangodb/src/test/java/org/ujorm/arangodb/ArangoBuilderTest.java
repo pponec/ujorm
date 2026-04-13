@@ -37,7 +37,7 @@ import java.util.stream.Stream;
  *
  * @author Pavel Ponec
  */
-public class ArangoBuilderTest extends org.junit.jupiter.api.Assertions {
+class ArangoBuilderTest extends org.junit.jupiter.api.Assertions {
     private static final boolean DISABLED = true;
 
     @Disabled // @Test
@@ -74,7 +74,7 @@ public class ArangoBuilderTest extends org.junit.jupiter.api.Assertions {
     }
 
     @Test
-    public void testAQL() {
+    void testAQL() {
         String collectionName = "firstCollection";
 
         // A sample with an argument type of date-time:

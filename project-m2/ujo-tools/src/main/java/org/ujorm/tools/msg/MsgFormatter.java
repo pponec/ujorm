@@ -129,7 +129,7 @@ public class MsgFormatter {
     }
 
     /**
-     * Print argument to the Writter with an optional format.
+     * Print argument to the Writer with an optional format.
      * @param out Appendable
      * @param value Value where the {@code Supplier} interface is supported.
      */

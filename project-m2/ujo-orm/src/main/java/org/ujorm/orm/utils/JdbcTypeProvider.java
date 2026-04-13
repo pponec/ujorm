@@ -34,6 +34,7 @@ import java.time.OffsetTime;
 import java.time.ZonedDateTime;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.UUID;
 
 /** JDBC provider */
@@ -88,12 +89,10 @@ public final class JdbcTypeProvider {
         return Map.copyOf(result); // make map immutable
     }
 
-    /** Try tu find JDBC type */
+    /** Try to find JDBC type or return the null, of no type found. */
     @Nullable
-    public JDBCType findJdbcType(@NotNull Class<?> clazz) throws IllegalArgumentException {
-        if (clazz == null) {
-            throw new IllegalArgumentException("The class must is required");
-        }
+    JDBCType findJdbcType(@NotNull Class<?> clazz) throws IllegalArgumentException {
+        Objects.requireNonNull(clazz, "The class is required");
         return typeMap.get(Primitive.wrapPrimitive(clazz));
     }
 
@@ -102,7 +101,7 @@ public final class JdbcTypeProvider {
     public JDBCType findJdbcType(@NotNull Key<?, ?> key) {
         var valueType = key.type();
         if (valueType.isEnum()) {
-            valueType = key.mapEnumByOrdinal()
+            valueType = key.info().mapEnumByOrdinal()
                     ? Integer.class
                     : String.class;
         }

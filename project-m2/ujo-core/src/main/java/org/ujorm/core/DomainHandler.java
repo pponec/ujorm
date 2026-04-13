@@ -28,6 +28,20 @@ public interface DomainHandler<D> {
     @NotNull String getDatabaseTable();
     @NotNull List<Key<D, ?>> getKeyList();
 
+    /** Returns the primary key or the first column */
+    @NotNull default Key<D,?> findPrimaryKey(boolean acceptDefaultPk) {
+        var keys = getKeyList();
+        for (var key : keys) {
+            if (key.info().primaryKey()) return key;
+        }
+        if (acceptDefaultPk) {
+            return keys.get(0);
+        } else {
+            var msg = "No primary key was found by to annotation in " + getDomainClass();
+            throw new IllegalStateException(msg);
+        }
+    }
+
     /**
      * Find key in metamodel.
      * @param name Property name.
@@ -44,14 +58,14 @@ public interface DomainHandler<D> {
     /**
      * Find key in metamodel.
      * @param name Property name.
-     * @return Key object.
+     * @return Key object or null if not found and default is null.
      * @throws NoSuchElementException If not such element was found
      */
-    @NotNull
-    @SuppressWarnings("unchecked")
+    @Nullable
+    @SuppressWarnings({"unchecked", "java:S2637", "ConstantConditions"})
     default <V> Key<D, V> getKey(@Nullable String name)
             throws NoSuchElementException {
-        return getKey(name, null);
+        return getKey(name, (Class<V>) null);
     }
 
     /**

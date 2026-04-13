@@ -26,14 +26,10 @@ public record ColumnModel<D,V>(
         /** Column name */
         String name,
         JDBCType jdbcType,
-        /** Is foreign key to a relation */
+        /** Optional foreign key to the relation */
         @Nullable
         Key<V,?> foreignKey
 ) {
-
-    public boolean relation() {
-        return foreignKey != null;
-    }
 
     /**
      * Reading values from a JDBC ResultSet requires using object types
@@ -41,7 +37,7 @@ public record ColumnModel<D,V>(
      */
     public Class<V> objectType() {
         final var type = key.type();
-        return type.isPrimitive() ? (Class<V>) Primitive.wrapPrimitive(type) : type;
+        return type.isPrimitive() ? Primitive.wrapPrimitive(type) : type;
     }
 
     /** Java Property Name */
@@ -62,13 +58,13 @@ public record ColumnModel<D,V>(
 
     /** Is it a Primary Key? */
     public boolean pk() {
-        return key.primaryKey();
+        return key.info().primaryKey();
     }
 
     /** Return a domain Key for a common value type. */
     @SuppressWarnings("unchecked")
-    public Key<D,Object> keyObject() {
-        return (Key<D,Object>) key;
+    public Key<D, ?> keyObject() {
+        return key;
     }
 
     /** Returns a full name */

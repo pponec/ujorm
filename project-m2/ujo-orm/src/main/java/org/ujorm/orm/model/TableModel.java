@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -18,40 +18,53 @@ package org.ujorm.orm.model;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.ujorm.core.DomainHandler;
-import org.ujorm.core.DomainHandlerProvider;
 import org.ujorm.core.Key;
-import org.ujorm.orm.impl.Context;
 
-import java.sql.Connection;
 import java.util.*;
 
 /** Temporary Model */
 public record TableModel<D>(
+        /** Gets the domain handler. */
         DomainHandler<D> hander,
-        ColumnModel<D,Object> pk,
-        List<ColumnModel<D,Object>> columns,
+
+        /** Gets the primary key. */
+        ColumnModel<D, ?> pk,
+
+        /** Gets the columns ordered by the {@link Key#index()} . */
+        List<ColumnModel<D, ?>> columns,
+
+        /** Gets the table name. */
         String tableName,
-        /** Inserted columns without PK. */
+
+        /** Gets the inserted columns without PK. */
         @NotNull
-        List<ColumnModel<D, Object>> updatableColumns,
-        /** Selected database parameters extracted from the JDBC model. */
+        List<ColumnModel<D, ?>> updatableColumns,
+
+        /** Gets the selected database parameters extracted from the JDBC model. */
         Jdbc jdbc
 ) {
 
     /** Find a column model for the property name */
     @NotNull
-    public ColumnModel<D,Object> getColumn(@NotNull CharSequence property) {
+    public ColumnModel<D, ?> getColumn(@NotNull CharSequence property) {
         var index = (property instanceof Key key)
                 ? key.index()
                 : hander.getKey(property.toString()).index();
         return columns.get(index);
     }
 
+    /** Find column model by the key */
+    @NotNull
+    @SuppressWarnings("unchecked")
+    public <V> ColumnModel<D, V> getColumnOfKey(@NotNull Key<D, V> key) {
+        return (ColumnModel<D, V>) columns.get(key.index());
+    }
+
     /** Find a column model for the property name. If the model is empty, return all updatable columns. */
     @NotNull
-    public List<ColumnModel<D,Object>> getColumns(@NotNull CharSequence... properties) {
+    public List<ColumnModel<D, ?>> getColumns(@NotNull CharSequence... properties) {
         var result = properties.length > 0
-                ? new ArrayList<ColumnModel<D,Object>>(properties.length)
+                ? new ArrayList<ColumnModel<D, ?>>(properties.length)
                 : updatableColumns();
         for (var prop : properties) {
             result.add(getColumn(prop));
@@ -61,13 +74,13 @@ public record TableModel<D>(
 
     /** Find a column model by the index */
     @NotNull
-    public ColumnModel<D,Object> getColumn(@NotNull int index) {
+    public ColumnModel<D, ?> getColumn(@NotNull int index) {
         return columns.get(index);
     }
 
     /** Exclude PK according to the PK value. */
     @NotNull
-    public List<ColumnModel<D,Object>> createInsertedColumns(@Nullable Object pkValue) {
+    public List<ColumnModel<D, ?>> createInsertedColumns(@Nullable Object pkValue) {
         return pkValue == null
                 ? updatableColumns()
                 : columns();
@@ -79,7 +92,7 @@ public record TableModel<D>(
     }
 
     /** Original key of Ujo API */
-    public Key<D,?> pkRaw() {
+    public Key<D, ?> pkRaw() {
         return pk.key();
     }
 

@@ -23,7 +23,7 @@ import static org.junit.jupiter.api.Assertions.*;
  * Tests of the MsgFormatter class
  * @author Pavel Ponec
  */
-public class MsgFormatterTest {
+class MsgFormatterTest {
 
     /**
      * Test of format method, of class MsgFormatter.

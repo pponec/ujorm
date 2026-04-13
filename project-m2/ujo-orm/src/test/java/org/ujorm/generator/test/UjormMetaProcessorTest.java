@@ -7,7 +7,7 @@ import java.lang.reflect.Field;
 import static org.junit.jupiter.api.Assertions.*;
 
 /** Integration tests for Ujorm APT Meta Generator */
-public class UjormMetaProcessorTest {
+class UjormMetaProcessorTest {
 
     private final String packageName = StandardEntity.class.getPackageName() + ".";
 

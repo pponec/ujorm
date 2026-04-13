@@ -17,6 +17,7 @@
 package org.ujorm.tools.xml.config.impl;
 
 import java.nio.charset.Charset;
+import java.util.Objects;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.ujorm.tools.Assert;
@@ -239,13 +240,13 @@ public class DefaultXmlConfig implements XmlConfig {
 
     /** A new line sequence */
     public DefaultXmlConfig setNewLine(@NotNull final CharSequence newLine) {
-        this.newLine = Assert.required(newLine, "newLine");
+        this.newLine = Objects.requireNonNull(newLine, "newLine");
         return this;
     }
 
     /** A default value formatter is implemented by the method {@code String.valueOf(value)} */
     public DefaultXmlConfig setFormatter(@NotNull Formatter formatter) {
-        this.formatter = Assert.required(formatter, "formatter");
+        this.formatter = Objects.requireNonNull(formatter, "formatter");
         return this;
     }
 
@@ -258,7 +259,7 @@ public class DefaultXmlConfig implements XmlConfig {
      * <br> null -> "null"
      */
     public DefaultXmlConfig setIsoFormatter() {
-        Formatter formatter = new Formatter() {
+        var formatter = new Formatter() {
             @Override
             public @NotNull CharSequence format(@Nullable Object value, @NotNull ApiElement element, @Nullable String attributeName) {
                 return (value == null)

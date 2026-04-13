@@ -7,7 +7,7 @@
 
     <groupId>org.ujorm</groupId>
     <artifactId>ujo-tools</artifactId>
-    <version>3.0.0-RC3</version>
+    <version>3.0.0-RC4</version>
     <packaging>jar</packaging>
     <name>ujo-tools</name>
     <description>Ujorm-tools module is a basic library tools for common use</description>
@@ -34,13 +34,14 @@
     </scm>
 
     <properties>
-        <revision>3.0.0-RC3</revision>
+        <revision>3.0.0-RC4</revision>
         <java.version>17</java.version>
         <maven.compiler.target>${java.version}</maven.compiler.target>
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <maven.compiler.encoding>UTF-8</maven.compiler.encoding>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <junit.version>5.12.2</junit.version>
+        <mockito.version>5.21.0</mockito.version>
     </properties>
 
     <dependencies>
@@ -78,7 +79,7 @@
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-junit-jupiter</artifactId>
-            <version>4.3.1</version>
+            <version>${mockito.version}</version>
             <scope>test</scope>
         </dependency>
 

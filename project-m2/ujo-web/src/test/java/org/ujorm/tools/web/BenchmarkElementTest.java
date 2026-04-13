@@ -31,7 +31,7 @@ import static j2html.TagCreator.*;
 /**
  * @author Pavel Ponec
  */
-public class BenchmarkElementTest {
+class BenchmarkElementTest {
     private static final Logger LOGGER = LoggerFactory.getLogger(BenchmarkElementTest.class);
 
     private static final boolean RUN_BENCHMARK = false;

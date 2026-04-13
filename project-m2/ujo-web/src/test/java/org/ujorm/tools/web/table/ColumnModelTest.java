@@ -23,7 +23,7 @@ import static org.junit.jupiter.api.Assertions.*;
  *
  * @author Pavel Ponec
  */
-public class ColumnModelTest {
+class ColumnModelTest {
 
     private static final boolean OPPSITE = true;
     private static final boolean NATURAL = !OPPSITE;

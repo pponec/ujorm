@@ -22,7 +22,7 @@ import static org.junit.jupiter.api.Assertions.*;
  *
  * @author Pavel Ponec
  */
-public class TextBuilderTest {
+class TextBuilderTest {
 
     @Test
     public void sample() {

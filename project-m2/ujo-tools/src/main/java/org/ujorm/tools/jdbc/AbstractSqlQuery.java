@@ -18,6 +18,7 @@ package org.ujorm.tools.jdbc;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.ujorm.tools.common.Array;
 import java.math.BigDecimal;
 import java.sql.*;
 import java.sql.SQLException;
@@ -35,7 +36,6 @@ import java.util.stream.StreamSupport;
 
 /** Abstract base class for SqlQuery containing internal JDBC execution logic. */
 public abstract class AbstractSqlQuery<T extends AbstractSqlQuery<T>> implements AutoCloseable {
-
     /** SQL parameter mark type of {@code :param} */
     static final Pattern SQL_MARK = Pattern.compile(":(\\w+)");
 
@@ -43,7 +43,7 @@ public abstract class AbstractSqlQuery<T extends AbstractSqlQuery<T>> implements
     private static final Logger LOGGER = Logger.getLogger(AbstractSqlQuery.class.getName());
 
     @NotNull
-    private final Connection dbConnection;
+    protected final Connection dbConnection;
     @NotNull
     protected String sqlTemplate = "";
     @NotNull
@@ -58,7 +58,7 @@ public abstract class AbstractSqlQuery<T extends AbstractSqlQuery<T>> implements
     private AbstractSqlQuery.LogRequest logRequest = null;
 
     @Nullable
-    protected StringBuilder _builder = null;
+    protected StringBuilder _writer = null;
 
     public AbstractSqlQuery(@NotNull Connection dbConnection) {
         this.dbConnection = dbConnection;
@@ -70,20 +70,21 @@ public abstract class AbstractSqlQuery<T extends AbstractSqlQuery<T>> implements
         return (T) this;
     }
 
-    /** Init builder */
-    protected StringBuilder initBuilder() {
-        if (_builder == null) {
-            _builder = new StringBuilder(64);
-        } else {
-            _builder.setLength(0);
+    /** Get builder */
+    @NotNull
+    protected StringBuilder getWriter(boolean reset) {
+        if (_writer == null) {
+            _writer = new StringBuilder(64);
+        } else if (reset) {
+            _writer.setLength(0);
         }
-        return _builder;
+        return _writer;
     }
 
     /** Sets a new SQL template and resets current parameters. Any existing resources are closed. */
-    public T sql(@NotNull String... sqlLines) {
+    public T sql(@NotNull CharSequence... sqlLines) {
         close();
-        sqlTemplate = sqlLines.length == 1 ? sqlLines[0] : String.join("\n", sqlLines);
+        sqlTemplate = sqlLines.length == 1 ? sqlLines[0].toString() : String.join("\n", sqlLines);
         return self();
     }
 
@@ -111,6 +112,7 @@ public abstract class AbstractSqlQuery<T extends AbstractSqlQuery<T>> implements
     public T bind(@NotNull final String key, final Byte... values) {
         return bind(true, key, values);
     }
+
     public T bind(final boolean enabled, @NotNull final String key, final Byte... values) {
         return bindObject(enabled, key, JDBCType.TINYINT, (Object[]) values);
     }
@@ -119,6 +121,7 @@ public abstract class AbstractSqlQuery<T extends AbstractSqlQuery<T>> implements
     public T bind(@NotNull final String key, final Short... values) {
         return bind(true, key, values);
     }
+
     public T bind(final boolean enabled, @NotNull final String key, final Short... values) {
         return bindObject(enabled, key, JDBCType.SMALLINT, (Object[]) values);
     }
@@ -127,6 +130,7 @@ public abstract class AbstractSqlQuery<T extends AbstractSqlQuery<T>> implements
     public T bind(@NotNull final String key, final Integer... values) {
         return bind(true, key, values);
     }
+
     public T bind(final boolean enabled, @NotNull final String key, final Integer... values) {
         return bindObject(enabled, key, JDBCType.BIGINT, (Object[]) values);
     }
@@ -135,6 +139,7 @@ public abstract class AbstractSqlQuery<T extends AbstractSqlQuery<T>> implements
     public T bind(@NotNull final String key, final Long... values) {
         return bind(true, key, values);
     }
+
     public T bind(final boolean enabled, @NotNull final String key, final Long... values) {
         return bindObject(enabled, key, JDBCType.BIGINT, (Object[]) values);
     }
@@ -143,6 +148,7 @@ public abstract class AbstractSqlQuery<T extends AbstractSqlQuery<T>> implements
     public T bind(@NotNull final String key, final BigDecimal... values) {
         return bind(true, key, values);
     }
+
     public T bind(final boolean enabled, @NotNull final String key, final BigDecimal... values) {
         return bindObject(enabled, key, JDBCType.NUMERIC, (Object[]) values);
     }
@@ -151,6 +157,7 @@ public abstract class AbstractSqlQuery<T extends AbstractSqlQuery<T>> implements
     public T bind(@NotNull final String key, final String... values) {
         return bind(true, key, values);
     }
+
     public T bind(final boolean enabled, @NotNull final String key, final String... values) {
         return bindObject(enabled, key, JDBCType.VARCHAR, (Object[]) values);
     }
@@ -159,6 +166,7 @@ public abstract class AbstractSqlQuery<T extends AbstractSqlQuery<T>> implements
     public T bind(@NotNull final String key, final LocalDate... values) {
         return bind(true, key, values);
     }
+
     public T bind(final boolean enabled, @NotNull final String key, final LocalDate... values) {
         return bindObject(enabled, key, JDBCType.DATE, (Object[]) values);
     }
@@ -167,6 +175,7 @@ public abstract class AbstractSqlQuery<T extends AbstractSqlQuery<T>> implements
     public T bind(@NotNull final String key, final LocalDateTime... values) {
         return bind(true, key, values);
     }
+
     public T bind(final boolean enabled, @NotNull final String key, final LocalDateTime... values) {
         return bindObject(enabled, key, JDBCType.TIMESTAMP, (Object[]) values);
     }
@@ -177,7 +186,12 @@ public abstract class AbstractSqlQuery<T extends AbstractSqlQuery<T>> implements
     }
 
     /** Assigns SQL parameter values. If reusing a statement, ensure the same number of parameters is set. */
-    public T bindObject(final boolean enabled, @NotNull final String key, final JDBCType jdbcType, final Object... values) {
+    public T bindObject(final boolean enabled, @NotNull final String key, final JDBCType jdbcType, @NotNull final Object... values) {
+        return bindObject(enabled, key, jdbcType, Array.of(values));
+    }
+
+    /** Assigns SQL parameter values. If reusing a statement, ensure the same number of parameters is set. */
+    public T bindObject(final boolean enabled, @NotNull final String key, final JDBCType jdbcType, @NotNull final Array<Object> values) {
         if (enabled) {
             params.put(key, new ParamValue(jdbcType, values));
         }
@@ -334,7 +348,7 @@ public abstract class AbstractSqlQuery<T extends AbstractSqlQuery<T>> implements
 
     @NotNull
     protected String buildSql(List<ParamValue> sqlValues, boolean includingValues) {
-        final var sqlBuffer = initBuilder();
+        final var sqlBuffer = getWriter(true);
         final var matcher = SQL_MARK.matcher(sqlTemplate);
         final var missingKeys = new HashSet<String>();
 
@@ -343,10 +357,10 @@ public abstract class AbstractSqlQuery<T extends AbstractSqlQuery<T>> implements
             final var param = params.get(key);
             if (param != null) {
                 matcher.appendReplacement(sqlBuffer, "");
-                for (int i = 0; i < param.values().length; i++) {
+                for (int i = 0, max = param.values().size(); i < max; i++) {
                     if (i > 0) sqlBuffer.append(',');
-                    sqlBuffer.append(includingValues ? "[" + param.values()[i] + "]" : "?");
-                    sqlValues.add(i == 0 ? param : new ParamValue(param.jdbcType(), param.values()[i]));
+                    sqlBuffer.append(includingValues ? "[" + param.getValue(i) + "]" : "?");
+                    sqlValues.add(i == 0 ? param : new ParamValue(param.jdbcType(), Array.of(param.getValue(i))));
                 }
             } else {
                 matcher.appendReplacement(sqlBuffer, Matcher.quoteReplacement(matcher.group()));
@@ -372,14 +386,21 @@ public abstract class AbstractSqlQuery<T extends AbstractSqlQuery<T>> implements
         return sqlTemplate;
     }
 
+    /** Returns the SQL string include values */
     @NotNull
     @Override
     public String toString() {
         return buildSql(new ArrayList<>(), true);
     }
 
+    /**
+     * Converts the text to a single line by collapsing all whitespace sequences into a single space.
+     * Note that this formatting applies to the entire string, including spaces inside text literals.
+     *
+     * @return A single-line text optimized for logging
+     */
     public String toStringLine() {
-        return toString().replaceAll("\\s*\\R+\\s*", " ");
+        return toString().replaceAll("\\s+", " ").trim();
     }
 
     /** A request for logging the SQL. */
@@ -391,15 +412,19 @@ public abstract class AbstractSqlQuery<T extends AbstractSqlQuery<T>> implements
     ) {}
 
     /** SQL parameter values */
-    record ParamValue(
+    protected record ParamValue(
             /** Returns the JDBC Type */
             @NotNull JDBCType jdbcType,
             /** Returns the parameter values */
-            @NotNull Object... values
+            @NotNull Array<Object> values
     ) {
         /** Returns the first value from the values array */
         public Object first() {
-            return values.length > 0 ? values[0] : null;
+            return values.getFirstValue(null);
+        }
+
+        public Object getValue(int index) {
+            return values.get(index);
         }
     }
 
@@ -410,7 +435,7 @@ public abstract class AbstractSqlQuery<T extends AbstractSqlQuery<T>> implements
             try {
                 return applyFunction(resultSet);
             } catch (Exception ex) {
-                throw (ex instanceof RuntimeException re) ? re : new SqlException(ex);
+                throw (ex instanceof RuntimeException re) ? re : SQLExceptionBuilder.build(ex);
             }
         }
         @NotNull

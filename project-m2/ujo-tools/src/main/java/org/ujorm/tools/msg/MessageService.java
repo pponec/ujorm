@@ -16,10 +16,7 @@
 package org.ujorm.tools.msg;
 
 import java.io.IOException;
-import java.util.Formatter;
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Supplier;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -85,7 +82,7 @@ public class MessageService {
             @NotNull final Locale defaultLocale) {
         this.begTag = Assert.hasLength(begTag, "begTag");
         this.endTag = endTag;
-        this.defaultLocale = Assert.required(defaultLocale, "defaultLocale");
+        this.defaultLocale = Objects.requireNonNull(defaultLocale, "defaultLocale");
     }
 
     /** Create a map from man pairs key-value
@@ -248,9 +245,10 @@ public class MessageService {
             if (val != null) {
                 writer.append(msg, last, i);
                 if (formatIndex > 0) {
-                    new Formatter(writer, locale != null ? locale : defaultLocale).format
-                          ( expr.substring(1 + formatIndex)
-                          , val, val, val, val, val, val); // Simplify Date format
+                    try (var formatter = new Formatter(writer, locale != null ? locale : defaultLocale)) {
+                        formatter.format( expr.substring(1 + formatIndex)
+                                        , val, val, val, val, val, val); // Simplify Date format
+                    }
                 } else {
                     writeValue(val, writer, locale);
                 }

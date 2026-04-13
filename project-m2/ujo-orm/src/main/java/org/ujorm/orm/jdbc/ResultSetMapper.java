@@ -6,8 +6,8 @@ import org.ujorm.core.*;
 import org.ujorm.core.csv.CsvLineSplitter;
 import org.ujorm.core.impl.AbstractUjo;
 import org.ujorm.orm.Config;
+import org.ujorm.orm.utils.JdbcUtils;
 import org.ujorm.tools.common.Primitive;
-import org.ujorm.tools.jdbc.JdbcUtils;
 import org.ujorm.tools.jdbc.AbstractSqlQuery.SqlFunction;
 
 import java.sql.ResultSet;
@@ -188,7 +188,7 @@ public final class ResultSetMapper<D> {
             var isLast = (i == parts.length - 1);
             var key = findKey(clazz, parts[i], byColumn);
 
-            if (isLast && !key.foreignKey()) {
+            if (isLast && !key.info().foreignKey()) {
                 currentNode.addMapping(key, colIdx);
             } else {
                 currentNode = currentNode.getOrCreateRelation(key);
@@ -218,7 +218,7 @@ public final class ResultSetMapper<D> {
     private <D2> Key<D2, Object> findPrimaryKey(Class<D2> domainType) {
         var handler = service.getHandler(domainType);
         for (var key : handler.getKeyList()) {
-            if (key.primaryKey()) {
+            if (key.info().primaryKey()) {
                 return (Key<D2, Object>) key;
             }
         }
@@ -349,8 +349,15 @@ public final class ResultSetMapper<D> {
 
     // --- Static methods ---
 
+    /**
+     * Extracts column metadata from the ResultSet or explicitly provided labels.
+     * Throws an IllegalStateException if explicit labels are provided but their count does not match the ResultSet.
+     */
     private static List<ColumnMetadata> getLabelColumns(ResultSet rs, CharSequence... explicitLabels) throws SQLException {
         if (explicitLabels != null && explicitLabels.length > 0) {
+            if (explicitLabels.length != rs.getMetaData().getColumnCount()) {
+                throw new IllegalStateException("Column count mismatch between labels and ResultSet.");
+            }
             var result = new ArrayList<ColumnMetadata>(explicitLabels.length);
             for (var label : explicitLabels) {
                 result.add(new ColumnMetadata(label.toString(), false));

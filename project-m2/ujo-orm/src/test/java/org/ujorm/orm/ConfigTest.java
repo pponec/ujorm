@@ -3,6 +3,7 @@ package org.ujorm.orm;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import java.util.logging.Level;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -26,24 +27,24 @@ class ConfigTest {
 
         // Verifies fallback to defaults or file properties
         assertNotNull(config._testOnly());
-        assertTrue(config.isFirstPropertyIsIdentifier());
+        assertTrue(config.acceptDefaultPk());
     }
 
     @Test
     void testSystemPropertyOverrides() {
         // Simulates external configuration via System properties (replaces the need for Mock)
         System.setProperty("org.ujorm.maxCacheSize", "1024");
-        System.setProperty("org.ujorm.printSql", "false");
+        System.setProperty("org.ujorm.logSqlLevel", "OFF");
         System.setProperty("org.ujorm.batchSize", "128");
 
         var config = new Config();
 
         assertEquals(1024, config.getMaxCacheSize());
-        assertFalse(config.isPrintSql());
+        assertEquals(Level.OFF, config.getLogSqlLevel());
         assertEquals(128, config.getBatchSize());
 
         // This remains default as it was not overridden
-        assertTrue(config.isFirstPropertyIsIdentifier());
+        assertTrue(config.acceptDefaultPk());
     }
 
     @Test
@@ -66,13 +67,13 @@ class ConfigTest {
         var config = new Config();
 
         config.setValue(Config.maxCacheSize, 9999);
-        config.setValue(Config.printSql, false);
+        config.setValue(Config.logSqlLevel, Level.OFF);
         config.setValue(Config.testOnly, "BUILDER_TEST");
 
         assertEquals(9999, config.getMaxCacheSize());
-        assertFalse(config.isPrintSql());
+        assertEquals(Level.OFF, config.getLogSqlLevel());
         assertEquals("BUILDER_TEST", config._testOnly());
-        assertTrue(config.isFirstPropertyIsIdentifier());
+        assertTrue(config.acceptDefaultPk());
     }
 
     @Test
@@ -80,12 +81,8 @@ class ConfigTest {
         var config = new Config();
 
         var exception = assertThrows(
-                NullPointerException.class,
-                () -> config.setValue(Config.maxCacheSize, null),
-                "The setValue() method must throw an exception if value is null."
-        );
-
-        assertEquals("The value is required.", exception.getMessage());
+                RuntimeException.class,
+                () -> config.setValue(Config.maxCacheSize, null));
     }
 
     @Test

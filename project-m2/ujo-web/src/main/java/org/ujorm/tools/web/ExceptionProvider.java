@@ -15,10 +15,10 @@
  */
 package org.ujorm.tools.web;
 
+import java.util.Objects;
 import java.util.function.Consumer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.ujorm.tools.Assert;
 
 /**
  *
@@ -64,7 +64,7 @@ public final class ExceptionProvider {
     /** A factory method */
     @NotNull
     public static ExceptionProvider of(@NotNull final Throwable e) {
-        return new ExceptionProvider(Assert.required(e, "Exception is required"));
+        return new ExceptionProvider(Objects.requireNonNull(e, "Exception is required"));
     }
 
     /** A factory method */

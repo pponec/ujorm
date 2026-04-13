@@ -13,7 +13,7 @@ import org.ujorm.core.Key;
 import org.ujorm.core.generator.ClassName;
 import org.ujorm.core.generator.DomainModel;
 import org.ujorm.core.generator.JavaSourceGenerator;
-import org.ujorm.tools.jdbc.JdbcUtils;
+import org.ujorm.orm.utils.JdbcUtils;
 
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;

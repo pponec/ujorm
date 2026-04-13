@@ -10,17 +10,28 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
+import static org.ujorm.maven.UjormMetaProcessor.Const.*;
 
 /** Generates metamodel from entities during the compilation phase using APT. */
 @SupportedAnnotationTypes({
-        "javax.persistence.Entity", "javax.persistence.Table",
-        "jakarta.persistence.Entity", "jakarta.persistence.Table"
+        "javax.persistence.Entity",
+        "javax.persistence.Table",
+        "jakarta.persistence.Entity",
+        "jakarta.persistence.Table"
 })
-@SupportedOptions({"ujorm.prefix", "ujorm.suffix"})
+@SupportedOptions({
+        PARAM_PREFIX,
+        PARAM_SUFFIX,
+        PARAM_META_PACKAGE
+})
 public class UjormMetaProcessor extends AbstractProcessor {
-
+    /** Prefix of the generated domain classes */
     private String prefix = "Meta";
+    /** Suffix of the generated domain classes */
     private String suffix = "";
+    /** Relative package of the generated domain classes */
+    private String metaPackage = "";
+    /** Set of processed classes to prevent duplicates */
     private final Set<String> processedClasses = new HashSet<>();
 
     @Override
@@ -28,18 +39,23 @@ public class UjormMetaProcessor extends AbstractProcessor {
         super.init(processingEnv);
         var options = processingEnv.getOptions();
 
-        if (options.containsKey("ujorm.prefix")) {
-            var p = options.get("ujorm.prefix");
+        if (options.containsKey(PARAM_PREFIX)) {
+            var p = options.get(PARAM_PREFIX);
             if (p != null) prefix = p;
         }
-        if (options.containsKey("ujorm.suffix")) {
-            var s = options.get("ujorm.suffix");
+        if (options.containsKey(PARAM_SUFFIX)) {
+            var s = options.get(PARAM_SUFFIX);
             if (s != null) suffix = s;
+        }
+        if (options.containsKey(PARAM_META_PACKAGE)) {
+            var p = options.get(PARAM_META_PACKAGE);
+            if (p != null) metaPackage = p;
         }
 
         // Safety fallback against null values injected by Maven
         if (prefix == null) prefix = "";
         if (suffix == null) suffix = "";
+        if (metaPackage == null) metaPackage = "";
 
         processingEnv.getMessager().printMessage(Diagnostic.Kind.NOTE, "Ujorm3 APT Processor initialized.");
     }
@@ -56,7 +72,7 @@ public class UjormMetaProcessor extends AbstractProcessor {
      */
     @Override
     public Set<String> getSupportedOptions() {
-        return Set.of("ujorm.prefix", "ujorm.suffix");
+        return Set.of(PARAM_PREFIX, PARAM_SUFFIX, PARAM_META_PACKAGE);
     }
 
     @Override
@@ -92,7 +108,14 @@ public class UjormMetaProcessor extends AbstractProcessor {
 
     /** Processes a single annotated class or record and generates the metamodel source file. */
     private void processClassElement(TypeElement classElement) {
-        var targetPackage = processingEnv.getElementUtils().getPackageOf(classElement).getQualifiedName().toString();
+        var originalPackage = processingEnv.getElementUtils().getPackageOf(classElement).getQualifiedName().toString();
+
+        // Relative package is supported only
+        var subPackage = metaPackage.trim().replaceFirst("^\\.", "");
+        var targetPackage = subPackage.isEmpty()
+                ? originalPackage
+                : originalPackage + "." + subPackage;
+
         var originalName = classElement.getSimpleName().toString();
         var newClassName = prefix + originalName + suffix;
         var fullClassName = targetPackage + "." + newClassName;
@@ -175,7 +198,6 @@ public class UjormMetaProcessor extends AbstractProcessor {
                 // Safe and exact way to read annotation values in APT
                 var isNone = false;
                 for (var entry : am.getElementValues().entrySet()) {
-                    // entry.getValue() represents the actual set value, e.g., lombok.AccessLevel.NONE
                     if (entry.getValue().toString().contains("NONE")) {
                         isNone = true;
                         break;
@@ -241,12 +263,15 @@ public class UjormMetaProcessor extends AbstractProcessor {
                 result.append("import ").append(canonicalName).append(";\n");
             }
 
+            result.append("import javax.annotation.processing.Generated;\n");
             result.append("import org.ujorm.core.Key;\n");
             result.append("import org.ujorm.core.DomainHandler;\n");
-            result.append("import org.ujorm.core.DomainHandlerProvider;\n\n");
+            result.append("import org.ujorm.core.DomainHandlerProvider;\n");
+            result.append("import org.ujorm.orm.dsl.TableAlias;\n\n");
 
-            result.append("/** Auto-generated metamodel for ").append(originalName).append(" */\n");
-            result.append("public class ").append(newClassName).append(" {\n\n");
+            result.append("/** Auto-generated metamodel for the {@code ").append(originalName).append("} domain class. */\n");
+            result.append("@Generated(\"").append(getClass().getCanonicalName()).append("\")\n");
+            result.append("public abstract class ").append(newClassName).append(" {\n\n");
 
             result.append("    private static final DomainHandler<").append(originalName)
                     .append("> meta = DomainHandlerProvider.getHandler(").append(originalName).append(".class);\n\n");
@@ -288,15 +313,26 @@ public class UjormMetaProcessor extends AbstractProcessor {
                 var typeName = getTypeName(field.asType());
 
                 if (isRecord) {
-                    result.append("    /** The ").append(fieldName).append(" property */\n");
+                    result.append("    /** The {@code ").append(fieldName).append("} property descriptor */\n");
                 }
 
                 result.append("    public static final Key<").append(originalName).append(", ").append(typeName).append("> ")
                         .append(fieldName).append(" = meta.getKey(\"").append(fieldName).append("\");\n");
             }
 
+            result.append("\n    /** Creates a table alias for the {@code ").append(originalName).append("} domain class. */\n");
+            result.append("    public static TableAlias<").append(originalName).append("> as(String alias) {\n");
+            result.append("        return new TableAlias<>(alias, ").append(originalName).append(".class);\n");
+            result.append("    }\n");
             result.append("}\n");
             return result.toString();
         }
+    }
+
+    /** Parameter constants */
+    static final class Const {
+        static final String PARAM_PREFIX = "ujorm.prefix";
+        static final String PARAM_SUFFIX = "ujorm.suffix";
+        static final String PARAM_META_PACKAGE = "ujorm.metaPackage";
     }
 }

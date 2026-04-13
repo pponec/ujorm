@@ -23,7 +23,7 @@ import static org.junit.jupiter.api.Assertions.*;
  *
  * @author Pavel Ponec
  */
-public class JsonBuilderTest {
+class JsonBuilderTest {
 
     /**
      * Test of write method, of class JsonWriter.

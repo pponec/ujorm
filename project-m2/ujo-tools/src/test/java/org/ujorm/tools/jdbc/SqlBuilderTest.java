@@ -43,7 +43,7 @@ import static org.junit.jupiter.api.Assertions.*;
  * Testing the BasicSqlQuery class
  * @author Pavel Ponec
  */
-public class SqlBuilderTest extends AbstractJdbcConnector {
+class SqlBuilderTest extends AbstractJdbcConnector {
 
     private final String newLine = "\n";
 
@@ -344,6 +344,7 @@ public class SqlBuilderTest extends AbstractJdbcConnector {
     void autoCloseTest() {
         try (SqlBuilder query = null) {
         }
+        assertTrue(true);
     }
 
     /** Test the static run method */

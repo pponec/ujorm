@@ -4,10 +4,14 @@ package org.ujorm.core.impl;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.ujorm.core.Key;
+import org.ujorm.core.KeyInfo;
+import org.ujorm.core.criterion.Criterion;
+import org.ujorm.core.criterion.Operator;
+import org.ujorm.core.criterion.ProxyValue;
+import org.ujorm.tools.common.Array;
 import org.ujorm.tools.common.Primitive;
 
 import java.util.Map;
-import java.util.Objects;
 
 /**
  * Abstract implementation of the {@link Key} interface.
@@ -15,7 +19,7 @@ import java.util.Objects;
  * @param <D> Domain type
  * @param <V> Value type
  */
-public abstract class AbstractKey<D, V> implements Key<D, V> {
+public abstract class AbstractKey<D, V> implements Key<D, V>, KeyInfo<V> {
 
     /** Default values for primitive types. */
     private static final Map<Class<?>, Object> DEFAULT_VALUES = Primitive.ofAllToMap(
@@ -85,18 +89,8 @@ public abstract class AbstractKey<D, V> implements Key<D, V> {
     }
 
     @Override
-    public String fullName() {
-        return domainClass().getSimpleName() + '.' + name;
-    }
-
-    @Override
     public final @NotNull Class<V> type() {
         return type;
-    }
-
-    @Override
-    public final boolean primitiveType() {
-        return type().isPrimitive();
     }
 
     @Override
@@ -117,11 +111,6 @@ public abstract class AbstractKey<D, V> implements Key<D, V> {
     @Override
     public boolean required() {
         return required;
-    }
-
-    @Override
-    public V of(@NotNull final D bean) {
-        return getValue(bean);
     }
 
     @Nullable
@@ -163,12 +152,6 @@ public abstract class AbstractKey<D, V> implements Key<D, V> {
     }
 
     @Override
-    public boolean isDefault(@NotNull final D bean) {
-        final var value = getValue(bean);
-        return Objects.equals(value, defaultValue);
-    }
-
-    @Override
     public @Nullable V getDefaultValue() {
         return defaultValue;
     }
@@ -207,6 +190,17 @@ public abstract class AbstractKey<D, V> implements Key<D, V> {
     @Override
     public String toString() {
         return name;
+    }
+
+    @Override
+    public final KeyInfo<V> info() {
+        return this;
+    }
+
+    /** For the Criterion implementations */
+    @Override
+    public Key<D,V> self() {
+        return this;
     }
 
     /** Creates a new exception for missing setters. */

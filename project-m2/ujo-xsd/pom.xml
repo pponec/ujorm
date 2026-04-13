@@ -7,16 +7,11 @@
         <artifactId>oss-parent</artifactId>
         <version>9</version>
     </parent>
-    <!--<parent>
-        <groupId>org.ujorm</groupId>
-        <artifactId>ujo</artifactId>
-        <version>3.0.0-RC3</version>
-    </parent>-->
 
     <groupId>org.ujorm</groupId>
     <artifactId>ujo-xsd</artifactId>
     <packaging>jar</packaging>
-    <version>3.0.0-RC3</version>
+    <version>3.0.0-RC4</version>
     <url>http://ujorm.org</url>
     <name>ujo-xsd</name>
     <description>XSD generator according the Ujo
@@ -38,7 +33,7 @@
     </licenses>
 
     <properties>
-        <revision>3.0.0-RC3</revision>
+        <revision>3.0.0-RC4</revision>
         <java.version>17</java.version>
         <maven.compiler.target>${java.version}</maven.compiler.target>
         <maven.compiler.source>${java.version}</maven.compiler.source>

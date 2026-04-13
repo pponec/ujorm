@@ -22,6 +22,7 @@ import org.ujorm.core.Key;
 import org.ujorm.orm.model.QuotePair;
 import org.ujorm.tools.Check;
 import org.ujorm.tools.jdbc.AbstractSqlQuery;
+import org.ujorm.tools.jdbc.SQLExceptionBuilder;
 import org.ujorm.tools.msg.MessageService;
 
 import java.sql.Connection;
@@ -92,7 +93,7 @@ public class SqlQuery extends AbstractSqlQuery<SqlQuery> {
     }
 
     @Override
-    public SqlQuery sql(@NotNull String... sqlLines) {
+    public SqlQuery sql(@NotNull CharSequence... sqlLines) {
         super.sql(sqlLines);
         this.hasColumnsMode = this.sqlTemplate != null && this.sqlTemplate.contains("${" + COLUMNS_MARK + "}");
         return this;
@@ -143,7 +144,7 @@ public class SqlQuery extends AbstractSqlQuery<SqlQuery> {
             columnLabels = new LinkedHashMap<>();
         }
 
-        var builder = initBuilder();
+        var builder = getWriter(true);
         int labelOffset = 0;
 
         if (isColumn) {
@@ -283,7 +284,7 @@ public class SqlQuery extends AbstractSqlQuery<SqlQuery> {
         try (var query = new SqlQuery(connection)) {
             return fun.applyFunction(query);
         } catch (Exception ex) {
-            throw (ex instanceof RuntimeException re) ? re : new SqlException(ex);
+            throw (ex instanceof RuntimeException re) ? re : SQLExceptionBuilder.build(ex);
         }
     }
 }

@@ -27,7 +27,7 @@ public interface HttpContext {
 
     /** Returns the type safe last parameter or the default value. */
     default <T> T parameter(@NotNull CharSequence key, @NotNull Function<String, T> converter) {
-        return parameter(key, converter, (T) null);
+        return parameter(key, converter, null);
     }
 
     /** HTTP Servlet Factory */

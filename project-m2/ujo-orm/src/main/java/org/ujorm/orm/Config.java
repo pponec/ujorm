@@ -2,6 +2,7 @@ package org.ujorm.orm;
 
 import org.jetbrains.annotations.NotNull;
 import org.ujorm.core.csv.CsvConfig;
+import org.ujorm.orm.dsl.SelectQuery;
 import org.ujorm.tools.common.Primitive;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
@@ -10,7 +11,10 @@ import java.util.function.Function;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+/** ORM Configuration */
 public class Config {
+    /** The class {@link SelectQuery} enables only SQL SELECT statements. */
+    public static final boolean DSL_SELECT_ONLY = true;
 
     private static final Logger LOGGER = Logger.getLogger(Config.class.getName());
     private static final String PREFIX = "org.ujorm.";
@@ -27,7 +31,7 @@ public class Config {
      * Otherwise, or if you need to specify a different field as the primary key,
      * you must explicitly annotate the field using the JPA {@code @Id} annotation.
      */
-    public static final Key<Boolean> firstPropertyIsIdentifier = meta.key("firstPropertyIsIdentifier", true);
+    public static final Key<Boolean> acceptDefaultPk = meta.key("firstPropertyIsIdentifier", true);
 
     /** Maximum size of the cache in the {@link org.ujorm.orm.jdbc.ResultSetMapper} */
     public static final Key<Integer> maxCacheSize = meta.key("maxCacheSize", 512);
@@ -35,14 +39,14 @@ public class Config {
     /** Batch size for the INSERT */
     public static final Key<Integer> batchSize = meta.key("batchSize", 512);
 
-    /** Prints all SQL templates to the log. */
-    public static final Key<Boolean> printSql = meta.key("printSql", true);
+    /** Log level for SQL statement logging. To disable SQL logs, use the {@code OFF} value. */
+    public static final Key<Level> logSqlLevel = meta.key("logSqlLevel", Level.INFO);
+
+    /** Log parameters of the SQL statement. */
+    public static final Key<Boolean> logSqlParams = meta.key("logSqlParams", false);
 
     /** Print warnings, if Connection autocommit is true in batch operations. */
     public static final Key<Boolean> autoCommitWarned = meta.key("autoCommitWarned", true);
-
-    /** Enable or disable the service of the {@link org.ujorm.orm.UjormServiceProvider} object. */
-    public static final Key<Boolean> enabledUjormServiceProvider = meta.key("enabledUjormServiceProvider", true);
 
     /** Enable quoting the SQL columns.
      * @see #quotePair
@@ -69,13 +73,11 @@ public class Config {
     /** The object is locked and immutable. */
     private boolean locked = false;
 
-    /** Temporary Map of functions */
-    private Map<Class<?>, Function<String, ?>> funMap = Map.copyOf(CsvConfig.initConverterMap());
-
     public Config() {
         var properties = loadProperties();
+        var converters = CsvConfig.initConverterMap();
         for (var key : meta.keys) {
-            loadKey(key, properties);
+            loadKey(key, properties, converters);
         }
     }
 
@@ -87,7 +89,7 @@ public class Config {
      * @param value Required value
      * @param <V> The value type (annotation breaks IntelliJ tests
      */
-    public <V> void setValue(@NotNull Key<V> key, /*@NotNull*/ V value) {
+    public <V> void setValue(@NotNull Key<V> key, @NotNull V value) {
         if (locked) {
             throw new IllegalStateException("The configuration is locked.");
         }
@@ -98,20 +100,19 @@ public class Config {
     /** Lock the configuration for further writes */
     public Config lock() {
         this.locked = true;
-        this.funMap = null;
         return this;
     }
 
     // --- Getters ---
 
-    public boolean isFirstPropertyIsIdentifier() { return firstPropertyIsIdentifier.getValue(values); }
+    public boolean acceptDefaultPk() { return acceptDefaultPk.getValue(values); }
     public int getMaxCacheSize() { return maxCacheSize.getValue(values); }
     public int getBatchSize() { return batchSize.getValue(values); }
-    public boolean isPrintSql() { return printSql.getValue(values); }
+    public Level getLogSqlLevel() { return logSqlLevel.getValue(values); }
+    public boolean isLogSqlParams() { return logSqlParams.getValue(values); }
     public boolean isAutoCommitWarned() { return autoCommitWarned.getValue(values); }
-    public boolean isEnabledUjormServiceProvider() { return enabledUjormServiceProvider.getValue(values); }
     public boolean isEnableSqlQuoting() { return enableSqlQuoting.getValue(values); }
-    public String quotePair() { return quotePair.getValue(values); }
+    public String getQuotePair() { return quotePair.getValue(values); }
     /** @deprecated For jUnit test only */
     @Deprecated
     String _testOnly() { return testOnly.getValue(values); }
@@ -120,7 +121,11 @@ public class Config {
     // --- Loading and conversion logic ---
 
     /** Loads value from System properties or file properties */
-    private <V> void loadKey(Key<V> key, Properties props) {
+    private <V> void loadKey(
+            @NotNull Key<V> key,
+            @NotNull Properties props,
+            @NotNull Map<Class<?>, Function<String, ?>> converters
+    ) {
         var fullKey = PREFIX + key.name();
         var value = System.getProperty(fullKey);
 
@@ -128,15 +133,19 @@ public class Config {
             value = props.getProperty(fullKey);
         }
         if (value != null) {
-            setValue(key, convertValue(key, value));
+            setValue(key, convertValue(key, value, converters));
         }
     }
 
     /** Converts string to the type of the default value */
     @SuppressWarnings("unchecked")
-    private <V> V convertValue(@NotNull Key<V> key, @NotNull String value) {
+    private <V> V convertValue(
+            @NotNull Key<V> key,
+            @NotNull String value,
+            @NotNull Map<Class<?>, Function<String, ?>> converters
+    ) {
         var type = Primitive.wrapPrimitive(key.type());
-        var converter = (Function<String, ?>) funMap.get(type);
+        var converter = (Function<String, ?>) converters.get(type);
         if (converter == null) {
             var msg = "Parameter %s has no converter for type %s".formatted(key.name, key.type());
             throw new IllegalStateException(msg);
@@ -191,9 +200,6 @@ public class Config {
         }
 
         private void setValue(@NotNull final V value, @NotNull final Object[] objects) {
-            if (value == null) {
-                throw new IllegalArgumentException("Value is required");
-            }
             objects[index] = value;
         }
 

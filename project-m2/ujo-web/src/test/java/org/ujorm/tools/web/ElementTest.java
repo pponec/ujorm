@@ -32,7 +32,7 @@ import org.ujorm.tools.web.ao.Injector;
 /**
  * @author Pavel Ponec
  */
-public class ElementTest {
+class ElementTest {
 
     /** Logger */
     private final Logger logger = Logger.getLogger(ElementTest.class.getName());

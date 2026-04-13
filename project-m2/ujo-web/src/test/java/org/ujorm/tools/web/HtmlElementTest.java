@@ -30,7 +30,7 @@ import static org.junit.jupiter.api.Assertions.*;
  *
  * @author Pavel Ponec
  */
-public class HtmlElementTest {
+class HtmlElementTest {
 
     /**
      * Test of getName method, of class HtmlElement.

@@ -7,6 +7,7 @@ import org.junit.jupiter.api.*;
 import org.ujorm.core.demo.City;
 import org.ujorm.core.demo.Employee;
 
+@SuppressWarnings("java:S5786")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class DomainHandlerServiceTest {
 

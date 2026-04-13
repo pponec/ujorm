@@ -19,6 +19,9 @@ package org.ujorm.core;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Unmodifiable;
+import org.ujorm.core.criterion.CriterionProvider;
+
+import java.util.Objects;
 
 /**
  * This interface is a descriptor of the {@link Ujo} attribute. The Key contains only meta-data;
@@ -32,39 +35,41 @@ import org.jetbrains.annotations.Unmodifiable;
  * @see Ujo
  */
 @Unmodifiable
-@SuppressWarnings("deprecation")
-public interface Key<UJO, VALUE> extends CharSequence, Comparable<Key> {
+public interface Key<DOMAIN, VALUE> extends CharSequence, Comparable<Key>, CriterionProvider<DOMAIN, VALUE> {
 
     /** Returns the name of the Key (e.g., "name"). */
     @NotNull String name();
 
-    /** Returns the full name of the Key, including the simple name of the
+    /**
+     * Returns the full name of the Key, including the simple name of the
      * domain class separated by a dot (e.g., "Employee.name").
      */
-    @NotNull String fullName();
+    @NotNull
+    default String fullName() {
+        return domainClass().getSimpleName() + '.' + name();
+    }
 
     /** Returns the type of the value associated with this key. */
     @NotNull Class<VALUE> type();
 
-    /** Checks if the value type is a primitive. */
-    default boolean primitiveType() {
-        return type().isPrimitive();
+    /** Returns true if the domain type is a subtype of, or equal to, the specified class. */
+    default boolean isDomainOf(@NotNull final Class<?> type) {
+        return type.isAssignableFrom(domainClass());
+    }
+
+    /** Returns true if the key type is a subtype of, or equal to, the specified class. */
+    default boolean isTypeOf(@NotNull final Class<?> type) {
+        return type.isAssignableFrom(type());
+    }
+
+    /** Returns true if the value can be assigned to this Key. */
+    default boolean isInstanceOf(@Nullable final Object value) {
+        return type().isInstance(value);
     }
 
     /** Returns the class of the domain Ujo object. */
-    @NotNull Class<UJO> domainClass();
+    @NotNull Class<DOMAIN> domainClass();
 
-    /** Returns the name of the database column label. */
-    @NotNull String columnLabel();
-
-    /** Indicates whether the database column is required. */
-    boolean required();
-
-    /** Indicates whether the column is a primary key. */
-    boolean primaryKey();
-
-    /** Indicates whether the column is a foreign key. */
-    boolean foreignKey();
 
     /**
      * Sets a type-safe value to the specified Ujo object.
@@ -75,7 +80,7 @@ public interface Key<UJO, VALUE> extends CharSequence, Comparable<Key> {
      * @throws UnsupportedOperationException If the key is read-only.
      * @see Ujo#setValue(Key, Object)
      */
-    void setValue(@NotNull UJO bean, @Nullable VALUE value) throws UnsupportedOperationException;
+    void setValue(@NotNull DOMAIN bean, @Nullable VALUE value) throws UnsupportedOperationException;
 
     /**
      * Gets a type-safe value from the specified Ujo object.
@@ -84,55 +89,39 @@ public interface Key<UJO, VALUE> extends CharSequence, Comparable<Key> {
      * @return The type-safe value from the Ujo object.
      * @throws NullPointerException If the bean is null.
      * @see Ujo#getValue(Key)
-     * @see #of(Object)
      */
-    VALUE getValue(@NotNull UJO bean);
-
-    /** Returns a default value used when the current property value is null.
-     * This feature is only relevant if the default value is not null.
-     */
-    @Nullable VALUE getDefaultValue();
-
-    /** Determines whether to map the Enum by its ordinal (true) or name (false). */
-    boolean mapEnumByOrdinal();
-
-    /** Indicates whether the property value of the given Ujo is equal to the default value of this key. */
-    boolean isDefault(@NotNull UJO ujo);
+    VALUE getValue(@NotNull DOMAIN bean);
 
     /**
-     * An alias for the method {@link #getValue(Object)}.
-     */
-    default VALUE of(@NotNull final UJO ujo) {
-        return getValue(ujo);
-    }
-
-    /** Returns the index of the key.
-     * The index is useful for sorting keys in {@code UjoManager.readProperties(Class)}.
-     */
-    short index();
-
-    /** Returns a name of the key. */
-    @Override
-    String toString();
-
-    /** Returns a default value for substitution.
+     * Returns a default value for substitution.
      * Defaults to {@code null} unless overridden.
-     * @see #getDefaultValue()
      */
     @Nullable
     default VALUE getDefault() {
         return null;
     }
 
-    /** Returns true if the key type is a subtype of, or equal to, the specified class. */
-    default boolean isTypeOf(@NotNull final Class<?> type) {
-        return type().isAssignableFrom(type);
+    /**
+     * Returns a default value used when the current property value is null.
+     * This feature is only relevant if the default value is not null.
+     */
+    @Nullable VALUE getDefaultValue();
+
+
+    /**
+     * Returns the index of the key.
+     * The index is useful for sorting keys in {@code UjoManager.readProperties(Class)}.
+     */
+    short index();
+
+    /** Returns table alias, default is an empty text. */
+    default @NotNull String tableAlias() {
+        return "";
     }
 
-    /** Returns true if the domain type is a subtype of, or equal to, the specified class. */
-    default boolean isDomainOf(@NotNull final Class<?> type) {
-        return domainClass().isAssignableFrom(type);
-    }
+    /** Returns a name of the key. */
+    @Override
+    String toString();
 
     @Override
     default int length() {
@@ -152,10 +141,25 @@ public interface Key<UJO, VALUE> extends CharSequence, Comparable<Key> {
 
     @Override
     default int compareTo(@NotNull final Key o) {
-        final var i1 = this.index();
-        final var i2 = o.index();
+        var i1 = this.index();
+        var i2 = o.index();
         return Integer.compare(i1, i2);
     }
+
+    /**
+     * Returns true, if the key value equals to a parameter value. The key value can be null.
+     *
+     * @param domain A basic domain objects.
+     * @param value Null value is supported.
+     * @return Accordance
+     */
+    default boolean equals(@NotNull final DOMAIN domain, @Nullable final VALUE value) {
+        return Objects.equals(getValue(domain), value);
+    }
+
+    /** Provides more information */
+    @NotNull
+    KeyInfo info();
 
     // ---- Join methods ---
 
@@ -184,10 +188,9 @@ public interface Key<UJO, VALUE> extends CharSequence, Comparable<Key> {
                 .append('.').append(key2.name())
                 .append('.').append(key3.name())
                 .append('.').append(key4.name());
-            for (var key : keys) {
-                result.append('.').append(key);
-            }
-            return result.toString();
+        for (var key : keys) {
+            result.append('.').append(key.name());
+        }
+        return result.toString();
     }
-
 }

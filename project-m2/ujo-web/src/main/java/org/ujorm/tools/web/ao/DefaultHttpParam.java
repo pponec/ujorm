@@ -15,7 +15,9 @@
  */
 package org.ujorm.tools.web.ao;
 
+import java.util.Objects;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * An interface for bulding HTML parameters by an Enumerator.
@@ -35,9 +37,12 @@ public final class DefaultHttpParam implements HttpParameter {
     /** The name of the parameter */
     @NotNull
     private final String paramName;
+
+    /** The default value of the parameter */
     @NotNull
     private final String defaultValue;
 
+    /** Creates a new instance */
     DefaultHttpParam(@NotNull String paramName, @NotNull String defaultValue) {
         this.paramName = paramName;
         this.defaultValue = defaultValue;
@@ -76,4 +81,14 @@ public final class DefaultHttpParam implements HttpParameter {
         return paramName.charAt(index);
     }
 
+    @Override
+    public boolean equals(@Nullable Object obj) {
+        return this == obj  || (obj instanceof HttpParameter other
+                && Objects.equals(this.paramName, other.paramName()));
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(this.paramName);
+    }
 }

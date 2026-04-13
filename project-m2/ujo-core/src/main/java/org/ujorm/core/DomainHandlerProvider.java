@@ -32,6 +32,7 @@ public final class DomainHandlerProvider {
      * @param clazz An original domain class
      * @return DomainHandler
      */
+    @NotNull
     public static <D> DomainHandler<D> getHandler(@NotNull Class<D> clazz) {
         return provider().getHandler(clazz);
     }

@@ -19,8 +19,8 @@ import java.io.IOException;
 import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
-
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.ujorm.tools.Assert;
@@ -44,7 +44,7 @@ public class JavaScriptWriter implements Injector {
     public static final HttpParameter DEFAULT_SORT_REQUEST_PARAM = HttpParameter.of("_sort");
     /** Default duration */
     public static final Duration DEFAULT_DELAY = Duration.ofMillis(250);
-    /** Default timeou */
+    /** Default timeout */
     public static final Duration DEFAULT_TIMEOUT = Duration.ofSeconds(30);
     /** All input elements except buttons */
     private static final CharSequence[] DEFAULT_INPUT_SELECTORS = {"input:not([type='button'])", "textarea", "select"};
@@ -53,7 +53,7 @@ public class JavaScriptWriter implements Injector {
     protected final HttpParameter ajaxRequestParam;
     /** Javascript ajax request parameter */
     protected final HttpParameter sortRequestParam;
-     /** Input selectors */
+    /** Input selectors */
     protected final CharSequence[] inputCssSelectors;
     /** An AJAX delay to the input request */
     @NotNull
@@ -69,7 +69,7 @@ public class JavaScriptWriter implements Injector {
     protected CharSequence newLine = "\n";
     /** An error message selector */
     @Nullable
-    protected CharSequence errorSelector ="?";
+    protected CharSequence errorSelector = "?";
     /** A subtitle selector */
     @NotNull
     protected CharSequence errorMessage = "AJAX fails due";
@@ -98,14 +98,14 @@ public class JavaScriptWriter implements Injector {
             @NotNull HttpParameter ajaxRequestParam,
             @NotNull HttpParameter sortRequestParam,
             @NotNull CharSequence... inputSelectors) {
-        this.idleDelay = Assert.required(idleDelay, "idleDelay");
-        this.ajaxRequestParam = Assert.required(ajaxRequestParam, "ajaxRequestParam");
-        this.sortRequestParam = Assert.required(sortRequestParam, "sortRequestParam");
-        this.inputCssSelectors = Assert.hasLength(inputSelectors, "inputSelectors");
+        this.idleDelay = Objects.requireNonNull(idleDelay, "idleDelay");
+        this.ajaxRequestParam = Objects.requireNonNull(ajaxRequestParam, "ajaxRequestParam");
+        this.sortRequestParam = Objects.requireNonNull(sortRequestParam, "sortRequestParam");
+        this.inputCssSelectors = Objects.requireNonNull(inputSelectors, "inputSelectors");
     }
 
     public JavaScriptWriter setFormSelector(String formSelector) {
-        this.formCssSelector = Assert.required(formSelector, "formSelector");
+        this.formCssSelector = Objects.requireNonNull(formSelector, "formSelector");
         return this;
     }
 
@@ -115,7 +115,7 @@ public class JavaScriptWriter implements Injector {
     }
 
     public JavaScriptWriter setNewLine(@NotNull CharSequence newLine) {
-        this.newLine = Assert.required(newLine, "newLine");
+        this.newLine = Objects.requireNonNull(newLine, "newLine");
         return this;
     }
 
@@ -126,20 +126,20 @@ public class JavaScriptWriter implements Injector {
     }
 
     /** Assign an AJAX error message */
-    public JavaScriptWriter setErrorMessage(@Nullable CharSequence errorMessage) {
+    public JavaScriptWriter setErrorMessage(@NotNull CharSequence errorMessage) {
         this.errorMessage = Assert.hasLength(errorMessage, "errorMessage");
         return this;
     }
 
     /** An AJAX timeout to get a response  */
     public JavaScriptWriter setAjaxTimeout(@NotNull Duration ajaxTimeout) {
-        this.ajaxTimeout = Assert.required(ajaxTimeout, "ajaxTimeout");
+        this.ajaxTimeout = Objects.requireNonNull(ajaxTimeout, "ajaxTimeout");
         return this;
     }
 
     /** An AJAX delay to the input request */
     public JavaScriptWriter setIdleDelay(@NotNull Duration idleDelay) {
-        this.idleDelay = Assert.required(idleDelay, "idleDelay");
+        this.idleDelay = Objects.requireNonNull(idleDelay, "idleDelay");
         return this;
     }
 
@@ -246,7 +246,7 @@ public class JavaScriptWriter implements Injector {
             params.put("inputSelector", inputCssSelector());
             params.put("onLoadSubmit", onLoadSubmit(params));
         }
-        try (Element js = parent.addElement(Html.SCRIPT)) {
+        try (var js = parent.addElement(Html.SCRIPT)) {
             MessageService.formatMsg(scriptTemplate(), params, appendable(js));
         }
     }
@@ -260,8 +260,8 @@ public class JavaScriptWriter implements Injector {
     /** Generate a map of JS functions */
     private String bulidFunctionMap(Map<String, String> functionMap) {
         if (functionMap.isEmpty()) return "";
-        final var result = new StringBuilder(64);
-        final var i = new AtomicInteger();
+        var result = new StringBuilder(64);
+        var i = new AtomicInteger();
         functionMap.forEach((key, value) -> {
             result.append(i.getAndIncrement() == 0 ? " " : ", ");
             result.append(key).append("(){").append(value).append("}");

@@ -23,12 +23,7 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.nio.file.Paths;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import javax.tools.*;
@@ -49,10 +44,7 @@ public class ClassGenerator {
      */
     public Class<?> createClass(String sourceCode, ClassName canonicalClassName) {
         var compiler = ToolProvider.getSystemJavaCompiler();
-        if (compiler == null) {
-            throw new IllegalStateException("Java Compiler unavailable. Ensure you are running with a JDK.");
-        }
-
+        Objects.requireNonNull(compiler, "Java Compiler unavailable. Ensure you are running with a JDK.");
         var classBytes = new HashMap<String, byte[]>();
         var diagnostics = new DiagnosticCollector<JavaFileObject>();
 
