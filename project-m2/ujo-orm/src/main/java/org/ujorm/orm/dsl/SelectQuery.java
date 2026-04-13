@@ -118,7 +118,7 @@ public class SelectQuery<D> extends AbstractSqlQuery<SelectQuery<D>> {
         return self();
     }
 
-    /** Write a SQL condition. */
+    /** Adds a SQL condition. Repeated calls append conditions using the AND operator. */
     public SelectQuery<D> where (@NotNull Criterion criterion) {
         this.builder.where(criterion);
         return self();

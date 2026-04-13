@@ -26,6 +26,9 @@ public interface AbstractOperator {
     /** Is the operator a binary type ? */
     boolean isBinary();
 
+    /** Is the operator a constant? */
+    boolean isConstant();
+
     /** Returns Enum */
     Enum getEnum();
 

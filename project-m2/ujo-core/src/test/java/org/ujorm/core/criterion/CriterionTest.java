@@ -59,6 +59,59 @@ public class CriterionTest {
         assertSame(base, base.or(falseCrn));
     }
 
+    /** Test exhaustive combinations of logical optimizations for ALWAYS_TRUE and ALWAYS_FALSE */
+    @Test
+    public void testLogicalOptimizationsExhaustive() {
+        var nameCrn = Criterion.whereEq(MetaEmployee.name, "A");
+        var trueCrn = Criterion.forAll(MetaEmployee.id);
+        var falseCrn = Criterion.forNone(MetaEmployee.id);
+        var trueCrn2 = Criterion.forAll(MetaEmployee.city);
+
+        // --- OR Operator Optimization ---
+
+        // Left constant
+        assertSame(trueCrn, trueCrn.or(nameCrn));
+        assertSame(nameCrn, falseCrn.or(nameCrn));
+
+        // Right constant
+        assertSame(trueCrn, nameCrn.or(trueCrn));
+        assertSame(nameCrn, nameCrn.or(falseCrn));
+
+        // Both constants
+        assertSame(trueCrn, trueCrn.or(falseCrn));   // TRUE OR FALSE -> TRUE
+        assertSame(trueCrn, trueCrn.or(trueCrn));    // TRUE OR TRUE -> TRUE
+        assertSame(trueCrn, trueCrn.or(trueCrn2));   // Return the first condition
+
+        assertSame(trueCrn, falseCrn.or(trueCrn));   // FALSE OR TRUE -> TRUE
+        assertSame(falseCrn, falseCrn.or(falseCrn)); // FALSE OR FALSE -> FALSE
+
+        // --- AND Operator Optimization ---
+
+        // Left constant
+        assertSame(nameCrn, trueCrn.and(nameCrn));
+        assertSame(falseCrn, falseCrn.and(nameCrn));
+
+        // Right constant
+        assertSame(nameCrn, nameCrn.and(trueCrn));
+        assertSame(falseCrn, nameCrn.and(falseCrn));
+
+        // Both constants
+        assertSame(falseCrn, trueCrn.and(falseCrn)); // TRUE AND FALSE -> FALSE
+        assertSame(falseCrn, falseCrn.and(trueCrn)); // FALSE AND TRUE -> FALSE
+        assertSame(trueCrn, trueCrn.and(trueCrn));   // TRUE AND TRUE -> TRUE
+        assertSame(falseCrn, falseCrn.and(falseCrn));// FALSE AND FALSE -> FALSE
+
+        // --- Fallback behavior (e.g. NOT operator or when no logic optimization applies) ---
+
+        // Fallback for constants with unsupported optimization operator
+        var notJoined = trueCrn.join(BinaryOperator.NOT, trueCrn);
+        assertTrue(notJoined.isBinary());
+
+        // Fallback for normal criteria
+        var normalJoin = nameCrn.and(Criterion.whereEq(MetaEmployee.name, "B"));
+        assertTrue(normalJoin.isBinary());
+    }
+
     /** Test NOT operator */
     @Test
     public void testNotOperator() {

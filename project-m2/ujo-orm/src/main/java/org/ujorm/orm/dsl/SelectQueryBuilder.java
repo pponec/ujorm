@@ -75,9 +75,9 @@ public class SelectQueryBuilder implements AutoCloseable {
         columns.add(column);
     }
 
-    /** Set criterion */
+    /** Adds a SQL condition. Repeated calls append conditions using the AND operator. */
     public void where(@Nullable Criterion criterion) {
-        this.criterion = criterion != null ? criterion : Criterion.forAll();
+        this.criterion = this.criterion.and(Objects.requireNonNull(criterion, "criterion"));
     }
 
     /** Build the query */

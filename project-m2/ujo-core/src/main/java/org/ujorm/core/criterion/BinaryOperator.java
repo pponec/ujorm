@@ -65,6 +65,12 @@ public enum BinaryOperator implements AbstractOperator {
         return true;
     }
 
+    @Override
+    public boolean isConstant() {
+        return false;
+    }
+
+
     /** Returns Enum */
     @Override
     public final Enum getEnum() {

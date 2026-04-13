@@ -110,11 +110,14 @@ public abstract class Criterion {
      * @return Result
      */
     public Criterion join(@NotNull final BinaryOperator operator, @NotNull final Criterion criterion) {
-        var rightOp = criterion.getOperator();
-        if (rightOp == Operator.ALWAYS_TRUE || rightOp == Operator.ALWAYS_FALSE) {
+        var constL = this.getOperator().isConstant();
+        if (constL || criterion.getOperator().isConstant()) {
+            var cNode = constL ? this : criterion;
+            var oNode = constL ? criterion : this;
+
             return switch (operator) {
-                case OR -> rightOp == Operator.ALWAYS_TRUE ? criterion : this;
-                case AND -> rightOp == Operator.ALWAYS_TRUE ? this : criterion;
+                case OR -> cNode.getOperator() == Operator.ALWAYS_TRUE ? cNode : oNode;
+                case AND -> cNode.getOperator() == Operator.ALWAYS_FALSE ? cNode : oNode;
                 default -> new BinaryCriterion(this, operator, criterion);
             };
         }

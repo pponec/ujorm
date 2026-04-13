@@ -55,13 +55,6 @@ public enum Operator implements AbstractOperator {
     CONTAINS("LIKE"),
     /** Only for a CharSequence subtypes (including String). Note: Not a standard SQL operator. */
     CONTAINS_CASE_INSENSITIVE("ILIKE"),
-    /** This operator can have their own SQL condition by a SqlDialect solution.
-     * <br>If you need to use more operators, I recommend to implement your own class
-     * by the interface AbstractOperator and adjust the appropriate SqlDialect.
-     * <br>Note: Not a standard SQL operator.
-     */
-    USER(""),
-
     /**
      * A custom SQL operator where the placeholder {@code {0}} is replaced by the real column name and {@code {1}} is repalced by the first value.
      * The right-hand value of the Criterion is used as the SQL template with values.
@@ -95,6 +88,11 @@ public enum Operator implements AbstractOperator {
     @Override
     public final boolean isBinary() {
         return false;
+    }
+
+    @Override
+    public boolean isConstant() {
+        return this == ALWAYS_TRUE || this == ALWAYS_FALSE;
     }
 
     /** Returns an Enumeration */
