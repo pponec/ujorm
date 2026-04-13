@@ -34,6 +34,7 @@ import java.sql.Connection;
 import java.sql.JDBCType;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Stream;
 
 /**
  * A fluent wrapper over {@link java.sql.PreparedStatement}
@@ -257,6 +258,18 @@ public class SelectQuery<D> extends AbstractSqlQuery<SelectQuery<D>> {
                 dslWriter.append(item);
             }
         }
+    }
+
+    /** Executes the query and returns a Stream of mapped results. */
+    @NotNull
+    public Stream<D> streamMap() {
+        return streamMap(entityManager.mapper());
+    }
+
+    /** Executes the query and returns a List of mapped results. */
+    @NotNull
+    public List<D> toList() {
+        return streamMap().toList();
     }
 
     // --- INNER CLASSES ---

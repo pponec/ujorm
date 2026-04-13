@@ -116,7 +116,6 @@ class TutorialTest extends AbstractDemo {
                 .column(MetaEmployee.boss, MetaEmployee.name)
                 .where(MetaEmployee.id.whereGe(1L))
                 .tail("ORDER BY", MetaEmployee.id)
-                .streamMap(EMPLOYEE_MAPPER.mapper())
                 .toList()
         );
 
@@ -170,7 +169,6 @@ class TutorialTest extends AbstractDemo {
                     .column(MetaEmployee.boss, qBossId) // Build the relation
                     .where(criterion)
                     .tail("ORDER BY", qBossId, "DESC NULLS LAST") // Bosses last
-                    .streamMap(EMPLOYEE_MAPPER.mapper())
                     .toList();
 
             employeeCrud.delete(employees.stream());

@@ -78,22 +78,30 @@ Entities do not need to be registered beforehand, and multiple classes can map t
 
 The library offers a type-safe `SelectQuery` builder for constructing SQL queries smoothly in Java, while still fully supporting the classic `SqlQuery` for writing raw native SQL.
 Both approaches utilize the generated `Meta` classes for mapping and aliases, preventing SQL typos and ensuring compile-time safety.
-Because the library intentionally avoids lazy-loading, the explicit conversion from the `ResultSet` to the domain object inherently prevents the N+1 query problem.
+
+**Automatic Joins:**
+The `SelectQuery` automatically generates `JOIN` clauses based on the entity metadata. The type of join is determined by the `@JoinColumn` annotation:
+* INNER JOIN: Used when the attribute is marked as mandatory (e.g., `@JoinColumn(nullable = false)`).
+* LEFT JOIN: Used by default or when the attribute is explicitly marked as nullable (e.g., `@Nullable` or `@JoinColumn(nullable = true)`).
+
+**Filtering and Native SQL:**
+Data filtering can be defined using the `where()` method, which accepts a **`Criterion`** object. This object can represent a complex logical structure in the form of a **binary tree**, providing a clear and type-safe way to build nested conditions.
+
+Alternatively, you can use the **`tail()`** method to append native SQL fragments. Within this method, you can use **`Key`** objects to represent database columns, ensuring that even native SQL remains synchronized with your domain model. For recursive queries or self-referencing relationships, the library supports **table aliases** within the property-descriptor (Key), allowing you to uniquely identify different instances of the same table.
 
 ```java
-static final ResultSetMapper<Employee> EMPLOYEE_MAPPER = ResultSetMapper.of(Employee.class);
+final EntityContext CTX = EntityContext.ofDefault();
+final EntityManager<Employee, Long> EMPLOYEE_EM = CTX.entityManager(Employee.class);
 
-/** Select demonstration */
 List<Employee> select() {
     return SelectQuery.run(connection(), EMPLOYEE_EM, query -> query
-            .sql("SELECT")
+            .sql("SELECT")                                  // Optional: "SELECT" is the default
             .columnsOfDomain(true)
-            .column(MetaEmployee.city, MetaCity.name)
-            .column(MetaEmployee.city, MetaCity.countryCode)
-            .column(MetaEmployee.boss, MetaEmployee.name)
+            .column(MetaEmployee.city, MetaCity.name)       // INNER JOIN (nullable = false)
+            .column(MetaEmployee.city, MetaCity.countryCode)  
+            .column(MetaEmployee.boss, MetaEmployee.name)   // LEFT JOIN (nullable = true)
             .where(MetaEmployee.id.whereGe(1L))
             .tail("ORDER BY", MetaEmployee.id)
-            .streamMap(EMPLOYEE_MAPPER.mapper())
             .toList()
     );
 }

@@ -18,7 +18,7 @@
       <data key="d4" xml:space="preserve"/>
       <data key="d6">
         <y:UMLClassNode>
-          <y:Geometry height="101.0" width="184.0" x="710.4849999999997" y="661.1019999999997"/>
+          <y:Geometry height="101.0" width="184.0" x="710.4849999999997" y="671.1019999999995"/>
           <y:Fill color="#FFCC00" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
           <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="13" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="21.706016540527344" horizontalTextPosition="center" iconTextGap="4" modelName="custom" textColor="#000000" verticalTextPosition="bottom" visible="true" width="140.81210327148438" x="21.593948364257812" xml:space="preserve" y="3.0">EntityManager&lt;D, V&gt;<y:LabelModel><y:SmartNodeLabelModel distance="4.0"/></y:LabelModel><y:ModelParameter><y:SmartNodeLabelModelParameter labelRatioX="0.0" labelRatioY="0.0" nodeRatioX="0.0" nodeRatioY="-0.005249704633440266" offsetX="0.0" offsetY="0.0" upX="0.0" upY="-1.0"/></y:ModelParameter></y:NodeLabel>
@@ -34,7 +34,7 @@
       <data key="d4" xml:space="preserve"/>
       <data key="d6">
         <y:UMLClassNode>
-          <y:Geometry height="101.00000000000011" width="195.0" x="929.4849999999997" y="661.1019999999999"/>
+          <y:Geometry height="101.00000000000011" width="195.0" x="929.4849999999997" y="671.1019999999996"/>
           <y:Fill color="#FFCC00" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
           <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="13" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="21.706016540527344" horizontalTextPosition="center" iconTextGap="4" modelName="custom" textColor="#000000" verticalTextPosition="bottom" visible="true" width="140.006103515625" x="27.4969482421875" xml:space="preserve" y="3.0">ResultSetMapper&lt;D&gt;<y:LabelModel><y:SmartNodeLabelModel distance="4.0"/></y:LabelModel><y:ModelParameter><y:SmartNodeLabelModelParameter labelRatioX="0.0" labelRatioY="0.0" nodeRatioX="0.0" nodeRatioY="0.0" offsetX="0.0" offsetY="0.0" upX="0.0" upY="-1.0"/></y:ModelParameter></y:NodeLabel>
@@ -156,7 +156,7 @@ delete(domains: Stream&lt;D&gt;) : int</y:MethodLabel>
       <data key="d4" xml:space="preserve"/>
       <data key="d6">
         <y:UMLClassNode>
-          <y:Geometry height="150.15999999999985" width="262.0" x="404.4224999999997" y="611.9419999999999"/>
+          <y:Geometry height="160.15999999999985" width="262.0" x="404.4224999999997" y="611.9419999999999"/>
           <y:Fill color="#FFCC00" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
           <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="13" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="21.706016540527344" horizontalTextPosition="center" iconTextGap="4" modelName="custom" textColor="#000000" verticalTextPosition="bottom" visible="true" width="154.38414001464844" x="53.80792999267578" xml:space="preserve" y="3.0">SelectQuery&lt;DOMAIN&gt;<y:LabelModel><y:SmartNodeLabelModel distance="4.0"/></y:LabelModel><y:ModelParameter><y:SmartNodeLabelModelParameter labelRatioX="0.0" labelRatioY="0.0" nodeRatioX="0.0" nodeRatioY="0.0" offsetX="0.0" offsetY="0.0" upX="0.0" upY="-1.0"/></y:ModelParameter></y:NodeLabel>
@@ -166,6 +166,7 @@ delete(domains: Stream&lt;D&gt;) : int</y:MethodLabel>
 column(key: Key[*]): SelectQuery
 where(condition: Criterion): SelectQuery
 tail(sqlTail: CharSequence): SelectQuery
+toList(): D[*]
 «static» &lt;R&gt; run(connection: Connection,
     fun: SqlFunction&lt;SelectQuery, R&gt;) : R</y:MethodLabel>
           </y:UML>
@@ -176,7 +177,7 @@ tail(sqlTail: CharSequence): SelectQuery
       <data key="d4" xml:space="preserve"/>
       <data key="d6">
         <y:UMLNoteNode>
-          <y:Geometry height="160.15999999999985" width="104.0" x="270.4224999999997" y="601.9419999999999"/>
+          <y:Geometry height="160.15999999999985" width="104.0" x="270.4224999999997" y="611.9419999999999"/>
           <y:Fill hasColor="false" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
           <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="134.75291442871094" horizontalTextPosition="center" iconTextGap="4" modelName="custom" textColor="#000000" verticalTextPosition="bottom" visible="true" width="97.57667541503906" x="3.2116622924804688" xml:space="preserve" y="12.703542785644458">Type-safe fluent 
@@ -246,7 +247,7 @@ and JOINs.<y:LabelModel><y:SmartNodeLabelModel distance="4.0"/></y:LabelModel><y
           <y:Path sx="80.33206349206382" sy="-19.795999999999626" tx="-59.98499999999967" ty="57.17999999999995"/>
           <y:LineStyle color="#000000" type="dashed" width="1.0"/>
           <y:Arrows source="none" target="plain"/>
-          <y:EdgeLabel alignment="center" configuration="AutoFlippingLabel" distance="2.0" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="20.344114303588867" horizontalTextPosition="center" iconTextGap="4" modelName="six_pos" modelPosition="tail" preferredPlacement="anywhere" ratio="0.5" textColor="#000000" verticalTextPosition="bottom" visible="true" width="45.064300537109375" x="1.9200075819549056" xml:space="preserve" y="-78.81518312835703">creates<y:PreferredPlacementDescriptor angle="0.0" angleOffsetOnRightSide="0" angleReference="absolute" angleRotationOnRightSide="co" distance="-1.0" frozen="true" placement="anywhere" side="anywhere" sideReference="relative_to_edge_flow"/></y:EdgeLabel>
+          <y:EdgeLabel alignment="center" configuration="AutoFlippingLabel" distance="2.0" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="20.344114303588867" horizontalTextPosition="center" iconTextGap="4" modelName="six_pos" modelPosition="tail" preferredPlacement="anywhere" ratio="0.5" textColor="#000000" verticalTextPosition="bottom" visible="true" width="45.064300537109375" x="1.916786588566879" xml:space="preserve" y="-83.7894873275759">creates<y:PreferredPlacementDescriptor angle="0.0" angleOffsetOnRightSide="0" angleReference="absolute" angleRotationOnRightSide="co" distance="-1.0" frozen="true" placement="anywhere" side="anywhere" sideReference="relative_to_edge_flow"/></y:EdgeLabel>
           <y:BendStyle smoothed="false"/>
         </y:PolyLineEdge>
       </data>
@@ -294,7 +295,7 @@ and JOINs.<y:LabelModel><y:SmartNodeLabelModel distance="4.0"/></y:LabelModel><y
     <edge id="e10" source="n8" target="n2">
       <data key="d10">
         <y:PolyLineEdge>
-          <y:Path sx="-4.413196721311124" sy="9.97800000000018" tx="70.08680327868888" ty="24.138000000000034"/>
+          <y:Path sx="-4.413196721311124" sy="10.642491209376857" tx="70.08680327868888" ty="24.138000000000034"/>
           <y:LineStyle color="#000000" type="line" width="1.0"/>
           <y:Arrows source="none" target="white_delta"/>
           <y:BendStyle smoothed="false"/>
@@ -304,7 +305,7 @@ and JOINs.<y:LabelModel><y:SmartNodeLabelModel distance="4.0"/></y:LabelModel><y
     <edge id="e11" source="n8" target="n0">
       <data key="d10">
         <y:PolyLineEdge>
-          <y:Path sx="92.95250000000033" sy="38.97800000000018" tx="-10.20761904761873" ty="14.398000000000252"/>
+          <y:Path sx="92.95250000000033" sy="41.57376451784781" tx="-10.20761904761873" ty="14.398000000000252"/>
           <y:LineStyle color="#000000" type="line" width="1.0"/>
           <y:Arrows source="white_diamond" target="none"/>
           <y:BendStyle smoothed="false"/>
@@ -314,7 +315,7 @@ and JOINs.<y:LabelModel><y:SmartNodeLabelModel distance="4.0"/></y:LabelModel><y
     <edge id="e12" source="n8" target="n9">
       <data key="d10">
         <y:PolyLineEdge>
-          <y:Path sx="-68.83942622950785" sy="0.0" tx="-2.9849999999996726" ty="5.0"/>
+          <y:Path sx="-68.83942622950785" sy="0.0" tx="-2.9849999999996726" ty="4.999999999999999"/>
           <y:LineStyle color="#000000" type="dashed" width="1.0"/>
           <y:Arrows source="none" target="none"/>
           <y:BendStyle smoothed="false"/>
