@@ -195,10 +195,6 @@ You can run and modify this test locally: [TutorialTest.java](project-m2/ujo-orm
   <img src="docs/images/OrmApi.svg" width="700" height="400" alt="OrmApi Class Diagram">
 </p>
 
-* **SqlQuery:**
-  A facade over the `PreparedStatement` with no external dependencies, supporting named parameters.
-  It ensures safe parameter binding and automatic database resource cleanup.
-  It enables flexible mapping of columns to metamodel keys using text labels.
 * **SelectQuery:**
   A type-safe builder for constructing SELECT statements directly from the domain model using a fluent API.
   It automatically generates `FROM` and `JOIN` clauses based on the paths of used metamodel attributes.
@@ -217,9 +213,9 @@ If missing, it attempts to derive them automatically.
 M:1 relationships are recognized if an attribute's class has a `@Table` annotation.
 
 Which class should you use?
-Use `SqlQuery` for most typical `SELECT` statements.
+Use `SelectQuery` for all standard data reading to gain full type safety and automatic table joins.
 Use `EntityManager` for operations on domain objects by primary key.
-All other use cases are covered by the `SqlBuilder` class.
+For specific cases requiring native SQL, the low-level `SqlQuery` interface is available (not shown in the diagram).
 
 ### Caching Strategy
 
