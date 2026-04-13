@@ -314,7 +314,7 @@ public class SelectQuery<D> extends AbstractSqlQuery<SelectQuery<D>> {
             var key = (Key<?, ?>) criterion.getLeftNode();
             var operator = criterion.getOperator();
             var value = criterion.getRightNode();
-            var jdbcType = JdbcUtils.findJdbcType(key.type());
+            var jdbcType = JdbcUtils.findJdbcType(key);
 
             switch (operator) {
                 case ALWAYS_TRUE, ALWAYS_FALSE -> writer.append(operator.term());

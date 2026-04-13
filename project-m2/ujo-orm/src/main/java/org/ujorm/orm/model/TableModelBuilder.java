@@ -234,9 +234,9 @@ public class TableModelBuilder<D> {
             var foreignHandler = DomainHandlerProvider.getHandler(key.type());
             var acceptDefaultPk = config.acceptDefaultPk();
             foreignKey = foreignHandler.findPrimaryKey(acceptDefaultPk);
-            jdbcType = JdbcUtils.findJdbcType(foreignKey.type());
+            jdbcType = JdbcUtils.findJdbcType(foreignKey);
         } else {
-            jdbcType = JdbcUtils.findJdbcType(key.type());
+            jdbcType = JdbcUtils.findJdbcType(key);
         }
         Objects.requireNonNull(jdbcType, () -> "No jdbcType found for " + key.fullName());
         var columnName = dbColumMapLowerCase.get(key.info().columnLabel().toLowerCase(Locale.ENGLISH));

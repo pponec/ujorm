@@ -4,6 +4,7 @@ package org.ujorm.orm.utils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.ujorm.core.DomainHandler;
+import org.ujorm.core.Key;
 import org.ujorm.tools.jdbc.SQLExceptionBuilder;
 
 import java.sql.JDBCType;
@@ -13,7 +14,6 @@ import java.util.Iterator;
 import java.util.Objects;
 import java.util.Spliterator;
 import java.util.Spliterators;
-import java.util.function.Consumer;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
@@ -59,8 +59,8 @@ public final class JdbcUtils {
         return result;
     }
 
-    public static JDBCType findJdbcType(Class<?> clazz) {
-        return JDBC.findJdbcType(clazz);
+    public static @NotNull JDBCType findJdbcType(@NotNull Key<?,?> key) {
+        return JDBC.findJdbcType(key);
     }
 
     /** Build a property change set */
