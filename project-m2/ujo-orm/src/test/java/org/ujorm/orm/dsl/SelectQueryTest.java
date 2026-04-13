@@ -101,6 +101,43 @@ class SelectQueryTest extends AbstractDatabaseTest {
         }
     }
 
+    /** Test query without logging using FINEST level */
+    @Test
+    void testLogOffByFinest() {
+        var logger = java.util.logging.Logger.getLogger(org.ujorm.tools.jdbc.AbstractSqlQuery.class.getName());
+        var logRecords = new java.util.ArrayList<java.util.logging.LogRecord>();
+        var handler = new java.util.logging.Handler() {
+            @Override
+            public void publish(java.util.logging.LogRecord record) {
+                logRecords.add(record);
+            }
+            @Override public void flush() {}
+            @Override public void close() throws SecurityException {}
+        };
+
+        var originalLevel = logger.getLevel();
+        logger.setLevel(java.util.logging.Level.INFO);
+        logger.addHandler(handler);
+
+        try (var query = new SelectQuery<>(connection(), entityManager)) {
+            query.log(java.util.logging.Level.FINEST, false);
+            query.sql("SELECT COUNT(*)").where(QEmployee.id.whereGt(1L));
+
+            // Execute the query:
+            var count = query.streamMap(rs -> rs.getInt(1)).findFirst().orElseThrow();
+            org.junit.jupiter.api.Assertions.assertEquals(0, count.intValue());
+
+            var hasLogs = logRecords.stream()
+                    .anyMatch(record -> record.getMessage() != null && record.getMessage().contains("SELECT COUNT(*)"));
+
+            org.junit.jupiter.api.Assertions.assertFalse(hasLogs,
+                    "SQL should NOT be logged when level is FINEST and logger is set to INFO.");
+        } finally {
+            logger.removeHandler(handler);
+            logger.setLevel(originalLevel);
+        }
+    }
+
     // -------------
 
     /** Initialize database schema */
