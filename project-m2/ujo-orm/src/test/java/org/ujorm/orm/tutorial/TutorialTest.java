@@ -2,7 +2,7 @@ package org.ujorm.orm.tutorial;
 
 import org.junit.jupiter.api.*;
 import org.ujorm.orm.core.EntityManager;
-import org.ujorm.orm.dsl.DslQuery;
+import org.ujorm.orm.dsl.SelectQuery;
 import org.ujorm.orm.jdbc.ResultSetMapper;
 import org.ujorm.orm.tutorial.domains.*;
 import org.ujorm.orm.SqlQuery;
@@ -107,8 +107,8 @@ class TutorialTest extends AbstractDemo {
     /** DSL select by the column method. */
     @Test
     @Order(220)
-    void select_by_dsl() {
-        var employees = DslQuery.run(connection(), EMPLOYEE_EM, query -> query
+    void select_query() {
+        var employees = SelectQuery.run(connection(), EMPLOYEE_EM, query -> query
                 .sql("SELECT")
                 .columnsOfDomain(true)
                 .column(MetaEmployee.city, MetaCity.name)
@@ -164,7 +164,7 @@ class TutorialTest extends AbstractDemo {
         var qBossId = MetaEmployee.as("b").key(MetaEmployee.id);
         var criterion = MetaEmployee.id.whereGe(1L);
 
-        try (var query = new DslQuery<>(connection(), EMPLOYEE_EM)) {
+        try (var query = new SelectQuery<>(connection(), EMPLOYEE_EM)) {
             var employees = query.sql("SELECT")
                     .column(MetaEmployee.id)
                     .column(MetaEmployee.boss, qBossId) // Build the relation

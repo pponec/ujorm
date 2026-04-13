@@ -2,6 +2,7 @@ package org.ujorm.orm;
 
 import org.jetbrains.annotations.NotNull;
 import org.ujorm.core.csv.CsvConfig;
+import org.ujorm.orm.dsl.SelectQuery;
 import org.ujorm.tools.common.Primitive;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
@@ -12,7 +13,7 @@ import java.util.logging.Logger;
 
 /** ORM Configuration */
 public class Config {
-    /** The class {@link org.ujorm.orm.dsl.DslQuery} enables only SQL SELECT statements. */
+    /** The class {@link SelectQuery} enables only SQL SELECT statements. */
     public static final boolean DSL_SELECT_ONLY = true;
 
     private static final Logger LOGGER = Logger.getLogger(Config.class.getName());

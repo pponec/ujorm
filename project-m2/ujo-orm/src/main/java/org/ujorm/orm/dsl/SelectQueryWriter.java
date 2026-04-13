@@ -29,7 +29,7 @@ import org.ujorm.tools.jdbc.SQLException;
  *
  * @since 2.26
  */
-public interface DslQueryWriter {
+public interface SelectQueryWriter {
 
     /** Write database table name. */
     void writeTableName(@NotNull String tableAlias, @NotNull Class<?> entityClass);

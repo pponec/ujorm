@@ -33,7 +33,7 @@ import java.util.*;
  *
  * @since 2.26
  */
-public class DslQueryBuilder implements AutoCloseable {
+public class SelectQueryBuilder implements AutoCloseable {
 
     /** New Line Character */
     private static final char NEW_LINE = '\n';
@@ -60,14 +60,14 @@ public class DslQueryBuilder implements AutoCloseable {
     private String baseTableAlias;
 
     /** DSL Writer */
-    private final DslQueryWriter dslWriter;
+    private final SelectQueryWriter selectWriter;
 
     @NotNull
     private Criterion criterion = Criterion.forAll();
 
     /** Constructor */
-    public DslQueryBuilder(@NotNull DslQueryWriter dslWriter) {
-        this.dslWriter = dslWriter;
+    public SelectQueryBuilder(@NotNull SelectQueryWriter selectWriter) {
+        this.selectWriter = selectWriter;
     }
 
     /** Adds a description of a single column composed of sequentially linked components. */
@@ -82,7 +82,7 @@ public class DslQueryBuilder implements AutoCloseable {
 
     /** Build the query */
     public StringBuilder build() {
-        var result = dslWriter.append("");
+        var result = selectWriter.append("");
         if (result.isEmpty()) {
             result.append("SELECT");
         }
@@ -145,9 +145,9 @@ public class DslQueryBuilder implements AutoCloseable {
 
             // Centralized logic for column prefixes:
             if (colIdx > 0) {
-                dslWriter.append(NEW_LINE).append(", ");
+                selectWriter.append(NEW_LINE).append(", ");
             } else {
-                dslWriter.append(SPACE);
+                selectWriter.append(SPACE);
             }
 
             var finalKey = keyPath[keyPath.length - 1];
@@ -155,7 +155,7 @@ public class DslQueryBuilder implements AutoCloseable {
                     ? currentAlias
                     : finalKey.tableAlias();
 
-            dslWriter.writeColumnName(finalAlias, finalKey, keyPath);
+            selectWriter.writeColumnName(finalAlias, finalKey, keyPath);
         }
     }
 
@@ -175,19 +175,19 @@ public class DslQueryBuilder implements AutoCloseable {
             baseTableAlias = generateAlias(entityClass.getSimpleName());
         }
 
-        dslWriter.append(NEW_LINE).append("FROM ");
-        dslWriter.writeTableName(baseTableAlias, entityClass);
+        selectWriter.append(NEW_LINE).append("FROM ");
+        selectWriter.writeTableName(baseTableAlias, entityClass);
     }
 
     /** Inner/outer joins according to isRequired method */
     public void buildJoins() {
         for (var join : joins) {
-            dslWriter.append(NEW_LINE).append(join.required() ? "JOIN " : "LEFT JOIN ");
-            dslWriter.writeTableName(join.targetAlias(), join.targetClass());
-            dslWriter.append(" ON ");
-            dslWriter.writeColumnName(join.targetAlias(), findRelatedPrimaryKey(join.relationKey()));
-            dslWriter.append(" = ");
-            dslWriter.writeColumnName(join.sourceAlias(), join.relationKey());
+            selectWriter.append(NEW_LINE).append(join.required() ? "JOIN " : "LEFT JOIN ");
+            selectWriter.writeTableName(join.targetAlias(), join.targetClass());
+            selectWriter.append(" ON ");
+            selectWriter.writeColumnName(join.targetAlias(), findRelatedPrimaryKey(join.relationKey()));
+            selectWriter.append(" = ");
+            selectWriter.writeColumnName(join.sourceAlias(), join.relationKey());
         }
     }
 
@@ -197,7 +197,7 @@ public class DslQueryBuilder implements AutoCloseable {
             switch (valCrn.getOperator()) {
                 case ALWAYS_TRUE -> { return; }
                 case ALWAYS_FALSE -> {
-                    dslWriter.append(NEW_LINE).append("WHERE ")
+                    selectWriter.append(NEW_LINE).append("WHERE ")
                             .append(getSqlOperatorText(valCrn.getOperator()));
                     return;
                 }
@@ -205,7 +205,7 @@ public class DslQueryBuilder implements AutoCloseable {
             }
         }
 
-        dslWriter.append(NEW_LINE).append("WHERE ");
+        selectWriter.append(NEW_LINE).append("WHERE ");
         buildCriterionTree(this.criterion, true);
     }
 
@@ -213,16 +213,16 @@ public class DslQueryBuilder implements AutoCloseable {
     private void buildCriterionTree(Criterion crn, boolean isRoot) {
         if (crn instanceof ValueCriterion<?> valCrn) {
             var alias = findTableAlias(valCrn.getLeftNode());
-            dslWriter.writeCondition(valCrn, alias);
+            selectWriter.writeCondition(valCrn, alias);
         } else if (crn instanceof BinaryCriterion binCrn) {
             if (!isRoot) {
-                dslWriter.append("(");
+                selectWriter.append("(");
             }
             buildCriterionTree(binCrn.getLeftNode(), false);
-            dslWriter.append(SPACE).append(getSqlOperatorText(binCrn.getOperator())).append(SPACE);
+            selectWriter.append(SPACE).append(getSqlOperatorText(binCrn.getOperator())).append(SPACE);
             buildCriterionTree(binCrn.getRightNode(), false);
             if (!isRoot) {
-                dslWriter.append(")");
+                selectWriter.append(")");
             }
         } else {
             throw new IllegalArgumentException("Unsupported criterion: " + crn);

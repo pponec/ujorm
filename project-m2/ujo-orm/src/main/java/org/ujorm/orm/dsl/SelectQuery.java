@@ -43,28 +43,22 @@ import java.util.List;
  *
  * <h4>Sample of usage</h4>
  * <pre>
- *  List&lt;Employee&gt; employees = SqlQuery.run(dbConnection, build -> build.sql("""
- *         SELECT t.id, t.name, t.created
- *         FROM employee t
- *         WHERE t.id > :id
- *           AND t.code IN (:code)
- *         ORDER BY t.id
- *         """)
- *         .bind("id", 10)
- *         .bind("code", "T", "V")
- *         .streamMap(rs -> new Employee(
- *                 rs.getInt("id"),
- *                 rs.getString("name"),
- *                 rs.getObject("created", LocalDate.class)))
- *         .toList()
- * }
+ * var employees = SelectQuery.run(connection(), EMPLOYEE_EM, query -> query
+ *    .sql("SELECT")
+ *    .columnsOfDomain(true)
+ *    .column(MetaEmployee.city, MetaCity.name)
+ *    .column(MetaEmployee.city, MetaCity.countryCode)
+ *    .where(MetaEmployee.id.whereGe(1L))
+ *    .tail("ORDER BY", MetaEmployee.id)
+ *    .streamMap(EMPLOYEE_MAPPER.mapper())
+ *    .toList()
+ * );
  * </pre>
  * Licence: Apache License, Version 2.0
- * Original source: <a href="https://github.com/pponec/PPScriptsForJava/blob/development/src/main/java/net/ponec/script/SqlExecutor.java">GitHub</a>
  * @author Pavel Ponec, https://github.com/pponec
- * @since 2.26
+ * @since 3.0
  */
-public class DslQuery<D> extends AbstractSqlQuery<DslQuery<D>> {
+public class SelectQuery<D> extends AbstractSqlQuery<SelectQuery<D>> {
 
     /** Empty key array */
     private static final Key<?,?>[] EMPTY = new Key<?,?>[0];
@@ -73,10 +67,10 @@ public class DslQuery<D> extends AbstractSqlQuery<DslQuery<D>> {
     private final EntityManager<D,?> entityManager;
 
     /** Columns */
-    private final DslQueryBuilder builder;
+    private final SelectQueryBuilder builder;
 
     /** Columns */
-    private final DslWriter dslWriter;
+    private final SelectWriter dslWriter;
 
     /** Column quotes */
     @NotNull
@@ -97,10 +91,10 @@ public class DslQuery<D> extends AbstractSqlQuery<DslQuery<D>> {
      * Constructor with a database connection
      * @param dbConnection A database connection
      */
-    public DslQuery(@NotNull Connection dbConnection, @NotNull EntityManager<D, ?> entityManager) {
+    public SelectQuery(@NotNull Connection dbConnection, @NotNull EntityManager<D, ?> entityManager) {
         super(dbConnection);
-        this.dslWriter = new DslWriter(getWriter(true));
-        this.builder = new DslQueryBuilder(dslWriter);
+        this.dslWriter = new SelectWriter(getWriter(true));
+        this.builder = new SelectQueryBuilder(dslWriter);
         this.entityManager = entityManager;
         var config = entityManager.getConfig();
         this.log(config.getLogSqlLevel(), config.isLogSqlParams());
@@ -117,14 +111,14 @@ public class DslQuery<D> extends AbstractSqlQuery<DslQuery<D>> {
 
     /** Head of the SQL where default is SELECT. */
     @Override
-    public DslQuery<D> sql(@NotNull CharSequence... sqlHead) {
+    public SelectQuery<D> sql(@NotNull CharSequence... sqlHead) {
         super.sql("");
         this.sqlHead = sqlHead;
         return self();
     }
 
     /** Write a SQL condition. */
-    public DslQuery<D> where (@NotNull Criterion criterion) {
+    public SelectQuery<D> where (@NotNull Criterion criterion) {
         this.builder.where(criterion);
         return self();
     }
@@ -145,7 +139,7 @@ public class DslQuery<D> extends AbstractSqlQuery<DslQuery<D>> {
      * @param sqlTail SQL fragments or Meta objects (e.g. {@code Key})
      * @return The same instance
      */
-    public DslQuery<D> tail(@NotNull CharSequence... sqlTail) {
+    public SelectQuery<D> tail(@NotNull CharSequence... sqlTail) {
         this.sqlTail = sqlTail;
         return self();
     }
@@ -153,7 +147,7 @@ public class DslQuery<D> extends AbstractSqlQuery<DslQuery<D>> {
     // ------- COLUMNS -------
 
     /** Add all properties of the main domain objects */
-    public DslQuery<D> columnsOfDomain(boolean includingForeignKeys) {
+    public SelectQuery<D> columnsOfDomain(boolean includingForeignKeys) {
         for (Key<D,?> key : entityManager.getDomainHandler().getKeyList()) {
             if (includingForeignKeys || !key.info().foreignKey()) {
                 this.builder.column(key);
@@ -167,7 +161,7 @@ public class DslQuery<D> extends AbstractSqlQuery<DslQuery<D>> {
      * The provided metamodel attributes define a type-safe path to the specific property
      * (e.g., entity -> relation -> property) and are concatenated to form the final SQL column label.
      */
-    public DslQuery<D> column(@NotNull Key<?,?> attr) {
+    public SelectQuery<D> column(@NotNull Key<?,?> attr) {
         return putColumn(EMPTY, attr);
     }
 
@@ -176,8 +170,8 @@ public class DslQuery<D> extends AbstractSqlQuery<DslQuery<D>> {
      * The provided metamodel attributes define a type-safe path to the specific property
      * (e.g., entity -> relation -> property) and are concatenated to form the final SQL column label.
      */
-    public <V1> DslQuery<D> column(@NotNull Key<D,V1> attr1,
-                                   @NotNull Key<V1,?> attr2) {
+    public <V1> SelectQuery<D> column(@NotNull Key<D,V1> attr1,
+                                      @NotNull Key<V1,?> attr2) {
         return putColumn(EMPTY, attr1, attr2);
     }
 
@@ -186,9 +180,9 @@ public class DslQuery<D> extends AbstractSqlQuery<DslQuery<D>> {
      * The provided metamodel attributes define a type-safe path to the specific property
      * (e.g., entity -> relation -> property) and are concatenated to form the final SQL column label.
      */
-    public <V1,V2> DslQuery<D> column(@NotNull Key<D,V1> attr1,
-                                      @NotNull Key<V1,V2> attr2,
-                                      @NotNull Key<V2,?> attr3) {
+    public <V1,V2> SelectQuery<D> column(@NotNull Key<D,V1> attr1,
+                                         @NotNull Key<V1,V2> attr2,
+                                         @NotNull Key<V2,?> attr3) {
         return putColumn(EMPTY, attr1, attr2, attr3);
     }
 
@@ -198,16 +192,16 @@ public class DslQuery<D> extends AbstractSqlQuery<DslQuery<D>> {
      * (e.g., entity -> relation -> property) and are concatenated to form the final SQL column label.
      */
     @SafeVarargs
-    public final <V1,V2,V3> DslQuery<D> column(@NotNull Key<D,V1> attr1,
-                                               @NotNull Key<V1,V2> attr2,
-                                               @NotNull Key<V2,V3> attr3,
-                                               @NotNull Key<V3,?> attr4,
-                                               @NotNull Key<?,?>... attrs) {
+    public final <V1,V2,V3> SelectQuery<D> column(@NotNull Key<D,V1> attr1,
+                                                  @NotNull Key<V1,V2> attr2,
+                                                  @NotNull Key<V2,V3> attr3,
+                                                  @NotNull Key<V3,?> attr4,
+                                                  @NotNull Key<?,?>... attrs) {
         return putColumn(attrs, attr1, attr2, attr3, attr4);
     }
 
     /** Validates and adds an expression to the internal map */
-    DslQuery<D> putColumn(
+    SelectQuery<D> putColumn(
             @NotNull Key<?,?>[] attrs,
             @NotNull Key<?,?>... keys
     ) {
@@ -267,11 +261,11 @@ public class DslQuery<D> extends AbstractSqlQuery<DslQuery<D>> {
 
     // --- INNER CLASSES ---
 
-    public final class DslWriter implements DslQueryWriter {
+    public final class SelectWriter implements SelectQueryWriter {
 
         final StringBuilder writer;
 
-        public DslWriter(StringBuilder writer) {
+        public SelectWriter(StringBuilder writer) {
             this.writer = writer;
         }
 
@@ -377,8 +371,8 @@ public class DslQuery<D> extends AbstractSqlQuery<DslQuery<D>> {
     // --- STATIC METHODS ---
 
     /** Run a query statement */
-    public static <D, R> R run(Connection connection, EntityManager<D, ?> em, SqlFunction<DslQuery<D>, R> fun) {
-        try (var query = new DslQuery<D>(connection, em)) {
+    public static <D, R> R run(Connection connection, EntityManager<D, ?> em, SqlFunction<SelectQuery<D>, R> fun) {
+        try (var query = new SelectQuery<D>(connection, em)) {
             return fun.applyFunction(query);
         } catch (Exception ex) {
             throw (ex instanceof RuntimeException re) ? re : SQLExceptionBuilder.build(ex);

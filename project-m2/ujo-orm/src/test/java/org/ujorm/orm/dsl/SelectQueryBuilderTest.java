@@ -14,7 +14,7 @@ import org.ujorm.orm.dsl.meta.*;
 import org.ujorm.orm.utils.Lines;
 import static org.junit.jupiter.api.Assertions.*;
 
-class DslQueryBuilderTest {
+class SelectQueryBuilderTest {
 
     private final StringBuilder writer = new StringBuilder(256);
 
@@ -176,8 +176,8 @@ class DslQueryBuilderTest {
         assertEquals("FROM [Object] o"   , sql.next());
     }
 
-    private @NotNull DslQueryBuilder getBuilder() {
-        return new DslQueryBuilder(new DslQueryWriterTestImpl(writer));
+    private @NotNull SelectQueryBuilder getBuilder() {
+        return new SelectQueryBuilder(new SelectQueryWriterTestImpl(writer));
     }
 
     /** Test that CUSTOM_SQL template correctly replaces the placeholder with the column name */
@@ -224,7 +224,7 @@ class DslQueryBuilderTest {
 
     /** Query writer implementation for testing */
     @RequiredArgsConstructor
-    static class DslQueryWriterTestImpl implements DslQueryWriter {
+    static class SelectQueryWriterTestImpl implements SelectQueryWriter {
 
         final StringBuilder writer;
         final QuotePair q = QuotePair.ofMsSqlServer();

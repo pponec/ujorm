@@ -8,7 +8,7 @@ import org.ujorm.orm.dsl.meta.*;
 
 import java.sql.Connection;
 
-class DslQueryDemoTest {
+class SelectQueryDemoTest {
 
 
     private EntityContext ctx = EntityContext.ofDefault();
@@ -19,7 +19,7 @@ class DslQueryDemoTest {
     /** @Test  : Only demo */
     void demo() {
 
-        var select = new DslQuery<>(connection(), employeeEm);
+        var select = new SelectQuery<>(connection(), employeeEm);
         select.column(QEmployee.id)
                 .column(QEmployee.name)
                 .column(QEmployee.city, QCity.name)
@@ -52,7 +52,7 @@ class DslQueryDemoTest {
     /** @Test  : Only demo */
     void count() {
 
-        var select = new DslQuery<Employee>(connection(), employeeEm);
+        var select = new SelectQuery<Employee>(connection(), employeeEm);
         select.sql("SELECT COUNT(*)")
                 .where(QEmployee.id.whereGt(1L))
                 .tail("ORDER BY", QEmployee.id, "DESC" );

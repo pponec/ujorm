@@ -76,7 +76,7 @@ Entities do not need to be registered beforehand, and multiple classes can map t
 
 ### SELECT
 
-The library offers a type-safe `DslQuery` builder for constructing SQL queries smoothly in Java, while still fully supporting the classic `SqlQuery` for writing raw native SQL.
+The library offers a type-safe `SelectQuery` builder for constructing SQL queries smoothly in Java, while still fully supporting the classic `SqlQuery` for writing raw native SQL.
 Both approaches utilize the generated `Meta` classes for mapping and aliases, preventing SQL typos and ensuring compile-time safety.
 Because the library intentionally avoids lazy-loading, the explicit conversion from the `ResultSet` to the domain object inherently prevents the N+1 query problem.
 
@@ -85,7 +85,7 @@ static final ResultSetMapper<Employee> EMPLOYEE_MAPPER = ResultSetMapper.of(Empl
 
 /** Select demonstration */
 List<Employee> select() {
-    return DslQuery.run(connection(), EMPLOYEE_EM, query -> query
+    return SelectQuery.run(connection(), EMPLOYEE_EM, query -> query
             .sql("SELECT")
             .columnsOfDomain(true)
             .column(MetaEmployee.city, MetaCity.name)
@@ -106,7 +106,7 @@ The individual approaches differ only in the way the SQL query is constructed.
 Regardless of the chosen approach, the database columns are ultimately mapped to entities using column aliases in the format: `"city.name"`.
 The resulting `ResultSet` is also mapped to entities using this same mechanism via the **`ResultSetMapper`** class.
 
-A more detailed overview of the available query options, including advanced use cases of `SqlQuery` and other implementations of `DslQuery`, can be found in the [TutorialTest.java](project-m2/ujo-orm/src/test/java/org/ujorm/orm/tutorial/TutorialTest.java) class.
+A more detailed overview of the available query options, including advanced use cases of `SqlQuery` and other implementations of `SelectQuery`, can be found in the [TutorialTest.java](project-m2/ujo-orm/src/test/java/org/ujorm/orm/tutorial/TutorialTest.java) class.
 
 ### INSERT
 
@@ -161,7 +161,7 @@ If the original version of the domain object is provided, the library automatica
 ### DELETE
 
 To maintain database integrity, entities must often be deleted in a specific order (e.g., subordinates before their bosses).
-The `DslQuery` class provides a type-safe way to fetch entities with the necessary ordering.
+The `SelectQuery` class provides a type-safe way to fetch entities with the necessary ordering.
 Using the `tail` method, you can append native SQL fragments like `ORDER BY` to ensure that self-referencing relationships are handled correctly during bulk deletion.
 
 ```java
@@ -170,7 +170,7 @@ void delete() {
     var qBossId = MetaEmployee.as("b").key(MetaEmployee.id);
     var criterion = MetaEmployee.id.whereGe(1L);
 
-    try (var query = new DslQuery<>(connection(), EMPLOYEE_EM)) {
+    try (var query = new SelectQuery<>(connection(), EMPLOYEE_EM)) {
         var employees = query.sql("SELECT")
                 .column(MetaEmployee.id)
                 .column(MetaEmployee.boss, qBossId) // Build the relation
@@ -195,13 +195,31 @@ You can run and modify this test locally: [TutorialTest.java](project-m2/ujo-orm
   <img src="docs/images/OrmApi.svg" width="700" height="400" alt="OrmApi Class Diagram">
 </p>
 
-* **SqlQuery:** A facade over `PreparedStatement` with no external dependencies; alternatively, use the `DslQuery` class for a more type-safe way to build SQL SELECT statements.
-* **ResultSetMapper:** Converts `Stream<ResultSet>` to objects (JavaBeans or Records).
-* **EntityManager:** The core component that handles mapping and creates `Crud` objects for standard operations.
+* **SqlQuery:**
+  A facade over the `PreparedStatement` with no external dependencies, supporting named parameters.
+  It ensures safe parameter binding and automatic database resource cleanup.
+  It enables flexible mapping of columns to metamodel keys using text labels.
+* **SelectQuery:**
+  A type-safe builder for constructing SELECT statements directly from the domain model using a fluent API.
+  It automatically generates `FROM` and `JOIN` clauses based on the paths of used metamodel attributes.
+  It integrates hierarchical `Criterion` trees for complex data filtering without manual SQL writing.
+* **ResultSetMapper:**
+  A universal tool for transforming `ResultSet` rows into Record or JavaBean objects.
+  It utilizes the Stream API for memory-efficient and lazy processing of query results.
+  It provides automatic type conversion between JDBC types and target class attributes.
+* **EntityManager:**
+  The central component responsible for managing metadata and configuring the ORM mapping.
+  It serves as a factory for creating `Crud` objects used for standard database operations.
+  It manages SQL logging configurations and defines rules for table and column quoting.
 
 Ujorm3 derives mapping from JPA/Jakarta annotations (`@Table`, `@Column`, `@Id`).
 If missing, it attempts to derive them automatically.
 M:1 relationships are recognized if an attribute's class has a `@Table` annotation.
+
+Which class should you use?
+Use `SqlQuery` for most typical `SELECT` statements.
+Use `EntityManager` for operations on domain objects by primary key.
+All other use cases are covered by the `SqlBuilder` class.
 
 ### Caching Strategy
 

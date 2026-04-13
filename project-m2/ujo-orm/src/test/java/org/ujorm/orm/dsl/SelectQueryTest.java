@@ -14,7 +14,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 /** DslQuery test class with shared connection */
-class DslQueryTest extends AbstractDatabaseTest {
+class SelectQueryTest extends AbstractDatabaseTest {
 
     private final EntityContext ctx = EntityContext.ofDefault();
     private final EntityManager<Employee, Long> entityManager = ctx.entityManager(Employee.class);
@@ -22,7 +22,7 @@ class DslQueryTest extends AbstractDatabaseTest {
 
     @Test
     void testSelectEmployeeWithCity() {
-        try (var query = new DslQuery<>(connection(), entityManager)) {
+        try (var query = new SelectQuery<>(connection(), entityManager)) {
             query.sql("SELECT")
                     .column(QEmployee.id)
                     .column(QEmployee.name)
@@ -56,7 +56,7 @@ class DslQueryTest extends AbstractDatabaseTest {
 
     @Test
     void testSelectCount() {
-        try (var query = new DslQuery<>(connection(), entityManager)) {
+        try (var query = new SelectQuery<>(connection(), entityManager)) {
             query.sql("SELECT COUNT(*)").where(QEmployee.id.whereGt(1L));
 
             var sqlValues = query.toString(); // Build the query.
@@ -80,7 +80,7 @@ class DslQueryTest extends AbstractDatabaseTest {
         if (Config.DSL_SELECT_ONLY) return;
 
         var employeeTable = QEmployee.as("emp");
-        try (var query = new DslQuery<>(connection(), entityManager)) {
+        try (var query = new SelectQuery<>(connection(), entityManager)) {
             query.sql("UPDATE", employeeTable,
                             "SET", employeeTable.key(QEmployee.name), "= :name")
                     .where(employeeTable.key(QEmployee.id).whereGt(1L))

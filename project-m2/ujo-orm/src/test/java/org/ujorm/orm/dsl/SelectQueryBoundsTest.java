@@ -7,11 +7,10 @@ import org.ujorm.core.criterion.Criterion;
 import org.ujorm.core.criterion.Operator;
 import org.ujorm.orm.dsl.meta.QCity;
 import org.ujorm.orm.dsl.meta.QEmployee;
-import org.ujorm.orm.tutorial.domains.*;
 import org.ujorm.orm.utils.Lines;
 import static org.junit.jupiter.api.Assertions.*;
 
-class DslQueryBoundsTest {
+class SelectQueryBoundsTest {
 
     private final StringBuilder writer = new StringBuilder(256);
 
@@ -98,9 +97,9 @@ class DslQueryBoundsTest {
         assertEquals("WHERE 1=0", sql.next());
     }
 
-    private @NotNull DslQueryBuilder createBuilder(String ...sql) {
-        var dslWriter = new DslQueryBuilderTest.DslQueryWriterTestImpl(writer);
+    private @NotNull SelectQueryBuilder createBuilder(String ...sql) {
+        var dslWriter = new SelectQueryBuilderTest.SelectQueryWriterTestImpl(writer);
         dslWriter.append(String.join(" ", sql));
-        return new DslQueryBuilder(dslWriter);
+        return new SelectQueryBuilder(dslWriter);
     }
 }
