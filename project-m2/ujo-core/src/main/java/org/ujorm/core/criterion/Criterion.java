@@ -115,11 +115,10 @@ public abstract class Criterion {
             var cNode = constL ? this : criterion;
             var oNode = constL ? criterion : this;
 
-            return switch (operator) {
-                case OR -> cNode.getOperator() == Operator.ALWAYS_TRUE ? cNode : oNode;
-                case AND -> cNode.getOperator() == Operator.ALWAYS_FALSE ? cNode : oNode;
-                default -> new BinaryCriterion(this, operator, criterion);
-            };
+            switch (operator) {
+                case OR: return cNode.getOperator() == Operator.ALWAYS_TRUE ? cNode : oNode;
+                case AND: return cNode.getOperator() == Operator.ALWAYS_FALSE ? cNode : oNode;
+            }
         }
         return new BinaryCriterion(this, operator, criterion);
     }
