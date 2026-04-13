@@ -320,7 +320,10 @@ Yes, `EntityManager` and `Meta` classes are stateless and thread-safe.
 `Crud` and `SqlQuery` are stateful and scoped to a single thread/request.
 
 **Does Ujorm3 support native SQL queries?**
-Yes. While the `SelectQuery` builder covers most operations type-safely, you can use the `SqlQuery` class to execute raw native SQL for complex or database-specific requirements. Crucially, Ujorm3 can still use its `ResultSetMapper` to automatically map the results of these native queries directly to your domain objects, eliminating the need for manual row-mapping boilerplate.
+Yes. you can use the `SqlQuery` class to execute raw native SQL for complex or database-specific requirements. 
+Crucially, Ujorm3 can still use its `ResultSetMapper` to automatically map the results of these native queries directly to your domain objects, eliminating the need for manual row-mapping boilerplate. 
+This feature actually eases the learning curve for newcomers; developers transitioning from JDBC or JDBI don't need to immediately master building complex `Criterion` trees. 
+They can start by writing complex queries in plain SQL via `SqlQuery`, benefit from the automatic mapping, and gradually transition to the type-safe `SelectQuery` at their own pace.
 
 
 **Is runtime bytecode generation secure?**
