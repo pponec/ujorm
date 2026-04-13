@@ -170,11 +170,11 @@ class SelectQueryBuilderCoverageTest {
             var operator = criterion.getOperator();
             if (operator == Operator.CUSTOM_SQL) {
                 var tv = (TemplateValue<?>) criterion.getRightNode();
-                var sql = tv.template().replace("{0}", q.open() + alias + "." + ((Key<?,?>)criterion.getLeftNode()).name() + q.close())
+                var sql = tv.template().replace("{0}", q.open() + alias + "." + criterion.getLeftNode().name() + q.close())
                         .replace("{1}", String.valueOf(tv.values().get(0)));
                 writer.append(sql);
             } else {
-                writeColumnName(alias, (Key<?, ?>) criterion.getLeftNode());
+                writeColumnName(alias, criterion.getLeftNode());
                 writer.append(" ").append(operator.name().equals("EQ") ? "=" : operator.name()).append(" ");
                 writer.append(criterion.getRightNode());
             }

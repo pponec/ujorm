@@ -34,7 +34,7 @@ public class TableModelService {
 
     private final DomainHandlerService domainService;
 
-    private Config config;
+    private final Config config;
 
     /** Public constructor */
     public TableModelService(DomainHandlerService domainService, Config config) {

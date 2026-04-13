@@ -13,7 +13,7 @@ import java.util.stream.Stream;
 /** Tests for partial updates using SnapshotProvider */
 class EntityManagerUpdateTest extends AbstractDaoTest {
 
-    private EntityContext ctx = EntityContext.ofDefault();
+    private final EntityContext ctx = EntityContext.ofDefault();
     private final Class<Long> idType = Long.class;
 
     /** Test partial updates of one or multiple entities */

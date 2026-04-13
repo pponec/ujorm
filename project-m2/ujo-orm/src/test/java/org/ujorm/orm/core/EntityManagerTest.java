@@ -12,7 +12,7 @@ import java.util.stream.Stream;
 
 class EntityManagerTest extends AbstractDaoTest {
 
-    private EntityContext ctx = EntityContext.ofDefault();
+    private final EntityContext ctx = EntityContext.ofDefault();
     private final Class<Long> pkType = Long.class;
 
     @Test

@@ -11,7 +11,7 @@ import java.time.LocalDate;
 /** Tests for partial updates using SnapshotProvider */
 class EntityManagerReadTest extends AbstractDaoTest {
 
-    private EntityContext ctx = EntityContext.ofDefault();
+    private final EntityContext ctx = EntityContext.ofDefault();
     private final Class<Long> idType = Long.class;
 
     @Test

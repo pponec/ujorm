@@ -76,7 +76,7 @@ class AbstractWriterTest {
 
         localWriter.writeNewLine(2);
 
-        var expectedResult = config.getNewLine().toString() + "    ";
+        var expectedResult = config.getNewLine() + "    ";
         assertEquals(expectedResult, out.toString());
     }
 

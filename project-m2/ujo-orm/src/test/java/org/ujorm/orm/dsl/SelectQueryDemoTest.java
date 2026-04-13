@@ -11,10 +11,10 @@ import java.sql.Connection;
 class SelectQueryDemoTest {
 
 
-    private EntityContext ctx = EntityContext.ofDefault();
-    private EntityManager<Employee, Long> employeeEm = ctx.entityManager(Employee.class);
-    private Employee emp = new Employee();
-    private QuotePair quotePair = QuotePair.ofMsSqlServer();
+    private final EntityContext ctx = EntityContext.ofDefault();
+    private final EntityManager<Employee, Long> employeeEm = ctx.entityManager(Employee.class);
+    private final Employee emp = new Employee();
+    private final QuotePair quotePair = QuotePair.ofMsSqlServer();
 
     /** @Test  : Only demo */
     void demo() {

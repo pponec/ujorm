@@ -16,7 +16,7 @@ import java.time.LocalDate;
 /** Tests a logic of column aliases processing in ResultSetMapper */
 class ResultSetMapperTestDb extends AbstractDaoTest {
 
-    private EntityContext ctx = EntityContext.ofDefault();
+    private final EntityContext ctx = EntityContext.ofDefault();
     private final Class<Long> idType = Long.class;
 
     City cityOriginal = null;

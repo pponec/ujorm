@@ -40,9 +40,9 @@ public class ValueCriterion<U> extends Criterion  {
     /** False constant criterion */
     public static final Criterion FALSE = new ValueCriterion<>(false);
 
-    private Key<U, Object> key;
-    private Operator operator;
-    protected Object value;
+    private final Key<U, Object> key;
+    private final Operator operator;
+    protected final Object value;
 
     /** Create an Criterion constant */
     protected ValueCriterion(final boolean value) {

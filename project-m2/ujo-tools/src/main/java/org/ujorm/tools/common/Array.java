@@ -44,7 +44,7 @@ public final class Array<T> implements Serializable, Iterable<T> {
     private final T[] array;
 
     /** Internal constructor */
-    protected Array(@NotNull final T[] array) {
+    private Array(@NotNull final T[] array) {
         this.array = array;
     }
 
@@ -55,7 +55,7 @@ public final class Array<T> implements Serializable, Iterable<T> {
 
     /** Create a shallow copy of the object */
     @NotNull
-    public final Array<T> copy() {
+    public Array<T> copy() {
         return new Array<>(this);
     }
 

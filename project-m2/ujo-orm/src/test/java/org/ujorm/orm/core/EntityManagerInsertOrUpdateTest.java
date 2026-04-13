@@ -16,7 +16,7 @@ import java.util.stream.Stream;
 /** Tests for stream-based batch inserts and insertOrUpdate operations */
 class EntityManagerInsertOrUpdateTest extends AbstractDaoTest {
 
-    private EntityContext ctx = EntityContext.ofDefault();
+    private final EntityContext ctx = EntityContext.ofDefault();
     private final Class<Long> idType = Long.class;
 
     // --- TESTS FOR insertBatch (Stream) ---

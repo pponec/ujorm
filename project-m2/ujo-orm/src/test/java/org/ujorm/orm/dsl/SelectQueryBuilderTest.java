@@ -293,7 +293,7 @@ class SelectQueryBuilderTest {
                 var end = template.indexOf('}', start);
                 if (end == -1) break;
 
-                writer.append(template.substring(last, start));
+                writer.append(template, last, start);
                 var mark = template.substring(start + 1, end);
                 last = end + 1;
 
