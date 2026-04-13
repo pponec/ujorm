@@ -319,6 +319,10 @@ Relations are recognized by the `@Table` annotation on the attribute type.
 Yes, `EntityManager` and `Meta` classes are stateless and thread-safe.
 `Crud` and `SqlQuery` are stateful and scoped to a single thread/request.
 
+**Does Ujorm3 support native SQL queries?**
+Yes. While the `SelectQuery` builder covers most operations type-safely, you can use the `SqlQuery` class to execute raw native SQL for complex or database-specific requirements. Crucially, Ujorm3 can still use its `ResultSetMapper` to automatically map the results of these native queries directly to your domain objects, eliminating the need for manual row-mapping boilerplate.
+
+
 **Is runtime bytecode generation secure?**
 Yes.
 It is based purely on your project's domain classes with no external data input, a standard approach also used by HikariCP or Spring.
