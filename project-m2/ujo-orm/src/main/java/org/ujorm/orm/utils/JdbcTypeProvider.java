@@ -89,7 +89,7 @@ public final class JdbcTypeProvider {
         return Map.copyOf(result); // make map immutable
     }
 
-    /** Try tu find JDBC type */
+    /** Try to find JDBC type */
     @Nullable
     public JDBCType findJdbcType(@NotNull Class<?> clazz) throws IllegalArgumentException {
         Objects.requireNonNull(clazz, "The class is required");

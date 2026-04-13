@@ -30,10 +30,7 @@ import org.ujorm.tools.jdbc.SQLExceptionBuilder;
 import java.sql.Connection;
 import java.sql.JDBCType;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -241,6 +238,7 @@ public class TableModelBuilder<D> {
         } else {
             jdbcType = JdbcUtils.findJdbcType(key.type());
         }
+        Objects.requireNonNull(jdbcType, () -> "No jdbcType found for " + key.fullName());
         var columnName = dbColumMapLowerCase.get(key.info().columnLabel().toLowerCase(Locale.ENGLISH));
         if (Check.isEmpty(columnName)) {
             var msg = "Property %s mapped to column '%s' not found in database."
