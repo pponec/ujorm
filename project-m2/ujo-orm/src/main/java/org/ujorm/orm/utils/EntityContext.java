@@ -1,5 +1,6 @@
 package org.ujorm.orm.utils;
 
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.ujorm.core.DomainHandler;
 import org.ujorm.core.DomainHandlerProvider;
@@ -11,6 +12,7 @@ import org.ujorm.orm.core.EntityManagerService;
 import org.ujorm.orm.core.TableModelService;
 
 import java.sql.Connection;
+import java.util.logging.Level;
 
 /** Entity Content. */
 public class EntityContext {
@@ -72,14 +74,35 @@ public class EntityContext {
         return new EntityContext(config, domainService, tableModelService, entityManagerService);
     }
 
-    /** Factory method */
+    /** Factory method for user configuration. */
     public static EntityContext of(Config config) {
         return of(DomainHandlerProvider.provider(), config);
     }
 
-    /** Factory method */
+    /** Common factory method creating context with default configuration. */
     public static EntityContext ofDefault() {
         return of(Config.ofDefault());
+    }
+
+
+    /** Factory method for logging SQL statements with the INFO level. */
+    public static EntityContext ofSqlInfo() {
+        var config = new Config()
+                .setValue(Config.logSqlLevel, Level.INFO);
+        return of(config.lock());
+    }
+
+    /**
+     * Factory method for logging SQL statements and their parameters at the specified level.
+     *
+     * @param logLevel the logging level for SQL output
+     * @return an entity context with SQL and parameter logging enabled
+     */
+    public static EntityContext ofSqlLogsWithParams(@NotNull Level logLevel) {
+        var result = new Config()
+                .setValue(Config.logSqlLevel, logLevel)
+                .setValue(Config.logSqlParams, true);
+        return of(result.lock());
     }
 
 }
