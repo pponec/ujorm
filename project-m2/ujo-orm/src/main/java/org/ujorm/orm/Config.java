@@ -13,8 +13,6 @@ import java.util.logging.Logger;
 
 /** ORM Configuration */
 public class Config {
-    /** The class {@link SelectQuery} enables only SQL SELECT statements. */
-    public static final boolean DSL_SELECT_ONLY = true;
 
     private static final Logger LOGGER = Logger.getLogger(Config.class.getName());
     private static final String PREFIX = "org.ujorm.";

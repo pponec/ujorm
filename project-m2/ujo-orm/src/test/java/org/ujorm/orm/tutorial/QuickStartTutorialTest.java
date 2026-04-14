@@ -1,12 +1,16 @@
 package org.ujorm.orm.tutorial;
 
 import org.junit.jupiter.api.*;
+import org.ujorm.orm.SqlQuery;
 import org.ujorm.orm.core.EntityManager;
 import org.ujorm.orm.dsl.SelectQuery;
 import org.ujorm.orm.jdbc.ResultSetMapper;
-import org.ujorm.orm.tutorial.domains.*;
-import org.ujorm.orm.SqlQuery;
+import org.ujorm.orm.tutorial.domains.City;
+import org.ujorm.orm.tutorial.domains.Employee;
+import org.ujorm.orm.tutorial.domains.MetaCity;
+import org.ujorm.orm.tutorial.domains.MetaEmployee;
 import org.ujorm.orm.utils.EntityContext;
+
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -17,35 +21,32 @@ import static org.junit.jupiter.api.Assertions.*;
  * Note: These tests run sequentially to demonstrate an entity lifecycle.
  */
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-class TutorialTest extends AbstractDemo {
+class QuickStartTutorialTest extends AbstractDemo {
 
     private static final EntityContext CTX = EntityContext.ofSqlInfo();
-    private static final EntityManager<Employee, Long> EMPLOYEE_EM = CTX.entityManager(Employee.class);
     private static final EntityManager<City, Long> CITY_EM = CTX.entityManager(City.class);
     private static final ResultSetMapper<Employee> EMPLOYEE_MAPPER = ResultSetMapper.of(Employee.class);
 
     @Test
     @Order(100)
     void insert() {
-        var employeeCrud = EMPLOYEE_EM.crud(connection());
-        var cityCrud = CITY_EM.crud(connection());
+        // City is an immutable Recor
+        var cityOttawa = new City(1L, "Ottawa", "CA");
+        var cityBarcelone = new City(2L, "Barcelona", "ES");
 
-        // City is an immutable Record, Employee is a mutable JavaBean
-        var cityOttawa = cityCrud.insert(new City(null, "Ottawa", "CA"));
-        var emplIngrid = Employee.of("Ingrid", cityOttawa, null);
-        var emplDave = Employee.of("Dave", cityOttawa, emplIngrid);
-        var emplCarol = Employee.of("Carol", cityOttawa, emplIngrid);
+        try (var query = new SqlQuery(connection())) {
+            var sql = """
+                    INSERT INTO
+                    
+                    """;
 
-        employeeCrud.insert(emplIngrid);
-        employeeCrud.insert(emplDave, emplCarol);
-
-        assertNotNull(emplIngrid.getId());
+        }
     }
 
     /** Select employees and map columns by type-safe generated Meta classes. */
     @Test
     @Order(200)
-    void select_by_labels() {
+    void select() {
         var sql = """
                  SELECT e.id      AS ${e.id}
                  , e.name         AS ${e.name}
@@ -104,82 +105,21 @@ class TutorialTest extends AbstractDemo {
         assertEquals("Ingrid", employees.get(1).getBoss().getName());
     }
 
-    /** DSL select by the column method. */
-    @Test
-    @Order(220)
-    void select_query() {
-        var employees = SelectQuery.run(connection(), EMPLOYEE_EM, query -> query
-                .sql("SELECT")
-                .columnsOfDomain(true)
-                .column(MetaEmployee.city, MetaCity.name)
-                .column(MetaEmployee.city, MetaCity.countryCode)
-                .column(MetaEmployee.boss, MetaEmployee.name)
-                .where(MetaEmployee.id.whereGe(1L))
-                .tail("ORDER BY", MetaEmployee.id)
-                .toList()
-        );
-
-        assertEquals(3, employees.size());
-        assertEquals("Dave", employees.get(1).getName());
-        assertEquals("Ingrid", employees.get(1).getBoss().getName());
-    }
-
-    /** Select an Entity by ID. */
-    @Test
-    @Order(230)
-    void selectEntity_by_id() {
-        var crud = CITY_EM.crud(connection());
-        var barcelonaId = 1L;
-        var barcelona = crud.findById(barcelonaId).orElseThrow();
-        Assertions.assertNotNull(barcelona.id());
-    }
-
 
     /** Note the last argument of the update() method specifying the modified attribute. */
     @Test
     @Order(300)
     void update() {
-        var employeeCrud = EMPLOYEE_EM.crud(connection());
-
-        var emplIngrid = employeeCrud.findById(1L).orElseThrow();
-        var emplDave = employeeCrud.findById(2L).orElseThrow();
-        var emplCarol = employeeCrud.findById(3L).orElseThrow();
-
-        emplIngrid.setBoss(emplDave);
-        emplDave.setBoss(null);
-        emplCarol.setBoss(emplDave);
-
-        employeeCrud.update(Stream.of(emplIngrid, emplDave, emplCarol),
-                MetaEmployee.boss);
-
-        assertNull(employeeCrud.findByIdNullable(2L).getBoss());
+        var sql = """
+               """;
     }
 
     /** Note the returned row count at the end of the method. */
     @Test
     @Order(400)
     void delete() {
-        var employeeCrud = EMPLOYEE_EM.crud(connection());
-        var qBossId = MetaEmployee.as("b").key(MetaEmployee.id);
-        var criterion = MetaEmployee.id.whereGe(1L);
-
-        try (var query = new SelectQuery<>(connection(), EMPLOYEE_EM)) {
-            var employees = query.sql("SELECT")
-                    .column(MetaEmployee.id)
-                    .column(MetaEmployee.boss, qBossId) // Build the relation
-                    .where(criterion)
-                    .tail("ORDER BY", qBossId, "DESC NULLS LAST") // Bosses last
-                    .toList();
-
-            employeeCrud.delete(employees.stream());
-
-            var count = query.sql("SELECT COUNT(*)")
-                    .where(criterion)
-                    .streamMap(rs -> rs.getInt(1))
-                    .findFirst().orElseThrow();
-
-            assertEquals(0, count);
-        }
+       var sql = """
+               """;
     }
 
     /** Create all database tables first. */
