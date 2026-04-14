@@ -97,12 +97,13 @@ public class Config {
      * @param value Required value
      * @param <V> The value type (annotation breaks IntelliJ tests
      */
-    public <V> void setValue(@NotNull Key<V> key, @NotNull V value) {
+    public <V> Config setValue(@NotNull Key<V> key, @NotNull V value) {
         if (locked) {
             throw new IllegalStateException("The configuration is locked.");
         }
         Objects.requireNonNull(value, "The value is required.");
         key.setValue(value, values);
+        return this;
     }
 
     /** Lock the configuration for further writes */
