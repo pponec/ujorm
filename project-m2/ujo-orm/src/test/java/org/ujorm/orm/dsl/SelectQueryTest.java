@@ -2,7 +2,6 @@ package org.ujorm.orm.dsl;
 
 import org.junit.jupiter.api.Test;
 import org.ujorm.orm.AbstractDatabaseTest;
-import org.ujorm.orm.Config;
 import org.ujorm.orm.SqlQuery;
 import org.ujorm.orm.core.EntityManager;
 import org.ujorm.orm.dsl.meta.*;
@@ -15,6 +14,9 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 /** DslQuery test class with shared connection */
 class SelectQueryTest extends AbstractDatabaseTest {
+
+    /** The class {@link SelectQuery} enables only SQL SELECT statements. */
+    static final boolean DSL_SELECT_ONLY = true;
 
     private final EntityContext ctx = EntityContext.ofDefault();
     private final EntityManager<Employee, Long> entityManager = ctx.entityManager(Employee.class);
@@ -77,7 +79,7 @@ class SelectQueryTest extends AbstractDatabaseTest {
 
     @Test
     void testUpdate() {
-        if (Config.DSL_SELECT_ONLY) return;
+        if (DSL_SELECT_ONLY) return;
 
         var employeeTable = QEmployee.as("emp");
         try (var query = new SelectQuery<>(connection(), entityManager)) {

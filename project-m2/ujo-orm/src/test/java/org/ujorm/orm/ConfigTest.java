@@ -3,6 +3,8 @@ package org.ujorm.orm;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.ujorm.orm.utils.Lines;
+
 import java.util.logging.Level;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -97,5 +99,15 @@ class ConfigTest {
         );
 
         assertTrue(exception.getMessage().contains("locked"));
+    }
+
+    @Test
+    void testToString() {
+        var config = Config.ofDefault();
+        var lines = Lines.of(config.toString());
+        System.out.println(lines);
+
+        assertEquals("org.ujorm.orm.Config (locked: true)", lines.get(0));
+        assertEquals("org.ujorm.firstPropertyIsIdentifier: true", lines.get(1).trim());
     }
 }

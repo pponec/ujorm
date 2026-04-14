@@ -1,22 +1,19 @@
 package org.ujorm.orm;
 
+import lombok.extern.java.Log;
 import org.jetbrains.annotations.NotNull;
 import org.ujorm.core.csv.CsvConfig;
-import org.ujorm.orm.dsl.SelectQuery;
 import org.ujorm.tools.common.Primitive;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.function.Function;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /** ORM Configuration */
+@Log
 public class Config {
-    /** The class {@link SelectQuery} enables only SQL SELECT statements. */
-    public static final boolean DSL_SELECT_ONLY = true;
 
-    private static final Logger LOGGER = Logger.getLogger(Config.class.getName());
     private static final String PREFIX = "org.ujorm.";
     private static final String CONFIG_FILE = "ujorm-config.properties";
     private static final KeyProvider meta = new KeyProvider();
@@ -69,6 +66,8 @@ public class Config {
      */
     public static final Key<String> quotePair = meta.key("quotePair", "");
 
+    /** Log all configuration values in the {@link org.ujorm.orm.utils.EntityContext} class; */
+    public static final Key<Boolean> logConfigValues = meta.key("logConfigValues", true);
 
     // --- End of the list ---
 
@@ -97,12 +96,13 @@ public class Config {
      * @param value Required value
      * @param <V> The value type (annotation breaks IntelliJ tests
      */
-    public <V> void setValue(@NotNull Key<V> key, @NotNull V value) {
+    public <V> Config setValue(@NotNull Key<V> key, @NotNull V value) {
         if (locked) {
             throw new IllegalStateException("The configuration is locked.");
         }
         Objects.requireNonNull(value, "The value is required.");
         key.setValue(value, values);
+        return this;
     }
 
     /** Lock the configuration for further writes */
@@ -121,10 +121,10 @@ public class Config {
     public boolean isAutoCommitWarned() { return autoCommitWarned.getValue(values); }
     public boolean isEnableSqlQuoting() { return enableSqlQuoting.getValue(values); }
     public String getQuotePair() { return quotePair.getValue(values); }
+    public boolean logConfigValues() { return logConfigValues.getValue(values); }
     /** @deprecated For jUnit test only */
     @Deprecated
     String _testOnly() { return testOnly.getValue(values); }
-
 
     // --- Loading and conversion logic ---
 
@@ -175,15 +175,26 @@ public class Config {
                 result.load(new InputStreamReader(stream, StandardCharsets.UTF_8));
             }
         } catch (Exception e) {
-            LOGGER.log(Level.WARNING, "Failed to load " + CONFIG_FILE, e);
+            log.log(Level.WARNING, "Failed to load " + CONFIG_FILE, e);
         }
         return result;
     }
 
+    /** Get all values */
     @Override
     public String toString() {
-        return "ConfigImpl{count=" + meta.keys.size() + ", locked=" + locked + "}";
+        var separator = "\n  ";
+        var result = new StringBuilder(256)
+                .append(getClass().getName())
+                .append(" (locked: ").append(locked).append(')');
+        for (var key : meta.keys) {
+            if (testOnly == key) continue;
+            var value = key.getValue(values);
+            result.append(separator).append(key).append(": ").append(value);
+        }
+        return result.toString();
     }
+
 
     /** Internal Key definition */
     @SuppressWarnings("unchecked")
