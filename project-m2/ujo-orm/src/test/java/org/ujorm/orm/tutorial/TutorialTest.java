@@ -80,7 +80,7 @@ class TutorialTest extends AbstractDemo {
 
         var employees = SelectQuery.run(connection(), EMPLOYEE_EM, query -> query
                 .sql("SELECT")
-                .columnsOfDomain(true)
+                .columnsAll(true)
                 .column(MetaEmployee.city, MetaCity.name)
                 .column(MetaEmployee.city, MetaCity.countryCode)
                 .column(MetaEmployee.boss, MetaEmployee.name)
