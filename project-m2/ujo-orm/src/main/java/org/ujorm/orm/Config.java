@@ -3,14 +3,12 @@ package org.ujorm.orm;
 import lombok.extern.java.Log;
 import org.jetbrains.annotations.NotNull;
 import org.ujorm.core.csv.CsvConfig;
-import org.ujorm.orm.dsl.SelectQuery;
 import org.ujorm.tools.common.Primitive;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.function.Function;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /** ORM Configuration */
 @Log
