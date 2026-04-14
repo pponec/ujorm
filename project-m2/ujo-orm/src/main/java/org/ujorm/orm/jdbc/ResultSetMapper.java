@@ -389,6 +389,6 @@ public final class ResultSetMapper<D> {
     }
 
     public static <D> ResultSetMapper<D> of(@NotNull Class<D> domainClass) {
-        return of(domainClass, Config.ofDefault().lock());
+        return of(domainClass, Config.ofDefault());
     }
 }

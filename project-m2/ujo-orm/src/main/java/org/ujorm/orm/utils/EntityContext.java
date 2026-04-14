@@ -1,7 +1,6 @@
 package org.ujorm.orm.utils;
 
 import lombok.extern.java.Log;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.ujorm.core.DomainHandler;
 import org.ujorm.core.DomainHandlerProvider;
@@ -13,7 +12,6 @@ import org.ujorm.orm.core.EntityManagerService;
 import org.ujorm.orm.core.TableModelService;
 
 import java.sql.Connection;
-import java.util.logging.Level;
 
 /** Entity Content. */
 @Log
@@ -89,25 +87,14 @@ public class EntityContext {
         return of(Config.ofDefault());
     }
 
-
-    /** Factory method for logging SQL statements with the INFO level. */
-    public static EntityContext ofSqlInfo() {
-        var config = new Config()
-                .setValue(Config.logSqlLevel, Level.INFO);
-        return of(config.lock());
-    }
-
     /**
      * Factory method for logging SQL statements and their parameters at the specified level.
      *
-     * @param logLevel the logging level for SQL output
+     * @param logSqlParams Log SQL including parameters
      * @return an entity context with SQL and parameter logging enabled
      */
-    public static EntityContext ofSqlLogsWithParams(@NotNull Level logLevel) {
-        var result = new Config()
-                .setValue(Config.logSqlLevel, logLevel)
-                .setValue(Config.logSqlParams, true);
-        return of(result.lock());
+    public static EntityContext ofSqlInfoWithParams(boolean logSqlParams) {
+        return of(Config.ofSqlInfoWithParams(logSqlParams));
     }
 
 }

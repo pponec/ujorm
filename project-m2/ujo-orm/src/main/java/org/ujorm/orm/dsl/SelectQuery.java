@@ -124,6 +124,14 @@ public class SelectQuery<D> extends AbstractSqlQuery<SelectQuery<D>> {
         return self();
     }
 
+    /** Adds many SQL conditions joined by the AND operator */
+    public SelectQuery<D> whereAnd (@NotNull Criterion... criterions) {
+        for (Criterion crn : criterions) {
+            where(crn);
+        }
+        return self();
+    }
+
     /**
      * Append an optional rest of the SQL statement.
      * The method allows mixing raw SQL fragments (String) with Meta objects

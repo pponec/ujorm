@@ -4,13 +4,38 @@ import lombok.extern.java.Log;
 import org.jetbrains.annotations.NotNull;
 import org.ujorm.core.csv.CsvConfig;
 import org.ujorm.tools.common.Primitive;
+
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.function.Function;
 import java.util.logging.Level;
 
-/** ORM Configuration */
+/**
+ * ORM Configuration.
+ * <p>
+ * Each {@link Key} attribute in this class represents a single configuration parameter,
+ * where the data type of the parameter is defined by the generic type {@code <V>}.
+ * </p>
+ *
+ * <h3>Parameter Assembly and Priority</h3>
+ *
+ * The configuration values are assembled from multiple sources. When a value is requested,
+ * the mechanism follows this priority (from highest to lowest):
+ *
+ * <ol>
+ *   <li><b>Manual Settings:</b> Values explicitly set using the {@link #setValue(Key, Object)} method.</li>
+ *   <li><b>System Properties:</b> JVM system properties prefixed with {@code org.ujorm.} (e.g., {@code -Dorg.ujorm.batchSize=1000}).</li>
+ *   <li><b>Configuration File:</b> Values loaded from the {@code ujorm-config.properties} file located on the classpath.</li>
+ *   <li><b>Default Values:</b> The initial values defined directly in the code during {@link Key} creation.</li>
+ * </ol>
+ *
+ * <h3>Lifecycle and Locking</h3>
+ *
+ * It is highly recommended to <b>lock</b> the configuration instance using the {@link #lock()} method
+ * before passing it to the ORM engine or using it in a multi-threaded environment.
+ * Once locked, the configuration becomes immutable, ensuring consistency and thread safety.
+ */
 @Log
 public class Config {
 
@@ -243,5 +268,14 @@ public class Config {
     /** Build an immutable object with default arguments */
     public static Config ofDefault() {
         return new Config().lock();
+    }
+
+    /** Factory method for logging SQL with INFO level including configuration. */
+    public static Config ofSqlInfoWithParams(boolean logSqlParams) {
+        var result = new Config()
+                .setValue(Config.logSqlLevel, Level.INFO)
+                .setValue(Config.logSqlParams, logSqlParams)
+                .setValue(Config.logConfigValues, true);
+        return result.lock();
     }
 }

@@ -15,11 +15,13 @@ import static org.junit.jupiter.api.Assertions.*;
  * Ujorm3: Lightweight, fast, and transparent ORM.
  * Entities are either standard JavaBeans or Records. No magic, pure speed.
  * Note: These tests run sequentially to demonstrate an entity lifecycle.
+ *
+ * @see QuickStartTutorialTest
  */
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class TutorialTest extends AbstractDemo {
 
-    private static final EntityContext CTX = EntityContext.ofSqlInfo();
+    private static final EntityContext CTX = EntityContext.ofSqlInfoWithParams(false);
     private static final EntityManager<Employee, Long> EMPLOYEE_EM = CTX.entityManager(Employee.class);
     private static final EntityManager<City, Long> CITY_EM = CTX.entityManager(City.class);
     private static final ResultSetMapper<Employee> EMPLOYEE_MAPPER = ResultSetMapper.of(Employee.class);
@@ -42,9 +44,88 @@ class TutorialTest extends AbstractDemo {
         assertNotNull(emplIngrid.getId());
     }
 
-    /** Select employees and map columns by type-safe generated Meta classes. */
+    /** Select an Entity by ID. */
     @Test
     @Order(200)
+    void selectEntity_by_id() {
+        var crud = CITY_EM.crud(connection());
+        var barcelonaId = 1L;
+        var barcelona = crud.findById(barcelonaId).orElseThrow();
+        Assertions.assertNotNull(barcelona.id());
+    }
+
+    /** DSL select by the column method.
+     *  See generated SQL statement from the log:
+     * <pre>
+     *   SELECT e."ID" AS "id"
+     *   , e."NAME" AS "name"
+     *   , e."CITY_ID" AS "city"
+     *   , e."BOSS_ID" AS "boss"
+     *   , c."NAME" AS "city.name"
+     *   , c."COUNTRY_CODE" AS "city.countryCode"
+     *   , b."NAME" AS "boss.name"
+     *   FROM "EMPLOYEE" e
+     *   JOIN "CITY" c ON c."ID" = e."CITY_ID"
+     *   LEFT JOIN "EMPLOYEE" b ON b."ID" = e."BOSS_ID"
+     *   WHERE e."ID" &gt;= ? AND c."ID" IN (?,?)
+     *   ORDER BY e."ID"
+     * </pre>
+     */
+    @Test
+    @Order(210)
+    void select_by_criteron() {
+        var c1 = MetaEmployee.id.whereGe(1L);
+        var c2 = MetaCity.id.whereIn(1L, 2L);
+        var criterion = c1.and(c2);
+
+        var employees = SelectQuery.run(connection(), EMPLOYEE_EM, query -> query
+                .sql("SELECT")
+                .columnsOfDomain(true)
+                .column(MetaEmployee.city, MetaCity.name)
+                .column(MetaEmployee.city, MetaCity.countryCode)
+                .column(MetaEmployee.boss, MetaEmployee.name)
+                .where(criterion)
+                .tail("ORDER BY", MetaEmployee.id)
+                .toList()
+        );
+
+        assertEquals(3, employees.size());
+        assertEquals("Dave", employees.get(1).getName());
+        assertEquals("Ingrid", employees.get(1).getBoss().getName());
+    }
+
+    /** Select by the column method. */
+    @Test
+    @Order(220)
+    void select_by_columns() {
+        var sql = """
+                 SELECT ${COLUMNS}
+                 FROM employee e
+                 JOIN city c ON c.id = e.city_id
+                 LEFT JOIN employee b ON b.id = e.boss_id
+                 WHERE e.id > :employeeId
+                 ORDER BY e.id
+                 """;
+
+        var employees = SqlQuery.run(connection(), query -> query
+                .sql(sql)
+                .column("e.id", MetaEmployee.id)
+                .column("e.name", MetaEmployee.name)
+                .column("c.name", MetaEmployee.city, MetaCity.name)
+                .column("c.country_code", MetaEmployee.city, MetaCity.countryCode)
+                .column("b.name", MetaEmployee.boss, MetaEmployee.name)
+                .bind("employeeId", 0L)
+                .streamMap(EMPLOYEE_MAPPER.mapper())
+                .toList());
+
+        assertEquals(3, employees.size());
+        assertEquals("Dave", employees.get(1).getName());
+        assertEquals("Ingrid", employees.get(1).getBoss().getName());
+    }
+
+    /** Select employees by labels */
+    @Test
+    @Order(230)
     void select_by_labels() {
         var sql = """
                  SELECT e.id      AS ${e.id}
@@ -74,66 +155,6 @@ class TutorialTest extends AbstractDemo {
         assertEquals("Dave", employees.get(1).getName());
         assertEquals("Ingrid", employees.get(1).getBoss().getName());
     }
-
-    /** Simplified select by the column method. */
-    @Test
-    @Order(210)
-    void select_by_columns() {
-        var sql = """
-                 SELECT ${COLUMNS}
-                 FROM employee e
-                 JOIN city c ON c.id = e.city_id
-                 LEFT JOIN employee b ON b.id = e.boss_id
-                 WHERE e.id > :employeeId
-                 ORDER BY e.id
-                 """;
-
-        var employees = SqlQuery.run(connection(), query -> query
-                .sql(sql)
-                .column("e.id", MetaEmployee.id)
-                .column("e.name", MetaEmployee.name)
-                .column("c.name", MetaEmployee.city, MetaCity.name)
-                .column("c.country_code", MetaEmployee.city, MetaCity.countryCode)
-                .column("b.name", MetaEmployee.boss, MetaEmployee.name)
-                .bind("employeeId", 0L)
-                .streamMap(EMPLOYEE_MAPPER.mapper())
-                .toList());
-
-        assertEquals(3, employees.size());
-        assertEquals("Dave", employees.get(1).getName());
-        assertEquals("Ingrid", employees.get(1).getBoss().getName());
-    }
-
-    /** DSL select by the column method. */
-    @Test
-    @Order(220)
-    void select_query() {
-        var employees = SelectQuery.run(connection(), EMPLOYEE_EM, query -> query
-                .sql("SELECT")
-                .columnsOfDomain(true)
-                .column(MetaEmployee.city, MetaCity.name)
-                .column(MetaEmployee.city, MetaCity.countryCode)
-                .column(MetaEmployee.boss, MetaEmployee.name)
-                .where(MetaEmployee.id.whereGe(1L))
-                .tail("ORDER BY", MetaEmployee.id)
-                .toList()
-        );
-
-        assertEquals(3, employees.size());
-        assertEquals("Dave", employees.get(1).getName());
-        assertEquals("Ingrid", employees.get(1).getBoss().getName());
-    }
-
-    /** Select an Entity by ID. */
-    @Test
-    @Order(230)
-    void selectEntity_by_id() {
-        var crud = CITY_EM.crud(connection());
-        var barcelonaId = 1L;
-        var barcelona = crud.findById(barcelonaId).orElseThrow();
-        Assertions.assertNotNull(barcelona.id());
-    }
-
 
     /** Note the last argument of the update() method specifying the modified attribute. */
     @Test
