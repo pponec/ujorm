@@ -1,5 +1,6 @@
 package org.ujorm.orm.utils;
 
+import lombok.extern.java.Log;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.ujorm.core.DomainHandler;
@@ -15,6 +16,7 @@ import java.sql.Connection;
 import java.util.logging.Level;
 
 /** Entity Content. */
+@Log
 public class EntityContext {
 
     /** ORM configuration */
@@ -69,6 +71,9 @@ public class EntityContext {
 
     /** Factory method */
     public static EntityContext of(DomainHandlerService domainService, Config config) {
+        if (config.logConfigValues()) {
+            log.info("Configuration parameters: " + config);
+        }
         var tableModelService = new TableModelService(domainService, config);
         var entityManagerService = new EntityManagerService(tableModelService, config);
         return new EntityContext(config, domainService, tableModelService, entityManagerService);

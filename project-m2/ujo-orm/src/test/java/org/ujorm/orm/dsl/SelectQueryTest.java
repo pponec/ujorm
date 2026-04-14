@@ -2,7 +2,6 @@ package org.ujorm.orm.dsl;
 
 import org.junit.jupiter.api.Test;
 import org.ujorm.orm.AbstractDatabaseTest;
-import org.ujorm.orm.Config;
 import org.ujorm.orm.SqlQuery;
 import org.ujorm.orm.core.EntityManager;
 import org.ujorm.orm.dsl.meta.*;
