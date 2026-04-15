@@ -76,7 +76,7 @@ The primary tool for searching and fetching relations. It uses **`Criterion`** o
 /** Type-safe selection */
 List<Employee> findEmployees(Connection connection) {
     return SelectQuery.run(connection, EMPLOYEE_EM, query -> query
-            .columnsOfDomain(true)     // Select all domain columns including foreign keys
+            .columns(true)     // Select all domain columns including foreign keys
             .column(MetaEmployee.city, MetaCity.name)
             .where(MetaEmployee.id.whereGe(1L))
             .toList());
@@ -128,7 +128,7 @@ final EntityManager<Employee, Long> EMPLOYEE_EM = CTX.entityManager(Employee.cla
 /** Fetching an entity with its relations */
 List<Employee> select(Connection connection) {
     return SelectQuery.run(connection, EMPLOYEE_EM, query -> query
-            .columnsOfDomain(true)
+            .columns(true)
             .column(MetaEmployee.city, MetaCity.name)     // INNER JOIN
             .column(MetaEmployee.boss, MetaEmployee.name) // LEFT JOIN
             .where(MetaEmployee.id.whereGe(1L))
