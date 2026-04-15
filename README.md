@@ -36,7 +36,7 @@ Detailed results and methodology are available in the [Benchmarks](#benchmarks) 
 
 ## Menu
 * [Quick Start (TL;DR)](#quick-start-tldr)
-* [Basic CRUD Operations](#basic-crud-operations)
+* [Detailed Operations & Relations](#detailed-operations--relations)
     * [SELECT](#select)
     * [INSERT](#insert)
     * [UPDATE](#update)
@@ -68,15 +68,6 @@ void simpleCrud(java.sql.Connection connection) {
     var barcelona = crud.findById(saved.id()).orElseThrow();
 }
 ```
-> 💡 **Sample Application:** For a practical demonstration of the library in action, check out
-> the **[PetStore reference implementation](https://github.com/pponec/ujorm-petstore?tab=readme-ov-file#ujorm-petstore)**.
-
-## Basic CRUD Operations
-
-Basic mapping utilizes standard Jakarta annotations (`@Table`, `@Column`).
-Entities do not need to be registered beforehand, and multiple classes can map to the same database table.
-
-### SELECT
 
 ### 2. SelectQuery (Type-Safe Object Querying)
 The primary tool for searching and fetching relations. It uses **`Criterion`** objects for type-safe filtering (verifying both structure and parameter types) and handles `JOIN` clauses automatically.
@@ -140,7 +131,7 @@ List<Employee> select(Connection connection) {
             .columns(true)
             .column(MetaEmployee.city, MetaCity.name)     // INNER JOIN
             .column(MetaEmployee.boss, MetaEmployee.name) // LEFT JOIN
-            .where(MetaEmployee.id.whereGe(1L))
+            .where(MetaEmployee.id.whereGe(1L).and(MetaCity.id.whereGe(1L)))
             .tail("ORDER BY", MetaEmployee.id)
             .toList()
     );
