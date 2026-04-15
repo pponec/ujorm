@@ -26,6 +26,7 @@ class TutorialTest extends AbstractDemo {
     private static final EntityManager<City, Long> CITY_EM = CTX.entityManager(City.class);
     private static final ResultSetMapper<Employee> EMPLOYEE_MAPPER = ResultSetMapper.of(Employee.class);
 
+    /** Persists new entities, showcasing handling of both immutable Records and mutable JavaBeans. */
     @Test
     @Order(100)
     void insert() {
@@ -44,7 +45,7 @@ class TutorialTest extends AbstractDemo {
         assertNotNull(emplIngrid.getId());
     }
 
-    /** Select an Entity by ID. */
+    /** Basic retrieval of an entity from the database using its unique primary key. */
     @Test
     @Order(200)
     void selectEntity_by_id() {
@@ -54,8 +55,9 @@ class TutorialTest extends AbstractDemo {
         Assertions.assertNotNull(barcelona.id());
     }
 
-    /** DSL select by the column method.
-     *  See generated SQL statement from the log:
+    /**
+     * Executes a complex DSL query with type-safe criteria and joined table columns.
+     * See generated SQL statement from the log:
      * <pre>
      *   SELECT e."ID" AS "id"
      *   , e."NAME" AS "name"
@@ -79,7 +81,7 @@ class TutorialTest extends AbstractDemo {
         var criterion = c1.and(c2);
 
         var employees = SelectQuery.run(connection(), EMPLOYEE_EM, query -> query
-                .sql("SELECT")
+                .sql("SELECT")  // Optional call because SELECT is the default
                 .columns(true)
                 .column(MetaEmployee.city, MetaCity.name)
                 .column(MetaEmployee.city, MetaCity.countryCode)
@@ -94,7 +96,41 @@ class TutorialTest extends AbstractDemo {
         assertEquals("Ingrid", employees.get(1).getBoss().getName());
     }
 
-    /** Select by the column method. */
+    /** Manages self-referencing relationships by applying an alias in a DSL query. */
+    @Test
+    @Order(211)
+    void select_by_alias() {
+        var metaBossName = MetaEmployee.as("boss").key(MetaEmployee.name);
+        var employees = SelectQuery.run(connection(), EMPLOYEE_EM, query -> query
+                .columns(true)
+                .column(MetaEmployee.boss, metaBossName)
+                .where(metaBossName.whereEq("Ingrid"))
+                .toList()
+        );
+
+        assertEquals(2, employees.size());
+    }
+
+    /** Performs SQL grouping and aggregation, mapping the output to a custom object array. */
+    @Test
+    @Order(212)
+    void select_group_by() {
+        var employees = SelectQuery.run(connection(), EMPLOYEE_EM, query -> query
+                .sql("SELECT COUNT(*),")
+                .column(MetaEmployee.name)
+                .where(MetaEmployee.id.whereGe(1L))
+                .tail("GROUP BY", MetaEmployee.name)
+                .streamMap(rs -> new Object[]{
+                        rs.getInt(1),
+                        rs.getString(2)})
+                .toList()
+        );
+
+        assertEquals(3, employees.size());
+        assertEquals((Object)1, employees.get(0)[0]);
+    }
+
+    /** Runs a raw SQL query with dynamic column definition and standard result mapping. */
     @Test
     @Order(220)
     void select_by_columns() {
@@ -123,7 +159,7 @@ class TutorialTest extends AbstractDemo {
         assertEquals("Ingrid", employees.get(1).getBoss().getName());
     }
 
-    /** Select employees by labels */
+    /** Uses Ujorm labels for consistent naming and mapping in raw SQL queries. */
     @Test
     @Order(230)
     void select_by_labels() {
@@ -156,7 +192,7 @@ class TutorialTest extends AbstractDemo {
         assertEquals("Ingrid", employees.get(1).getBoss().getName());
     }
 
-    /** Note the last argument of the update() method specifying the modified attribute. */
+    /** Updates specific attributes across a collection of entities in a single batch operation. */
     @Test
     @Order(300)
     void update() {
@@ -176,7 +212,7 @@ class TutorialTest extends AbstractDemo {
         assertNull(employeeCrud.findByIdNullable(2L).getBoss());
     }
 
-    /** Note the returned row count at the end of the method. */
+    /** Handles batch deletion with specialized filtering and ordering for related entities. */
     @Test
     @Order(400)
     void delete() {
@@ -203,7 +239,7 @@ class TutorialTest extends AbstractDemo {
         }
     }
 
-    /** Create all database tables first. */
+    /** Configures the initial database schema using raw DDL statements. */
     @Override
     void init() {
         try (var query = new SqlQuery(connection())) {
