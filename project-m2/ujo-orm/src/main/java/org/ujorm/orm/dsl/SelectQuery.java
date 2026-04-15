@@ -34,6 +34,7 @@ import java.sql.Connection;
 import java.sql.JDBCType;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 /**
@@ -278,6 +279,12 @@ public class SelectQuery<D> extends AbstractSqlQuery<SelectQuery<D>> {
     @NotNull
     public List<D> toList() {
         return streamMap().toList();
+    }
+
+    /** Find the first element. */
+    @NotNull
+    public Optional<D> findFirst() {
+        return streamMap().findFirst();
     }
 
     // --- INNER CLASSES ---

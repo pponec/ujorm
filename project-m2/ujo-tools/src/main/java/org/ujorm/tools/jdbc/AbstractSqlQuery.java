@@ -420,7 +420,7 @@ public abstract class AbstractSqlQuery<T extends AbstractSqlQuery<T>> implements
     ) {
         /** Returns the first value from the values array */
         public Object first() {
-            return values.getFirstValue(null);
+            return values.getFirst(null);
         }
 
         public Object getValue(int index) {

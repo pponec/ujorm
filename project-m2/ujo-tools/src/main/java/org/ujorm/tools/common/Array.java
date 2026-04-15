@@ -28,10 +28,10 @@ import java.util.stream.Stream;
  * <h4>Usage</h4>
  * <pre class="pre">
  *   Array<Character> array = Array.of('A', 'B', 'C', 'D', 'E');
- *   array.getFirst().orElse(undef);
- *   array.getLast().orElse(undef);
- *   array.getItem(9).orElse(undef);
- *   array.getItem(-2).orElse(undef);
+ *   array.findFirst().orElse(undef);
+ *   array.findLast().orElse(undef);
+ *   array.getOptional(9).orElse(undef);
+ *   array.getOptional(-2).orElse(undef);
  *   array.removeFirst();
  *   array.join('P', 'C')
  * </pre>
@@ -63,15 +63,12 @@ public final class Array<T> implements Serializable, Iterable<T> {
     @SuppressWarnings("unchecked")
     @NotNull
     public T[] toArray() {
-        var type = (Class<T>) array.getClass().getComponentType();
-        var result = (T[]) java.lang.reflect.Array.newInstance(type, array.length);
-        System.arraycopy(array, 0, result, 0, array.length);
-        return result;
+        return array.clone();
     }
 
     @NotNull
     public List<T> toList() {
-        return Arrays.asList(array);
+        return List.of(array);
     }
 
     @NotNull
@@ -105,37 +102,36 @@ public final class Array<T> implements Serializable, Iterable<T> {
     }
 
     @NotNull
-    public Optional<T> getFirst() {
+    public Optional<T> findFirst() {
         return getOptional(0);
     }
 
     /** No validations for the best performance */
     @Nullable
-    public T getFirstValue() {
+    public T getFirst() {
         return array[0];
     }
 
     /** No validations for the best performance */
     @Nullable
-    public T getFirstValue(@Nullable T defaultValue) {
+    public T getFirst(@Nullable T defaultValue) {
         return array.length > 0 ? array[0] : defaultValue;
     }
 
     @NotNull
-    public Optional<T> getLast() {
+    public Optional<T> findLast() {
         return getOptional(-1);
     }
 
     /** No validations for the best performance */
     @Nullable
-    public T getLastValue(@Nullable T defaultValue) {
+    public T getLast(@Nullable T defaultValue) {
         return array.length > 0 ? array[array.length - 1] : defaultValue;
     }
 
-
     /** No validations for the best performance */
     @Nullable
-    public T getLastValue() {
+    public T getLast() {
         return array[array.length - 1];
     }
 
@@ -149,8 +145,7 @@ public final class Array<T> implements Serializable, Iterable<T> {
     public Array<T> subArray(final int from) {
         var from2 = from < 0 ? array.length + from : from;
         var startIndex = Math.max(0, Math.min(from2, array.length));
-        var result = Arrays.copyOfRange(array, startIndex, array.length);
-        return new Array<>(result);
+        return startIndex == 0 ? this : new Array<>(Arrays.copyOfRange(array, startIndex, array.length));
     }
 
     /** Add new items to the new Array */
@@ -189,12 +184,7 @@ public final class Array<T> implements Serializable, Iterable<T> {
     @NotNull
     @Override
     public String toString() {
-        var result = new StringBuilder(64).append('[');
-        for (var i = 0; i < array.length; i++) {
-            result.append(i == 0 ? "" : ", ");
-            result.append(array[i]);
-        }
-        return result.append(']').toString();
+        return Arrays.toString(array);
     }
 
     /** An optimized iterator */

@@ -89,46 +89,46 @@ class ArrayTest {
 
     /** Test of the getFirst method */
     @Test
-    void getFirst() {
-        Assertions.assertEquals('A', array.getFirst().orElse(undef));
-        Assertions.assertEquals(undef, empty.getFirst().orElse(undef));
+    void findFirst() {
+        Assertions.assertEquals('A', array.findFirst().orElse(undef));
+        Assertions.assertEquals(undef, empty.findFirst().orElse(undef));
     }
 
     /** Test of the getFirstValue method without arguments */
     @Test
-    void getFirstValue() {
-        Assertions.assertEquals('A', array.getFirstValue());
-        Assertions.assertThrows(ArrayIndexOutOfBoundsException.class, () -> empty.getFirstValue());
+    void getFirst() {
+        Assertions.assertEquals('A', array.getFirst());
+        Assertions.assertThrows(ArrayIndexOutOfBoundsException.class, () -> empty.getFirst());
     }
 
     /** Test of the getFirstValue method with default value */
     @Test
-    void getFirstValueDefault() {
-        Assertions.assertEquals('A', array.getFirstValue(undef));
-        Assertions.assertEquals(undef, empty.getFirstValue(undef));
-        Assertions.assertNull(empty.getFirstValue(null));
+    void getFirstDefault() {
+        Assertions.assertEquals('A', array.getFirst(undef));
+        Assertions.assertEquals(undef, empty.getFirst(undef));
+        Assertions.assertNull(empty.getFirst(null));
     }
 
     /** Test of the getLast method */
     @Test
-    void getLast() {
-        Assertions.assertEquals('E', array.getLast().orElse(undef));
-        Assertions.assertEquals(undef, empty.getLast().orElse(undef));
+    void findLast() {
+        Assertions.assertEquals('E', array.findLast().orElse(undef));
+        Assertions.assertEquals(undef, empty.findLast().orElse(undef));
     }
 
     /** Test of the getLastValue method with default value */
     @Test
-    void getLastValueDefault() {
-        Assertions.assertEquals('E', array.getLastValue(undef));
-        Assertions.assertEquals(undef, empty.getLastValue(undef));
-        Assertions.assertNull(empty.getLastValue(null));
+    void getLastDefault() {
+        Assertions.assertEquals('E', array.getLast(undef));
+        Assertions.assertEquals(undef, empty.getLast(undef));
+        Assertions.assertNull(empty.getLast(null));
     }
 
     /** Test of the getLastValue method without arguments */
     @Test
-    void getLastValue() {
-        Assertions.assertEquals('E', array.getLastValue());
-        Assertions.assertThrows(ArrayIndexOutOfBoundsException.class, () -> empty.getLastValue());
+    void getLast() {
+        Assertions.assertEquals('E', array.getLast());
+        Assertions.assertThrows(ArrayIndexOutOfBoundsException.class, () -> empty.getLast());
     }
 
     /** Test of the removeFirst method */
