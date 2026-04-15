@@ -49,4 +49,34 @@ public interface HttpContext {
     static HttpContext of() {
         return of (new ManyMap());
     }
+
+    // --- DEPRECATED METHODS ---
+
+    /** Returns the last parameter or the null value.
+     * @deprecated Use a method without the prefix `get` .*/
+    @Deprecated
+    default String getParameter(@NotNull CharSequence key) {
+        return parameter(key);
+    }
+
+    /** Returns the parameter name set.
+     * @deprecated Use a method without the prefix `get` .*/
+    @Deprecated
+    default Set<String> getParameterNames() {
+        return parameterNames();
+    };
+
+    /** Returns the last parameter .
+     * @deprecated Use a method without the prefix `get` .*/
+    @Deprecated
+    default String getParameter(@NotNull CharSequence key, String defaultValue) {
+        return getParameter(key, defaultValue);
+    };
+
+    /** Returns the type safe last parameter or the default value..
+     * @deprecated Use a method without the prefix `get` .*/
+    @Deprecated
+    default <T> T getParameter(@NotNull CharSequence key, @NotNull T defaultValue, @NotNull Function<String, T> converter) {
+        return parameter(key, converter, defaultValue);
+    }
 }
