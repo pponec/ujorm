@@ -76,7 +76,7 @@ The primary tool for searching and fetching relations. It uses **`Criterion`** o
 /** Type-safe selection */
 List<Employee> findEmployees(Connection connection) {
     return SelectQuery.run(connection, EMPLOYEE_EM, query -> query
-            .columnsOfDomain(true)     // Select all domain columns including foreign keys
+            .columns(true)     // Select all domain columns including foreign keys
             .column(MetaEmployee.city, MetaCity.name)
             .where(MetaEmployee.id.whereGe(1L))
             .toList());
@@ -128,10 +128,10 @@ final EntityManager<Employee, Long> EMPLOYEE_EM = CTX.entityManager(Employee.cla
 /** Fetching an entity with its relations */
 List<Employee> select(Connection connection) {
     return SelectQuery.run(connection, EMPLOYEE_EM, query -> query
-            .columnsOfDomain(true)
+            .columns(true)
             .column(MetaEmployee.city, MetaCity.name)     // INNER JOIN
             .column(MetaEmployee.boss, MetaEmployee.name) // LEFT JOIN
-            .where(MetaEmployee.id.whereGe(1L))
+            .where(MetaEmployee.id.whereGe(1L).and(MetaCity.id.whereGe(1L)))
             .tail("ORDER BY", MetaEmployee.id)
             .toList()
     );
@@ -191,9 +191,9 @@ void delete(Connection connection) {
 ```
 
 ### All Examples
-Extract from: [TutorialTest.java](project-m2/ujo-orm/src/test/java/org/ujorm/orm/tutorial/TutorialTest.java).
 
----
+These snippets are extracted from a sequential JUnit test suite demonstrating the full entity lifecycle.
+You can run and modify this test locally: [TutorialTest.java](project-m2/ujo-orm/src/test/java/org/ujorm/orm/tutorial/TutorialTest.java).
 
 ## Class Diagram
 
@@ -201,18 +201,33 @@ Extract from: [TutorialTest.java](project-m2/ujo-orm/src/test/java/org/ujorm/orm
   <img src="docs/images/OrmApi.svg" width="700" height="400" alt="OrmApi Class Diagram">
 </p>
 
-* **SelectQuery:** Type-safe builder for SELECT statements.
-* **ResultSetMapper:** Universal tool for transforming `ResultSet` into Records/JavaBeans.
-* **EntityManager:** Core component managing metadata and creating `Crud` objects.
+* **SelectQuery:**
+  A type-safe builder for constructing SELECT statements directly from the domain model using a fluent API.
+  It automatically generates `FROM` and `JOIN` clauses based on the paths of used metamodel attributes.
+  It integrates hierarchical `Criterion` trees for complex data filtering without manual SQL writing.
+* **ResultSetMapper:**
+  A universal tool for transforming `ResultSet` rows into Record or JavaBean objects.
+  It utilizes the Stream API for memory-efficient and lazy processing of query results.
+  It provides automatic type conversion between JDBC types and target class attributes.
+* **EntityManager:**
+  The central component responsible for managing metadata and configuring the ORM mapping.
+  It serves as a factory for creating `Crud` objects used for standard database operations.
+  It manages SQL logging configurations and defines rules for table and column quoting.
+
+Ujorm3 derives mapping from JPA/Jakarta annotations (`@Table`, `@Column`, `@Id`).
+M:1 relationships are recognized if an attribute's class has a `@Table` annotation.
 
 ### Caching Strategy
-Metadata is cached for speed (ResultSetMapper limit: 512 queries). Domain data is **never cached** to ensure consistency.
 
----
+There is **no data caching** for user queries.
+Metadata is cached to maximize speed:
+* **ResultSetMapper:** Caches column mapping structures (limit: 512 distinct queries).
+* **EntityManager:** Retains the database table metamodel for each entity.
+  Use `EntityManagerService` for shared singleton instances.
 
 ## Generated Meta Models
 
-The Ujorm3 Annotation Processor generates `Meta` classes for compile-time safety.
+The Ujorm3 Annotation Processor generates `Meta` classes at compile time for type safety without string literals.
 
 ```java
 /** Auto-generated metamodel for Employee */
@@ -222,17 +237,19 @@ public class MetaEmployee {
     public static final Key<Employee, Long> id = meta.getKey("id");
     public static final Key<Employee, String> name = meta.getKey("name");
     public static final Key<Employee, City> city = meta.getKey("city");
+    public static final Key<Employee, Employee> boss = meta.getKey("boss");
 }
 ```
-Metamodel keys are singletons, enabling lightning-fast reference comparison and precompiled data access.
 
----
+Metamodel keys are singletons.
+Chaining them allows for strictly type-safe paths (e.g., `MetaEmployee.city, MetaCity.name`).
+They implement `CharSequence`, meaning they can be used interchangeably with Strings in many parts of the API.
 
 ## Configuration
 
-Ujorm3 is configured using the `Config` class, where each parameter is represented by a type-safe `Key`. 
+Ujorm3 is configured using the `Config` class, where each parameter is represented by a type-safe `Key`.
 To ensure consistency and thread safety in a multi-threaded environment, it is highly recommended to make the configuration immutable by calling the `lock()` method before passing it to the ORM engine.
-Configuration values are assembled dynamically from multiple sources. 
+Configuration values are assembled dynamically from multiple sources.
 When a parameter is requested, the mechanism evaluates these sources following a strict priority (from highest to lowest):
 
 1. **Manual Settings:** Values explicitly assigned using the `setValue(Key, Object)` method on the `Config` instance.
@@ -246,7 +263,7 @@ See the [JavaDoc](https://www.javadoc.io/doc/org.ujorm/ujo-orm/latest/org/ujorm/
 
 ## Maven Dependencies & Setup
 
-Requires **Java 17+**.
+Ujorm3 requires **Java 17 or higher**.
 
 ```xml
 <dependencies>
@@ -263,29 +280,62 @@ Requires **Java 17+**.
 </dependencies>
 ```
 
+To enable the Meta Processor, configure the `maven-compiler-plugin`.
+The library includes automated integration tests for PostgreSQL, MySQL, MariaDB, Oracle, and MS SQL Server via Testcontainers.
+
 ---
 
 ## Benchmarks
 
-Ujorm3 consistently ranks at the top for execution speed and memory efficiency (lowest Bytes/op) compared to Hibernate, Jdbi, or MyBatis.
-👉 [Full metrics on GitHub](https://github.com/pponec/orm-benchmarks)
+Performance tests comparing Ujorm3 to Hibernate, Jdbi, Exposed, and MyBatis were executed using an H2 database on Java 25.
+To ensure an objective methodology, scenarios and implementations were designed by the **Gemini Pro AI** model.
+The complete source code for these benchmarks is entirely open-source and fully auditable on GitHub, ensuring maximum transparency.
+
+**Conclusions:**
+* **Execution Speed:** Ujorm3 consistently ranks at the top across all tested database operations.
+* **Memory Efficiency:** The library exhibits the lowest memory allocation rate (Bytes/op), reducing Garbage Collector pressure.
+* **Minimal Footprint:** Zero external dependencies and a total compiled size under 3 MB makes it ideal for microservices and embedded devices.
+
+**Version tested:** `3.0.0-RC4`  
+**Full metrics:** 👉 [GitHub: orm-benchmarks](https://github.com/pponec/orm-benchmarks?tab=readme-ov-file#orm-benchmark)
 
 ---
 
 ## FAQ
 
-* **Serializability:** Domain objects do not need to implement `Serializable`.
-* **Bytecode Safety:** Generation is based purely on your domain classes, occurring entirely in RAM.
-* **Thread Safety:** `EntityManager` and `Meta` classes are thread-safe. `Crud` and `SqlQuery` are request-scoped.
+**Will Ujorm v2 still be supported?**
+No, support for v2 has ended.
+
+**Do domain objects need to implement `Serializable`?**
+No, Ujorm3 works with stateless data structures.
+
+**Is `@JoinColumn` required?**
+No, it is optional.
+Relations are recognized by the `@Table` annotation on the attribute type.
+
+**Are core components thread-safe?**
+Yes, `EntityManager` and `Meta` classes are stateless and thread-safe.
+`Crud` and `SqlQuery` are stateful and scoped to a single thread/request.
+
+**Does Ujorm3 support native SQL queries?**
+Yes, for complex or database-specific queries, you can use the `SqlQuery` class to execute native SQL. 
+This also makes it easier to get started with this technology: developers transitioning from JDBC/JDBI can begin with simple SQL and gradually move on to the type-safe `SelectQuery` class.
+
+**Is runtime bytecode generation secure?**
+Yes.
+It is based purely on your project's domain classes with no external data input, a standard approach also used by HikariCP or Spring.
 
 ---
 
 ## Feedback & Contributions
+
+Join the conversation or report issues on GitHub:  
 👉 **[Join the Discussion on GitHub](https://github.com/pponec/ujorm)**
 
 ---
 
 ## Related Links
+
 * [Ujorm Main Project](https://github.com/pponec/ujorm)
 * [Petstore Demo](https://github.com/pponec/ujorm-petstore)
 * [HTML Builder Benchmarks](https://github.com/pponec/html-benchmarks)
