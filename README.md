@@ -36,7 +36,7 @@ Detailed results and methodology are available in the [Benchmarks](#benchmarks) 
 
 ## Menu
 * [Quick Start (TL;DR)](#quick-start-tldr)
-* [Detailed Operations & Relations](#detailed-operations--relations)
+* [Basic CRUD Operations](#basic-crud-operations)
     * [SELECT](#select)
     * [INSERT](#insert)
     * [UPDATE](#update)
@@ -68,6 +68,15 @@ void simpleCrud(java.sql.Connection connection) {
     var barcelona = crud.findById(saved.id()).orElseThrow();
 }
 ```
+> 💡 **Sample Application:** For a practical demonstration of the library in action, check out
+> the **[PetStore reference implementation](https://github.com/pponec/ujorm-petstore?tab=readme-ov-file#ujorm-petstore)**.
+
+## Basic CRUD Operations
+
+Basic mapping utilizes standard Jakarta annotations (`@Table`, `@Column`).
+Entities do not need to be registered beforehand, and multiple classes can map to the same database table.
+
+### SELECT
 
 ### 2. SelectQuery (Type-Safe Object Querying)
 The primary tool for searching and fetching relations. It uses **`Criterion`** objects for type-safe filtering (verifying both structure and parameter types) and handles `JOIN` clauses automatically.
@@ -191,9 +200,9 @@ void delete(Connection connection) {
 ```
 
 ### All Examples
-Extract from: [TutorialTest.java](project-m2/ujo-orm/src/test/java/org/ujorm/orm/tutorial/TutorialTest.java).
 
----
+These snippets are extracted from a sequential JUnit test suite demonstrating the full entity lifecycle.
+You can run and modify this test locally: [TutorialTest.java](project-m2/ujo-orm/src/test/java/org/ujorm/orm/tutorial/TutorialTest.java).
 
 ## Class Diagram
 
@@ -201,18 +210,39 @@ Extract from: [TutorialTest.java](project-m2/ujo-orm/src/test/java/org/ujorm/orm
   <img src="docs/images/OrmApi.svg" width="700" height="400" alt="OrmApi Class Diagram">
 </p>
 
-* **SelectQuery:** Type-safe builder for SELECT statements.
-* **ResultSetMapper:** Universal tool for transforming `ResultSet` into Records/JavaBeans.
-* **EntityManager:** Core component managing metadata and creating `Crud` objects.
+* **SelectQuery:**
+  A type-safe builder for constructing SELECT statements directly from the domain model using a fluent API.
+  It automatically generates `FROM` and `JOIN` clauses based on the paths of used metamodel attributes.
+  It integrates hierarchical `Criterion` trees for complex data filtering without manual SQL writing.
+* **ResultSetMapper:**
+  A universal tool for transforming `ResultSet` rows into Record or JavaBean objects.
+  It utilizes the Stream API for memory-efficient and lazy processing of query results.
+  It provides automatic type conversion between JDBC types and target class attributes.
+* **EntityManager:**
+  The central component responsible for managing metadata and configuring the ORM mapping.
+  It serves as a factory for creating `Crud` objects used for standard database operations.
+  It manages SQL logging configurations and defines rules for table and column quoting.
+
+Ujorm3 derives mapping from JPA/Jakarta annotations (`@Table`, `@Column`, `@Id`).
+If missing, it attempts to derive them automatically.
+M:1 relationships are recognized if an attribute's class has a `@Table` annotation.
+
+Which class should you use?
+Use `SelectQuery` for all standard data reading to gain full type safety and automatic table joins.
+Use `EntityManager` for operations on domain objects by primary key.
+For specific cases requiring native SQL, the low-level `SqlQuery` interface is available (not shown in the diagram).
 
 ### Caching Strategy
-Metadata is cached for speed (ResultSetMapper limit: 512 queries). Domain data is **never cached** to ensure consistency.
 
----
+There is **no data caching** for user queries.
+Metadata is cached to maximize speed:
+* **ResultSetMapper:** Caches column mapping structures (limit: 512 distinct queries).
+* **EntityManager:** Retains the database table metamodel for each entity.
+  Use `EntityManagerService` for shared singleton instances.
 
 ## Generated Meta Models
 
-The Ujorm3 Annotation Processor generates `Meta` classes for compile-time safety.
+The Ujorm3 Annotation Processor generates `Meta` classes at compile time for type safety without string literals.
 
 ```java
 /** Auto-generated metamodel for Employee */
@@ -222,17 +252,19 @@ public class MetaEmployee {
     public static final Key<Employee, Long> id = meta.getKey("id");
     public static final Key<Employee, String> name = meta.getKey("name");
     public static final Key<Employee, City> city = meta.getKey("city");
+    public static final Key<Employee, Employee> boss = meta.getKey("boss");
 }
 ```
-Metamodel keys are singletons, enabling lightning-fast reference comparison and precompiled data access.
 
----
+Metamodel keys are singletons.
+Chaining them allows for strictly type-safe paths (e.g., `MetaEmployee.city, MetaCity.name`).
+They implement `CharSequence`, meaning they can be used interchangeably with Strings in many parts of the API.
 
 ## Configuration
 
-Ujorm3 is configured using the `Config` class, where each parameter is represented by a type-safe `Key`. 
+Ujorm3 is configured using the `Config` class, where each parameter is represented by a type-safe `Key`.
 To ensure consistency and thread safety in a multi-threaded environment, it is highly recommended to make the configuration immutable by calling the `lock()` method before passing it to the ORM engine.
-Configuration values are assembled dynamically from multiple sources. 
+Configuration values are assembled dynamically from multiple sources.
 When a parameter is requested, the mechanism evaluates these sources following a strict priority (from highest to lowest):
 
 1. **Manual Settings:** Values explicitly assigned using the `setValue(Key, Object)` method on the `Config` instance.
@@ -246,7 +278,7 @@ See the [JavaDoc](https://www.javadoc.io/doc/org.ujorm/ujo-orm/latest/org/ujorm/
 
 ## Maven Dependencies & Setup
 
-Requires **Java 17+**.
+Ujorm3 requires **Java 17 or higher**.
 
 ```xml
 <dependencies>
@@ -263,29 +295,66 @@ Requires **Java 17+**.
 </dependencies>
 ```
 
+To enable the Meta Processor, configure the `maven-compiler-plugin`.
+The library includes automated integration tests for PostgreSQL, MySQL, MariaDB, Oracle, and MS SQL Server via Testcontainers.
+
 ---
 
 ## Benchmarks
 
-Ujorm3 consistently ranks at the top for execution speed and memory efficiency (lowest Bytes/op) compared to Hibernate, Jdbi, or MyBatis.
-👉 [Full metrics on GitHub](https://github.com/pponec/orm-benchmarks)
+Performance tests comparing Ujorm3 to Hibernate, Jdbi, Exposed, and MyBatis were executed using an H2 database on Java 25.
+To ensure an objective methodology, scenarios and implementations were designed by the **Gemini Pro AI** model.
+The complete source code for these benchmarks is entirely open-source and fully auditable on GitHub, ensuring maximum transparency.
+
+**Conclusions:**
+* **Execution Speed:** Ujorm3 consistently ranks at the top across all tested database operations.
+* **Memory Efficiency:** The library exhibits the lowest memory allocation rate (Bytes/op), reducing Garbage Collector pressure.
+* **Minimal Footprint:** Zero external dependencies and a total compiled size under 3 MB makes it ideal for microservices and embedded devices.
+
+**Version tested:** `3.0.0-RC4`  
+**Full metrics:** 👉 [GitHub: orm-benchmarks](https://github.com/pponec/orm-benchmarks?tab=readme-ov-file#orm-benchmark)
 
 ---
 
 ## FAQ
 
-* **Serializability:** Domain objects do not need to implement `Serializable`.
-* **Bytecode Safety:** Generation is based purely on your domain classes, occurring entirely in RAM.
-* **Thread Safety:** `EntityManager` and `Meta` classes are thread-safe. `Crud` and `SqlQuery` are request-scoped.
+**Will Ujorm v2 still be supported?**
+No, support for v2 has ended.
+
+**Do domain objects need to implement `Serializable`?**
+No, Ujorm3 works with stateless data structures.
+
+**Is `@JoinColumn` required?**
+No, it is optional.
+Relations are recognized by the `@Table` annotation on the attribute type.
+
+**Are core components thread-safe?**
+Yes, `EntityManager` and `Meta` classes are stateless and thread-safe.
+`Crud` and `SqlQuery` are stateful and scoped to a single thread/request.
+
+**Does Ujorm3 support native SQL queries?**
+Yes. you can use the `SqlQuery` class to execute raw native SQL for complex or database-specific requirements.
+Crucially, Ujorm3 can still use its `ResultSetMapper` to automatically map the results of these native queries directly to your domain objects, eliminating the need for manual row-mapping boilerplate.
+This feature actually eases the learning curve for newcomers; developers transitioning from JDBC or JDBI don't need to immediately master building complex `Criterion` trees.
+They can start by writing complex queries in plain SQL via `SqlQuery`, benefit from the automatic mapping, and gradually transition to the type-safe `SelectQuery` at their own pace.
+Yes. Use `SqlQuery` to execute raw native SQL. Ujorm3’s `ResultSetMapper` automatically maps these results to your domain objects, eliminating manual row-mapping boilerplate.
+This eases the learning curve: developers transitioning from JDBC/JDBI can start with plain SQL and gradually adopt the type-safe `SelectQuery` without immediately mastering complex `Criterion` trees.
+
+**Is runtime bytecode generation secure?**
+Yes.
+It is based purely on your project's domain classes with no external data input, a standard approach also used by HikariCP or Spring.
 
 ---
 
 ## Feedback & Contributions
+
+Join the conversation or report issues on GitHub:  
 👉 **[Join the Discussion on GitHub](https://github.com/pponec/ujorm)**
 
 ---
 
 ## Related Links
+
 * [Ujorm Main Project](https://github.com/pponec/ujorm)
 * [Petstore Demo](https://github.com/pponec/ujorm-petstore)
 * [HTML Builder Benchmarks](https://github.com/pponec/html-benchmarks)
