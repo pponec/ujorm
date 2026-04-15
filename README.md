@@ -303,27 +303,28 @@ The complete source code for these benchmarks is entirely open-source and fully 
 
 ## FAQ
 
-**Will Ujorm v2 still be supported?**
+* **Will Ujorm v2 still be supported?**<br/>
 No, support for v2 has ended.
 
-**Do domain objects need to implement `Serializable`?**
+* **Do domain objects need to implement `Serializable`?**<br/>
 No, Ujorm3 works with stateless data structures.
 
-**Is `@JoinColumn` required?**
+* **Is `@JoinColumn` required?**<br/>
 No, it is optional.
 Relations are recognized by the `@Table` annotation on the attribute type.
-
-**Are core components thread-safe?**
+* **Are core components thread-safe?**<br/>
 Yes, `EntityManager` and `Meta` classes are stateless and thread-safe.
 `Crud` and `SqlQuery` are stateful and scoped to a single thread/request.
-
-**Does Ujorm3 support native SQL queries?**
+* **Does Ujorm3 support native SQL queries?**<br/>
 Yes, for complex or database-specific queries, you can use the `SqlQuery` class to execute native SQL. 
 This also makes it easier to get started with this technology: developers transitioning from JDBC/JDBI can begin with simple SQL and gradually move on to the type-safe `SelectQuery` class.
-
-**Is runtime bytecode generation secure?**
+* **Is runtime bytecode generation secure?**<br/>
 Yes.
 It is based purely on your project's domain classes with no external data input, a standard approach also used by HikariCP or Spring.
+* **How to teach an AI to use the Ujorm3 ORM library?**<br/>
+For a quick understanding of the library, it is best to provide the AI directly with the source code of these two tutorial files (e.g., by copying the text or uploading files) so they are immediately available in its active context:
+ [QuickStartTutorialTest.java](project-m2/ujo-orm/src/test/java/org/ujorm/orm/tutorial/QuickStartTutorialTest.java) and
+ [TutorialTest.java](project-m2/ujo-orm/src/test/java/org/ujorm/orm/tutorial/TutorialTest.java)
 
 ---
 
