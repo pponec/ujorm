@@ -215,13 +215,7 @@ You can run and modify this test locally: [TutorialTest.java](project-m2/ujo-orm
   It manages SQL logging configurations and defines rules for table and column quoting.
 
 Ujorm3 derives mapping from JPA/Jakarta annotations (`@Table`, `@Column`, `@Id`).
-If missing, it attempts to derive them automatically.
 M:1 relationships are recognized if an attribute's class has a `@Table` annotation.
-
-Which class should you use?
-Use `SelectQuery` for all standard data reading to gain full type safety and automatic table joins.
-Use `EntityManager` for operations on domain objects by primary key.
-For specific cases requiring native SQL, the low-level `SqlQuery` interface is available (not shown in the diagram).
 
 ### Caching Strategy
 
@@ -324,12 +318,8 @@ Yes, `EntityManager` and `Meta` classes are stateless and thread-safe.
 `Crud` and `SqlQuery` are stateful and scoped to a single thread/request.
 
 **Does Ujorm3 support native SQL queries?**
-Yes. you can use the `SqlQuery` class to execute raw native SQL for complex or database-specific requirements.
-Crucially, Ujorm3 can still use its `ResultSetMapper` to automatically map the results of these native queries directly to your domain objects, eliminating the need for manual row-mapping boilerplate.
-This feature actually eases the learning curve for newcomers; developers transitioning from JDBC or JDBI don't need to immediately master building complex `Criterion` trees.
-They can start by writing complex queries in plain SQL via `SqlQuery`, benefit from the automatic mapping, and gradually transition to the type-safe `SelectQuery` at their own pace.
-Yes. Use `SqlQuery` to execute raw native SQL. Ujorm3’s `ResultSetMapper` automatically maps these results to your domain objects, eliminating manual row-mapping boilerplate.
-This eases the learning curve: developers transitioning from JDBC/JDBI can start with plain SQL and gradually adopt the type-safe `SelectQuery` without immediately mastering complex `Criterion` trees.
+Yes, for complex or database-specific queries, you can use the `SqlQuery` class to execute native SQL. 
+This also makes it easier to get started with this technology: developers transitioning from JDBC/JDBI can begin with simple SQL and gradually move on to the type-safe `SelectQuery` class.
 
 **Is runtime bytecode generation secure?**
 Yes.
