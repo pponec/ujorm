@@ -52,13 +52,17 @@ public class Config {
      * that the first declared field in the JavaBean or Record is the identifier.
      * Otherwise, or if you need to specify a different field as the primary key,
      * you must explicitly annotate the field using the JPA {@code @Id} annotation.
+     * The default value is {@code true}.
      */
     public static final Key<Boolean> acceptDefaultPk = meta.key("firstPropertyIsIdentifier", true);
 
-    /** Maximum size of the cache in the {@link org.ujorm.orm.jdbc.ResultSetMapper} */
+    /**
+     * Maximum size of the cache in the {@link org.ujorm.orm.jdbc.ResultSetMapper}.
+     * The default value is 512.
+     */
     public static final Key<Integer> maxCacheSize = meta.key("maxCacheSize", 512);
 
-    /** Batch size for the INSERT */
+    /** Batch size for the INSERT. The default value is 512. */
     public static final Key<Integer> batchSize = meta.key("batchSize", 512);
 
     /**
@@ -72,13 +76,13 @@ public class Config {
      */
     public static final Key<Level> logSqlLevel = meta.key("logSqlLevel", Level.FINE);
 
-    /** Log parameters of the SQL statement. */
+    /** Log parameters of the SQL statement. The default value is {@code false}. */
     public static final Key<Boolean> logSqlParams = meta.key("logSqlParams", false);
 
-    /** Print warnings, if Connection autocommit is true in batch operations. */
+    /** Print warnings, if Connection autocommit is true in batch operations. The default value is {@code true}. */
     public static final Key<Boolean> autoCommitWarned = meta.key("autoCommitWarned", true);
 
-    /** Enable quoting the SQL columns.
+    /** Enable quoting the SQL columns. The default value is {@code true}.
      * @see #quotePair
      */
     public static final Key<Boolean> enableSqlQuoting = meta.key("enableSqlQuoting", true);
@@ -86,17 +90,21 @@ public class Config {
     /**
      * Quotes for SQL column names. An empty string attempts to fetch them via JDBC.
      * Otherwise, the first and last characters serve as opening and closing delimiters.
+     * The default value is an empty string.
      * @see #enableSqlQuoting
      * @see org.ujorm.orm.model.QuotePair
      */
     public static final Key<String> quotePair = meta.key("quotePair", "");
 
-    /** Log all configuration values in the {@link org.ujorm.orm.utils.EntityContext} class; */
+    /**
+     * Log all configuration values in the {@link org.ujorm.orm.utils.EntityContext} class.
+     * The default value is {@code true}.
+     */
     public static final Key<Boolean> logConfigValues = meta.key("logConfigValues", true);
 
     // --- End of the list ---
 
-    /** A technical parameter for the jUnit test only */
+    /** A technical parameter for the jUnit test only. The default value is an empty string. */
     public static final Key<String> testOnly = meta.key("testOnly", "");
 
     /** Object state stored in an array */
@@ -221,16 +229,29 @@ public class Config {
     }
 
 
-    /** Internal Key definition */
+    /**
+     * Internal Key definition
+     *
+     * @param <V> The value type
+     */
     @SuppressWarnings("unchecked")
     public record Key<V>(
-            /** Name of the key */
+            /**
+             * Returns the name of the key
+             * @return The name
+             */
             String name,
 
-            /** Index of the key */
+            /**
+             * Returns the index of the key
+             * @return The index
+             */
             int index,
 
-            /** Default value */
+            /**
+             * Returns the default value
+             * @return The default value
+             */
             V defaultValue
     ) {
         public Class<V> type() {
