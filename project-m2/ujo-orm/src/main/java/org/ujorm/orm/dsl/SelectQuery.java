@@ -156,7 +156,7 @@ public class SelectQuery<D> extends AbstractSqlQuery<SelectQuery<D>> {
     // ------- COLUMNS -------
 
     /** Add all properties of the main domain objects */
-    public SelectQuery<D> columnsAll(boolean includingForeignKeys) {
+    public SelectQuery<D> columns(boolean includingForeignKeys) {
         for (Key<D,?> key : entityManager.getDomainHandler().getKeyList()) {
             if (includingForeignKeys || !key.info().foreignKey()) {
                 this.builder.column(key);

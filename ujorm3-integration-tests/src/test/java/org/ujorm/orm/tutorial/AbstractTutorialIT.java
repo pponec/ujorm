@@ -182,7 +182,7 @@ public abstract class AbstractTutorialIT {
     void select_query() {
         var employees = SelectQuery.run(connection(), employeeEm, query -> query
                 .sql("SELECT")
-                .columnsAll(true)
+                .columns(true)
                 .column(MetaEmployee.city, MetaCity.name)
                 .column(MetaEmployee.city, MetaCity.countryCode)
                 .column(MetaEmployee.boss, MetaEmployee.name)
