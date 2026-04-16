@@ -169,7 +169,7 @@
       <line y2="639" fill="none" x1="405" clip-path="url(#clipPath11)" x2="665" y1="639"/>
       <line y2="649" fill="none" x1="405" clip-path="url(#clipPath11)" x2="665" y1="649"/>
       <text stroke-linecap="butt" x="409.4225" y="667.4761" clip-path="url(#clipPath11)" font-family="sans-serif" stroke="none" stroke-miterlimit="1.45" xml:space="preserve">sql(sqlHead: CharSequence[*]): SelectQuery</text>
-      <text stroke-linecap="butt" x="409.4225" y="683.8202" clip-path="url(#clipPath11)" font-family="sans-serif" stroke="none" stroke-miterlimit="1.45" xml:space="preserve">column(key: Key[*]): SelectQuery</text>
+      <text stroke-linecap="butt" x="409.4225" y="683.8202" clip-path="url(#clipPath11)" font-family="sans-serif" stroke="none" stroke-miterlimit="1.45" xml:space="preserve">column(key: Key[1..*]): SelectQuery</text>
       <text stroke-linecap="butt" x="409.4225" y="700.1643" clip-path="url(#clipPath11)" font-family="sans-serif" stroke="none" stroke-miterlimit="1.45" xml:space="preserve">where(condition: Criterion): SelectQuery</text>
       <text stroke-linecap="butt" x="409.4225" y="716.5084" clip-path="url(#clipPath11)" font-family="sans-serif" stroke="none" stroke-miterlimit="1.45" xml:space="preserve">tail(sqlTail: CharSequence): SelectQuery</text>
       <text stroke-linecap="butt" x="409.4225" y="732.8525" clip-path="url(#clipPath11)" font-family="sans-serif" stroke="none" stroke-miterlimit="1.45" xml:space="preserve">toList(): D[*]</text>

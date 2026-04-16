@@ -163,7 +163,7 @@ delete(domains: Stream&lt;D&gt;) : int</y:MethodLabel>
           <y:UML clipContent="true" constraint="" hasDetailsColor="false" omitDetails="false" stereotype="" use3DEffect="true">
             <y:AttributeLabel xml:space="preserve"/>
             <y:MethodLabel xml:space="preserve">sql(sqlHead: CharSequence[*]): SelectQuery
-column(key: Key[*]): SelectQuery
+column(key: Key[1..*]): SelectQuery
 where(condition: Criterion): SelectQuery
 tail(sqlTail: CharSequence): SelectQuery
 toList(): D[*]
