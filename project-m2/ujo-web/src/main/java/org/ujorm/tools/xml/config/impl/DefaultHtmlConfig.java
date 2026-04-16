@@ -169,12 +169,12 @@ public class DefaultHtmlConfig extends DefaultXmlConfig implements HtmlConfig {
 
     /** Title is a required element by HTML 5 */
     public DefaultHtmlConfig setTitle(@NotNull final CharSequence title) {
-        this.title = Assert.required(title, "title");
+        this.title = Assert.notNull(title, () -> "title");
         return this;
     }
 
     public DefaultHtmlConfig setCssLinks(@NotNull final CharSequence... cssLinks) {
-        this.cssLinks = Assert.required(cssLinks, REQUIRED_MSG, "cssLinks");
+        this.cssLinks = Assert.notNull(cssLinks, () -> REQUIRED_MSG.formatted("cssLinks"));
         return this;
     }
 
@@ -184,7 +184,7 @@ public class DefaultHtmlConfig extends DefaultXmlConfig implements HtmlConfig {
     }
 
     public DefaultHtmlConfig setContentType(@NotNull final String contentType) {
-        this.contentType = Assert.required(contentType, REQUIRED_MSG, "contentType");
+        this.contentType = Assert.notNull(contentType, () -> REQUIRED_MSG.formatted("contentType"));
         return this;
     }
 
@@ -206,7 +206,7 @@ public class DefaultHtmlConfig extends DefaultXmlConfig implements HtmlConfig {
 
     /** Set Unpair element names */
     public DefaultHtmlConfig setUnpairElements(@NotNull final Set<String> unpairElements) {
-        this.unpairElements = Assert.required(unpairElements, REQUIRED_MSG, "unpairElements");
+        this.unpairElements = Assert.notNull(unpairElements, () -> REQUIRED_MSG.formatted("unpairElements"));
         return this;
     }
 
@@ -218,13 +218,13 @@ public class DefaultHtmlConfig extends DefaultXmlConfig implements HtmlConfig {
      */
     @Deprecated
     public DefaultHtmlConfig setRawHeaderText(@NotNull final String rawHeaderText) {
-        this.rawHeaderText = Assert.required(rawHeaderText, REQUIRED_MSG, "rawHeaderText");
+        this.rawHeaderText = Assert.notNull(rawHeaderText, () -> REQUIRED_MSG.formatted("rawHeaderText"));
         return this;
     }
 
     /** Assign a new header injector */
     public DefaultHtmlConfig setHeaderInjector(@NotNull final ApiInjector headerInjector) {
-        this.headerInjector = Assert.required(headerInjector, REQUIRED_MSG, "headerInjector");
+        this.headerInjector = Assert.notNull(headerInjector, () -> REQUIRED_MSG.formatted("headerInjector"));
         return this;
     }
 }

@@ -145,7 +145,7 @@ public final class Wrapper<V> implements Comparable<Wrapper<V>>, Confessionable 
             @NotNull final D value,
             final boolean nullFirst,
             @NotNull final Function<D, P>... functions) {
-        Assert.hasLength(functions, "Function is required");
+        Assert.hasLength(functions, () -> "Function is required");
         return new Wrapper<>(value, nullFirst, functions);
     }
 

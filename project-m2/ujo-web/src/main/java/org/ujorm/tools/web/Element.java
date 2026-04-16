@@ -545,7 +545,7 @@ public class Element extends XmlBuilder<Element> implements Html {
     /** Add new heading with the required level */
     @NotNull
     public Element addHeadingX(int level, @NotNull final CharSequence... cssClasses) {
-        Assert.isTrue(level > 0, "Unsupported level {}", level);
+        Assert.isTrue(level > 0, () -> "Unsupported level " + level);
         return addElement(HEADING_PREFIX + level, cssClasses);
     }
 

@@ -200,17 +200,17 @@ public class ReportBuilderConfigImpl<D> implements ReportBuilderConfig<D> {
     }
 
     public ReportBuilderConfigImpl<D> setFormId(@NotNull final String formId) {
-        this.formId = Assert.hasLength(formId, "formId");
+        this.formId = Assert.hasLength(formId, () -> "formId");
         return this;
     }
 
     public ReportBuilderConfigImpl<D> setControlCss(@NotNull final String controlCss) {
-        this.controlCss = Assert.hasLength(controlCss, "controlCss");
+        this.controlCss = Assert.hasLength(controlCss, () -> "controlCss");
         return this;
     }
 
     public ReportBuilderConfigImpl<D> setSubtitleCss(@NotNull final String subtitleCss) {
-        this.subtitleCss = Assert.hasLength(subtitleCss, "subtitleCss");
+        this.subtitleCss = Assert.hasLength(subtitleCss, () -> "subtitleCss");
         return this;
     }
 

@@ -163,8 +163,8 @@ public class GridBuilder<D> {
      */
     @NotNull
     public <V> GridBuilder<D> sortable(@NotNull final Direction direction) {
-        Assert.required(direction, "direction");
-        Assert.hasLength(columns, "No column is available");
+        Assert.notNull(direction, () -> "direction");
+        Assert.hasLength(columns, () -> "No column is available");
         columns.get(columns.size() - 1).setSortable(direction);
         return this;
     }

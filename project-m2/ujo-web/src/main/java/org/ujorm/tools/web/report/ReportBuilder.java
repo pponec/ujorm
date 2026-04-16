@@ -394,7 +394,7 @@ public class ReportBuilder<D> {
         }
 
         public Url(@NotNull final String bootstrapCss, @NotNull final String jQueryJs) {
-            this.bootstrapCss = Assert.hasLength(bootstrapCss, "bootstrapCss");
+            this.bootstrapCss = Assert.hasLength(bootstrapCss, () -> "bootstrapCss");
         }
     }
 }

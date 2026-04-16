@@ -45,7 +45,7 @@ public class DefaultXmlConfig implements XmlConfig {
     public static final int DEFAULT_FIRST_LEVEL = Integer.MIN_VALUE + 1;
 
     /** Assertion message template */
-    public static final String REQUIRED_MSG = "The argument {} is required";
+    public static final String REQUIRED_MSG = "The argument %s is required";
 
     /** An empty String */
     public static final String EMPTY = "";
@@ -133,7 +133,7 @@ public class DefaultXmlConfig implements XmlConfig {
      * @param charset the charset to set
      */
     public DefaultXmlConfig setCharset(@NotNull final Charset charset) {
-        this.charset = Assert.required(charset, REQUIRED_MSG, "charset");
+        this.charset = Assert.notNull(charset, () -> REQUIRED_MSG.formatted("charset"));
         return this;
     }
 
@@ -197,7 +197,7 @@ public class DefaultXmlConfig implements XmlConfig {
     /** An indentation space for elements of the next level,
      * where default value is an empty `String` */
     public DefaultXmlConfig setIndentationSpace(@NotNull CharSequence indentation) {
-        this.indentation = Assert.required(indentation, REQUIRED_MSG, "indentation");
+        this.indentation = Assert.notNull(indentation, () -> REQUIRED_MSG.formatted("indentation"));
         return this;
     }
 
@@ -218,7 +218,7 @@ public class DefaultXmlConfig implements XmlConfig {
 
     /** A replacement text instead of the {@code null} value */
     public DefaultXmlConfig setDefaultValue(@NotNull String defaultValue) {
-        this.defaultValue = Assert.required(defaultValue, "defaultValue");
+        this.defaultValue = Assert.notNull(defaultValue, () -> "defaultValue");
         return this;
     }
 

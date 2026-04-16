@@ -87,7 +87,7 @@ public class ReqestDispatcher {
      * @return
      */
     public ReqestDispatcher onParam(@NotNull final HttpParameter key, @NotNull final IOConsumer<JsonBuilder> processor) throws IOException {
-        Assert.required(key, "Parameter {} is required", "key");
+        Assert.notNull(key, () -> "Parameter %s is required".formatted("key"));
         if (!done && key.of(context, false)) {
             try (JsonBuilder builder = JsonBuilder.of(context.writer(), getAjaxConfig())) {
                 done = true;

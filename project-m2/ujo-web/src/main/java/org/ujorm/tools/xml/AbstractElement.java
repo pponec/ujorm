@@ -38,7 +38,7 @@ public abstract class AbstractElement<E extends AbstractElement<?>> implements A
     protected final String name;
 
     public AbstractElement(@NotNull final String name) {
-        this.name = Assert.hasLength(name, "name");
+        this.name = Assert.hasLength(name, () -> "name");
     }
 
     @Override

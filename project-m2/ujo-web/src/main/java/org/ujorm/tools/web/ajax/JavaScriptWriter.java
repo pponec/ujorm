@@ -127,7 +127,7 @@ public class JavaScriptWriter implements Injector {
 
     /** Assign an AJAX error message */
     public JavaScriptWriter setErrorMessage(@NotNull CharSequence errorMessage) {
-        this.errorMessage = Assert.hasLength(errorMessage, "errorMessage");
+        this.errorMessage = Assert.hasLength(errorMessage, () -> "errorMessage");
         return this;
     }
 

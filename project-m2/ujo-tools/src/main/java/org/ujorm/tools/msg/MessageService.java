@@ -80,7 +80,7 @@ public class MessageService {
             @NotNull final String begTag,
             @NotNull final char endTag,
             @NotNull final Locale defaultLocale) {
-        this.begTag = Assert.hasLength(begTag, "begTag");
+        this.begTag = Assert.hasLength(begTag, () -> "begTag");
         this.endTag = endTag;
         this.defaultLocale = Objects.requireNonNull(defaultLocale, "defaultLocale");
     }

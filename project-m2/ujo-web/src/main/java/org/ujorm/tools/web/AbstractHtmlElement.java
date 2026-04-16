@@ -263,7 +263,7 @@ public abstract class AbstractHtmlElement implements ApiElement<Element>, Html {
      * @return New script element
      */
     public Element addJavascriptLink(final boolean defer, @NotNull final CharSequence javascriptLink) {
-        Assert.required(javascriptLink, REQUIRED_MSG, "javascriptLink");
+        Assert.notNull(javascriptLink, () -> REQUIRED_MSG.formatted("javascriptLink"));
         return getHead().addElement(Html.SCRIPT)
                 .setAttribute(Html.A_SRC, javascriptLink)
                 .setAttribute("defer", defer ? "defer" : null);
@@ -300,7 +300,7 @@ public abstract class AbstractHtmlElement implements ApiElement<Element>, Html {
      * @return New CSS element
      */
     public Element addCssLink(@NotNull final CharSequence css) {
-        Assert.required(css, REQUIRED_MSG, "css");
+        Assert.notNull(css, () -> REQUIRED_MSG.formatted("css"));
         return getHead().addElement(Html.LINK)
                 .setAttribute(Html.A_HREF, css)
                 .setAttribute(Html.A_REL, "stylesheet");
@@ -311,7 +311,7 @@ public abstract class AbstractHtmlElement implements ApiElement<Element>, Html {
      * @return New CSS element
      */
     public Element addCssBody(@NotNull final CharSequence css) {
-        Assert.required(css, REQUIRED_MSG, "css");
+        Assert.notNull(css, () -> REQUIRED_MSG.formatted("css"));
         return getHead().addElement(Html.STYLE).addRawText(css);
     }
 
@@ -323,7 +323,7 @@ public abstract class AbstractHtmlElement implements ApiElement<Element>, Html {
     public Element addCssBodies(
             @NotNull final CharSequence lineSeparator,
             @NotNull final CharSequence... css) {
-        Assert.hasLength(css, REQUIRED_MSG, "css");
+        Assert.hasLength(css, () -> REQUIRED_MSG.formatted("css"));
         final var result = getHead().addElement(Html.STYLE);
         for (int i = 0; i < css.length; i++) {
             if (i > 0) result.addRawText(lineSeparator);

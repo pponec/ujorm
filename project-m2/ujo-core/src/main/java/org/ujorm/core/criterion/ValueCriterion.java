@@ -136,10 +136,10 @@ public class ValueCriterion<U> extends Criterion  {
 
     /**
      * Test a value is an instance of Iterable.
-     * If parameter is not valid than method throws Exception.
+     * If parameter is not valid, method throws Exception.
      */
     protected final void checkArray(Object value) throws IllegalArgumentException {
-        Assert.isTrue(value instanceof Array<?>, "Value must be an Array type");
+        Assert.isTrue(value instanceof Array<?>, () -> "Value must be an Array type");
     }
 
     /** This instance is an immutable implementation. */

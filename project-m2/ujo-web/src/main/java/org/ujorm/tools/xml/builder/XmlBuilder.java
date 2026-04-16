@@ -67,7 +67,7 @@ public class XmlBuilder<T extends XmlBuilder<T>> implements ApiElement<T> {
     public static final String HTML = Html.HTML;
 
     /** Assertion message template */
-    protected static final String REQUIRED_MSG = "The argument '{}' is required";
+    protected static final String REQUIRED_MSG = "The argument '%s' is required";
 
     /** Element name (not final to allow recycling) */
     @NotNull
@@ -129,7 +129,7 @@ public class XmlBuilder<T extends XmlBuilder<T>> implements ApiElement<T> {
     ) {
         this.name = name;
         this.lastText = name == HIDDEN_NAME;
-        this.writer = Assert.required(writer, REQUIRED_MSG, "writer");
+        this.writer = Assert.notNull(writer, () -> REQUIRED_MSG.formatted("writer"));
         this.level = level;
 
         if (printName) try {
@@ -194,7 +194,7 @@ public class XmlBuilder<T extends XmlBuilder<T>> implements ApiElement<T> {
      */
     @Nullable
     protected T nextChild(@Nullable final T element) {
-        Assert.isFalse(closed, "The node '{}' was closed", this.name);
+        Assert.isFalse(closed, () -> "The node '%s' was closed".formatted(this.name));
         if (!filled) try {
             writer.writeMid(this);
         } catch (IOException e) {
@@ -250,9 +250,9 @@ public class XmlBuilder<T extends XmlBuilder<T>> implements ApiElement<T> {
     @Override @NotNull
     public final T setAttribute(@Nullable final String name, @Nullable final Object value) {
         if (name != null) {
-            Assert.hasLength(name, REQUIRED_MSG, "name");
-            Assert.isFalse(closed, "The node '{}' was closed", name);
-            Assert.isTrue(attributeMode, "Writing attributes to the '{}' node was closed", name);
+            Assert.hasLength(name, () -> REQUIRED_MSG.formatted("name"));
+            Assert.isFalse(closed, () -> "The node '%s' was closed".formatted(name));
+            Assert.isTrue(attributeMode, () -> "Writing attributes to the '%s' node was closed".formatted(name));
             if (value != null) try {
                 writer.writeAttrib(name, value, this);
             } catch (IOException e) {
