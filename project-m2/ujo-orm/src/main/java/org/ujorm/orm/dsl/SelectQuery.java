@@ -287,6 +287,22 @@ public class SelectQuery<D> extends AbstractSqlQuery<SelectQuery<D>> {
         return streamMap().findFirst();
     }
 
+    /**
+     * Finds a unique result.
+     * If more than one row is found, an exception is thrown.
+     * @return An Optional containing the unique result, or empty if no result was found.
+     * @throws IllegalStateException If more than one row is found.
+     */
+    @NotNull
+    public Optional<D> findUnique() {
+        var resultList = streamMap().limit(2).toList();
+        return switch (resultList.size()) {
+            case 0 -> Optional.empty();
+            case 1 -> Optional.of(resultList.get(0));
+            default -> throw new IllegalStateException("Expected one result at most, but found more");
+        };
+    }
+
     // --- INNER CLASSES ---
 
     public final class SelectWriter implements SelectQueryWriter {
