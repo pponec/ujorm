@@ -87,6 +87,8 @@ public class SelectQueryBuilder implements AutoCloseable {
         if (result.isEmpty()) {
             result.append("SELECT");
         }
+
+        prepareBaseTableAndJoins();
         buildColumns();
         buildTable();
         buildJoins();
@@ -95,59 +97,110 @@ public class SelectQueryBuilder implements AutoCloseable {
         return result;
     }
 
+    /**
+     * Prepares base table alias and resolves all JOINs from columns and criteria.
+     */
+    protected void prepareBaseTableAndJoins() {
+        var entityClass = columns.isEmpty()
+                ? extractTableClassFromCriterion(this.criterion)
+                : columns.get(0).pathItem(0).domainClass();
+
+        if (entityClass != null && baseTableAlias == null) {
+            this.baseTableAlias = generateAlias(entityClass.getSimpleName());
+            this.domainAliases.putIfAbsent(entityClass, this.baseTableAlias);
+        }
+
+        if (this.baseTableAlias != null) {
+            for (var keyPath : columns) {
+                resolveJoinsAndGetAlias(keyPath);
+            }
+
+            var criterionKeys = new ArrayList<Key<?, ?>>();
+            collectKeysFromCriterion(this.criterion, criterionKeys);
+            for (var keyPath : criterionKeys) {
+                resolveJoinsAndGetAlias(keyPath);
+            }
+        }
+    }
+
+    /**
+     * Processes the key path, generates necessary JOINs, and returns the final table alias.
+     *
+     * @param keyPath The key path
+     * @return The table alias
+     */
+    @NotNull
+    private String resolveJoinsAndGetAlias(@NotNull Key<?, ?> keyPath) {
+        var currentAlias = this.baseTableAlias != null ? this.baseTableAlias : "";
+        var keyNameCounts = new HashSet<String>();
+
+        for (var i = 0; i < keyPath.pathSize() - 1; i++) {
+            var relKey = keyPath.pathItem(i);
+            var subPath = new ArrayList<Key<?, ?>>(i + 1);
+            for (var j = 0; j <= i; j++) {
+                subPath.add(keyPath.pathItem(j));
+            }
+            var relKeyName = relKey.name();
+
+            if (!joinMap.containsKey(subPath)) {
+                var targetClass = relKey.type();
+                var isReq = relKey.info().required();
+                var nextKey = keyPath.pathItem(i + 1);
+                String targetAlias;
+
+                if (!nextKey.tableAlias().isEmpty()) {
+                    targetAlias = nextKey.tableAlias();
+                    usedAliases.add(targetAlias);
+                } else if (!relKey.tableAlias().isEmpty()) {
+                    targetAlias = relKey.tableAlias();
+                    usedAliases.add(targetAlias);
+                } else {
+                    targetAlias = keyNameCounts.contains(relKeyName)
+                            ? generateNumberedAlias(relKeyName)
+                            : generateAlias(relKeyName);
+                }
+
+                var joinInfo = new JoinModel(relKey, currentAlias, targetAlias, targetClass, isReq);
+                joinMap.put(subPath, joinInfo);
+                joins.add(joinInfo);
+                domainAliases.putIfAbsent(targetClass, targetAlias);
+            }
+
+            keyNameCounts.add(relKeyName);
+            currentAlias = joinMap.get(subPath).targetAlias();
+        }
+
+        var finalKey = keyPath.pathItem(keyPath.pathSize() - 1);
+        return finalKey.tableAlias().isEmpty()
+                ? (keyPath.pathSize() == 1 ? domainAliases.getOrDefault(finalKey.domainClass(), currentAlias) : currentAlias)
+                : finalKey.tableAlias();
+    }
+
+    /**
+     * Recursively collects all keys from the criterion tree.
+     *
+     * @param crn  The criterion
+     * @param keys The list of collected keys
+     */
+    private void collectKeysFromCriterion(Criterion crn, List<Key<?, ?>> keys) {
+        if (crn instanceof ValueCriterion<?> valCrn) {
+            keys.add(valCrn.getLeftNode());
+        } else if (crn instanceof BinaryCriterion binCrn) {
+            collectKeysFromCriterion(binCrn.getLeftNode(), keys);
+            collectKeysFromCriterion(binCrn.getRightNode(), keys);
+        }
+    }
+
     /** Prepare model for JOINs and format SELECT columns */
     public void buildColumns() {
         if (columns.isEmpty()) {
             return;
         }
 
-        var firstKey = columns.get(0).pathItem(0);
-        var baseClass = firstKey.domainClass();
-        this.baseTableAlias = generateAlias(baseClass.getSimpleName());
-        this.domainAliases.putIfAbsent(baseClass, this.baseTableAlias);
-
         for (var colIdx = 0; colIdx < columns.size(); colIdx++) {
             var keyPath = columns.get(colIdx);
-            var currentAlias = this.baseTableAlias;
-            var keyNameCounts = new HashSet<String>();
+            var finalAlias = resolveJoinsAndGetAlias(keyPath);
 
-            for (int i = 0, max = keyPath.pathSize() - 1; i < max; i++) {
-                var relKey = keyPath.pathItem(i);
-                var subPath = new ArrayList<Key<?, ?>>(i + 1);
-                for (var j = 0; j <= i; j++) {
-                    subPath.add(keyPath.pathItem(j));
-                }
-                var relKeyName = relKey.name();
-
-                if (!joinMap.containsKey(subPath)) {
-                    var targetClass = relKey.type();
-                    var isReq = relKey.info().required();
-                    var nextKey = keyPath.pathItem(i + 1);
-                    String targetAlias;
-
-                    if (!nextKey.tableAlias().isEmpty()) {
-                        targetAlias = nextKey.tableAlias();
-                        usedAliases.add(targetAlias);
-                    } else if (!relKey.tableAlias().isEmpty()) {
-                        targetAlias = relKey.tableAlias();
-                        usedAliases.add(targetAlias);
-                    } else {
-                        targetAlias = keyNameCounts.contains(relKeyName)
-                                ? generateNumberedAlias(relKeyName)
-                                : generateAlias(relKeyName);
-                    }
-
-                    var joinInfo = new JoinModel(relKey, currentAlias, targetAlias, targetClass, isReq);
-                    joinMap.put(subPath, joinInfo);
-                    joins.add(joinInfo);
-                    domainAliases.putIfAbsent(targetClass, targetAlias);
-                }
-
-                keyNameCounts.add(relKeyName);
-                currentAlias = joinMap.get(subPath).targetAlias();
-            }
-
-            // Centralized logic for column prefixes:
             if (colIdx > 0) {
                 selectWriter.append(NEW_LINE).append(", ");
             } else {
@@ -155,10 +208,6 @@ public class SelectQueryBuilder implements AutoCloseable {
             }
 
             var finalKey = keyPath.pathItem(keyPath.pathSize() - 1);
-            var finalAlias = finalKey.tableAlias().isEmpty()
-                    ? currentAlias
-                    : finalKey.tableAlias();
-
             selectWriter.writeColumnName(finalAlias, finalKey, keyPath);
         }
     }
@@ -170,17 +219,13 @@ public class SelectQueryBuilder implements AutoCloseable {
      */
     public void buildTable() {
         var entityClass = columns.isEmpty()
-                ? extractTableClassFromCriterion(this.criterion) // The first criterion column
-                : columns.get(0).pathItem(0).domainClass();      // The first select column
+                ? extractTableClassFromCriterion(this.criterion)
+                : columns.get(0).pathItem(0).domainClass();
 
         Objects.requireNonNull(entityClass, "Entity class could not be resolved.");
 
-        if (baseTableAlias == null) {
-            baseTableAlias = generateAlias(entityClass.getSimpleName());
-        }
-
         selectWriter.append(NEW_LINE).append("FROM ");
-        selectWriter.writeTableName(baseTableAlias, entityClass);
+        selectWriter.writeTableName(this.baseTableAlias, entityClass);
     }
 
     /** Inner/outer joins according to isRequired method */
@@ -199,13 +244,11 @@ public class SelectQueryBuilder implements AutoCloseable {
     public void buildWhere() {
         if (this.criterion instanceof ValueCriterion<?> valCrn) {
             switch (valCrn.getOperator()) {
-                case ALWAYS_TRUE -> { return; }
-                case ALWAYS_FALSE -> {
+                case ALWAYS_TRUE: return;
+                case ALWAYS_FALSE:
                     selectWriter.append(NEW_LINE).append("WHERE ")
                             .append(getSqlOperatorText(valCrn.getOperator()));
                     return;
-                }
-                default -> {}
             }
         }
 
@@ -236,10 +279,8 @@ public class SelectQueryBuilder implements AutoCloseable {
     /** Resolve table alias from a Key */
     @NotNull
     public String findTableAlias(@NotNull Key<?, ?> key) {
-        var result = key.tableAlias().isEmpty()
-                ? domainAliases.getOrDefault(key.domainClass(), baseTableAlias)
-                : key.tableAlias();
-        if (result == null) {
+        var result = resolveJoinsAndGetAlias(key);
+        if (result.isEmpty()) {
             throw new IllegalStateException("No alias found for the key: " + key.fullName());
         }
         return result;
@@ -286,7 +327,7 @@ public class SelectQueryBuilder implements AutoCloseable {
     }
 
     /** Find a relation key */
-    protected Key<?,?> findRelatedPrimaryKey(Key<?,?> foreignKey) {
+    protected Key<?, ?> findRelatedPrimaryKey(Key<?, ?> foreignKey) {
         var acceptDefaultPk = true;
         return DomainHandlerProvider.getHandler(foreignKey.domainClass()).findPrimaryKey(acceptDefaultPk);
     }
@@ -310,15 +351,15 @@ public class SelectQueryBuilder implements AutoCloseable {
 
     /** Record representing a parsed JOIN relationship. */
     record JoinModel(
-            /** Returns relation key */
+            /** Gets the relation key. */
             Key<?, ?> relationKey,
-            /** Returns source alias */
+            /** Gets the source alias. */
             String sourceAlias,
-            /** Returns target alias */
+            /** Gets the target alias. */
             String targetAlias,
-            /** Returns target class */
+            /** Gets the target class. */
             Class<?> targetClass,
-            /** Returns true if required */
+            /** Gets the required flag. */
             boolean required
     ) {}
 
