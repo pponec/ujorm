@@ -91,6 +91,53 @@ class SelectQueryBuilderTest {
         assertEquals("WHERE ([e.id] <= 0 AND [c.id] IN (1, 2)) OR ([c.name] = 'Joe' AND [bb.name] = 'Black')", sql.next());
     }
 
+    /** Test criteria-only query, typically used for SELECT COUNT(*) */
+    @Test
+    void testCriterionOnlyForCount() {
+        var builder = getBuilder();
+
+        // 1. No columns defined
+        // 2. Criteria creation driving the FROM and JOIN clauses
+        var crn = QEmployee.city.join(QCity.name).whereEq("Prague");
+        builder.where(crn);
+
+        // 3. Execution
+        var sql = Lines.of(builder.toString());
+
+        // 4. Output verification
+        assertEquals(4, sql.size(), () -> builder.toString());
+        assertEquals("SELECT"                              , sql.next());
+        assertEquals("FROM [Employee] e"                   , sql.next());
+        assertEquals("JOIN [City] c ON [c.id] = [e.city]"  , sql.next());
+        assertEquals("WHERE [c.name] = 'Prague'"           , sql.next());
+    }
+
+    /** Test that keys in SELECT and WHERE share the same table alias */
+    @Test
+    void testSharedAliasForSelectAndWhere() {
+        var builder = getBuilder();
+
+        // 1. Column definition
+        builder.column(QEmployee.id);
+        builder.column(QEmployee.city.join(QCity.name));
+
+        // 2. Criteria creation using the exact same relation path
+        var crn1 = QEmployee.city.join(QCity.name).whereEq("Prague");
+        var crn2 = QEmployee.id.whereGt(10L);
+        builder.where(crn1.and(crn2));
+
+        // 3. Execution
+        var sql = Lines.of(builder.toString());
+
+        // 4. Output verification
+        assertEquals(5, sql.size(), () -> builder.toString());
+        assertEquals("SELECT [e.id] AS [id]"                      , sql.next());
+        assertEquals(", [c.name] AS [city.name]"                  , sql.next());
+        assertEquals("FROM [Employee] e"                          , sql.next());
+        assertEquals("JOIN [City] c ON [c.id] = [e.city]"         , sql.next());
+        assertEquals("WHERE [c.name] = 'Prague' AND [e.id] > 10"  , sql.next());
+    }
+
     /** Test that the WHERE clause is omitted when the root criterion is ALWAYS_TRUE */
     @Test
     void testStandaloneAlwaysTrue() {
