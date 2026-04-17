@@ -33,7 +33,7 @@ class SelectQueryBoundsTest {
     void testDomainAliasResolutionInWhereClause() {
         var builder = createBuilder();
         builder.column(QEmployee.id);
-        builder.column(QEmployee.city, QCity.name);
+        builder.column(QEmployee.city.join(QCity.name));
 
         // The criterion is placed on QCity, but the user doesn't pass an explicitly aliased key.
         // DslBuilder should dynamically figure out that QCity matches the joined table alias.

@@ -19,6 +19,7 @@ package org.ujorm.core;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Unmodifiable;
+import org.ujorm.core.composed.ComposedKey;
 import org.ujorm.core.criterion.CriterionProvider;
 
 import java.util.Objects;
@@ -35,7 +36,11 @@ import java.util.Objects;
  * @see Ujo
  */
 @Unmodifiable
-public interface Key<DOMAIN, VALUE> extends CharSequence, Comparable<Key>, CriterionProvider<DOMAIN, VALUE> {
+public interface Key<DOMAIN, VALUE> extends
+        CharSequence,
+        Comparable<Key>,
+        CriterionProvider<DOMAIN, VALUE> ,
+        ComposedKey<DOMAIN, VALUE> {
 
     /** Returns the name of the Key (e.g., "name"). */
     @NotNull String name();
@@ -164,13 +169,13 @@ public interface Key<DOMAIN, VALUE> extends CharSequence, Comparable<Key>, Crite
     // ---- Join methods ---
 
     /** Joins all key names using a dot delimiter. */
-    default <V2> String join(
+    default <V2> String joinNames(
             @NotNull final Key<VALUE,V2> key2) {
         return name() + '.' + key2.name();
     }
 
     /** Joins all key names using a dot delimiter. */
-    default <V2,V3> String join(
+    default <V2,V3> String joinNames(
             @NotNull final Key<VALUE,V2> key2,
             @NotNull final Key<V2, V3> key3) {
         return name() +
@@ -179,7 +184,7 @@ public interface Key<DOMAIN, VALUE> extends CharSequence, Comparable<Key>, Crite
     }
 
     /** Joins all key names using a dot delimiter. */
-    default <V2,V3,V4> String join(
+    default <V2,V3,V4> String joinNames(
             @NotNull final Key<VALUE,V2> key2,
             @NotNull final Key<V2, V3> key3,
             @NotNull final Key<V3, V4> key4,

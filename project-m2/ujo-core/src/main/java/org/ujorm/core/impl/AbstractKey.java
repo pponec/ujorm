@@ -5,10 +5,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.ujorm.core.Key;
 import org.ujorm.core.KeyInfo;
-import org.ujorm.core.criterion.Criterion;
-import org.ujorm.core.criterion.Operator;
-import org.ujorm.core.criterion.ProxyValue;
-import org.ujorm.tools.common.Array;
 import org.ujorm.tools.common.Primitive;
 
 import java.util.Map;

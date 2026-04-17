@@ -13,6 +13,7 @@ import org.ujorm.orm.model.QuotePair;
 import org.ujorm.orm.dsl.meta.*;
 import org.ujorm.orm.utils.Lines;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.ujorm.core.composed.ComposedKeyImpl.EMPTY_KEY;
 
 class SelectQueryBuilderTest {
 
@@ -30,8 +31,8 @@ class SelectQueryBuilderTest {
         // 1. Column definition (generates base alias 'e' and joins 'c' for city, 'b' for boss)
         builder.column(QEmployee.id);
         builder.column(QEmployee.name);
-        builder.column(QEmployee.city, QCity.name);
-        builder.column(QEmployee.boss, QEmployee.name);
+        builder.column(QEmployee.city.join(QCity.name));
+        builder.column(QEmployee.boss.join(QEmployee.name));
 
         // 2. Criteria creation
         var crn1 = QEmployee.name.whereEq("Joe");
@@ -63,8 +64,8 @@ class SelectQueryBuilderTest {
         // 1. Column definition (generates base alias 'e' and joins 'c' for city, 'bb' for boss)
         builder.column(QEmployee.id);
         builder.column(QEmployee.name);
-        builder.column(QEmployee.city, QCity.name);
-        builder.column(QEmployee.boss, metaBossName);
+        builder.column(QEmployee.city.join(QCity.name));
+        builder.column(QEmployee.boss.join(metaBossName));
 
         // 2. Criteria creation
         var crn1 = QEmployee.id.whereLe(0L);
@@ -240,16 +241,17 @@ class SelectQueryBuilderTest {
 
         /** Write database column name. */
         @Override
-        public void writeColumnName(@NotNull String tableAlias, @NotNull Key<?,?> column, Key<?,?>... labels) {
+        public void writeColumnName(@NotNull String tableAlias, @NotNull Key<?,?> column, Key<?,?> labels) {
             writer.append(q.open()).append(tableAlias).append('.').append(column.name()).append(q.close());
 
-            var printLabel = labels.length > 0;
+            var labelsSize = labels.pathSize();
+            var printLabel = labelsSize > 0;
             if (printLabel) {
                 writer.append(" AS ");
                 writer.append(q.open());
-                for (var i = 0; i < labels.length; i++) {
+                for (var i = 0; i < labelsSize; i++) {
                     if (i > 0) writer.append('.');
-                    writer.append(labels[i].name());
+                    writer.append(labels.pathItem(i).name());
                 }
                 writer.append(q.close());
             }
@@ -271,12 +273,12 @@ class SelectQueryBuilderTest {
                     }
                 }
                 case IN, NOT_IN -> {
-                    writeColumnName(alias, key);
+                    writeColumnName(alias, key, EMPTY_KEY);
                     writer.append(' ').append(operator.term()).append(' ');
                     writeValues(value);
                 }
                 default -> {
-                    writeColumnName(alias, key);
+                    writeColumnName(alias, key, EMPTY_KEY);
                     writer.append(' ').append(operator.term()).append(' ');
                     writeValue(value);
                 }
@@ -298,7 +300,7 @@ class SelectQueryBuilderTest {
                 last = end + 1;
 
                 switch (mark) {
-                    case "0" -> writeColumnName(alias, key);
+                    case "0" -> writeColumnName(alias, key, EMPTY_KEY);
                     case "*" -> writeValues(values);
                     default -> writeArrayAsSquareBrackets(values);
                 }

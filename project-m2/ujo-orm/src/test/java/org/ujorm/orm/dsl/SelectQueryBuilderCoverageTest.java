@@ -15,6 +15,7 @@ import org.ujorm.orm.utils.Lines;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.ujorm.core.composed.ComposedKeyImpl.EMPTY_KEY;
 
 /**
  * Test class for SelectQueryBuilder to achieve high code coverage in SonarQube.
@@ -89,7 +90,7 @@ class SelectQueryBuilderCoverageTest {
         var builder = getBuilder();
         // Path: Employee -> Boss (Employee) -> Boss's Boss (Employee)
         builder.column(QEmployee.id);
-        builder.column(QEmployee.boss, QEmployee.boss, QEmployee.name);
+        builder.column(QEmployee.boss.join(QEmployee.boss, QEmployee.name));
 
         var sql = Lines.ofQuoted(builder.toString());
 
@@ -153,13 +154,14 @@ class SelectQueryBuilderCoverageTest {
         }
 
         @Override
-        public void writeColumnName(@NotNull String tableAlias, @NotNull Key<?, ?> column, Key<?, ?>... labels) {
+        public void writeColumnName(@NotNull String tableAlias, @NotNull Key<?, ?> column, Key<?, ?> labels) {
             writer.append(q.open()).append(tableAlias).append('.').append(column.name()).append(q.close());
-            if (labels.length > 0) {
+            var labelsSize = labels.pathSize();
+            if (labelsSize > 0) {
                 writer.append(" AS ").append(q.open());
-                for (var i = 0; i < labels.length; i++) {
+                for (var i = 0; i < labelsSize; i++) {
                     if (i > 0) writer.append('.');
-                    writer.append(labels[i].name());
+                    writer.append(labels.pathItem(i).name());
                 }
                 writer.append(q.close());
             }
@@ -174,7 +176,7 @@ class SelectQueryBuilderCoverageTest {
                         .replace("{1}", String.valueOf(tv.values().get(0)));
                 writer.append(sql);
             } else {
-                writeColumnName(alias, criterion.getLeftNode());
+                writeColumnName(alias, criterion.getLeftNode(), EMPTY_KEY);
                 writer.append(" ").append(operator.name().equals("EQ") ? "=" : operator.name()).append(" ");
                 writer.append(criterion.getRightNode());
             }

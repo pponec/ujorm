@@ -35,7 +35,7 @@ public interface SelectQueryWriter {
     void writeTableName(@NotNull String tableAlias, @NotNull Class<?> entityClass);
 
     /** Write database column name. */
-    void writeColumnName(@NotNull String tableAlias, @NotNull Key<?,?> column, Key<?,?>... labels);
+    void writeColumnName(@NotNull String tableAlias, @NotNull Key<?,?> column, Key<?,?> labels);
 
     /**
      * Format condition to SQL.

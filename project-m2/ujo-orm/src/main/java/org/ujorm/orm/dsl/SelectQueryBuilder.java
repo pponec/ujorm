@@ -25,6 +25,7 @@ import org.ujorm.core.criterion.BinaryCriterion;
 import org.ujorm.core.criterion.Criterion;
 import org.ujorm.core.criterion.ValueCriterion;
 import java.util.*;
+import static org.ujorm.core.composed.ComposedKeyImpl.*;
 
 /**
  * A fluent wrapper over {@link java.sql.PreparedStatement}
@@ -42,7 +43,7 @@ public class SelectQueryBuilder implements AutoCloseable {
     private static final char SPACE = ' ';
 
     /** Columns */
-    private final List<Key<?, ?>[]> columns = new ArrayList<>();
+    private final List<Key<?, ?>> columns = new ArrayList<>();
 
     /** Used table aliases */
     private final Set<String> usedAliases = new HashSet<>();
@@ -71,7 +72,7 @@ public class SelectQueryBuilder implements AutoCloseable {
     }
 
     /** Adds a description of a single column composed of sequentially linked components. */
-    public void column(Key<?, ?>... column) {
+    public void column(Key<?, ?> column) {
         columns.add(column);
     }
 
@@ -100,7 +101,7 @@ public class SelectQueryBuilder implements AutoCloseable {
             return;
         }
 
-        var firstKey = columns.get(0)[0];
+        var firstKey = columns.get(0).pathItem(0);
         var baseClass = firstKey.domainClass();
         this.baseTableAlias = generateAlias(baseClass.getSimpleName());
         this.domainAliases.putIfAbsent(baseClass, this.baseTableAlias);
@@ -110,15 +111,18 @@ public class SelectQueryBuilder implements AutoCloseable {
             var currentAlias = this.baseTableAlias;
             var keyNameCounts = new HashSet<String>();
 
-            for (var i = 0; i < keyPath.length - 1; i++) {
-                var relKey = keyPath[i];
-                var subPath = Arrays.asList(keyPath).subList(0, i + 1);
+            for (int i = 0, max = keyPath.pathSize() - 1; i < max; i++) {
+                var relKey = keyPath.pathItem(i);
+                var subPath = new ArrayList<Key<?, ?>>(i + 1);
+                for (var j = 0; j <= i; j++) {
+                    subPath.add(keyPath.pathItem(j));
+                }
                 var relKeyName = relKey.name();
 
                 if (!joinMap.containsKey(subPath)) {
                     var targetClass = relKey.type();
                     var isReq = relKey.info().required();
-                    var nextKey = keyPath[i + 1];
+                    var nextKey = keyPath.pathItem(i + 1);
                     String targetAlias;
 
                     if (!nextKey.tableAlias().isEmpty()) {
@@ -150,7 +154,7 @@ public class SelectQueryBuilder implements AutoCloseable {
                 selectWriter.append(SPACE);
             }
 
-            var finalKey = keyPath[keyPath.length - 1];
+            var finalKey = keyPath.pathItem(keyPath.pathSize() - 1);
             var finalAlias = finalKey.tableAlias().isEmpty()
                     ? currentAlias
                     : finalKey.tableAlias();
@@ -166,8 +170,8 @@ public class SelectQueryBuilder implements AutoCloseable {
      */
     public void buildTable() {
         var entityClass = columns.isEmpty()
-                ? extractTableClassFromCriterion(this.criterion)    // The first criterion column
-                : columns.get(0)[0].domainClass();                  // The first select column
+                ? extractTableClassFromCriterion(this.criterion) // The first criterion column
+                : columns.get(0).pathItem(0).domainClass();      // The first select column
 
         Objects.requireNonNull(entityClass, "Entity class could not be resolved.");
 
@@ -185,9 +189,9 @@ public class SelectQueryBuilder implements AutoCloseable {
             selectWriter.append(NEW_LINE).append(join.required() ? "JOIN " : "LEFT JOIN ");
             selectWriter.writeTableName(join.targetAlias(), join.targetClass());
             selectWriter.append(" ON ");
-            selectWriter.writeColumnName(join.targetAlias(), findRelatedPrimaryKey(join.relationKey()));
+            selectWriter.writeColumnName(join.targetAlias(), findRelatedPrimaryKey(join.relationKey()), EMPTY_KEY);
             selectWriter.append(" = ");
-            selectWriter.writeColumnName(join.sourceAlias(), join.relationKey());
+            selectWriter.writeColumnName(join.sourceAlias(), join.relationKey(), EMPTY_KEY);
         }
     }
 
@@ -244,16 +248,13 @@ public class SelectQueryBuilder implements AutoCloseable {
     /** Extract base table class from criterion */
     @Nullable
     private Class<?> extractTableClassFromCriterion(Criterion crn) {
-        Class<?> result = null;
         if (crn instanceof BinaryCriterion binCrn) {
-            result = extractTableClassFromCriterion(binCrn.getLeftNode());
-            if (result == null) {
-                result = extractTableClassFromCriterion(binCrn.getRightNode());
-            }
+            var result = extractTableClassFromCriterion(binCrn.getLeftNode());
+            return result != null ? result : extractTableClassFromCriterion(binCrn.getRightNode());
         } else if (crn instanceof ValueCriterion<?> valCrn) {
-            result = valCrn.getLeftNode().domainClass();
+            return valCrn.getLeftNode().domainClass();
         }
-        return result;
+        return null;
     }
 
     /** Get SQL operator text. */

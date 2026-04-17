@@ -368,19 +368,6 @@ public abstract class Criterion {
         return new ValueCriterion<>(key, constant ? Operator.ALWAYS_TRUE : Operator.ALWAYS_FALSE, constant);
     }
 
-//    /**
-//     * This is a constant criterion independent of an entity.
-//     * @deprecated The method is deprecated in the ORM, use an alternative method.
-//     */
-//    @Deprecated
-//    @SuppressWarnings("unchecked")
-//    public static <U> Criterion forConstant(final boolean positive) {
-//        return positive
-//                ? ValueCriterion.TRUE
-//                : ValueCriterion.FALSE;
-//    }
-
-
     private static @NotNull AbstractKey<Object, Object> createDummyKey() {
         return new AbstractKey<>(0, "", Object.class, "", false, false, false, false) {
             @Override

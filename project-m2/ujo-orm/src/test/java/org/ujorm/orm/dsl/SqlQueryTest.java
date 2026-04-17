@@ -49,20 +49,6 @@ import static org.mockito.Mockito.when;
     }
 
     @Test
-    void testMultipleLabelsVarargs() {
-        try (var query = new SqlQuery(connectionMock)) {
-            query.sql("""
-                    SELECT c AS ${complex_col} FROM table""");
-            query.label("complex_col",
-                    mockKey("db"), mockKey("schema"), mockKey("table"),
-                    mockKey("user"), mockKey("address"), mockKey("zip"));
-
-            assertEquals("""
-                    SELECT c AS "db.schema.table.user.address.zip" FROM table""", query.toStringLine());
-        }
-    }
-
-    @Test
     void testLabelsWithBoundParameters() {
         try (var query = new SqlQuery(connectionMock)) {
             // Combination of labels and standard parameters

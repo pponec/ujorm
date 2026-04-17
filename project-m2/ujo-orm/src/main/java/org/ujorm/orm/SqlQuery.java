@@ -182,6 +182,8 @@ public class SqlQuery extends AbstractSqlQuery<SqlQuery> {
     /** Add a column label to the placeholder in the format {@code ${placeholder} }.
      * The provided metamodel attributes define a type-safe path to the specific property
      * (e.g., entity -> relation -> property) and are concatenated to form the final SQL column label.
+     *
+     * @see Key#join(Key, Key) You can join the keys optimally by this method.
      */
     public SqlQuery label(@NotNull String placeholder, @NotNull Key<?,?> attr) {
         return putColumnOrLabel(false, placeholder, attr);
@@ -190,6 +192,8 @@ public class SqlQuery extends AbstractSqlQuery<SqlQuery> {
     /** Add a column label to the placeholder in the format {@code ${placeholder} }.
      * The provided metamodel attributes define a type-safe path to the specific property
      * (e.g., entity -> relation -> property) and are concatenated to form the final SQL column label.
+     *
+     * @see Key#join(Key, Key) You can join the keys optimally by this method.
      */
     public <V1> SqlQuery label(@NotNull String placeholder,
                                @NotNull Key<?,V1> attr1,
@@ -200,6 +204,8 @@ public class SqlQuery extends AbstractSqlQuery<SqlQuery> {
     /** Add a column label to the placeholder in the format {@code ${placeholder} }.
      * The provided metamodel attributes define a type-safe path to the specific property
      * (e.g., entity -> relation -> property) and are concatenated to form the final SQL column label.
+     *
+     * @see Key#join(Key, Key) You can join the keys optimally by this method.
      */
     public <V1,V2> SqlQuery label(@NotNull String placeholder,
                                   @NotNull Key<?,V1> attr1,
@@ -208,31 +214,13 @@ public class SqlQuery extends AbstractSqlQuery<SqlQuery> {
         return putColumnOrLabel(false, placeholder, attr1, attr2, attr3);
     }
 
-    /** Add a column label to the placeholder in the format {@code ${placeholder} }.
-     * The provided metamodel attributes define a type-safe path to the specific property
-     * (e.g., entity -> relation -> property) and are concatenated to form the final SQL column label.
-     */
-    @SafeVarargs
-    public final <V1,V2,V3> SqlQuery label(@NotNull String placeholder,
-                                           @NotNull Key<?,V1> attr1,
-                                           @NotNull Key<V1,V2> attr2,
-                                           @NotNull Key<V2,V3> attr3,
-                                           @NotNull Key<V3,?> attr4,
-                                           @NotNull Key<?,?>... attrs) {
-        var allAttrs = new CharSequence[4 + attrs.length];
-        allAttrs[0] = attr1;
-        allAttrs[1] = attr2;
-        allAttrs[2] = attr3;
-        allAttrs[3] = attr4;
-        System.arraycopy(attrs, 0, allAttrs, 4, attrs.length);
-        return putColumnOrLabel(false, placeholder, allAttrs);
-    }
-
     // ------- COLUMNS -------
 
     /** Add a SQL column definition dynamically to replace the {@code ${COLUMNS} } placeholder.
      * The provided metamodel attributes define a type-safe path to the specific property
      * (e.g., entity -> relation -> property) and are concatenated to form the final SQL column label.
+     *
+     * @see Key#join(Key, Key) You can join the keys optimally by this method.
      */
     public SqlQuery column(@NotNull String sqlExpression, @NotNull Key<?,?> attr) {
         return putColumnOrLabel(true, sqlExpression, attr);
@@ -241,6 +229,8 @@ public class SqlQuery extends AbstractSqlQuery<SqlQuery> {
     /** Add a SQL column definition dynamically to replace the {@code ${COLUMNS} } placeholder.
      * The provided metamodel attributes define a type-safe path to the specific property
      * (e.g., entity -> relation -> property) and are concatenated to form the final SQL column label.
+     *
+     * @see Key#join(Key, Key) You can join the keys optimally by this method.
      */
     public <V1> SqlQuery column(@NotNull String sqlExpression,
                                 @NotNull Key<?,V1> attr1,
@@ -251,32 +241,14 @@ public class SqlQuery extends AbstractSqlQuery<SqlQuery> {
     /** Add a SQL column definition dynamically to replace the {@code ${COLUMNS} } placeholder.
      * The provided metamodel attributes define a type-safe path to the specific property
      * (e.g., entity -> relation -> property) and are concatenated to form the final SQL column label.
+     *
+     * @see Key#join(Key, Key) You can join the keys optimally by this method.
      */
     public <V1,V2> SqlQuery column(@NotNull String sqlExpression,
                                    @NotNull Key<?,V1> attr1,
                                    @NotNull Key<V1,V2> attr2,
                                    @NotNull Key<V2,?> attr3) {
         return putColumnOrLabel(true, sqlExpression, attr1, attr2, attr3);
-    }
-
-    /** Add a SQL column definition dynamically to replace the {@code ${COLUMNS} } placeholder.
-     * The provided metamodel attributes define a type-safe path to the specific property
-     * (e.g., entity -> relation -> property) and are concatenated to form the final SQL column label.
-     */
-    @SafeVarargs
-    public final <V1,V2,V3> SqlQuery column(@NotNull String sqlExpression,
-                                            @NotNull Key<?,V1> attr1,
-                                            @NotNull Key<V1,V2> attr2,
-                                            @NotNull Key<V2,V3> attr3,
-                                            @NotNull Key<V3,?> attr4,
-                                            @NotNull Key<?,?>... attrs) {
-        var allAttrs = new CharSequence[4 + attrs.length];
-        allAttrs[0] = attr1;
-        allAttrs[1] = attr2;
-        allAttrs[2] = attr3;
-        allAttrs[3] = attr4;
-        System.arraycopy(attrs, 0, allAttrs, 4, attrs.length);
-        return putColumnOrLabel(true, sqlExpression, allAttrs);
     }
 
     /** Run a builder statement */

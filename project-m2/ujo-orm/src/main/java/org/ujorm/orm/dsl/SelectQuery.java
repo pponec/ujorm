@@ -19,6 +19,7 @@ package org.ujorm.orm.dsl;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.ujorm.core.Key;
+import org.ujorm.core.composed.ComposedKeyImpl;
 import org.ujorm.core.criterion.Criterion;
 import org.ujorm.core.criterion.TemplateValue;
 import org.ujorm.core.criterion.ValueCriterion;
@@ -36,6 +37,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
+import static org.ujorm.core.composed.ComposedKeyImpl.*;
 
 /**
  * A fluent wrapper over {@link java.sql.PreparedStatement}
@@ -61,9 +63,6 @@ import java.util.stream.Stream;
  * @since 3.0
  */
 public class SelectQuery<D> extends AbstractSqlQuery<SelectQuery<D>> {
-
-    /** Empty key array */
-    private static final Key<?,?>[] EMPTY = new Key<?,?>[0];
 
     /** Entity manager */
     private final EntityManager<D,?> entityManager;
@@ -170,56 +169,36 @@ public class SelectQuery<D> extends AbstractSqlQuery<SelectQuery<D>> {
      * Add a SQL column definition dynamically to replace the {@code ${COLUMNS} } placeholder.
      * The provided metamodel attributes define a type-safe path to the specific property
      * (e.g., entity -> relation -> property) and are concatenated to form the final SQL column label.
+     * @see Key#join(Key, Key) You can use also.
      */
     public SelectQuery<D> column(@NotNull Key<?,?> attr) {
-        return putColumn(EMPTY, attr);
+        this.builder.column(attr);
+        return this;
     }
 
     /**
      * Add a SQL column definition dynamically to replace the {@code ${COLUMNS} } placeholder.
      * The provided metamodel attributes define a type-safe path to the specific property
      * (e.g., entity -> relation -> property) and are concatenated to form the final SQL column label.
+     * @see Key#join(Key, Key) You can use also.
      */
     public <V1> SelectQuery<D> column(@NotNull Key<D,V1> attr1,
                                       @NotNull Key<V1,?> attr2) {
-        return putColumn(EMPTY, attr1, attr2);
+        this.builder.column(ComposedKeyImpl.ofDirtyKeys(attr1, attr2));
+        return this;
     }
 
     /**
      * Add a SQL column definition dynamically to replace the {@code ${COLUMNS} } placeholder.
      * The provided metamodel attributes define a type-safe path to the specific property
      * (e.g., entity -> relation -> property) and are concatenated to form the final SQL column label.
+     * @see Key#join(Key, Key) You can use also.
      */
     public <V1,V2> SelectQuery<D> column(@NotNull Key<D,V1> attr1,
                                          @NotNull Key<V1,V2> attr2,
                                          @NotNull Key<V2,?> attr3) {
-        return putColumn(EMPTY, attr1, attr2, attr3);
-    }
-
-    /**
-     * Add a SQL column definition dynamically to replace the {@code ${COLUMNS} } placeholder.
-     * The provided metamodel attributes define a type-safe path to the specific property
-     * (e.g., entity -> relation -> property) and are concatenated to form the final SQL column label.
-     */
-    @SafeVarargs
-    public final <V1,V2,V3> SelectQuery<D> column(@NotNull Key<D,V1> attr1,
-                                                  @NotNull Key<V1,V2> attr2,
-                                                  @NotNull Key<V2,V3> attr3,
-                                                  @NotNull Key<V3,?> attr4,
-                                                  @NotNull Key<?,?>... attrs) {
-        return putColumn(attrs, attr1, attr2, attr3, attr4);
-    }
-
-    /** Validates and adds an expression to the internal map */
-    SelectQuery<D> putColumn(
-            @NotNull Key<?,?>[] attrs,
-            @NotNull Key<?,?>... keys
-    ) {
-        var result = new Key<?,?>[keys.length + attrs.length];
-        System.arraycopy(keys, 0, result, 0, keys.length);
-        if (attrs != EMPTY) System.arraycopy(attrs, 0, result, keys.length, attrs.length);
-        this.builder.column(result);
-        return self();
+        this.builder.column(ComposedKeyImpl.ofDirtyKeys(attr1, attr2, attr3));
+        return this;
     }
 
     @NotNull
@@ -255,7 +234,7 @@ public class SelectQuery<D> extends AbstractSqlQuery<SelectQuery<D>> {
             if (i > 0) dslWriter.append(' ');
             if (item instanceof Key<?,?> key) {
                 var alias = builder.findTableAlias(key);
-                dslWriter.writeColumnName(alias, key, EMPTY);
+                dslWriter.writeColumnName(alias, key, EMPTY_KEY);
             } else if (item instanceof TableAlias tableAlias) { // Config.DSL_SELECT_ONLY ?
                 var tableModel = entityManager.getTableModelService()
                         .getTableModel(tableAlias.domainClass(), dbConnection);
@@ -325,16 +304,17 @@ public class SelectQuery<D> extends AbstractSqlQuery<SelectQuery<D>> {
 
         /** Write database column name. If labels are available, append labels for the SQL SELECT statement. */
         @Override
-        public void writeColumnName(@NotNull String tableAlias, @NotNull Key<?,?> key, Key<?,?>... labels) {
+        public void writeColumnName(@NotNull String tableAlias, @NotNull Key<?,?> key, Key<?,?> labels) {
             var columnModel = entityManager.getTableModelService().getColumnModel(key, dbConnection);
             writer.append(tableAlias).append('.').append(q.open()).append(columnModel.name()).append(q.close());
 
-            if (labels.length > 0) {
+            var labelsSize = labels.pathSize();
+            if (labelsSize > 0) {
                 writer.append(" AS ");
                 writer.append(q.open());
-                for (var i = 0; i < labels.length; i++) {
+                for (var i = 0; i < labelsSize; i++) {
                     if (i > 0) writer.append('.');
-                    writer.append(labels[i].name());
+                    writer.append(labels.pathItem(i).name());
                 }
                 writer.append(q.close());
             }
@@ -356,13 +336,13 @@ public class SelectQuery<D> extends AbstractSqlQuery<SelectQuery<D>> {
                 }
                 case IN, NOT_IN -> {
                     var placeholder = nextPlaceholder(alias, key);
-                    writeColumnName(alias, key, EMPTY);
+                    writeColumnName(alias, key, EMPTY_KEY);
                     writer.append(' ').append(operator.term()).append(" (:").append(placeholder).append(')');
                     bindObject(true, placeholder, jdbcType, Array.ofObject(value));
                 }
                 default -> {
                     var placeholder = nextPlaceholder(alias, key);
-                    writeColumnName(alias, key, EMPTY);
+                    writeColumnName(alias, key, EMPTY_KEY);
                     writer.append(' ').append(operator.term()).append(" :").append(placeholder);
                     bindObject(true, placeholder, jdbcType, Array.ofObject(value));
                 }
@@ -380,7 +360,7 @@ public class SelectQuery<D> extends AbstractSqlQuery<SelectQuery<D>> {
                     if (mark == '0' || mark == '1') {
                         writer.append(template, last, i); // Appends without substring allocation!
                         if (mark == '0') {
-                            writeColumnName(alias, key, EMPTY);
+                            writeColumnName(alias, key, EMPTY_KEY);
                         } else {
                             var placeholder = nextPlaceholder(alias, key);
                             writer.append(':').append(placeholder);

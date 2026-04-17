@@ -31,18 +31,18 @@ class EmployeeUjoTest {
         Key<City, Double> city_latitude = CityUjo.keyLatitude;
 
         Assertions.assertEquals("name", user_name.name());
-        Assertions.assertEquals("boss.name", user_boss.join(user_name));
-        Assertions.assertEquals("boss.city", user_boss.join(user_city));
-        Assertions.assertEquals("boss.city.countryCode", user_boss.join(user_city, city_country));
+        Assertions.assertEquals("boss.name", user_boss.joinNames(user_name));
+        Assertions.assertEquals("boss.city", user_boss.joinNames(user_city));
+        Assertions.assertEquals("boss.city.countryCode", user_boss.joinNames(user_city, city_country));
         Assertions.assertEquals("countryCode", city_country.toString());
         Assertions.assertEquals("latitude", city_latitude.toString());
         // Non type safe method:
-        Assertions.assertEquals("boss.boss.boss.name.latitude", user_boss.join(user_boss, user_boss, user_name, city_latitude));
+        Assertions.assertEquals("boss.boss.boss.name.latitude", user_boss.joinNames(user_boss, user_boss, user_name, city_latitude));
 
         // Compilation error is expected (!)
         /*
-        Assertions.assertEquals("boss.latitude", user_boss.join(city_latitude));
-        Assertions.assertEquals("country.name", city_country.join(user_name));
+        Assertions.assertEquals("boss.latitude", user_boss.joinName(city_latitude));
+        Assertions.assertEquals("country.name", city_country.joinName(user_name));
         */
 
 
