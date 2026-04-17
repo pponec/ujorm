@@ -97,13 +97,9 @@ public class SelectQueryBuilder implements AutoCloseable {
         return result;
     }
 
-    /**
-     * Prepares base table alias and resolves all JOINs from columns and criteria.
-     */
+    /** Prepares base table alias and resolves all JOINs from columns and criteria. */
     protected void prepareBaseTableAndJoins() {
-        var entityClass = columns.isEmpty()
-                ? extractTableClassFromCriterion(this.criterion)
-                : columns.get(0).pathItem(0).domainClass();
+        var entityClass = resolveBaseEntityClass();
 
         if (entityClass != null && baseTableAlias == null) {
             this.baseTableAlias = generateAlias(entityClass.getSimpleName());
@@ -146,19 +142,15 @@ public class SelectQueryBuilder implements AutoCloseable {
                 var targetClass = relKey.type();
                 var isReq = relKey.info().required();
                 var nextKey = keyPath.pathItem(i + 1);
-                String targetAlias;
 
-                if (!nextKey.tableAlias().isEmpty()) {
-                    targetAlias = nextKey.tableAlias();
-                    usedAliases.add(targetAlias);
-                } else if (!relKey.tableAlias().isEmpty()) {
-                    targetAlias = relKey.tableAlias();
-                    usedAliases.add(targetAlias);
-                } else {
-                    targetAlias = keyNameCounts.contains(relKeyName)
-                            ? generateNumberedAlias(relKeyName)
-                            : generateAlias(relKeyName);
-                }
+                var targetAlias = !nextKey.tableAlias().isEmpty()
+                        ? nextKey.tableAlias()
+                        : !relKey.tableAlias().isEmpty()
+                        ? relKey.tableAlias()
+                        : keyNameCounts.contains(relKeyName)
+                        ? generateNumberedAlias(relKeyName)
+                        : generateAlias(relKeyName);
+                usedAliases.add(targetAlias);
 
                 var joinInfo = new JoinModel(relKey, currentAlias, targetAlias, targetClass, isReq);
                 joinMap.put(subPath, joinInfo);
@@ -218,10 +210,7 @@ public class SelectQueryBuilder implements AutoCloseable {
      * <br/> the first criterion column of
      */
     public void buildTable() {
-        var entityClass = columns.isEmpty()
-                ? extractTableClassFromCriterion(this.criterion)
-                : columns.get(0).pathItem(0).domainClass();
-
+        var entityClass = resolveBaseEntityClass();
         Objects.requireNonNull(entityClass, "Entity class could not be resolved.");
 
         selectWriter.append(NEW_LINE).append("FROM ");
@@ -284,6 +273,14 @@ public class SelectQueryBuilder implements AutoCloseable {
             throw new IllegalStateException("No alias found for the key: " + key.fullName());
         }
         return result;
+    }
+
+    /** Resolves base table class from columns or criterion. */
+    @Nullable
+    private Class<?> resolveBaseEntityClass() {
+        return columns.isEmpty()
+                ? extractTableClassFromCriterion(this.criterion)
+                : columns.get(0).pathItem(0).domainClass();
     }
 
     /** Extract base table class from criterion */
