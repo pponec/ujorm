@@ -169,14 +169,17 @@ class SelectQueryBuilderCoverageTest {
 
         @Override
         public void writeCondition(ValueCriterion<?> criterion, @NotNull String alias) {
+            var keyPath = (Key<?, ?>) criterion.getLeftNode();
+            var key = keyPath.pathItem(keyPath.pathSize() - 1);
             var operator = criterion.getOperator();
             if (operator == Operator.CUSTOM_SQL) {
                 var tv = (TemplateValue<?>) criterion.getRightNode();
-                var sql = tv.template().replace("{0}", q.open() + alias + "." + criterion.getLeftNode().name() + q.close())
+                var sql = tv.template()
+                        .replace("{0}", q.open() + alias + "." + key.name() + q.close())
                         .replace("{1}", String.valueOf(tv.values().get(0)));
                 writer.append(sql);
             } else {
-                writeColumnName(alias, criterion.getLeftNode(), EMPTY_KEY);
+                writeColumnName(alias, key, EMPTY_KEY);
                 writer.append(" ").append(operator.name().equals("EQ") ? "=" : operator.name()).append(" ");
                 writer.append(criterion.getRightNode());
             }

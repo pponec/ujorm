@@ -307,7 +307,8 @@ class SelectQueryBuilderTest {
         /** Write the condition to SQL */
         @Override
         public void writeCondition(ValueCriterion<?> criterion, @NotNull String alias) {
-            var key = (Key<?, ?>) criterion.getLeftNode();
+            var keyPath = (Key<?, ?>) criterion.getLeftNode();
+            var key = keyPath.pathItem(keyPath.pathSize() - 1);
             var operator = criterion.getOperator();
             var value = criterion.getRightNode();
 
