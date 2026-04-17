@@ -87,7 +87,7 @@
       <text stroke-linecap="butt" x="275.4225" y="487.3484" clip-path="url(#clipPath5)" font-family="sans-serif" stroke="none" stroke-miterlimit="1.45" xml:space="preserve">bind(key: String, values: Integer[1..*]): T</text>
       <text stroke-linecap="butt" x="275.4225" y="503.6926" clip-path="url(#clipPath5)" font-family="sans-serif" stroke="none" stroke-miterlimit="1.45" xml:space="preserve">bind(key: String, values: String[1..*]): T</text>
       <text stroke-linecap="butt" x="275.4225" y="520.0367" clip-path="url(#clipPath5)" font-family="sans-serif" stroke="none" stroke-miterlimit="1.45" xml:space="preserve">log(level: Level,  includingParams: boolean): T</text>
-      <text stroke-linecap="butt" x="275.4225" y="536.3808" clip-path="url(#clipPath5)" font-family="sans-serif" stroke="none" stroke-miterlimit="1.45" xml:space="preserve">streamMap(mapper: SqlFunction): Stream&lt;ResultSet&gt;</text>
+      <text stroke-linecap="butt" x="275.4225" y="536.3808" clip-path="url(#clipPath5)" font-family="sans-serif" stroke="none" stroke-miterlimit="1.45" xml:space="preserve">toStream(mapper: SqlFunction): Stream&lt;ResultSet&gt;</text>
       <text stroke-linecap="butt" x="275.4225" y="552.7249" clip-path="url(#clipPath5)" font-family="sans-serif" stroke="none" stroke-miterlimit="1.45" xml:space="preserve">forEach(consumer: SqlConsumer): void</text>
       <text stroke-linecap="butt" x="275.4225" y="569.069" clip-path="url(#clipPath5)" font-family="sans-serif" stroke="none" stroke-miterlimit="1.45" xml:space="preserve">execute(): int</text>
       <rect x="450" y="282" clip-path="url(#clipPath2)" fill="rgb(255,255,153)" width="128" height="53" stroke="none"/>

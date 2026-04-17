@@ -85,7 +85,7 @@ class QuickStartTutorialTest extends AbstractDemo {
                     .label("c.name", MetaCity.name)
                     .label("c.countryCode", MetaCity.countryCode)
                     .bind("id", 1L)
-                    .streamMap(rs -> new City(
+                    .toStream(rs -> new City(
                             rs.getLong(MetaCity.id.name()),
                             rs.getString(MetaCity.name.name()),
                             rs.getString(MetaCity.countryCode.name())))
@@ -96,7 +96,7 @@ class QuickStartTutorialTest extends AbstractDemo {
             // --- Reuse the query with the sophisticated ResultSetMapper ---
 
             var nextCities = query.bind("id", 2L)
-                    .streamMap(CITY_MAPPER.mapper())
+                    .toStream(CITY_MAPPER.mapper())
                     .toList();
             assertEquals(1, nextCities.size());
         }

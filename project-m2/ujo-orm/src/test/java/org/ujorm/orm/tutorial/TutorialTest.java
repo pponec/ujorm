@@ -120,7 +120,7 @@ class TutorialTest extends AbstractDemo {
                 .column(MetaEmployee.name)
                 .where(MetaEmployee.id.whereGe(1L))
                 .tail("GROUP BY", MetaEmployee.name)
-                .streamMap(rs -> new Object[]{
+                .toStream(rs -> new Object[]{
                         rs.getInt(1),
                         rs.getString(2)})
                 .toList()
@@ -151,7 +151,7 @@ class TutorialTest extends AbstractDemo {
                 .column("c.country_code", MetaEmployee.city, MetaCity.countryCode)
                 .column("b.name", MetaEmployee.boss, MetaEmployee.name)
                 .bind("employeeId", 0L)
-                .streamMap(EMPLOYEE_MAPPER.mapper())
+                .toStream(EMPLOYEE_MAPPER.mapper())
                 .toList());
 
         assertEquals(3, employees.size());
@@ -184,7 +184,7 @@ class TutorialTest extends AbstractDemo {
                 .label("c.country_code", MetaEmployee.city, MetaCity.countryCode)
                 .label("b.name", MetaEmployee.boss, MetaEmployee.name)
                 .bind("employeeId", 0L)
-                .streamMap(EMPLOYEE_MAPPER.mapper())
+                .toStream(EMPLOYEE_MAPPER.mapper())
                 .toList());
 
         assertEquals(3, employees.size());
@@ -232,7 +232,7 @@ class TutorialTest extends AbstractDemo {
 
             var count = query.sql("SELECT COUNT(*)")
                     .where(criterion)
-                    .streamMap(rs -> rs.getInt(1))
+                    .toStream(rs -> rs.getInt(1))
                     .findFirst().orElseThrow();
 
             assertEquals(0, count);

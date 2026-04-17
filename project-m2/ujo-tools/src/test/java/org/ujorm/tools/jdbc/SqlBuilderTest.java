@@ -159,7 +159,7 @@ class SqlBuilderTest extends AbstractJdbcConnector {
                             "ORDER BY t.id")
                     .bind("id", 10)
                     .bind("code", "T", "M")
-                    .streamMap(rs -> new Employee(
+                    .toStream(rs -> new Employee(
                             rs.getInt("id"),
                             rs.getString("name"),
                             rs.getObject("created", LocalDate.class)))
@@ -173,7 +173,7 @@ class SqlBuilderTest extends AbstractJdbcConnector {
             System.out.println("SELECT 2 (reuse the previous SELECT)");
             List<Employee> employees2 = query
                     .bind("id", 100)
-                    .streamMap(rs -> new Employee(
+                    .toStream(rs -> new Employee(
                             rs.getInt("id"),
                             rs.getString("name"),
                             rs.getObject("created", LocalDate.class)))
@@ -202,7 +202,7 @@ class SqlBuilderTest extends AbstractJdbcConnector {
                 """)
                 .bind("id", 10)
                 .bind("code", "T", "V")
-                .streamMap(rs -> new Employee(
+                .toStream(rs -> new Employee(
                         rs.getInt("id"),
                         rs.getString("name"),
                         rs.getObject("created", LocalDate.class)))
@@ -218,7 +218,7 @@ class SqlBuilderTest extends AbstractJdbcConnector {
                         "  AND t.name LIKE :name") // AND t.name LIKE :name%
                 .bind("id", 1)
                 .bind("name", "test")
-                .streamMap(rs -> new Employee(
+                .toStream(rs -> new Employee(
                         rs.getInt("id"),
                         rs.getString("name"),
                         rs.getObject("created", LocalDate.class)))
@@ -233,7 +233,7 @@ class SqlBuilderTest extends AbstractJdbcConnector {
                         "  AND t.name LIKE :name")
                 .bind("id", 1)
                 .bind("name", "t%")
-                .streamMap(rs -> new Employee(
+                .toStream(rs -> new Employee(
                         rs.getInt("id"),
                         rs.getString("name"),
                         rs.getObject("created", LocalDate.class)))
@@ -256,7 +256,7 @@ class SqlBuilderTest extends AbstractJdbcConnector {
             Assertions.assertEquals(query.sqlTemplate(), query.toString());
 
             var ex = assertThrows(org.ujorm.tools.jdbc.SQLException.class, () -> {
-                query.streamMap(t -> t).count();
+                query.toStream(t -> t).count();
             });
             assertEquals("Missing SQL parameter: [code, id]", ex.getMessage());
 
@@ -328,7 +328,7 @@ class SqlBuilderTest extends AbstractJdbcConnector {
             query.sql("INSERT INTO test (id) VALUES (:id)").bind("id", 1);
             query.prepareStatement(Statement.RETURN_GENERATED_KEYS);
 
-            var stream = query.generatedKeys(rs -> "dummy");
+            var stream = query.getGeneratedKeys(rs -> "dummy");
             assertEquals(0, stream.count());
 
             assertThrows(NoSuchElementException.class, () -> {
@@ -353,7 +353,7 @@ class SqlBuilderTest extends AbstractJdbcConnector {
         try (var dbConnection = createDbConnection()) {
             var result = SqlBuilder.run(dbConnection, query -> query
                     .sql("SELECT 1")
-                    .streamMap(rs -> rs.getInt(1))
+                    .toStream(rs -> rs.getInt(1))
                     .findFirst()
                     .orElse(0));
             assertEquals(1, result);
@@ -404,7 +404,7 @@ class SqlBuilderTest extends AbstractJdbcConnector {
 
         try (var query = new SqlBuilder(dbConnection)) {
             var stream = query.sql("SELECT name FROM employee")
-                    .streamMap(rs -> rs.getString(1));
+                    .toStream(rs -> rs.getString(1));
 
             // Short-circuit operation
             var result = stream.findFirst().orElse(null);

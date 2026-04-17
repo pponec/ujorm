@@ -123,7 +123,7 @@ public abstract class AbstractTutorialIT {
                 .column("b.name", MetaEmployee.boss, MetaEmployee.name)
                 .bind("employeeId", 0L)
                 .log(Level.INFO, true)
-                .streamMap(employeeEm.mapper())
+                .toStream(employeeEm.mapper())
                 .toList());
 
         assertEquals(3, employees.size());
@@ -153,7 +153,7 @@ public abstract class AbstractTutorialIT {
                     .column("b.name", MetaEmployee.boss, MetaEmployee.name)
                     .bind("employeeId", 0L)
                     .log(Level.INFO, true)
-                    .streamMap(employeeEm.mapper())
+                    .toStream(employeeEm.mapper())
                     .toList();
 
             var rawSql = query.toString();
@@ -225,7 +225,7 @@ public abstract class AbstractTutorialIT {
         var allEmployees = employeeCrud
                 .selectWhere("id > :id", query -> query
                         .bind("id", 0L)
-                        .streamMap(employeeEm.mapper())
+                        .toStream(employeeEm.mapper())
                         .sorted(Comparator.comparing(e -> e.getBoss() == null))
                         .toList());
 
@@ -234,7 +234,7 @@ public abstract class AbstractTutorialIT {
         var count = SqlQuery.run(connection(), query -> query
                 .sql("SELECT COUNT(*) FROM employee WHERE id >= :id")
                 .bind("id", 0L)
-                .streamMap(rs -> rs.getInt(1))
+                .toStream(rs -> rs.getInt(1))
                 .findFirst()
                 .orElseThrow());
         assertEquals(0, count);

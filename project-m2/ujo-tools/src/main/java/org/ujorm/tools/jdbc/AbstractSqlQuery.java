@@ -226,7 +226,7 @@ public abstract class AbstractSqlQuery<T extends AbstractSqlQuery<T>> implements
 
     /** Creates a Stream from the ResultSet. The Stream ensures the ResultSet is closed when finished. */
     @NotNull
-    private Stream<ResultSet> stream(final ResultSet rs) {
+    private Stream<ResultSet> toStream(final ResultSet rs) {
         switchResultSet(rs);
         final var iterator = new Iterator<ResultSet>() {
             @Override
@@ -257,13 +257,13 @@ public abstract class AbstractSqlQuery<T extends AbstractSqlQuery<T>> implements
 
     /** Executes the query and processes each row using the provided consumer. */
     public void forEach(@NotNull SqlConsumer<ResultSet> consumer) throws SQLException {
-        stream(executeSelect()).forEach(consumer);
+        toStream(executeSelect()).forEach(consumer);
     }
 
     /** Executes the query and returns a Stream of mapped results. */
     @NotNull
-    public <R> Stream<R> streamMap(SqlFunction<ResultSet, ? extends R> mapper) {
-        return stream(executeSelect()).map(mapper);
+    public <R> Stream<R> toStream(SqlFunction<ResultSet, ? extends R> mapper) {
+        return toStream(executeSelect()).map(mapper);
     }
 
     /**
@@ -319,7 +319,7 @@ public abstract class AbstractSqlQuery<T extends AbstractSqlQuery<T>> implements
 
     /** Returns the ResultSet containing generated keys from the last insert. */
     @Nullable
-    protected ResultSet generatedKeysRs() {
+    protected ResultSet getGeneratedKeysRs() {
         try {
             return preparedStatement != null ? preparedStatement.getGeneratedKeys() : null;
         } catch (SQLException e) {
@@ -332,17 +332,17 @@ public abstract class AbstractSqlQuery<T extends AbstractSqlQuery<T>> implements
      * Only one call per INSERT is allowed.
      */
     @NotNull
-    public <R> Stream<R> generatedKeys(SqlFunction<ResultSet, ? extends R> mapper) {
-        final var generatedKeysRs = generatedKeysRs();
+    public <R> Stream<R> getGeneratedKeys(SqlFunction<ResultSet, ? extends R> mapper) {
+        final var generatedKeysRs = getGeneratedKeysRs();
         return generatedKeysRs != null
-                ? stream(generatedKeysRs).map(mapper)
+                ? toStream(generatedKeysRs).map(mapper)
                 : Stream.of();
     }
 
     /** Method returns the last inserted key of the last INSERT statement. */
     @NotNull
     public <R> R generatedLastKey(SqlFunction<ResultSet, ? extends R> mapper) throws NoSuchElementException {
-        return generatedKeys(mapper).reduce((first, second) -> second)
+        return getGeneratedKeys(mapper).reduce((first, second) -> second)
                 .orElseThrow(() -> new NoSuchElementException("No keys"));
     }
 

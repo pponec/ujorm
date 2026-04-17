@@ -113,7 +113,7 @@ public final class EntityManager<D, V> {
     /**
      * Returns a stateful mapper (mapping function) for efficient processing of multiple rows.
      * <p>
-     * <strong>Usage:</strong> Highly recommended for stream processing (e.g., {@code .streamMap(entityManager.mapper())})
+     * <strong>Usage:</strong> Highly recommended for stream processing (e.g., {@code .toStream(entityManager.mapper())})
      * or manual {@code while(rs.next())} loops. By instantiating the mapper exactly once outside
      * the loop, column metadata is resolved upfront. This makes it significantly more efficient
      * for bulk operations.

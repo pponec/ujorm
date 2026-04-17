@@ -51,7 +51,7 @@ class SelectQueryTest extends AbstractDatabaseTest {
             assertEquals("ORDER BY e.'ID'", sql.next());
 
             // Execute the query:
-            var employees = query.streamMap(employeeMapper.mapper()).toList();
+            var employees = query.toStream(employeeMapper.mapper()).toList();
             assertEquals(0,employees.size());
         }
     }
@@ -72,7 +72,7 @@ class SelectQueryTest extends AbstractDatabaseTest {
             assertEquals("WHERE e.'ID' > :e_id_0", sql.next());
 
             // Execute the query:
-            var count = query.streamMap(rs -> rs.getInt(1)).findFirst().orElseThrow();
+            var count = query.toStream(rs -> rs.getInt(1)).findFirst().orElseThrow();
             assertEquals(0, count.intValue());
         }
     }
@@ -126,7 +126,7 @@ class SelectQueryTest extends AbstractDatabaseTest {
             query.sql("SELECT COUNT(*)").where(QEmployee.id.whereGt(1L));
 
             // Execute the query:
-            var count = query.streamMap(rs -> rs.getInt(1)).findFirst().orElseThrow();
+            var count = query.toStream(rs -> rs.getInt(1)).findFirst().orElseThrow();
             org.junit.jupiter.api.Assertions.assertEquals(0, count.intValue());
 
             var hasLogs = logRecords.stream()

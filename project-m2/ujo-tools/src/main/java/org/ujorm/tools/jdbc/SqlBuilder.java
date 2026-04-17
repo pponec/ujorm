@@ -36,7 +36,7 @@ import java.sql.Connection;
  *         """)
  *         .bind("id", 10)
  *         .bind("code", "T", "V")
- *         .streamMap(rs -> new Employee(
+ *         .toStream(rs -> new Employee(
  *                 rs.getInt("id"),
  *                 rs.getString("name"),
  *                 rs.getObject("created", LocalDate.class)))

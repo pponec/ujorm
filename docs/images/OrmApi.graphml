@@ -61,7 +61,7 @@ bind(key: String, values: Boolean[1..*]): T
 bind(key: String, values: Integer[1..*]): T
 bind(key: String, values: String[1..*]): T
 log(level: Level,  includingParams: boolean): T
-streamMap(mapper: SqlFunction): Stream&lt;ResultSet&gt;
+toStream(mapper: SqlFunction): Stream&lt;ResultSet&gt;
 forEach(consumer: SqlConsumer): void
 execute(): int</y:MethodLabel>
           </y:UML>

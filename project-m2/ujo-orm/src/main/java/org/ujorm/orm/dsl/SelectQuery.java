@@ -52,7 +52,7 @@ import java.util.stream.Stream;
  *    .column(MetaEmployee.city, MetaCity.countryCode)
  *    .where(MetaEmployee.id.whereGe(1L))
  *    .tail("ORDER BY", MetaEmployee.id)
- *    .streamMap(EMPLOYEE_MAPPER.mapper())
+ *    .toStream(EMPLOYEE_MAPPER.mapper())
  *    .toList()
  * );
  * </pre>
@@ -271,20 +271,20 @@ public class SelectQuery<D> extends AbstractSqlQuery<SelectQuery<D>> {
 
     /** Executes the query and returns a Stream of mapped results. */
     @NotNull
-    public Stream<D> streamMap() {
-        return streamMap(entityManager.mapper());
+    public Stream<D> toStream() {
+        return toStream(entityManager.mapper());
     }
 
     /** Executes the query and returns a List of mapped results. */
     @NotNull
     public List<D> toList() {
-        return streamMap().toList();
+        return toStream().toList();
     }
 
     /** Find the first element. */
     @NotNull
     public Optional<D> findFirst() {
-        return streamMap().findFirst();
+        return toStream().findFirst();
     }
 
     /**
@@ -295,7 +295,7 @@ public class SelectQuery<D> extends AbstractSqlQuery<SelectQuery<D>> {
      */
     @NotNull
     public Optional<D> findUnique() {
-        var resultList = streamMap().limit(2).toList();
+        var resultList = toStream().limit(2).toList();
         return switch (resultList.size()) {
             case 0 -> Optional.empty();
             case 1 -> Optional.of(resultList.get(0));

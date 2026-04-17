@@ -69,14 +69,14 @@ class AbstractSqlQueryTest {
     }
 
     @Test
-    void testStreamMapProcessing() throws SQLException {
+    void testToStreamProcessing() throws SQLException {
         when(mockResultSet.next()).thenReturn(true, true, false);
         when(mockResultSet.getString("name")).thenReturn("Alpha", "Beta");
 
         var query = new TestSqlQuery(mockConnection)
                 .sql("SELECT name FROM table");
 
-        List<String> result = query.streamMap(rs -> rs.getString("name"))
+        List<String> result = query.toStream(rs -> rs.getString("name"))
                 .collect(Collectors.toList());
 
         assertEquals(2, result.size());
@@ -85,7 +85,7 @@ class AbstractSqlQueryTest {
     }
 
     @Test
-    void testGeneratedKeys() throws SQLException {
+    void testGetGeneratedKeys() throws SQLException {
         when(mockResultSet.next()).thenReturn(true, false);
         when(mockResultSet.getLong(1)).thenReturn(99L);
 
