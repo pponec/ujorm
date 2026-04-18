@@ -3,6 +3,7 @@ package org.ujorm.orm.tutorial;
 import org.junit.jupiter.api.*;
 import org.ujorm.orm.core.EntityManager;
 import org.ujorm.orm.dsl.SelectQuery;
+import org.ujorm.orm.dsl.TableAlias;
 import org.ujorm.orm.jdbc.ResultSetMapper;
 import org.ujorm.orm.tutorial.domains.*;
 import org.ujorm.orm.SqlQuery;
@@ -100,15 +101,31 @@ class TutorialTest extends AbstractDemo {
     @Test
     @Order(211)
     void select_by_alias() {
-        var metaBossName = MetaEmployee.as("boss").key(MetaEmployee.name);
+
+        // --- By default alias ---
+
+        var metaBossName =  MetaEmployee.boss.join(MetaEmployee.name);
         var employees = SelectQuery.run(connection(), EMPLOYEE_EM, query -> query
                 .columns(true)
-                .column(MetaEmployee.boss, metaBossName)
+                .column(metaBossName)
                 .where(metaBossName.whereEq("Ingrid"))
                 .toList()
         );
 
         assertEquals(2, employees.size());
+
+        // --- By explicit alias: ---
+
+        var aliasedBossName = TableAlias.aliasedKey("boss", MetaEmployee.name);
+        employees = SelectQuery.run(connection(), EMPLOYEE_EM, query -> query
+                .columns(true)
+                .column(MetaEmployee.boss, aliasedBossName)
+                .where(aliasedBossName.whereEq("Ingrid"))
+                .toList()
+        );
+
+        assertEquals(2, employees.size());
+
     }
 
     /** Performs SQL grouping and aggregation, mapping the output to a custom object array. */
@@ -217,7 +234,7 @@ class TutorialTest extends AbstractDemo {
     @Order(400)
     void delete() {
         var employeeCrud = EMPLOYEE_EM.crud(connection());
-        var qBossId = MetaEmployee.as("b").key(MetaEmployee.id);
+        var qBossId = TableAlias.aliasedKey("b", MetaEmployee.id);
         var criterion = MetaEmployee.id.whereGe(1L);
 
         try (var query = new SelectQuery<>(connection(), EMPLOYEE_EM)) {

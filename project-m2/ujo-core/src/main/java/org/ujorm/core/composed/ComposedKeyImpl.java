@@ -96,7 +96,7 @@ public final class ComposedKeyImpl<T, V> implements Key<T, V>, ComposedKey<T, V>
 
     @Override
     public Key<?, ?> pathItem(int index) {
-        return keyPath[index];
+        return keyPath[index < 0 ? keyPath.length + index : index];
     }
 
     @Override

@@ -162,7 +162,7 @@ public class SelectQueryBuilder implements AutoCloseable {
             currentAlias = joinMap.get(subPath).targetAlias();
         }
 
-        var finalKey = keyPath.pathItem(keyPath.pathSize() - 1);
+        var finalKey= keyPath.pathItem(-1);
         return finalKey.tableAlias().isEmpty()
                 ? (keyPath.pathSize() == 1 ? domainAliases.getOrDefault(finalKey.domainClass(), currentAlias) : currentAlias)
                 : finalKey.tableAlias();
@@ -199,7 +199,7 @@ public class SelectQueryBuilder implements AutoCloseable {
                 selectWriter.append(SPACE);
             }
 
-            var finalKey = keyPath.pathItem(keyPath.pathSize() - 1);
+            var finalKey= keyPath.pathItem(-1);
             selectWriter.writeColumnName(finalAlias, finalKey, keyPath);
         }
     }

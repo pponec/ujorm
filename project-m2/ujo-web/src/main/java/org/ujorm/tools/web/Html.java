@@ -99,9 +99,9 @@ public interface Html {
     @Deprecated
     String BR = BREAK;
     /** Field set */
-    String FIELDSET  = "fieldset";
+    String FIELDSET = "fieldset";
     /** Legend */
-    String LEGEND  = "legend";
+    String LEGEND = "legend";
 
     // --- Attribute names ---
 

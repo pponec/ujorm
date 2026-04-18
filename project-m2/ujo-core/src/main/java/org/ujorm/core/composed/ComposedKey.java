@@ -56,12 +56,12 @@ public interface ComposedKey<DOMAIN, VALUE> {
         return pathSize() > 1;
     }
 
-    /** Returns a key item at the specific index */
+    /** Returns a key item at the specific index. A negative index counts from the end. */
     default Key<?, ?> pathItem(int index) {
-        if (index != 0) {
-            throw new NoSuchElementException("Out of range: " + index);
-        }
-        return (Key<?, ?>) self();
+        return switch (index) {
+            case -1, 0 -> self();
+            default -> throw new NoSuchElementException("Out of range: %s[%]".formatted(toString(), index));
+        };
     }
 
 }

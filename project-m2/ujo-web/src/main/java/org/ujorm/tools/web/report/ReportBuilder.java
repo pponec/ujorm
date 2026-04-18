@@ -317,7 +317,7 @@ public class ReportBuilder<D> {
         try (Element body = html.getBody()) {
             header.write(body);
             body.addDiv(config.getSubtitleCss()).addText(ajaxEnabled ? config.getAjaxReadyMessage() : "");
-            try (Element form =  body.addForm()
+            try (Element form = body.addForm()
                     .setId(config.getFormId())
                     .setMethod(Html.V_POST).setAction("?")) {
 

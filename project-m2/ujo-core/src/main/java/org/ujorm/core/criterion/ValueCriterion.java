@@ -35,7 +35,7 @@ public class ValueCriterion<U> extends Criterion  {
     public static final char SPACE = ' ';
 
     /** True constant criterion */
-    public static final Criterion TRUE  = new ValueCriterion<>(true);
+    public static final Criterion TRUE = new ValueCriterion<>(true);
 
     /** False constant criterion */
     public static final Criterion FALSE = new ValueCriterion<>(false);

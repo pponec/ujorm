@@ -38,4 +38,24 @@ public record TableAlias<T> (
     public String toString() {
         return domainClass.getSimpleName() + (!alias.isEmpty() ? " [" + alias + ']' : "");
     }
+
+    /**
+     * Factory method for TableAlias
+     * @param domainClass Domain class
+     * @param alias Table alias
+     * @return A new instance of TableAlias
+     */
+    public static <T> TableAlias<T> of(@NotNull Class<T> domainClass, @NotNull String alias) {
+        return new TableAlias(alias, domainClass);
+    }
+
+    /**
+     * Create a new AliasedKey for the given table alias and key
+     * @param alias Table alias
+     * @param key Original key
+     * @return A new instance of AliasedKey
+     */
+    public static <T,V> Key<T,V> aliasedKey(@NotNull String alias, @NotNull Key<T,V> key) {
+        return of(key.domainClass(), alias).key(key);
+    }
 }

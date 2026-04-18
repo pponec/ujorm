@@ -308,7 +308,7 @@ class SelectQueryBuilderTest {
         @Override
         public void writeCondition(ValueCriterion<?> criterion, @NotNull String alias) {
             var keyPath = (Key<?, ?>) criterion.getLeftNode();
-            var key = keyPath.pathItem(keyPath.pathSize() - 1);
+            var key= keyPath.pathItem(-1);
             var operator = criterion.getOperator();
             var value = criterion.getRightNode();
 

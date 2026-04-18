@@ -25,6 +25,7 @@ import static org.ujorm.maven.UjormMetaProcessor.Const.*;
         PARAM_META_PACKAGE
 })
 public class UjormMetaProcessor extends AbstractProcessor {
+    private static final boolean ENABLE_TABLE_ALIAS = false;
     /** Prefix of the generated domain classes */
     private String prefix = "Meta";
     /** Suffix of the generated domain classes */
@@ -267,7 +268,7 @@ public class UjormMetaProcessor extends AbstractProcessor {
             result.append("import org.ujorm.core.Key;\n");
             result.append("import org.ujorm.core.DomainHandler;\n");
             result.append("import org.ujorm.core.DomainHandlerProvider;\n");
-            result.append("import org.ujorm.orm.dsl.TableAlias;\n\n");
+            if (ENABLE_TABLE_ALIAS) result.append("import org.ujorm.orm.dsl.TableAlias;\n\n");
 
             result.append("/** Auto-generated metamodel for the {@code ").append(originalName).append("} domain class. */\n");
             result.append("@Generated(\"").append(getClass().getCanonicalName()).append("\")\n");
@@ -320,10 +321,13 @@ public class UjormMetaProcessor extends AbstractProcessor {
                         .append(fieldName).append(" = meta.getKey(\"").append(fieldName).append("\");\n");
             }
 
-            result.append("\n    /** Creates a table alias for the {@code ").append(originalName).append("} domain class. */\n");
-            result.append("    public static TableAlias<").append(originalName).append("> as(String alias) {\n");
-            result.append("        return new TableAlias<>(alias, ").append(originalName).append(".class);\n");
-            result.append("    }\n");
+            if (ENABLE_TABLE_ALIAS) {
+                result.append("\n");
+                result.append("    /** Creates a table alias for the {@code ").append(originalName).append("} domain class. */\n");
+                result.append("    public static TableAlias<").append(originalName).append("> as(String alias) {\n");
+                result.append("        return new TableAlias<>(alias, ").append(originalName).append(".class);\n");
+                result.append("    }\n");
+            }
             result.append("}\n");
             return result.toString();
         }
