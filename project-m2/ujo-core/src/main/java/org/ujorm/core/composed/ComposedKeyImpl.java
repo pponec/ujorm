@@ -45,7 +45,7 @@ public final class ComposedKeyImpl<T, V> implements Key<T, V>, ComposedKey<T, V>
 
     @Override
     public @NotNull Class<T> domainClass() {
-        return first().domainClass();
+        return (Class<T>) pathItem(0).domainClass();
     }
 
     /** Sets a value; throws a NullPointerException if any intermediate element is null. */
@@ -107,11 +107,6 @@ public final class ComposedKeyImpl<T, V> implements Key<T, V>, ComposedKey<T, V>
     @Override
     public String toString() {
         return name;
-    }
-
-    /** Returns the first key in the path. */
-    private Key<T, ?> first() {
-        return (Key<T, ?>) keyPath[0];
     }
 
     /** Returns the last key in the path. */

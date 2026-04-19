@@ -268,6 +268,68 @@ class SelectQueryBuilderTest {
         assertEquals("WHERE [e.id] IS NOT NULL AND [e.id] IN ((3, 5))", sql.next());
     }
 
+    /** Test that composed keys correctly apply the provided table alias to the SQL query */
+    @Test
+    void testAliasedComposedKey() {
+        var builder = getBuilder();
+
+        // 1. Crate composed key with an alias:
+        var aliasedCityName = TableAlias.aliasedKey("my_city", QEmployee.city.join(QCity.name));
+
+        // 2. Column definition
+        builder.column(QEmployee.id);
+        builder.column(aliasedCityName);
+
+        // 3. Criteria creation
+        var crn = aliasedCityName.whereEq("Prague");
+        builder.where(crn);
+
+        // 4. Execution
+        var sql = Lines.of(builder.toString());
+
+        // 5. Output verification
+        assertEquals(5, sql.size(), () -> builder.toString());
+        assertEquals("SELECT [e.id] AS [id]"                           , sql.next());
+        assertEquals(", [my_city.name] AS [city.name]"                 , sql.next());
+        assertEquals("FROM [Employee] e"                               , sql.next());
+        // JOIN alias "my_city" is seamlessly extracted from the next key in the path
+        assertEquals("JOIN [City] my_city ON [my_city.id] = [e.city]"  , sql.next());
+        assertEquals("WHERE [my_city.name] = 'Prague'"                 , sql.next());
+    }
+
+    /** Test that multiple aliased composed keys correctly generate distinct table aliases for JOINs */
+    @Test
+    void testMultipleAliasedComposedKeys() {
+        var builder = getBuilder();
+
+        // 1. Create paths to cities with distinct aliases for the employee and their superior
+        var empCityName = TableAlias.aliasedKey("ec", QEmployee.city.join(QCity.name));
+        var bossCityName = TableAlias.aliasedKey("bc", QEmployee.boss.join(QEmployee.city).join(QCity.name));
+
+        // 2. Column definition
+        builder.column(QEmployee.id);
+        builder.column(empCityName);
+        builder.column(bossCityName);
+
+        // 3. Criteria creation
+        var crn1 = empCityName.whereEq("Prague");
+        var crn2 = bossCityName.whereEq("London");
+        builder.where(crn1.and(crn2));
+
+        // 4. Execution
+        var sql = Lines.of(builder.toString());
+
+        // 5. Output verification
+        assertEquals(8, sql.size(), () -> builder.toString());
+        assertEquals("SELECT [e.id] AS [id]"                          , sql.next());
+        assertEquals(", [ec.name] AS [city.name]"                     , sql.next());
+        assertEquals(", [bc.name] AS [boss.city.name]"                , sql.next());
+        assertEquals("FROM [Employee] e"                              , sql.next());
+        assertEquals("JOIN [City] ec ON [ec.id] = [e.city]"           , sql.next());
+        assertEquals("LEFT JOIN [Employee] b ON [b.id] = [e.boss]"    , sql.next());
+        assertEquals("JOIN [City] bc ON [bc.id] = [b.city]"           , sql.next());
+        assertEquals("WHERE [ec.name] = 'Prague' AND [bc.name] = 'London'", sql.next());
+    }
     // --- CLASS ---
 
     /** Query writer implementation for testing */

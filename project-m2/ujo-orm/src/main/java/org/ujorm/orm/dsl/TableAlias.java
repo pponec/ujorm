@@ -2,6 +2,7 @@ package org.ujorm.orm.dsl;
 
 import org.jetbrains.annotations.NotNull;
 import org.ujorm.core.Key;
+import org.ujorm.core.composed.ComposedKeyImpl;
 
 import java.util.Objects;
 
@@ -50,12 +51,21 @@ public record TableAlias<T> (
     }
 
     /**
-     * Create a new AliasedKey for the given table alias and key
-     * @param alias Table alias
-     * @param key Original key
-     * @return A new instance of AliasedKey
+     * Create a new AliasedKey for the given table alias and key.
+     * In the case of a composed key, the alias is applied to the last element of the path.
      */
-    public static <T,V> Key<T,V> aliasedKey(@NotNull String alias, @NotNull Key<T,V> key) {
-        return of(key.domainClass(), alias).key(key);
+    @SuppressWarnings("unchecked")
+    public static <T, V> Key<T, V> aliasedKey(@NotNull String alias, @NotNull Key<T, V> key) {
+        var lastPathIndex = key.pathSize() - 1;
+        if (lastPathIndex <= 0) {
+            return of(key.domainClass(), alias).key(key);
+        }
+        var items = new Key<?, ?>[lastPathIndex + 1];
+        for (var i = 0; i < lastPathIndex; i++) {
+            items[i] = key.pathItem(i);
+        }
+        var lastItem = key.pathItem(lastPathIndex);
+        items[lastPathIndex] = of((Class) lastItem.domainClass(), alias).key(lastItem);
+        return ComposedKeyImpl.ofDirtyKeys(items);
     }
 }
