@@ -369,9 +369,7 @@ public final class EntityManager<D, V> {
                     checkAutoCommit(connection);
                 }
                 final var logLevel = config.getLogSqlLevel();
-                if (!Level.OFF.equals(logLevel)) {
-                    LOGGER.log(logLevel, sql::toString);
-                }
+                LOGGER.log(logLevel, sql::toString);
                 return fun.applyFunction(ps);
             } catch (SQLException ex) {
                 throw SQLExceptionBuilder.build(ex);
