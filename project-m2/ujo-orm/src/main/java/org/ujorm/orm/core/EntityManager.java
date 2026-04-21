@@ -454,6 +454,18 @@ public final class EntityManager<D, V> {
             }
         }
 
+        /**  If the primary key is empty (null or 0), an INSERT is performed; otherwise, an UPDATE is performed. */
+        @Override
+        public D insertOrUpdate(@NotNull D domain) {
+            var pkey = pk();
+            if (Objects.equals(pkey.getValue(domain), pkey.getDefault())) {
+                return insert(domain);
+            } else {
+                update(domain);
+                return domain;
+            }
+        }
+
         /**
          * Processes a stream of domain objects, deciding whether to insert or update each entity
          * based on the state of its primary key. If the primary key is empty (null or 0),

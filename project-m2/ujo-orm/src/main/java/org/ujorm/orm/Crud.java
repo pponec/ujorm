@@ -80,6 +80,10 @@ public interface Crud<D, V> {
      */
     D insert(@NotNull D domain);
 
+    /** Insert or update domain object */
+    public D insertOrUpdate(@NotNull D domain);
+
+
     /**
      * Processes a stream of domain objects and decides dynamically whether to insert or update each entity.
      * <p>
