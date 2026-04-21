@@ -52,6 +52,13 @@
             <version>3.0.0-RC5</version>
         </dependency>
 
+        <dependency>
+            <groupId>jakarta.servlet</groupId>
+            <artifactId>jakarta.servlet-api</artifactId>
+            <version>6.1.0</version>
+            <scope>provided</scope>
+        </dependency>
+
         <!-- Static analyzer support -->
         <dependency>
             <groupId>org.jetbrains</groupId>
@@ -60,6 +67,7 @@
             <optional>true</optional>
         </dependency>
 
+        <!-- Tests -->
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-engine</artifactId>
@@ -72,13 +80,6 @@
             <artifactId>mockito-junit-jupiter</artifactId>
             <version>${mockito.version}</version>
             <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>jakarta.servlet</groupId>
-            <artifactId>jakarta.servlet-api</artifactId>
-            <version>6.1.0</version>
-            <scope>provided</scope>
         </dependency>
 
         <dependency>
@@ -117,7 +118,7 @@
             <scope>test</scope>
         </dependency>
 
-        <!-- FOR A BENCHMARK -->
+        <!-- FOR A BENCHMARKs ONLY -->
         <dependency>
             <groupId>com.j2html</groupId>
             <artifactId>j2html</artifactId>
@@ -128,6 +129,7 @@
             <groupId>com.github.xmlet</groupId>
             <artifactId>htmlflow</artifactId>
             <version>5.0.3</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 
