@@ -321,6 +321,10 @@ This also makes it easier to get started with this technology: developers transi
 * **Is runtime bytecode generation secure?**<br/>
 Yes.
 It is based purely on your project's domain classes with no external data input, a standard approach also used by HikariCP or Spring.
+* **Is the library difficult to maintain?**<br/>
+  Easy maintenance was one of the main goals of the project.
+  The ORM library consists of a few well-defined components with clearly defined responsibilities, and no code performs binary modification of classes.
+  The library has an extremely compact codebase and is completely independent of third-party libraries.
 * **How to teach an AI to use the Ujorm3 ORM library?**<br/>
 For a quick understanding of the library, it is best to provide the AI directly with the source code of these two tutorial files (e.g., by copying the text or uploading files) so they are immediately available in its active context:
  [TutorialTest.java](https://raw.githubusercontent.com/pponec/ujorm/refs/heads/ujorm3/project-m2/ujo-orm/src/test/java/org/ujorm/orm/tutorial/TutorialTest.java)
