@@ -218,6 +218,12 @@ public abstract class AbstractSqlQuery<T extends AbstractSqlQuery<T>> implements
         }
     }
 
+    /** Executes an INSERT statement and directly returns a Stream of generated keys. */
+    @NotNull
+    public <R> Stream<R> executeInsert(@NotNull SqlFunction<ResultSet, ? extends R> mapper) {
+        return executeInsert().getGeneratedKeys(mapper);
+    }
+
     /** Internal execution of a SELECT query. */
     private ResultSet executeSelect() {
         try {
