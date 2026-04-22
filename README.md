@@ -303,28 +303,32 @@ The complete source code for these benchmarks is entirely open-source and fully 
 
 ## FAQ
 
-* **Will Ujorm v2 still be supported?**<br/>
-No, support for v2 has ended.
-
 * **Do domain objects need to implement `Serializable`?**<br/>
-No, Ujorm3 works with stateless data structures.
+  No, Ujorm3 works with stateless data structures and the `Serializable` is not required.
 
 * **Is `@JoinColumn` required?**<br/>
-No, it is optional.
-Relations are recognized by the `@Table` annotation on the attribute type.
+  No, it is optional.
+  Relations are recognized by the `@Table` annotation on the attribute type.
+
 * **Are core components thread-safe?**<br/>
-Yes, `EntityManager` and `Meta` classes are stateless and thread-safe.
-`Crud` and `SqlQuery` are stateful and scoped to a single thread/request.
+  Yes, `EntityManager` and `Meta` classes are stateless and thread-safe.
+  `Crud` and `SqlQuery` are stateful and scoped to a single thread or request.
+
 * **Does Ujorm3 support native SQL queries?**<br/>
-Yes, for complex or database-specific queries, you can use the `SqlQuery` class to execute native SQL. 
-This also makes it easier to get started with this technology: developers transitioning from JDBC/JDBI can begin with simple SQL and gradually move on to the type-safe `SelectQuery` class.
+  Yes, for complex or database-specific queries you can use the `SqlQuery` class to execute native SQL.
+  This also lowers the barrier to entry: developers transitioning from JDBC/JDBI can start with plain SQL
+  and gradually adopt the type-safe `SelectQuery` class.
+
 * **Is runtime bytecode generation secure?**<br/>
-Yes.
-It is based purely on your project's domain classes with no external data input, a standard approach also used by HikariCP or Spring.
+  Yes. It relies purely on your project's domain classes with no external data input —
+  the same approach used by established libraries such as HikariCP or Spring.
+
 * **Is the library difficult to maintain?**<br/>
   Easy maintenance was one of the main goals of the project.
-  The ORM library consists of a few well-defined components with clearly defined responsibilities, and no code performs binary modification of classes.
+  The ORM library consists of a few well-defined components with clearly defined responsibilities,
+  and no code performs binary modification of classes.
   The library has an extremely compact codebase and is completely independent of third-party libraries.
+
 * **How to teach an AI to use the Ujorm3 ORM library?**<br/>
 For a quick understanding of the library, it is best to provide the AI directly with the source code of these two tutorial files (e.g., by copying the text or uploading files) so they are immediately available in its active context:
  [TutorialTest.java](https://raw.githubusercontent.com/pponec/ujorm/refs/heads/ujorm3/project-m2/ujo-orm/src/test/java/org/ujorm/orm/tutorial/TutorialTest.java)
