@@ -277,8 +277,9 @@ public class ReportBuilder<D> {
                     .onParam(config.getAjaxRequestParam(), jsonBuilder -> doAjax(context, jsonBuilder, resource))
                     .onDefaultToElement(element -> printHtmlBody(context, element, resource));
         } catch (Exception e) {
-            LOGGER.log(Level.WARNING, "Internal server error", e);
-            throw new IllegalStateException("500"); // TODO.pop
+            var msg = "Internal server error";
+            LOGGER.log(Level.WARNING, msg, e);
+            throw new IllegalStateException(msg, e);
         }
     }
 
@@ -384,16 +385,14 @@ public class ReportBuilder<D> {
     public static class Url {
         /** Link to a Bootstrap URL of CDN */
         protected static final String BOOTSTRAP_CSS = "https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css";
-        /** Link to jQuery of CDN */
-        protected static final String JQUERY_JS = "";
 
         final String bootstrapCss;
 
         public Url() {
-            this(BOOTSTRAP_CSS, JQUERY_JS);
+            this(BOOTSTRAP_CSS);
         }
 
-        public Url(@NotNull final String bootstrapCss, @NotNull final String jQueryJs) {
+        public Url(@NotNull final String bootstrapCss) {
             this.bootstrapCss = Assert.hasLength(bootstrapCss, () -> "bootstrapCss");
         }
     }

@@ -104,7 +104,7 @@ public class TableModelBuilder<D> {
      */
     @NotNull
     private Map<String, String> findDatabaseColumnMap(TableIdentifier table, Connection initConnection) {
-        var columns = findDatabaseColumnList(table, initConnection);
+        final var columns = findDatabaseColumnList(table, initConnection);
         return StreamUtils.map(name -> name.toLowerCase(Locale.ENGLISH), columns);
     }
 
@@ -143,12 +143,11 @@ public class TableModelBuilder<D> {
     }
 
     /**
-     * Determines the database vendor from the provided connection.
+     * Determines the database vendor from the provided connection metadata.
      *
      * @param connection The database connection to check.
      * @return The identified database vendor or DEFAULT if unknown or an error occurs.
      */
-    /** Determines the database vendor from the connection metadata. */
     protected DatabaseVendor getDbVendor(Connection connection) {
         try {
             var productName = connection.getMetaData().getDatabaseProductName();

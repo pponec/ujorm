@@ -25,7 +25,7 @@ import java.util.*;
 /** Temporary Model */
 public record TableModel<D>(
         /** Gets the domain handler. */
-        DomainHandler<D> hander,
+        DomainHandler<D> handler,
 
         /** Gets the primary key. */
         ColumnModel<D, ?> pk,
@@ -49,7 +49,7 @@ public record TableModel<D>(
     public ColumnModel<D, ?> getColumn(@NotNull CharSequence property) {
         var index = (property instanceof Key key)
                 ? key.index()
-                : hander.getKey(property.toString()).index();
+                : handler.getKey(property.toString()).index();
         return columns.get(index);
     }
 
@@ -88,7 +88,7 @@ public record TableModel<D>(
 
     /** Full database name */
     public String database() {
-        return hander.getDatabaseTable();
+        return handler.getDatabaseTable();
     }
 
     /** Original key of Ujo API */

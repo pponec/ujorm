@@ -521,9 +521,9 @@ public final class EntityManager<D, V> {
         public D insert(@NotNull D domain) {
             Objects.requireNonNull(domain, "Domain object must not be null");
             var pkOriginalValue = utilities.getPrimaryKeyValue(domain);
-            var columns = tableModel().createInsertedColumns(pkOriginalValue);
-            var sql = utilities.buildInsertSql(columns);
             var returnGeneratedKeys = utilities.isPkEmpty(pkOriginalValue);
+            var columns = tableModel().createInsertedColumns(returnGeneratedKeys ? null : pkOriginalValue);
+            var sql = utilities.buildInsertSql(columns);
 
             return utilities.run(false, dbconnection, sql, returnGeneratedKeys, ps -> {
                 utilities.setValuesToStatement(domain, columns, ps);
@@ -870,7 +870,7 @@ public final class EntityManager<D, V> {
 
                 if (ps == null) {
                     genKeys = emptyPk;
-                    cols = tableModel().createInsertedColumns(pkVal);
+                    cols = tableModel().createInsertedColumns(emptyPk ? null : pkVal);
                     var sql = utilities.buildInsertSql(cols);
                     LOGGER.log(config.getLogSqlLevel(), sql);
                     ps = !emptyPk
