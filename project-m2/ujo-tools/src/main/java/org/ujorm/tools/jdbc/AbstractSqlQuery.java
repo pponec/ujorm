@@ -319,7 +319,7 @@ public abstract class AbstractSqlQuery<T extends AbstractSqlQuery<T>> implements
 
     /** Returns the ResultSet containing generated keys from the last insert. */
     @Nullable
-    protected ResultSet getGeneratedKeysRs() {
+    protected ResultSet getGeneratedKeysResultSet() {
         try {
             return preparedStatement != null ? preparedStatement.getGeneratedKeys() : null;
         } catch (SQLException e) {
@@ -333,7 +333,7 @@ public abstract class AbstractSqlQuery<T extends AbstractSqlQuery<T>> implements
      */
     @NotNull
     public <R> Stream<R> getGeneratedKeys(SqlFunction<ResultSet, ? extends R> mapper) {
-        final var generatedKeysRs = getGeneratedKeysRs();
+        final var generatedKeysRs = getGeneratedKeysResultSet();
         return generatedKeysRs != null
                 ? toStream(generatedKeysRs).map(mapper)
                 : Stream.of();
@@ -341,7 +341,7 @@ public abstract class AbstractSqlQuery<T extends AbstractSqlQuery<T>> implements
 
     /** Method returns the last inserted key of the last INSERT statement. */
     @NotNull
-    public <R> R generatedLastKey(SqlFunction<ResultSet, ? extends R> mapper) throws NoSuchElementException {
+    public <R> R getGeneratedLastKey(SqlFunction<ResultSet, ? extends R> mapper) throws NoSuchElementException {
         return getGeneratedKeys(mapper).reduce((first, second) -> second)
                 .orElseThrow(() -> new NoSuchElementException("No keys"));
     }

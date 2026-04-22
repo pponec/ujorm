@@ -134,7 +134,7 @@ class SqlBuilderTest extends AbstractJdbcConnector {
                     .bind("created", someDate)
                     .executeInsert();
 
-            var id1 = query.generatedLastKey(rs -> rs.getInt(1));
+            var id1 = query.getGeneratedLastKey(rs -> rs.getInt(1));
             Assertions.assertEquals(id1, 1);
 
             System.out.println("MULTI INSERT");
@@ -148,7 +148,7 @@ class SqlBuilderTest extends AbstractJdbcConnector {
             System.out.println("Previous statement with modified parameter(s)");
             query.bind("code", "X")
                     .execute();
-            var id5 = query.generatedLastKey(rs -> rs.getInt(1));
+            var id5 = query.getGeneratedLastKey(rs -> rs.getInt(1));
             Assertions.assertEquals(id5, 5);
 
             System.out.println("SELECT 1");
@@ -332,7 +332,7 @@ class SqlBuilderTest extends AbstractJdbcConnector {
             assertEquals(0, stream.count());
 
             assertThrows(NoSuchElementException.class, () -> {
-                query.generatedLastKey(rs -> "dummy");
+                query.getGeneratedLastKey(rs -> "dummy");
             });
         }
     }

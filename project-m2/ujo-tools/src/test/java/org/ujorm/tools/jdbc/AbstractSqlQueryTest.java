@@ -94,7 +94,7 @@ class AbstractSqlQueryTest {
                 .bind("val", "data");
 
         query.executeInsert();
-        var key = query.generatedLastKey(rs -> rs.getLong(1));
+        var key = query.getGeneratedLastKey(rs -> rs.getLong(1));
 
         assertEquals(99L, key);
     }
