@@ -206,10 +206,13 @@ public abstract class AbstractSqlQuery<T extends AbstractSqlQuery<T>> implements
         }
     }
 
-    /** Executes an INSERT statement with the ability to retrieve generated keys. */
-    public int executeInsert() {
+    /** Executes an INSERT statement with the ability to retrieve generated keys.
+     * @see #getGeneratedKeys(SqlFunction)
+     */
+    public T executeInsert() {
         try {
-            return prepareStatement(Statement.RETURN_GENERATED_KEYS).executeUpdate();
+            prepareStatement(Statement.RETURN_GENERATED_KEYS).executeUpdate();
+            return self();
         } catch (SQLException e) {
             throw new SqlException(e);
         }
