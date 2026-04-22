@@ -650,6 +650,8 @@ public final class EntityManager<D, V> {
             var result = 0L;
             var limit = utilities.getBatchLimit();
             var batchCount = 0;
+            var model = tableModel();
+            var changedColumnsCache = new HashMap<org.ujorm.orm.utils.BitSet, List<ColumnModel<D, ?>>>();
 
             try (var cache = new StatementCache<V>()) {
                 utilities.checkAutoCommit(dbconnection);
@@ -681,19 +683,24 @@ public final class EntityManager<D, V> {
 
                     result += cache.flushOnCollision(id);
 
-                    var modifiedKeys = new Key[modifiedIdx.length];
-                    for (var i = 0; i < modifiedIdx.length; i++) {
-                        modifiedKeys[i] = domainHandler.getKey(modifiedIdx[i]);
+                    var changedColumns = changedColumnsCache.get(changes);
+                    if (changedColumns == null) {
+                        changedColumns = new ArrayList<>(modifiedIdx.length);
+                        for (var modifiedColumnIndex : modifiedIdx) {
+                            changedColumns.add(model.getColumn(modifiedColumnIndex));
+                        }
+                        changedColumnsCache.put(changes, changedColumns);
                     }
+
                     var statement = cache.get(changes);
                     if (statement == null) {
-                        var sql = utilities.buildUpdateSql(modifiedKeys);
+                        var sql = utilities.buildUpdateSql(changedColumns);
                         LOGGER.log(config.getLogSqlLevel(), sql);
                         statement = dbconnection.prepareStatement(sql);
                         result += cache.put(changes, statement);
                     }
 
-                    updateInternalBinding(statement, domain, modifiedKeys);
+                    updateInternalBinding(statement, domain, changedColumns);
                     cache.addId(id);
                     batchCount++;
 
@@ -711,13 +718,7 @@ public final class EntityManager<D, V> {
         }
 
         /** Binds values to the PreparedStatement and adds it to the current batch. */
-        @SafeVarargs
-        private final void updateInternalBinding(PreparedStatement statement, D entity, Key<D, ?>... keys) throws SQLException {
-            var model = tableModel();
-            var columns = new ArrayList<ColumnModel<D, ?>>(keys.length);
-            for (var key : keys) {
-                columns.add(model.getColumn(key.index()));
-            }
+        private void updateInternalBinding(PreparedStatement statement, D entity, List<ColumnModel<D, ?>> columns) throws SQLException {
             utilities.setValuesAndPkToStatement(entity, columns, statement);
             statement.addBatch();
         }

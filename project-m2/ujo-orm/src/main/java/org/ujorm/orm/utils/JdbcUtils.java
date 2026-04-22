@@ -75,7 +75,7 @@ public final class JdbcUtils {
 
         var keys = handler.getKeyList();
         var result = BitSet.of(keys.size());
-        for (var key : handler.getKeyList()) {
+        for (var key : keys) {
             var v1 = key.getValue(domain);
             var v2 = key.getValue(snapshot);
             if (!Objects.equals(v1, v2)) {
