@@ -47,6 +47,29 @@ class EntityManagerInsertOrUpdateTest extends AbstractDaoTest {
         }
     }
 
+    @Test
+    void insertVarargs_WithNullItems_PreservesOrderAndSkipsNulls() {
+        var cityDao = ctx.entityManager(City.class, idType).crud(dbConnection);
+        var city = cityDao.insert(new City(null, "Arizona", "US", 34.0489, -111.0937));
+        var emplDao = ctx.entityManager(Employee.class, idType).crud(dbConnection);
+
+        var input1 = createEmployee("Varargs-A", city);
+        var input3 = createEmployee("Varargs-B", city);
+        var inserted = emplDao.insert(input1, null, input3);
+
+        Assertions.assertEquals(3, inserted.length);
+        Assertions.assertNotNull(inserted[0]);
+        Assertions.assertNull(inserted[1], "Null value in varargs must stay null");
+        Assertions.assertNotNull(inserted[2]);
+        Assertions.assertNotNull(inserted[0].getId());
+        Assertions.assertNotNull(inserted[2].getId());
+
+        var dbEmp1 = emplDao.findById(inserted[0].getId()).orElseThrow();
+        var dbEmp2 = emplDao.findById(inserted[2].getId()).orElseThrow();
+        Assertions.assertEquals("Varargs-A", dbEmp1.getName());
+        Assertions.assertEquals("Varargs-B", dbEmp2.getName());
+    }
+
     // --- TESTS FOR insertOrUpdate (Stream) ---
 
     @Test

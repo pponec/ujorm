@@ -87,6 +87,7 @@ class EntityManagerTest extends AbstractDaoTest {
 
     /** Tests the fail-fast behavior when passing null arguments to Crud methods. */
     @Test
+    @SuppressWarnings({"rawtypes", "unchecked"})
     void testFailFastOnNullParameters() {
         var cityDao = ctx.entityManager(City.class, pkType).crud(dbConnection);
         var noSnapshost = (Stream<SnapshotProvider>) null;
@@ -99,5 +100,23 @@ class EntityManagerTest extends AbstractDaoTest {
         Assertions.assertThrows(RuntimeException.class, () -> cityDao.delete((City) null));
         Assertions.assertThrows(RuntimeException.class, () -> cityDao.deleteById(null));
         Assertions.assertThrows(RuntimeException.class, () -> cityDao.delete((Stream<City>) null));
+    }
+
+    @Test
+    void entityManagerCacheByDomainClass_IgnoresIdTypeArgument() {
+        var cityManagerWithLong = ctx.entityManager(City.class, Long.class);
+        var cityManagerWithInteger = ctx.entityManager(City.class, Integer.class);
+        var employeeManager = ctx.entityManager(Employee.class, Long.class);
+
+        Assertions.assertSame(
+                cityManagerWithLong,
+                cityManagerWithInteger,
+                "EntityManager should be cached by domain class only"
+        );
+        Assertions.assertNotSame(
+                cityManagerWithLong,
+                employeeManager,
+                "Different domain classes must not share the same EntityManager"
+        );
     }
 }

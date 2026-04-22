@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.ujorm.orm.demo.City;
 import org.ujorm.orm.demo.Employee;
+import org.ujorm.orm.demo.UserSnapshotable;
 import org.ujorm.orm.utils.EntityContext;
 
 import java.time.LocalDate;
@@ -124,6 +125,7 @@ class EntityManagerUpdateTest extends AbstractDaoTest {
 
     /** Test error scenarios for partial updates */
     @Test
+    @SuppressWarnings({"rawtypes", "unchecked"})
     void errorScenarios() {
         var cityDao = ctx.entityManager(City.class, idType).crud(dbConnection);
         var city = cityDao.insert(new City(null, "California", "US", 36.7783, -119.4179));
@@ -140,6 +142,12 @@ class EntityManagerUpdateTest extends AbstractDaoTest {
         var ex = Assertions.assertThrows(IllegalArgumentException.class, () ->
                 emplDao.updateChanged(employee, null));
         Assertions.assertEquals("The entity at index 1 must not be null.", ex.getMessage());
+
+        // Error 3: Wrong entity type in stream (expected IllegalArgumentException)
+        var foreignType = new UserSnapshotable<>();
+        var stream = (Stream) Stream.of(foreignType);
+        ex = Assertions.assertThrows(IllegalArgumentException.class, () -> emplDao.updateChanged(stream));
+        Assertions.assertEquals("The entity at index 0 must be of type Employee.", ex.getMessage());
     }
 
     /** Create a new Employee without ID */

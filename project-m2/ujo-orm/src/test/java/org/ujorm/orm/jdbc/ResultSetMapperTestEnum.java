@@ -91,6 +91,27 @@ public class ResultSetMapperTestEnum {
         assertNull(result.getRole());
     }
 
+    /** Tests failure on unsupported DB type for Enum mapping. */
+    @Test @Order(400)
+    void testMapEnumUnsupportedDbType_throwsException() throws SQLException {
+        var rs = Mockito.mock(ResultSet.class);
+        var metaData = Mockito.mock(ResultSetMetaData.class);
+
+        when(rs.next()).thenReturn(true, false);
+        when(rs.getMetaData()).thenReturn(metaData);
+        when(metaData.getColumnCount()).thenReturn(3);
+
+        setupColumn(rs, metaData, 1, "id", "id", 40, Integer.class);
+        setupColumn(rs, metaData, 2, "name", "name", "Lenka", String.class);
+        setupEnumColumn(rs, metaData, 3, "role", "role", 12.5d);
+
+        var service = DomainHandlerProvider.provider();
+        var mapper = ResultSetMapper.of(Employee.class, service);
+
+        var ex = assertThrows(IllegalArgumentException.class, () -> mapper.convert(rs).findFirst());
+        assertTrue(ex.getMessage().contains("Unsupported DB type"), ex.getMessage());
+    }
+
     /** Helper to easily mock standard ResultSet metadata and values */
     <T> void setupColumn(ResultSet rs, ResultSetMetaData meta, int index, String columnName, String columnLabel, T columnValue, Class<T> type) throws SQLException {
         when(meta.getColumnLabel(index)).thenReturn(columnLabel);

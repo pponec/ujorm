@@ -50,4 +50,20 @@ class EntityManagerReadTest extends AbstractDaoTest {
         var resultSql = sql.replace(", ", "\n, ");
         Assertions.assertEquals(expectedSql, resultSql);
     }
+
+    @Test
+    void testSelectBuilderWithNullOrEmptyCondition_UsesWhereTrue() {
+        var cityDao = ctx.entityManager(City.class, idType).crud(dbConnection);
+        var sqlWithNull = cityDao.selectWhere(null, b -> b.toString());
+        var sqlWithEmpty = cityDao.selectWhere("", b -> b.toString());
+
+        Assertions.assertTrue(
+                sqlWithNull.endsWith(" WHERE 1=1"),
+                "Null WHERE condition must be replaced by 1=1"
+        );
+        Assertions.assertTrue(
+                sqlWithEmpty.endsWith(" WHERE 1=1"),
+                "Empty WHERE condition must be replaced by 1=1"
+        );
+    }
 }
