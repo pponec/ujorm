@@ -41,6 +41,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class QuickStartTutorialTest extends AbstractDemo {
 
     private static final ResultSetMapper<City> CITY_MAPPER = ResultSetMapper.of(City.class);
+    private static final int FIRST_PARAM = 1;
 
     /** Demonstrate record insertion with PreparedStatement reuse. */
     @Test
@@ -54,14 +55,14 @@ class QuickStartTutorialTest extends AbstractDemo {
                             """)
                     .bind("name", "Ottawa")
                     .bind("countryCode", "CA")
-                    .executeInsert(rs -> rs.getLong(1))
+                    .executeInsert(rs -> rs.getLong(FIRST_PARAM))
                     .findFirst().orElseThrow();
 
             // Reuse the same query with another parameters:
             var barcelonaId = query
                     .bind("name", "Barcelona")
                     .bind("countryCode", "ES")
-                    .executeInsert(rs -> rs.getLong(1))
+                    .executeInsert(rs -> rs.getLong(FIRST_PARAM))
                     .findFirst().orElseThrow();
 
             assertEquals(1L, ottawaId);
