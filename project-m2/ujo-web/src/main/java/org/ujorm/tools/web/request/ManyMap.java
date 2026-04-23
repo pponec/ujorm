@@ -1,12 +1,23 @@
 package org.ujorm.tools.web.request;
 
 
+import org.jetbrains.annotations.NotNull;
+
 import java.io.Reader;
 import java.util.*;
 
-public class ManyMap {
+public final class ManyMap {
+
     /** Internal map to store keys and their associated lists of values */
-    private final Map<String, List<String>> map = new HashMap<>();
+    private final Map<String, List<String>> map;
+
+    public ManyMap(int capacity) {
+        map = new HashMap<>(capacity);
+    }
+
+    public ManyMap() {
+        this(10);
+    }
 
     /** Method to add a value to the specified key */
     public void put(String key, String... values) {
@@ -37,8 +48,8 @@ public class ManyMap {
         return new URequestImpl(this, reader);
     }
 
-    public static final ManyMap of(Map<String, String> map) {
-        ManyMap result = new ManyMap();
+    public static @NotNull ManyMap of(Map<String, String> map) {
+        ManyMap result = new ManyMap(map.size());
         map.forEach((key, value) -> result.put(key, value));
         return result;
     }

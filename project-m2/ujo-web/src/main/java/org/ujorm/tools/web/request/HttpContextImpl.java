@@ -1,47 +1,53 @@
 package org.ujorm.tools.web.request;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.ujorm.tools.web.ao.Reflections;
-
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.Set;
 import java.util.function.Function;
 
 /** A default implementation of the HTTP servlet request context */
-public class HttpContextImpl implements HttpContext{
+public class HttpContextImpl implements HttpContext {
 
+    /** Default charset */
     public static final Charset CHARSET = StandardCharsets.UTF_8;
 
     private final URequest uRequest;
     private final Appendable writer;
 
+    /** Default constructor */
     public HttpContextImpl(URequest uRequest, Appendable writer) {
         this.uRequest = uRequest;
         this.writer = writer;
     }
 
+    /** Constructor with a default StringBuilder */
     public HttpContextImpl(URequest uRequest) {
         this(uRequest, new StringBuilder());
     }
 
+    /** Constructor with a default URequest and StringBuilder */
     public HttpContextImpl() {
         this(URequestImpl.of(), new StringBuilder());
     }
 
     /** An abstract API of the HTTP request */
+    @Override
     public URequest request() {
         return uRequest;
     }
 
-    /** Returns a writer of the HTTP response*/
+    /** Returns a writer of the HTTP response */
     @Override
     public Appendable writer() {
         return writer;
     }
 
-    /** Returns the last parameter or the null value. */
+    /** Returns the last parameter or the null value */
     public String parameter(@NotNull CharSequence key) {
         return parameter(key, (String) null);
     }
@@ -60,41 +66,25 @@ public class HttpContextImpl implements HttpContext{
     /** Returns the last parameter */
     @Override
     public <T> T parameter(@NotNull CharSequence key, @NotNull Function<String, T> converter, @NotNull T defaultValue) {
-        final var uRequest = request();
-        return uRequest != null
-                ? uRequest.parameter(key, converter, defaultValue)
+        var request = request();
+        return request != null
+                ? request.parameter(key, converter, defaultValue)
                 : defaultValue;
     }
 
-    /** Return a text of the {@code writer} object */
+    /** Return a text of the writer object */
     @Override
     public String toString() {
         return writer.toString();
     }
 
-    /** Create a default HTTP Context */
+    /** Create a default HTTP Context by independent API (Jakarta vs Javax) */
     public static HttpContext ofServlet(
-            @Nullable final Object httpServletRequest,
-            @NotNull final Object httpServletResponse) {
-        verifyClass(httpServletRequest, "Request");
-        verifyClass(httpServletResponse, "Response");
-        Reflections.setCharacterEncoding(httpServletResponse, CHARSET.name());
-        final Appendable writer = Reflections.getServletWriter(httpServletResponse);
-        final URequest ureq = httpServletRequest != null ? URequest.ofRequest(httpServletRequest) : URequestImpl.of();
+            @Nullable final Object req,
+            @NotNull final Object resp) {
+        Reflections.setCharacterEncoding(resp, CHARSET.name());
+        var writer = Reflections.getServletWriter(resp);
+        var ureq = req != null ? URequest.ofRequest(req) : URequestImpl.of();
         return new HttpContextImpl(ureq, writer);
-    }
-
-    /**
-     * Verifies that the given instance has the expected simple class name.
-     *
-     * @param instance         the object to verify, may be {@code null}
-     * @param simpleClassName  the expected simple class name
-     * @throws IllegalArgumentException if the instance is not {@code null} and its class name does not match the expected name
-     */
-    private static void verifyClass(@Nullable Object instance, @NotNull String simpleClassName) {
-        if (instance != null && !instance.getClass().getSimpleName().contains(simpleClassName)) {
-            throw new IllegalArgumentException("Expected class name '%s' but received '%s'."
-                    .formatted(simpleClassName, instance.getClass().getSimpleName()));
-        }
     }
 }

@@ -15,15 +15,9 @@
  */
 package org.ujorm.tools.web.ao;
 
-import java.lang.reflect.Method;
-import java.util.Locale;
-import java.util.function.Function;
-
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.ujorm.tools.Check;
-import org.ujorm.tools.web.request.HttpContext;
-import org.ujorm.tools.web.request.URequest;
 
 /**
  * An interface for bulding HTML parameters by an Enumerator.
