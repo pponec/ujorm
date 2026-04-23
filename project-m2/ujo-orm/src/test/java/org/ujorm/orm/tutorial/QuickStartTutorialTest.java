@@ -50,8 +50,8 @@ class QuickStartTutorialTest extends AbstractDemo {
         try (var query = new SqlQuery(connection())) {
             var ottawaId = query.sql("""
                              INSERT INTO city
-                             (  name,  country_code) VALUES 
-                             ( :name, :countryCode )
+                             ( name,  country_code) VALUES 
+                             (:name, :countryCode )
                             """)
                     .bind("name", "Ottawa")
                     .bind("countryCode", "CA")
