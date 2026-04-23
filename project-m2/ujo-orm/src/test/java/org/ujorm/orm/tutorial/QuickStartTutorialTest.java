@@ -42,30 +42,30 @@ class QuickStartTutorialTest extends AbstractDemo {
 
     private static final ResultSetMapper<City> CITY_MAPPER = ResultSetMapper.of(City.class);
 
-    private City cityOttawa = new City(1L, "Ottawa", "CA");
-    private City cityBarcelona = new City(2L, "Barcelona", "ES");
-
     /** Demonstrate record insertion with PreparedStatement reuse. */
     @Test
     @Order(100)
     void insert() {
         try (var query = new SqlQuery(connection())) {
-            query.sql("""
+            var ottawaId = query.sql("""
                              INSERT INTO city
-                             ( id,  name,  country_code) VALUES 
-                             (:id, :name, :countryCode )
+                             (  name,  country_code) VALUES 
+                             ( :name, :countryCode )
                             """)
-                    .bind("id", cityOttawa.id())
-                    .bind("name", cityOttawa.name())
-                    .bind("countryCode", cityOttawa.countryCode())
-                    .execute();
+                    .bind("name", "Ottawa")
+                    .bind("countryCode", "CA")
+                    .executeInsert(rs -> rs.getLong(1))
+                    .findFirst().orElseThrow();
 
-            // --- Reuse the same query instance with other parameters ---
+            // Reuse the same query with another parameters:
+            var barcelonaId = query
+                    .bind("name", "Barcelona")
+                    .bind("countryCode", "ES")
+                    .executeInsert(rs -> rs.getLong(1))
+                    .findFirst().orElseThrow();
 
-            query.bind("id", cityBarcelona.id())
-                    .bind("name", cityBarcelona.name())
-                    .bind("countryCode", cityBarcelona.countryCode())
-                    .execute();
+            assertEquals(1L, ottawaId);
+            assertEquals(2L, barcelonaId);
         }
     }
 
