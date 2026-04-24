@@ -1,182 +1,211 @@
-# <img src="docs/images/ujorm3-logo.png" align="right" height="150" hspace="20"> Ujorm3 Element for building HTML
+# Simple AJAX Demo Based on Java
 
-> *"Do the simplest thing that could possibly work."* > — Kent Beck, creator of Extreme Programming and pioneer of Test-Driven Development.
+This document explains how to use the `Element` class in a practical servlet-based application built on [Ujorm](https://ujorm.org/) and Vanilla JavaScript (ES6).
 
-Ujorm3 Web is a lightweight module for generating HTML code directly in Java.
-It serves as a type-safe alternative to traditional templating systems (such as Thymeleaf, JSP, or FreeMarker).
-The fundamental building block is the `Element` class, which provides a fluent API and utilizes the standard `try-with-resources` construct for automatic and correct closing of HTML tags.
-This approach eliminates runtime errors from templates and shifts the validation of UI correctness to compile-time.
+Why this approach can be attractive in real projects:
 
-### Design Philosophy & Constraints
+- Java-first UI rendering: HTML is composed in Java code, so refactoring tools and static analysis work directly on page structure.
+- No template runtime layer: unlike template engines (for example JSP, Thymeleaf, or FreeMarker), this flow does not depend on parsing template files during request handling.
+- Shared rendering logic for GET and AJAX: the same methods can render full pages and partial fragments, which helps keep behavior consistent.
+- Clear server/client contract: AJAX responses are explicit selector-to-HTML mappings (`JsonBuilder`), making partial updates straightforward to reason about.
+- Small conceptual surface: `Element`, `HtmlElement`, and `JsonBuilder` cover most of the rendering flow without requiring a large frontend framework.
 
-To keep the code as clear and reliable as possible, the module adheres to the following principles:
-* **No External Templates:** The user interface (UI) is defined exclusively using Java code. There is no parsing of text files at runtime.
-* **Type Safety:** Form field names, parameters, and passed data are checked by the compiler.
-* **Full Refactoring Support:** Complex components or entire page blocks (e.g., tables, forms) can be safely extracted into separate, reusable methods using your IDE.
-* **No Magic:** The resulting HTML code is generated explicitly, without hidden states or complex contexts.
+The demo is centered around `TutorialServlet`, which implements two rendering modes:
 
----
+- full-page server-side rendering in `doGet()`
+- partial page updates in `doPost()` for AJAX requests
 
-## Menu
-* [Quick Start (TL;DR)](#quick-start-tldr)
-* [Building HTML Elements](#building-html-elements)
-* [Forms and Inputs](#forms-and-inputs)
-* [Refactoring and Reusability](#refactoring-and-reusability)
-* [Simple AJAX Support](#simple-ajax-support)
-* [Maven Dependencies & Setup](#maven-dependencies--setup)
-* [Benchmarks](#benchmarks)
-* [Related Links](#related-links)
+In other words, this servlet demonstrates how to build HTML pages as a structured XML-like tree directly in Java code, and how to update only selected parts of the page via JSON responses.
 
----
+Implementation reference:  
+[TutorialServlet.java](https://github.com/pponec/demo-ajax/blob/main/src/main/java/net/ponec/demo/servlet/TutorialServlet.java)
 
-## Quick Start (TL;DR)
+## Server Screenshot and Context
 
-Creating a valid HTML document requires only a context instance and method chaining. `try` blocks ensure element nesting.
+The screenshot below is from the `TutorialServlet` demo page after the server is running.
+It illustrates the main tutorial use case: a form rendered on the server, submitted from the browser, and then updated either by full page render or by AJAX fragment replacement.
+
+What this screen represents:
+
+- a page generated fully in Java using `Element` / `HtmlElement`
+- an interactive form posting data to the servlet
+- an output area (for example `.ajax-output`) that can be refreshed without reloading the whole page
+- a minimal AJAX workflow where the backend returns `selector -> html` mappings via `JsonBuilder`
+
+<p align="center">
+  <img src="docs/images/servlet-tutorial-screen.jpg" alt="TutorialServlet demo screen with AJAX output area" width="350">
+</p>
+
+Source code for this screen:  
+[`TutorialServlet.java`](https://github.com/pponec/demo-ajax/blob/main/src/main/java/net/ponec/demo/servlet/TutorialServlet.java)
+
+## Element Tutorial
+
+This guide shows how to build HTML pages and AJAX responses in this project using:
+
+- `TutorialServlet` - orchestration of the GET/POST flow
+- `Element` - fluent builder for HTML tags and attributes
+- `HtmlElement` - document root (`html`, `head`, `body`) and output configuration
+- `JsonBuilder` - JSON response builder for partial page updates
+
+## 1) Mental Model
+
+Use this model:
+
+1. `doGet()` renders a complete HTML page.
+2. `doPost()` + AJAX parameter returns a JSON map `"selector -> new HTML content"`.
+3. `Element` composes tags with fluent chains (`addDiv().addHeading().setClass(...)`).
+4. `JsonBuilder` returns HTML fragments escaped into JSON string values.
+
+In `TutorialServlet`, this means:
+
+- GET builds a form with an input and output block (`Css.output`).
+- POST returns updated content for `.ajax-output` on AJAX requests.
+- without AJAX, POST falls back to classic server-side rendering (`doGet()`).
+
+## 2) `HtmlElement`: Document Entry Point
+
+`HtmlElement` / `AbstractHtmlElement` is the entry point for a full HTML document:
+
+- opens and closes the root document (`try-with-resources`)
+- keeps singleton `head` and `body`
+- supports configuration (`title`, CSS links, `charset`, pretty formatting)
+
+Typical pattern:
 
 ```java
-/** Generates a simple HTML page */
-void quickStart() {
-    var response = HttpContext.of();
-    try (var html = AbstractHtmlElement.of(response)) {
-        try (var body = html.getBody()) {
-            body.addHeading("Hello!");
-            body.addLabel()
-                .addText("Active:")
-                .addCheckBox("active")
-                .setCheckBoxValue(true);
-        }
-    }
-}
-```
-> 💡 **Sample Application:** For a practical demonstration of deploying the module in a real web application, check out the reference implementation **[PetStore](https://github.com/pponec/ujorm-petstore?tab=readme-ov-file#ujorm-petstore)**.
-
-## Building HTML Elements
-
-The `Element` class contains ready-made methods for most standard HTML tags (`addDiv`, `addSpan`, `addParagraph`, `addTable`, etc.). To set CSS classes, simply pass parameters as `varargs` of type `CharSequence`. Attributes can be easily set using the `setAttribute()` method or its shortened version `setAttr()`.
-
-```java
-/** Renders a styled alert box */
-void renderAlert(Element parent) {
-    try (var div = parent.addDiv("alert", "alert-warning")) {
-        div.setAttr("role", "alert");
-        div.addHeading(4, "Warning!", "alert-heading");
-        div.addParagraph().addText("Please check your input data.");
-    }
-}
-```
-
-## Forms and Inputs
-
-Creating forms is straightforward. The `Element` class allows easy method chaining for defining form elements, their names, and values. Special attention is paid to components like checkboxes, where the library automatically handles inserting a hidden field to correctly submit a negative (`false`) value.
-
-```java
-/** Renders a form for saving an entity */
-void renderForm(Element body, Long entityId, String defaultName) {
-    try (var form = body.addForm().setMethod(Html.V_POST).setAction("?action=save")) {
-        try (var row = form.addDiv()) {
-            try (var col = row.addDiv()) {
-                col.addTextInput()
-                    .setNameValue("name", defaultName)
-                    .setHint("Enter name");
-            }
-            row.addDiv().addSubmitButton().addText("Save");
-        }
+try (var html = AbstractHtmlElement.of("Page title", ctx)) {
+    html.getHead().addStyle().addRawText("/* css */");
+    try (var body = html.addBody()) {
+        body.addHeading("Hello");
     }
 }
 ```
 
-## Refactoring and Reusability
+## 3) `Element`: HTML Building Blocks
 
-A major advantage of writing UI in Java is the possibility of natural code decomposition. Instead of using complex directives for inserting fragments (as with templates), you simply divide the page creation into logical methods. This keeps the main rendering method short and readable.
+`Element` is a fluent API on top of an HTML/XML builder. Key rules:
+
+- `addXxx()` creates a child element (`addDiv`, `addForm`, `addInput`, ...)
+- `setXxx()` sets an attribute (`setClass`, `setName`, `setValue`, ...)
+- `addText()` escapes text (safe for normal content)
+- `addRawText()` writes raw text (use only for trusted content, e.g. internal CSS/JS)
+
+Examples:
 
 ```java
-/** Renders the whole page */
-void renderPage(Element body, List<Pet> pets, String contextPath) {
-    renderHeader(body, contextPath);
-    renderTable(body, pets);
-}
+body.addDiv("card")
+    .addHeading("Title")
+    .addParagraph().addText("Safe text");
+```
 
-/** Renders the page header */
-void renderHeader(Element body, String contextPath) {
-    try (var header = body.addDiv()) {
-        header.addHeading(1, "Ujorm PetStore", "text-primary");
-    }
-}
+```java
+form.addInput("my-input")
+    .setType(Html.V_TEXT)
+    .setName("query")
+    .setValue("abc");
+```
 
-/** Renders the data table */
-void renderTable(Element body, List<Pet> pets) {
-    try (var table = body.addTable()) {
-        try (var headRow = table.addTableHead().addTableRow()) {
-            headRow.addTableDetail().addText("ID");
-            headRow.addTableDetail().addText("Name");
-        }
-        try (var tbody = table.addTableBody()) {
-            for (var pet : pets) {
-                try (var row = tbody.addTableRow()) {
-                    row.addTableDetail().addText(pet.id());
-                    row.addTableDetail().addText(pet.name());
-                }
-            }
-        }
-    }
+### Important Performance Note
+
+`Element.addElement(...)` may internally return a reused child builder instance.
+Therefore, avoid storing sibling child references longer than necessary while creating other elements at the same level.
+
+Safe patterns:
+
+- compose fluent chains inline
+- or use short `try (...) { ... }` blocks as in `TutorialServlet`
+
+## 4) `TutorialServlet`: GET and POST Flow Step by Step
+
+### GET (`doGet`)
+
+1. create `ExchangeContext`
+2. open HTML document
+3. add CSS and JavaScript to `head` (`JavaScriptWriter`)
+4. build a form in `body`:
+   - input (`TEXT`)
+   - submit button
+   - output box with CSS class `ajax-output`
+5. render output content via `printResult(...)`
+
+### POST (`doPost`)
+
+1. read `DEFAULT_AJAX_REQUEST_PARAM`
+2. if `true`, return JSON via `JsonBuilder`
+3. JSON includes key `.ajax-output` and value = new HTML fragment
+4. if missing, call `doGet()` (non-AJAX fallback)
+
+## 5) `JsonBuilder`: Server-Side Diff for Frontend
+
+`JsonBuilder` creates a simple JSON object where the key is a CSS selector:
+
+- `writeId("result", ...)` -> key `"#result"`
+- `writeClass("ajax-output", ...)` -> key `".ajax-output"`
+- `write("key", ...)` -> key `"key"` (no prefix)
+
+In this project:
+
+```java
+try (var json = JsonBuilder.of(ctx)) {
+    json.writeClass(Css.output, e -> printResult(e, ctx));
 }
 ```
 
-## Simple AJAX Support
+This means: "replace content of all elements with class `.ajax-output` with newly generated HTML from `Element`."
 
-Ujorm3 Web provides native and minimalist support for AJAX, which does not require writing custom client-side JavaScript. Using the built-in `JavaScriptWriter` class, a handler script can be generated into the header that automatically intercepts form submissions. On the server side, the request is then processed and the response is formatted using the `JsonBuilder` tool, which ensures that only specific HTML elements (e.g., based on CSS classes) are redrawn.
+## 6) Practical Template for a New Page
 
-```java
-void renderPageWithAjax(HttpContext context) {
-    try (var html = AbstractHtmlElement.of("AJAX Demo", context)) {
-        // Injects the necessary JavaScript into the <head>
-        new JavaScriptWriter().write(html.getHead());
+Procedure:
 
-        try (var body = html.addBody()) {
-            try (var form = body.addForm().setMethod(Html.V_POST).setAction("?")) {
-                form.addTextInput().setNameValue("text", "Sample text");
-                form.addDiv().addButton().addText("Evaluate");
-                form.addDiv("out").addText("Result will appear here.");
-            }
-        }
-    }
-}
+1. create servlet `@WebServlet("/my-page")`
+2. in `doGet()`, build the full page with `AbstractHtmlElement.of(title, ctx)`
+3. give interactive blocks stable CSS classes or IDs
+4. in `doPost()`, split AJAX vs non-AJAX logic
+5. for AJAX responses, return fragments only via `JsonBuilder`
+6. generate fragments using the same method as server-side rendering (DRY), e.g. `printResult(...)`
 
-/** Handles the AJAX POST request */
-JsonBuilder doAjax(HttpContext context, JsonBuilder output) {
-    var text = context.getParameter("text", "");
-    var result = "Processed: " + text;
-    output.writeClass("out", e -> e.addDiv("out", Html.SPAN).addText(result));
-    return output;
-}
-```
+## 7) Conventions for AI Clients
 
-## Maven Dependencies & Setup
+If an AI client receives this README, follow these rules:
 
-To add the HTML builder to your project, include the dependency on the `ujo-web` module in your `pom.xml`. **Java 17 or higher** is required.
+- use `try-with-resources` for `HtmlElement`, `Element`, and `JsonBuilder`
+- build HTML with the `Element` fluent API, not by manual string concatenation
+- use `addText()` for normal content; use `addRawText()` only for trusted raw content
+- for AJAX updates, return JSON map selector -> HTML (`writeId` / `writeClass`)
+- reuse existing selector constants (`Css.output`, etc.) instead of ad-hoc strings
+- keep rendering logic in shared methods (`printResult(...)`) so GET and POST produce identical output
+
+## 8) Most Common Mistakes
+
+- missing `DEFAULT_AJAX_REQUEST_PARAM` -> client expects JSON, server returns full HTML page
+- using `addRawText()` for user input -> XSS risk
+- selector mismatch between frontend and `JsonBuilder` -> update is not applied
+- duplicated render logic in GET/POST -> inconsistent UI
+
+## Maven Dependency
+
+Add this dependency to your `pom.xml`:
 
 ```xml
-<dependencies>
-    <dependency>
-        <groupId>org.ujorm</groupId>
-        <artifactId>ujo-web</artifactId>
-        <version>3.0.0-RC3</version>
-    </dependency>
-</dependencies>
+<dependency>
+    <groupId>org.ujorm</groupId>
+    <artifactId>ujo-web</artifactId>
+    <version>latest</version>
+</dependency>
 ```
 
----
+For production use, prefer pinning a concrete version instead of `latest`.
 
-## Benchmarks
+## JavaDoc
 
-Generating HTML directly in Java without using reflection and without complex background parsing ensures the maximum possible performance. Compared to traditional templating engines, `Element` provides significantly higher throughput and minimal memory load, reducing pressure on the Garbage Collector.
+- `Element`: [JavaDoc](https://www.javadoc.io/doc/org.ujorm/ujo-web/latest/org/ujorm/tools/web/Element.html)
+- `HtmlElement`: [JavaDoc](https://www.javadoc.io/doc/org.ujorm/ujo-web/latest/org/ujorm/tools/web/HtmlElement.html)
+- `JsonBuilder`: [JavaDoc](https://www.javadoc.io/doc/org.ujorm/ujo-web/latest/org/ujorm/tools/web/json/JsonBuilder.html)
 
-**Full benchmark source code and results:** 👉 [GitHub: html-benchmarks](https://github.com/pponec/html-benchmarks?tab=readme-ov-file#html-builder-benchmark)
+## Internet Links
 
----
-
-## Related Links
-
-* [Ujorm](https://github.com/pponec/ujorm/tree/ujorm3?tab=readme-ov-file#-ujorm3-library) - The main project page for the ORM library.
-* [Petstore](https://github.com/pponec/ujorm-petstore?tab=readme-ov-file#ujorm-petstore) - A demonstration project combining Ujorm ORM and Ujorm Web (Element).
-* [Benchmark test Ujorm Element](https://github.com/pponec/html-benchmarks?tab=readme-ov-file#html-builder-benchmark) - A performance comparison of Java HTML generation tools.
+- Ujorm home page: [https://ujorm.org/](https://ujorm.org/)
+- JavaScript ES6 Fetch API guide: [https://www.freecodecamp.org/news/a-practical-es6-guide-on-how-to-perform-http-requests-using-the-fetch-api-594c3d91a547/](https://www.freecodecamp.org/news/a-practical-es6-guide-on-how-to-perform-http-requests-using-the-fetch-api-594c3d91a547/)
+- License: [Apache License, Version 2.0, January 2004](LICENSE.txt)
+- Project home page: [https://github.com/pponec/demo-ajax](https://github.com/pponec/demo-ajax)
