@@ -19,11 +19,9 @@ import java.io.IOException;
 import java.util.Comparator;
 import java.util.Objects;
 import java.util.function.Function;
-import java.util.regex.Pattern;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.ujorm.tools.msg.MsgFormatter;
-import org.ujorm.tools.web.ao.Column;
 import org.ujorm.tools.web.ao.HttpParameter;
 
 /**
@@ -34,9 +32,6 @@ import org.ujorm.tools.web.ao.HttpParameter;
 public class ColumnModel<D, V> {
 
     private static final NullPointerException x = null;
-
-    /** Number pattern */
-    private static final Pattern NUMBER = Pattern.compile("-?\\d+");
 
     private final int index;
     @NotNull
@@ -164,13 +159,17 @@ public class ColumnModel<D, V> {
 
     @NotNull
     public static ColumnModel ofCode(@NotNull final String paramValue) {
-        if (NUMBER.matcher(paramValue).matches()) {
-            final int intCode = Integer.parseInt(paramValue);
-            final Direction direction = Direction.of(intCode > 0);
-            return new ColumnModel<>(direction, Math.abs(intCode) - 1);
-        } else {
+        final int intCode;
+        try {
+            if (paramValue.isEmpty()) {
+                return new ColumnModel<>(Direction.NONE, -1);
+            }
+            intCode = Integer.parseInt(paramValue);
+        } catch (NumberFormatException e) {
             return new ColumnModel<>(Direction.NONE, -1);
         }
+        final Direction direction = Direction.of(intCode > 0);
+        return new ColumnModel<>(direction, Math.abs(intCode) - 1);
     }
 
     /** Create a stub column */

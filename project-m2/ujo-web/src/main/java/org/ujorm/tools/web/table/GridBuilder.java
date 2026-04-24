@@ -32,7 +32,6 @@ import org.ujorm.tools.web.Html;
 import org.ujorm.tools.web.ao.Column;
 import org.ujorm.tools.web.ao.HttpParameter;
 import org.ujorm.tools.web.ao.Injector;
-import org.ujorm.tools.web.ao.WebUtils;
 import org.ujorm.tools.xml.ApiElement;
 import org.ujorm.tools.xml.config.HtmlConfig;
 
@@ -255,8 +254,7 @@ public class GridBuilder<D> {
             }
         }
         try (Element tBody = table.addElement(Html.TBODY)) {
-            final Object cols = columns.stream().map(t -> t.getColumn());
-            final boolean hasRenderer = WebUtils.isType(Column.class, cols);
+            final boolean hasRenderer = hasRendererColumn();
             resource.apply(this).forEach(value -> {
                 final Element rowElement = tBody.addElement(Html.TR);
                 for (ColumnModel<D, ?> col : columns) {
@@ -270,6 +268,16 @@ public class GridBuilder<D> {
                 }
             });
         }
+    }
+
+    /** Returns true when any column uses a custom renderer. */
+    protected boolean hasRendererColumn() {
+        for (ColumnModel<D, ?> col : columns) {
+            if (col.getColumn() instanceof Column) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /** Returns the true in case the table is sortable.

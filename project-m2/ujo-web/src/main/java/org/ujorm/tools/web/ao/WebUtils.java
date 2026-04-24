@@ -16,7 +16,6 @@
 package org.ujorm.tools.web.ao;
 
 import org.jetbrains.annotations.NotNull;
-import org.ujorm.tools.Check;
 import java.util.stream.Stream;
 
 /**
@@ -40,14 +39,7 @@ public abstract class WebUtils {
 
     /** Check if any attribute is typeof the Renderer */
     public static final boolean isType(final Class type, final @NotNull Stream<Object> items) {
-        final boolean[] result = {false};
-        items.filter(t -> !result[0])
-                .forEach(t -> {
-                    if (type.isInstance(t)) {
-                        result[0] = true;
-                    }
-                });
-        return result[0];
+        return items.anyMatch(type::isInstance);
     }
 
 }
