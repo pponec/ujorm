@@ -53,6 +53,20 @@ class AbstractHtmlElementTest {
     }
 
     @Test
+    public void testJavascriptLinksBatch() {
+        var context = HttpContext.of();
+        try (var html = AbstractHtmlElement.of(context, null)) {
+            html.addJavascriptLinks(true,
+                    "https://example.com/one.js",
+                    "https://example.com/two.js");
+            html.addBody().addText("Body content");
+        }
+        var result = context.toString();
+        assertTrue(result.contains("src=\"https://example.com/one.js\" defer=\"defer\""));
+        assertTrue(result.contains("src=\"https://example.com/two.js\" defer=\"defer\""));
+    }
+
+    @Test
     public void testCssLinksAndBodies() {
         var context = HttpContext.of();
         try (var html = AbstractHtmlElement.of(context, null)) {
@@ -65,6 +79,19 @@ class AbstractHtmlElementTest {
         assertTrue(result.contains("<link href=\"style.css\" rel=\"stylesheet\""));
         assertTrue(result.contains("<style>body { color: red; }</style>"));
         assertTrue(result.contains(".main { margin: 0; }\n.footer { padding: 0; }"));
+    }
+
+    @Test
+    public void testCssLinksBatch() {
+        var context = HttpContext.of();
+        try (var html = AbstractHtmlElement.of(context, null)) {
+            html.addCssLinks("a.css", "b.css", "c.css");
+            html.addBody().addText("X");
+        }
+        var result = context.toString();
+        assertTrue(result.contains("<link href=\"a.css\" rel=\"stylesheet\"/>"));
+        assertTrue(result.contains("<link href=\"b.css\" rel=\"stylesheet\"/>"));
+        assertTrue(result.contains("<link href=\"c.css\" rel=\"stylesheet\"/>"));
     }
 
     @Test
@@ -127,5 +154,17 @@ class AbstractHtmlElementTest {
         // Hlavička by se měla vygenerovat automaticky při zavolání close()
         assertTrue(result.contains("<head>"));
         assertTrue(result.contains("<meta charset=\"UTF-8\""));
+    }
+
+    @Test
+    public void testCustomLangBeforeHeaderInitialization() {
+        var context = HttpContext.of();
+        try (var html = AbstractHtmlElement.of(context, null)) {
+            html.setAttribute(Html.A_LANG, "sk");
+            html.addBody().addText("Ahoj");
+        }
+        var result = context.toString();
+        assertTrue(result.contains("<html lang=\"sk\">"));
+        assertFalse(result.contains("<html lang=\"en\">"));
     }
 }

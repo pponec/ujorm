@@ -81,6 +81,21 @@ class AbstractWriterTest {
     }
 
     @Test
+    void testWriteNewLineMultipleLevels() throws IOException {
+        config.setIndentationSpace(" ");
+        var localWriter = new AbstractWriter(out, config) {};
+
+        localWriter.writeNewLine(1);
+        localWriter.writeNewLine(3);
+        localWriter.writeNewLine(0);
+
+        var expected = config.getNewLine() + " "
+                + config.getNewLine() + "   "
+                + config.getNewLine();
+        assertEquals(expected, out.toString());
+    }
+
+    @Test
     void testWriteValue() throws IOException {
         var value = "test-value";
         var element = createElement("test");
@@ -96,6 +111,15 @@ class AbstractWriterTest {
         escapedAppendable.append("<b>");
 
         assertEquals("&lt;b&gt;", out.toString());
+    }
+
+    @Test
+    void testGetWriterEscapedRangeAndChar() throws IOException {
+        var escapedAppendable = writer.getWriterEscaped();
+        escapedAppendable.append("A<B>C", 1, 4);
+        escapedAppendable.append('&');
+
+        assertEquals("&lt;B&gt;&amp;", out.toString());
     }
 
     @Test
