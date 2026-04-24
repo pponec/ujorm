@@ -19,6 +19,8 @@ package org.ujorm.tools.xml;
 import java.io.IOException;
 import java.lang.reflect.Method;
 import java.nio.charset.Charset;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
@@ -70,6 +72,8 @@ public abstract class AbstractWriter {
     /** Common formatter */
     public static final MsgFormatter FORMATTER = new MsgFormatter(){};
 
+    private static final String[] CONTROL_ESCAPES = createControlEscapes();
+
     /** Thread-safe cache for HttpServletResponse reflection methods */
     private static final Map<Class<?>, ResponseMethods> METHOD_CACHE = new ConcurrentHashMap<>();
 
@@ -88,6 +92,9 @@ public abstract class AbstractWriter {
     /** An indentation request */
     protected final boolean indentationEnabled;
 
+    @NotNull
+    protected final String indentation;
+
     /** Value formatter */
     @NotNull
     private final Formatter format;
@@ -95,6 +102,8 @@ public abstract class AbstractWriter {
     @NotNull
     private final Appendable writerEscaped = createAppendable();
 
+    /** Lazy cache for indentation prefixes by level. */
+    private final List<String> indentationCache = new ArrayList<>();
 
     /**
      * A writer constructor
@@ -106,7 +115,9 @@ public abstract class AbstractWriter {
         this.config = Objects.requireNonNull(config, "config");
         this.format = config.getFormatter();
         this.newLine = config.getNewLine().toString();
-        this.indentationEnabled = Check.hasLength(config.getIndentation());
+        this.indentation = config.getIndentation().toString();
+        this.indentationEnabled = Check.hasLength(indentation);
+        this.indentationCache.add("");
     }
 
     /** Write escaped value to the output
@@ -203,9 +214,7 @@ public abstract class AbstractWriter {
                 if (c > 32) {
                     out.append(c);
                 } else {
-                    out.append(XML_AMPERSAND + "#");
-                    out.append(Integer.toString(c));
-                    out.append(";");
+                    out.append(CONTROL_ESCAPES[c]);
                 }
             }
         }
@@ -238,10 +247,8 @@ public abstract class AbstractWriter {
         if (!newLine.isEmpty()) {
             out.append(newLine);
         }
-        if (indentationEnabled) {
-            for (int i = level; i > 0; i--) {
-                out.append(config.getIndentation());
-            }
+        if (indentationEnabled && level > 0) {
+            out.append(getIndentation(level));
         }
     }
 
@@ -288,6 +295,23 @@ public abstract class AbstractWriter {
                 return this;
             }
         };
+    }
+
+    @NotNull
+    private String getIndentation(final int level) {
+        while (indentationCache.size() <= level) {
+            final int lastIndex = indentationCache.size() - 1;
+            indentationCache.add(indentationCache.get(lastIndex) + indentation);
+        }
+        return indentationCache.get(level);
+    }
+
+    private static String[] createControlEscapes() {
+        final String[] result = new String[33];
+        for (int i = 0; i <= 32; i++) {
+            result[i] = "&#" + i + ";";
+        }
+        return result;
     }
 
     /** Cached reflection methods for HttpServletResponse */
