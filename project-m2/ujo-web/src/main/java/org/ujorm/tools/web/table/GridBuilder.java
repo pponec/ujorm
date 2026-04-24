@@ -15,8 +15,8 @@
  */
 package org.ujorm.tools.web.table;
 
-import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.function.BiConsumer;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicLong;
@@ -247,24 +247,27 @@ public class GridBuilder<D> {
                 thLink.addText(value);
             }
             if (columnSortable && config.isEmbeddedIcons()) {
-                InputStream img = config.getInnerSortableImageToStream(col.getDirection());
-                if (img != null) {
-                    thLink.addImage(img, col.getDirection().toString());
+                final String dataUri = config.getInnerSortableImageDataUri(col.getDirection());
+                if (dataUri != null) {
+                    thLink.addImage(dataUri, col.getDirection().toString());
                 }
             }
         }
         try (Element tBody = table.addElement(Html.TBODY)) {
             final boolean hasRenderer = hasRendererColumn();
+            final RowWriter<D>[] writers = hasRenderer ? precompileRowWriters() : null;
             resource.apply(this).forEach(value -> {
                 final Element rowElement = tBody.addElement(Html.TR);
-                for (ColumnModel<D, ?> col : columns) {
-                    final Function<D, ?> attribute = col.getColumn();
-                    final Element td = rowElement.addElement(Html.TD);
-                    if (hasRenderer && attribute instanceof Column) {
-                        ((Column)attribute).write(td, value);
-                    } else {
-                        td.addText(attribute.apply(value));
+                if (writers != null) {
+                    for (RowWriter<D> writer : writers) {
+                        writer.write(rowElement, value);
                     }
+                    return;
+                }
+                for (int i = 0, max = columns.size(); i < max; i++) {
+                    final Function<D, ?> attribute = columns.get(i).getColumn();
+                    final Element td = rowElement.addElement(Html.TD);
+                    td.addText(attribute.apply(value));
                 }
             });
         }
@@ -278,6 +281,24 @@ public class GridBuilder<D> {
             }
         }
         return false;
+    }
+
+    @SuppressWarnings("unchecked")
+    protected RowWriter<D>[] precompileRowWriters() {
+        final RowWriter<D>[] result = new RowWriter[columns.size()];
+        for (int i = 0, max = columns.size(); i < max; i++) {
+            final Function<D, ?> attribute = columns.get(i).getColumn();
+            final BiConsumer<Element, D> valueWriter = attribute instanceof Column
+                    ? (td, row) -> ((Column<D>) attribute).write(td, row)
+                    : (td, row) -> td.addText(attribute.apply(row));
+            result[i] = (rowElement, row) -> valueWriter.accept(rowElement.addElement(Html.TD), row);
+        }
+        return result;
+    }
+
+    @FunctionalInterface
+    protected interface RowWriter<D> {
+        void write(Element rowElement, D row);
     }
 
     /** Returns the true in case the table is sortable.

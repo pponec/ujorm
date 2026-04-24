@@ -16,9 +16,12 @@
 package org.ujorm.tools.web.table;
 
 import org.ujorm.tools.web.report.*;
+import java.io.IOException;
 import java.io.InputStream;
 import java.time.Duration;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.BiConsumer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -42,6 +45,8 @@ import org.ujorm.tools.xml.config.HtmlConfig;
  * @author Pavel Ponec
  */
 public interface GridBuilderConfig<D> {
+
+    Map<String, String> EMBEDDED_IMAGE_CACHE = new ConcurrentHashMap<>();
 
     @NotNull HtmlConfig getConfig();
 
@@ -101,6 +106,23 @@ public interface GridBuilderConfig<D> {
     @Nullable
     default InputStream getInnerSortableImageToStream(@NotNull final Direction direction) {
         return getClass().getResourceAsStream(getInnerSortableImage(direction));
+    }
+
+    /** Get an embedded sortable image in a Data URI format. */
+    @Nullable
+    default String getInnerSortableImageDataUri(@NotNull final Direction direction) {
+        final String path = getInnerSortableImage(direction);
+        final String dataUri = EMBEDDED_IMAGE_CACHE.computeIfAbsent(path, key -> {
+            try (InputStream in = getClass().getResourceAsStream(key)) {
+                if (in == null) {
+                    return "";
+                }
+                return "data:image/png;base64," + java.util.Base64.getEncoder().encodeToString(in.readAllBytes());
+            } catch (IOException e) {
+                throw new IllegalStateException("Failed to load embedded image: " + key, e);
+            }
+        });
+        return dataUri.isEmpty() ? null : dataUri;
     }
 
     /** Get a CSS direction style */
