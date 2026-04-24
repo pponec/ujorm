@@ -2,7 +2,10 @@ The Ujorm release notes
 (Maven groupId: org.ujorm)
 *******************************
 
-release 3.0.0-RC3 (2026-04-30)
+release 3.0.0-RC5 (2026-04-24)
++ ORM supports Enum types.
+
+release 3.0.0-RC3 (2026-03-30)
 + ORM supports Enum types.
 
 release 3.0.0-RC2 (2026-03-24)
