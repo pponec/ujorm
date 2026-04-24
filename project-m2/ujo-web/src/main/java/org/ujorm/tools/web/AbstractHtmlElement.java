@@ -252,8 +252,12 @@ public abstract class AbstractHtmlElement implements ApiElement<Element>, Html {
      * @param defer A script that will not run until after the page has loaded
      * @param javascriptLinks URL list to Javascript */
     public void addJavascriptLinks(final boolean defer, @NotNull final CharSequence... javascriptLinks) {
+        final Element head = getHead();
         for (var js : javascriptLinks) {
-            addJavascriptLink(defer, js);
+            Assert.notNull(js, () -> REQUIRED_MSG.formatted("javascriptLink"));
+            head.addElement(Html.SCRIPT)
+                    .setAttribute(Html.A_SRC, js)
+                    .setAttribute("defer", defer ? "defer" : null);
         }
     }
 
@@ -290,8 +294,12 @@ public abstract class AbstractHtmlElement implements ApiElement<Element>, Html {
     /** Create new CSS links
      * @param css Add a CSS links */
     public void addCssLinks(@NotNull final CharSequence... css) {
+        final Element head = getHead();
         for (var cssLink : css) {
-            addCssLink(cssLink);
+            Assert.notNull(cssLink, () -> REQUIRED_MSG.formatted("css"));
+            head.addElement(Html.LINK)
+                    .setAttribute(Html.A_HREF, cssLink)
+                    .setAttribute(Html.A_REL, "stylesheet");
         }
     }
 

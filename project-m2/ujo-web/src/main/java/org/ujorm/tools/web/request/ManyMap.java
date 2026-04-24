@@ -8,6 +8,8 @@ import java.util.*;
 
 public final class ManyMap {
 
+    private static final String[] EMPTY_ARRAY = new String[0];
+
     /** Internal map to store keys and their associated lists of values */
     private final Map<String, List<String>> map;
 
@@ -35,7 +37,10 @@ public final class ManyMap {
     /** Method to retrieve the list of values for a specified key
      * If the key is not found, return an empty list */
     public String[] get(String key) {
-        return getList(key).toArray(new String[0]);
+        final List<String> result = map.get(key);
+        return result == null || result.isEmpty()
+                ? EMPTY_ARRAY
+                : result.toArray(String[]::new);
     }
 
     /** Returns a key set */
