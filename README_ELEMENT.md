@@ -1,280 +1,114 @@
-# Simple AJAX Demo Based on Java
+# <img src="docs/images/ujorm3-logo.png" align="right" height="150" hspace="20"> Ujorm Element
 
-This document explains how to use the `Element` class in a practical servlet-based application built on [Ujorm](https://ujorm.org/) and Vanilla JavaScript (ES6).
+Ujorm Element is a lightweight Java library designed for building HTML pages and handling AJAX requests using pure Java code. It allows developers to construct user interfaces as an object tree, eliminating the need for external template engines or complex frontend frameworks.
 
-Why this approach can be attractive in real projects:
+### Design Philosophy
 
-- Java-first UI rendering: HTML is composed in Java code, so refactoring tools and static analysis work directly on page structure.
-- No template runtime layer: unlike template engines (for example JSP, Thymeleaf, or FreeMarker), this flow does not depend on parsing template files during request handling.
-- Shared rendering logic for GET and AJAX: the same methods can render full pages and partial fragments, which helps keep behavior consistent.
-- Clear server/client contract: AJAX responses are explicit selector-to-HTML mappings (`JsonBuilder`), making partial updates straightforward to reason about.
-- Small conceptual surface: `Element`, `HtmlElement`, and `JsonBuilder` cover most of the rendering flow without requiring a large frontend framework.
+To maintain high performance and code clarity, Ujorm Element follows these core principles:
+* **Java-First UI:** HTML is composed directly in Java, enabling static analysis, easy refactoring, and type safety for the page structure.
+* **No Template Runtime:** Unlike JSP, Thymeleaf, or FreeMarker, this library does not require parsing template files during request handling.
+* **Shared Rendering Logic:** The same methods can render full pages (GET) and partial fragments (AJAX POST), ensuring consistent behavior.
+* **Explicit AJAX Contract:** Server responses for partial updates are simple JSON maps of CSS selectors to HTML fragments, making the logic easy to reason about.
 
-The demo is centered around `TutorialServlet`, which implements two rendering modes:
+---
 
-- full-page server-side rendering in `doGet()`
-- partial page updates in `doPost()` for AJAX requests
+## Menu
+* [Quick Start (TL;DR)](#quick-start-tldr)
+* [Core Components](#core-components)
+* [AJAX Workflow](#ajax-workflow)
+* [Best Practices](#best-practices)
+* [Maven Dependency](#maven-dependency)
+* [Tutorial Source Code](#tutorial-source-code)
 
-In other words, this servlet demonstrates how to build HTML pages as a structured XML-like tree directly in Java code, and how to update only selected parts of the page via JSON responses.
+---
 
-Implementation reference: [TutorialServlet.java](project-m2/ujo-web/src/test/java/org/ujorm/tools/tutorial/TutorialServlet.java)
+## Quick Start (TL;DR)
 
-## Server Screenshot and Context
-
-The screenshot below is from the `TutorialServlet` demo page after the server starts.
-It illustrates the main tutorial use case: a form rendered on the server, submitted from the browser, and then updated either by full-page reload or by AJAX fragment replacement.
-
-What this screen represents:
-
-- a page generated fully in Java using `Element` / `HtmlElement`
-- an interactive form posting data to the servlet
-- an output area (for example `.ajax-output`) that can be refreshed without reloading the whole page
-- a minimal AJAX workflow where the backend returns `selector -> html` mappings via `JsonBuilder`
-
-<p align="center">
-  <img src="docs/images/servlet-tutorial-screen.jpg" alt="TutorialServlet demo screen with AJAX output area" width="350">
-</p>
-
-Source code for this screen:   
-[`TutorialServlet.java`](project-m2/ujo-web/src/test/java/org/ujorm/tools/tutorial/TutorialServlet.java)
-
-## Element Tutorial
-
-This guide shows how to build HTML pages and AJAX responses in this project using:
-
-- `TutorialServlet` - orchestration of the GET/POST flow
-- `Element` - fluent builder for HTML tags and attributes
-- `HtmlElement` - document root (`html`, `head`, `body`) and output configuration
-- `JsonBuilder` - JSON response builder for partial page updates
-
-## 1) Mental Model
-
-Use this model:
-
-1. `doGet()` renders a complete HTML page.
-2. `doPost()` returns a JSON map (`"selector -> new HTML content"`) when the AJAX parameter is present.
-3. `Element` composes tags with fluent chains (`addDiv().addHeading().setClass(...)`).
-4. `JsonBuilder` returns HTML fragments escaped into JSON string values.
-
-In `TutorialServlet`, this means:
-
-- GET builds a form with an input and output block (`Css.output`).
-- POST returns updated content for `.ajax-output` on AJAX requests.
-- without AJAX, POST falls back to classic server-side rendering (`doGet()`).
-
-## 2) `HtmlElement`: Document Entry Point
-
-`HtmlElement` / `AbstractHtmlElement` is the entry point for a full HTML document:
-
-- opens and closes the root document (`try-with-resources`)
-- keeps singleton `head` and `body`
-- supports configuration (`title`, CSS links, `charset`, pretty formatting)
-
-Typical pattern:
+The library is centered around three main classes: `HtmlElement` for the document root, `Element` for tags, and `JsonBuilder` for AJAX responses.
 
 ```java
-try (var html = AbstractHtmlElement.of("Page title", ctx)) {
-    html.getHead().addStyle().addRawText("/* css */");
-    try (var body = html.addBody()) {
-        body.addHeading("Hello");
+/** Create a basic HTML page */
+void createPage(ExchangeContext ctx) {
+    try (var html = AbstractHtmlElement.of("Page Title", ctx)) {
+        html.getHead().addStyle().addRawText("body { font-family: sans-serif; }");
+        try (var body = html.addBody()) {
+            body.addHeading("Welcome to Ujorm Element");
+        }
     }
 }
 ```
 
-## 3) `Element`: HTML Building Blocks
+---
 
-`Element` is a fluent API on top of an HTML/XML builder. Key rules:
+## Core Components
 
-- `addXxx()` creates a child element (`addDiv`, `addForm`, `addInput`, ...)
-- `setXxx()` sets an attribute (`setClass`, `setName`, `setValue`, ...)
-- `addText()` escapes text (safe for normal content)
-- `addRawText()` writes raw text (use only for trusted content, e.g. internal CSS/JS)
+### 1. HtmlElement (Document Entry Point)
+`HtmlElement` manages the root of the HTML document. It handles the lifecycle of the document (using `try-with-resources`), provides access to the `head` and `body`, and manages configurations like titles, CSS links, and character sets.
 
-Examples:
+### 2. Element (HTML Building Blocks)
+The `Element` class provides a fluent API to build HTML tags and attributes.
+* **Adding Tags:** Use `addDiv()`, `addForm()`, `addInput()`, etc.
+* **Setting Attributes:** Use `setClass()`, `setName()`, `setValue()`, and others.
+* **Adding Content:** Use `addText()` for safe, escaped content and `addRawText()` only for trusted internal CSS or JavaScript.
 
-```java
-body.addDiv("card")
-    .addHeading("Title")
-    .addParagraph().addText("Safe text");
-```
+*Note: For performance reasons, `addElement()` may return a reused child instance. Avoid storing sibling references longer than necessary.*
 
-```java
-form.addInput("my-input")
-    .setType(Html.V_TEXT)
-    .setName("query")
-    .setValue("abc");
-```
+### 3. JsonBuilder (Partial Updates)
+For AJAX requests, `JsonBuilder` creates a JSON object where keys are CSS selectors (e.g., `.ajax-output` or `#result`) and values are the new HTML fragments. The client-side script automatically updates the matching DOM elements.
 
-### Important Performance Note
+---
 
-`Element.addElement(...)` may internally return a reused child builder instance.
-Therefore, avoid storing sibling child references longer than necessary while creating other elements at the same level.
+## AJAX Workflow
 
-Safe patterns:
+The library includes a `JavaScriptWriter` that attaches lightweight AJAX behavior to standard HTML forms:
 
-- compose fluent chains inline
-- or use short `try (...) { ... }` blocks as in `TutorialServlet`
-
-## 4) `TutorialServlet`: GET and POST Flow Step by Step
-
-### GET (`doGet`)
-
-1. create `ExchangeContext`
-2. open HTML document
-3. add CSS and JavaScript to `head` (`JavaScriptWriter`)
-4. build a form in `body`:
-   - input (`TEXT`)
-   - submit button
-   - output box with CSS class `ajax-output`
-5. render output content via `printResult(...)`
-
-### POST (`doPost`)
-
-1. read `DEFAULT_AJAX_REQUEST_PARAM`
-2. if `true`, return JSON via `JsonBuilder`
-3. JSON includes the key `.ajax-output` with a newly rendered HTML fragment
-4. if missing, call `doGet()` (non-AJAX fallback)
-
-## 5) `JsonBuilder`: Server-Side Diff for Frontend
-
-`JsonBuilder` creates a simple JSON object where the key is a CSS selector:
-
-- `writeId("result", ...)` -> key `"#result"`
-- `writeClass("ajax-output", ...)` -> key `".ajax-output"`
-- `write("key", ...)` -> key `"key"` (no prefix)
-
-In this project:
+1. **Event Trigger:** User interactions (submit, keyup, or change) trigger a debounced event (default 250ms).
+2. **Asynchronous POST:** The browser sends a POST request with an additional `_ajax=true` parameter.
+3. **Server Response:** The servlet detects the AJAX parameter and uses `JsonBuilder` to return only the necessary HTML fragments.
+4. **DOM Update:** The client-side script receives the JSON and updates the specified DOM elements without a full page reload.
 
 ```java
-try (var json = JsonBuilder.of(ctx)) {
-    json.writeClass(Css.output, e -> printResult(e, ctx));
+/** AJAX POST Example */
+protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    var ctx = ExchangeContext.of(request, response);
+    if (ctx.parameter("_ajax", Boolean::parseBoolean, false)) {
+        try (var json = JsonBuilder.of(ctx)) {
+            // Replace the content of elements with class "ajax-output"
+            json.writeClass("ajax-output", e -> printResult(e, ctx));
+        }
+    } else {
+        doGet(request, response);
+    }
 }
 ```
 
-This means: replace all elements with class `.ajax-output` using newly generated HTML from `Element`.
+---
 
-## 5.1) How AJAX Works in the HTML Page
+## Best Practices
 
-The generated JavaScript (`JavaScriptWriter`) attaches behavior directly to HTML forms and keeps updates lightweight:
+* **Lifecycle Management:** Always use `try-with-resources` for `HtmlElement`, `Element`, and `JsonBuilder` to ensure proper closing of the output stream.
+* **Security:** Use `addText()` for all user-provided data to prevent XSS. Use `addRawText()` only for internal, trusted constants.
+* **DRY Rendering:** Keep rendering logic in shared methods (e.g., `printResult(...)`) so both GET and POST requests produce identical HTML fragments.
+* **Selectors:** Reuse stable CSS classes or IDs instead of ad-hoc strings for AJAX updates.
 
-1. **Initialization on page load**
-   - On `DOMContentLoaded`, `ujorm1.init()` scans all `<form>` elements.
-   - For each form, it binds:
-     - `submit` -> `process(e, form)`
-     - `keyup` and `change` on inputs (`input:not([type='button'])`, `textarea`, `select`) -> `timeEvent(form)`
-
-2. **Debounce for typing/editing**
-   - `timeEvent(form)` clears the previous timeout and starts a new one (`delayMs`, default 250 ms).
-   - This prevents sending one request per keystroke.
-   - After the delay:
-     - if no request is running: call `process(null, form)`
-     - if a request is already running: set `submitReq=true` (queue one follow-up refresh)
-
-3. **AJAX submission (`process`)**
-   - Prevents default submit navigation (`e.preventDefault()`), so the page does not reload.
-   - Collects form values into `FormData`.
-   - If a submit button triggered the event, its `name/value` is appended too (`e.submitter`), preserving native submit semantics.
-   - Sends `fetch("?_ajax=true", { method: "POST", body: new URLSearchParams(fd), headers: {"X-Requested-With":"XMLHttpRequest"} })`.
-
-4. **Server response contract**
-   - The server returns JSON generated by `JsonBuilder`, where:
-     - key = CSS selector (for example `.ajax-output`, `#result`)
-     - value = HTML fragment string
-   - Client loops through entries:
-     - normal selector -> `document.querySelectorAll(selector).forEach(el => el.innerHTML = value)`
-     - empty selector `""` -> call a JavaScript function from `fceMap` (`writeJsKey(...)` use case)
-
-5. **Concurrency and reliability**
-   - `ajaxRun` prevents overlapping writes from multiple in-flight requests.
-   - `submitReq` guarantees the latest user change is not lost while one request is still processing.
-   - In `finally`, once the current call ends, a queued refresh is immediately executed.
-   - On network/server failure, the error is logged (`console.error(err)`), and the state machine still resets.
-
-In short, the page remains server-rendered, while user edits trigger delayed AJAX POST calls that update only selected DOM fragments using the same backend rendering methods as full-page GET.
-
-### Request/Response Sequence (ASCII)
-
-```text
-User typing / submit
-        |
-        v
-Browser (ujorm1.timeEvent/process)
-  - debounce 250 ms
-  - POST ?_ajax=true
-        |
-        v
-Servlet (`doPost`)
-  - detects AJAX parameter
-  - renders fragment via `Element` / `printResult(...)`
-  - returns JSON via `JsonBuilder`
-        |
-        v
-JSON payload
-  {
-    ".ajax-output": "<div>...</div>"
-  }
-        |
-        v
-Browser JS loop
-  Object.entries(data).forEach(...)
-  -> querySelectorAll(".ajax-output")
-  -> el.innerHTML = "<div>...</div>"
-        |
-        v
-Updated page fragment (no full reload)
-```
-
-## 6) Practical Template for a New Page
-
-Procedure:
-
-1. create servlet `@WebServlet("/my-page")`
-2. in `doGet()`, build the full page with `AbstractHtmlElement.of(title, ctx)`
-3. give interactive blocks stable CSS classes or IDs
-4. in `doPost()`, split AJAX vs non-AJAX logic
-5. for AJAX responses, return fragments only via `JsonBuilder`
-6. generate fragments using the same method as server-side rendering (DRY), e.g. `printResult(...)`
-
-## 7) Conventions for AI Clients
-
-If an AI client receives this README, follow these rules:
-
-- use `try-with-resources` for `HtmlElement`, `Element`, and `JsonBuilder`
-- build HTML with the `Element` fluent API, not by manual string concatenation
-- use `addText()` for normal content; use `addRawText()` only for trusted raw content
-- for AJAX updates, return JSON map selector -> HTML (`writeId` / `writeClass`)
-- reuse existing selector constants (`Css.output`, etc.) instead of ad-hoc strings
-- keep rendering logic in shared methods (`printResult(...)`) so GET and POST produce identical output
-
-## 8) Most Common Mistakes
-
-- missing `DEFAULT_AJAX_REQUEST_PARAM` -> client expects JSON, server returns full HTML page
-- using `addRawText()` for user input -> XSS risk
-- selector mismatch between frontend and `JsonBuilder` -> update is not applied
-- duplicated render logic in GET/POST -> inconsistent UI
+---
 
 ## Maven Dependency
 
-Add this dependency to your `pom.xml`:
+Add the following dependency to your `pom.xml`. The library requires **Java 17 or higher**.
 
 ```xml
 <dependency>
     <groupId>org.ujorm</groupId>
     <artifactId>ujo-web</artifactId>
-    <version>latest</version>
+    <version>3.0.0-RC5</version>
 </dependency>
 ```
 
-For production use, prefer pinning a concrete version instead of `latest`.
+---
 
-## JavaDoc
+## Tutorial Source Code
 
-- `Element`: [JavaDoc](https://www.javadoc.io/doc/org.ujorm/ujo-web/latest/org/ujorm/tools/web/Element.html)
-- `HtmlElement`: [JavaDoc](https://www.javadoc.io/doc/org.ujorm/ujo-web/latest/org/ujorm/tools/web/HtmlElement.html)
-- `JsonBuilder`: [JavaDoc](https://www.javadoc.io/doc/org.ujorm/ujo-web/latest/org/ujorm/tools/web/json/JsonBuilder.html)
+The complete implementation of the concepts described above, including the GET/POST flow and AJAX integration, can be found in the following file:
 
-## Internet Links
-
-- [Benchmark of HTML libraries](https://github.com/pponec/html-benchmarks#html-builder-benchmark)
-- Ujorm ORM Home Page: [https://ujorm.org/)
-- License: [Apache License, Version 2.0, January 2004](LICENSE.txt)
+👉 **[TutorialServlet.java](https://github.com/pponec/ujorm/blob/master/project-m2/ujo-web/src/test/java/org/ujorm/tools/tutorial/TutorialServlet.java)**
