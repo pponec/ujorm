@@ -276,5 +276,5 @@ For production use, prefer pinning a concrete version instead of `latest`.
 ## Internet Links
 
 - [Benchmark of HTML libraries](https://github.com/pponec/html-benchmarks#html-builder-benchmark)
-- Ujorm ORM Home Page: [https://github.com/pponec/ujorm#ujorm-framework)
+- Ujorm ORM Home Page: [https://ujorm.org/)
 - License: [Apache License, Version 2.0, January 2004](LICENSE.txt)
