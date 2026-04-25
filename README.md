@@ -270,12 +270,12 @@ Ujorm3 requires **Java 17 or higher**.
     <dependency>
         <groupId>org.ujorm</groupId>
         <artifactId>ujo-core</artifactId>
-        <version>3.0.0-RC4</version>
+        <version>3.0.0-RC5</version>
     </dependency>
     <dependency>
         <groupId>org.ujorm</groupId>
         <artifactId>ujorm-orm</artifactId>
-        <version>3.0.0-RC4</version>
+        <version>3.0.0-RC5</version>
     </dependency>
 </dependencies>
 ```
@@ -296,7 +296,7 @@ The complete source code for these benchmarks is entirely open-source and fully 
 * **Memory Efficiency:** The library exhibits the lowest memory allocation rate (Bytes/op), reducing Garbage Collector pressure.
 * **Minimal Footprint:** Zero external dependencies and a total compiled size under 3 MB makes it ideal for microservices and embedded devices.
 
-**Version tested:** `3.0.0-RC4`  
+**Version tested:** `3.0.0-RC5`  
 **Full metrics:** 👉 [GitHub: orm-benchmarks](https://github.com/pponec/orm-benchmarks?tab=readme-ov-file#orm-benchmark)
 
 ---
