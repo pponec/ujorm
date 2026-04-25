@@ -275,7 +275,6 @@ For production use, prefer pinning a concrete version instead of `latest`.
 
 ## Internet Links
 
-- Ujorm home page: [https://ujorm.org/](https://ujorm.org/)
-- JavaScript ES6 Fetch API guide: [https://www.freecodecamp.org/news/a-practical-es6-guide-on-how-to-perform-http-requests-using-the-fetch-api-594c3d91a547/](https://www.freecodecamp.org/news/a-practical-es6-guide-on-how-to-perform-http-requests-using-the-fetch-api-594c3d91a547/)
+- [Benchmark of HTML libraries](https://github.com/pponec/html-benchmarks#html-builder-benchmark)
+- Ujorm ORM Home Page: [https://github.com/pponec/ujorm#ujorm-framework)
 - License: [Apache License, Version 2.0, January 2004](LICENSE.txt)
-- Project home page: [https://github.com/pponec/demo-ajax](https://github.com/pponec/demo-ajax)
