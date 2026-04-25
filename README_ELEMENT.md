@@ -21,8 +21,8 @@ Implementation reference: [TutorialServlet.java](project-m2/ujo-web/src/test/jav
 
 ## Server Screenshot and Context
 
-The screenshot below is from the `TutorialServlet` demo page after the server is running.
-It illustrates the main tutorial use case: a form rendered on the server, submitted from the browser, and then updated either by full page render or by AJAX fragment replacement.
+The screenshot below is from the `TutorialServlet` demo page after the server starts.
+It illustrates the main tutorial use case: a form rendered on the server, submitted from the browser, and then updated either by full-page reload or by AJAX fragment replacement.
 
 What this screen represents:
 
@@ -52,7 +52,7 @@ This guide shows how to build HTML pages and AJAX responses in this project usin
 Use this model:
 
 1. `doGet()` renders a complete HTML page.
-2. `doPost()` + AJAX parameter returns a JSON map `"selector -> new HTML content"`.
+2. `doPost()` returns a JSON map (`"selector -> new HTML content"`) when the AJAX parameter is present.
 3. `Element` composes tags with fluent chains (`addDiv().addHeading().setClass(...)`).
 4. `JsonBuilder` returns HTML fragments escaped into JSON string values.
 
@@ -132,7 +132,7 @@ Safe patterns:
 
 1. read `DEFAULT_AJAX_REQUEST_PARAM`
 2. if `true`, return JSON via `JsonBuilder`
-3. JSON includes key `.ajax-output` and value = new HTML fragment
+3. JSON includes the key `.ajax-output` with a newly rendered HTML fragment
 4. if missing, call `doGet()` (non-AJAX fallback)
 
 ## 5) `JsonBuilder`: Server-Side Diff for Frontend
@@ -151,7 +151,7 @@ try (var json = JsonBuilder.of(ctx)) {
 }
 ```
 
-This means: "replace content of all elements with class `.ajax-output` with newly generated HTML from `Element`."
+This means: replace all elements with class `.ajax-output` using newly generated HTML from `Element`.
 
 ## 5.1) How AJAX Works in the HTML Page
 
@@ -190,7 +190,7 @@ The generated JavaScript (`JavaScriptWriter`) attaches behavior directly to HTML
    - In `finally`, once the current call ends, a queued refresh is immediately executed.
    - On network/server failure, the error is logged (`console.error(err)`), and the state machine still resets.
 
-In short: the page behaves like classic server-rendered HTML, but user edits trigger delayed AJAX POST calls that update only selected DOM fragments, using the same backend rendering methods as full-page GET.
+In short, the page remains server-rendered, while user edits trigger delayed AJAX POST calls that update only selected DOM fragments using the same backend rendering methods as full-page GET.
 
 ### Request/Response Sequence (ASCII)
 
@@ -203,10 +203,10 @@ Browser (ujorm1.timeEvent/process)
   - POST ?_ajax=true
         |
         v
-Servlet (doPost)
+Servlet (`doPost`)
   - detects AJAX parameter
-  - renders fragment via Element/printResult(...)
-  - returns JSON via JsonBuilder
+  - renders fragment via `Element` / `printResult(...)`
+  - returns JSON via `JsonBuilder`
         |
         v
 JSON payload
