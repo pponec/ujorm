@@ -71,7 +71,7 @@ class HtmlToJavaConverterExtendedTest {
         var lines = Lines.ofQuoted(result);
 
         // Empty head should be skipped
-        assertEquals("", lines.get(4).trim().contains("addHead()") ? "addHead()" : "");
+        assertFalse(lines.get(4).trim().contains("addHead()"));
         assertEquals("html.addBody()", lines.get(4).trim());
     }
 
