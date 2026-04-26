@@ -14,8 +14,6 @@ import java.net.URI;
 import java.util.Collections;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
 class HtmlToJavaConverterTest {
     private final boolean printHtmlResult = false;
     private final String metaCharset = "  <meta charset=\"UTF-8\">\n";
@@ -28,6 +26,16 @@ class HtmlToJavaConverterTest {
     @Test
     void testConvertHtmlToJavaElements_BlockStyle() throws Exception {
         assertEquals(getHtml(), true);
+    }
+
+    @Test
+    void testConvertHtmlToJavaElements_DefaultTitleAndEscaping_Fluent() throws Exception {
+        assertEquals(getEdgeCaseHtml(), false);
+    }
+
+    @Test
+    void testConvertHtmlToJavaElements_DefaultTitleAndEscaping_Block() throws Exception {
+        assertEquals(getEdgeCaseHtml(), true);
     }
 
     private String getHtml() {
@@ -72,42 +80,56 @@ class HtmlToJavaConverterTest {
                 """;
     }
 
+    private String getEdgeCaseHtml() {
+        return """
+                <!DOCTYPE html>
+                <html lang="en">
+                <head><title>Demo</title></head>
+                <body>
+                    <div id="x" data-val="back\\slash">Line 1
+                Line 2</div>
+                    <script>
+                const q = "\"\"\"";
+                const path = "c:\\tmp";
+                    </script>
+                </body>
+                </html>
+                """;
+    }
+
 
     @Test
     void testStyle() throws Exception {
         HtmlToJavaConverter converter = new HtmlToJavaConverter();
         String result = converter.convertHtmlToJavaElements(getHtml(), false);
+        var lines = Lines.ofQuoted(result);
 
-        assertTrue(result.contains("html.setAttribute(Html.A_LANG, \"cs\");"));
-        assertTrue(result.contains("body.addHeadingX(2, \"c1\", \"c2\")"));
-        assertTrue(result.contains("try (var div = body.addDiv(\"container\", \"main\"))"));
-        assertTrue(result.contains("div2.addElement(\"my-custom-tag\", \"custom\")"));
-        assertTrue(result.contains(".setAttribute(\"my-custom-attribute\", \"c\")"));
-        assertTrue(result.contains("console.log('test1' + ' very very very long text;');"));
-
-        assertTrue(result.contains("var form = div.addForm()"));
-        assertTrue(result.contains("form.addInput()"));
-        assertTrue(result.contains(".setFor(\"in\")"));
-        assertTrue(result.contains(".setFor(\"in\")"));
-        assertTrue(result.contains("form.addInput()"));
-        assertTrue(result.contains(".setType(\"text\")"));
-        assertTrue(result.contains(".setName(\"firstname\")"));
-        assertTrue(result.contains(".setId(\"in\");"));
-        assertTrue(result.contains("div.addAnchor(\"http://ujorm.org\", \"niceClass\", \"linkClass\""));
-
-        assertTrue(result.contains("var p = div.addParagraph()"));
-        assertTrue(result.contains("p.addBreak();"));
-        assertTrue(result.contains("p.addAnchor(\"#\")"));
-        assertTrue(result.contains("div.addImg()"));
-        assertTrue(result.contains("var ul = div.addUnorderedlist()"));
-        assertTrue(result.contains("ul.addListItem()"));
-        assertTrue(result.contains("var ol = div.addOrderedList()"));
-        assertTrue(result.contains("div.addPreformatted()"));
-        assertTrue(result.contains("var table = div.addTable()"));
-        assertTrue(result.contains("var thead = table.addTableHead()"));
-        assertTrue(result.contains("var tbody = table.addTableBody()"));
-        assertTrue(result.contains("var tr = thead.addTableRow()"));
-        assertTrue(result.contains("tr.addTableDetail()"));
+        Assertions.assertEquals("html.setAttribute(Html.A_LANG, 'cs');", lines.get(4).trim());
+        Assertions.assertEquals("body.addHeadingX(2, 'c1', 'c2')", lines.get(6).trim());
+        Assertions.assertEquals("try (var div = body.addDiv('container', 'main')) {", lines.get(8).trim());
+        Assertions.assertEquals("div2.addElement('my-custom-tag', 'custom')", lines.get(12).trim());
+        Assertions.assertEquals(".setAttribute('my-custom-attribute', 'c');", lines.next().trim());
+        Assertions.assertEquals("console.log('test1' + ' very very very long text;');", lines.get(17).trim());
+        Assertions.assertEquals("try (var form = div.addForm()) {", lines.get(22).trim());
+        Assertions.assertEquals("form.addInput()", lines.get(26).trim());
+        Assertions.assertEquals("label.setFor('in');", lines.get(33).trim());
+        Assertions.assertEquals(".setType('text')", lines.get(36).trim());
+        Assertions.assertEquals(".setName('firstname')", lines.next().trim());
+        Assertions.assertEquals(".setId('in');", lines.next().trim());
+        Assertions.assertEquals("div.addAnchor('http://ujorm.org', 'niceClass', 'linkClass')", lines.get(41).trim());
+        Assertions.assertEquals("try (var p = div.addParagraph()) {", lines.get(45).trim());
+        Assertions.assertEquals("p.addBreak();", lines.get(47).trim());
+        Assertions.assertEquals("p.addAnchor('#')", lines.get(49).trim());
+        Assertions.assertEquals("div.addImg()", lines.get(53).trim());
+        Assertions.assertEquals("try (var ul = div.addUnorderedlist()) {", lines.get(56).trim());
+        Assertions.assertEquals("ul.addListItem()", lines.next().trim());
+        Assertions.assertEquals("try (var ol = div.addOrderedList()) {", lines.get(60).trim());
+        Assertions.assertEquals("div.addPreformatted()", lines.get(66).trim());
+        Assertions.assertEquals("try (var table = div.addTable()) {", lines.get(68).trim());
+        Assertions.assertEquals("try (var thead = table.addTableHead()) {", lines.get(69).trim());
+        Assertions.assertEquals("try (var tbody = table.addTableBody()) {", lines.get(75).trim());
+        Assertions.assertEquals("try (var tr = tbody.addTableRow()) {", lines.next().trim());
+        Assertions.assertEquals("tr.addTableDetail()", lines.next().trim());
     }
 
     private void assertEquals(String htmlInput, boolean blockStyle) throws Exception {
@@ -278,4 +300,5 @@ class HtmlToJavaConverterTest {
             return out.toByteArray();
         }
     }
+
 }
