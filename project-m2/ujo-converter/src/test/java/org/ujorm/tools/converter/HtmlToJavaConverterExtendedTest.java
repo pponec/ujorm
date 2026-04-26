@@ -160,4 +160,41 @@ class HtmlToJavaConverterExtendedTest {
         assertEquals(expected, writer.toString());
     }
 
+    /** Test separated CSS styles constants */
+    @Test
+    void testSeparatedCssStyles() throws IOException {
+        var converter = new HtmlToJavaConverter();
+        var html = "<div class='head row'>X</div>";
+        var result = converter.convertHtmlToJavaElements(html, false, true);
+        var lines = Lines.ofQuoted(result);
+
+        assertEquals("body.addDiv(Css.head, Css.row)", lines.get(5).trim());
+        assertEquals("public static final class Css {", lines.get(12).trim());
+        assertEquals("public static final String head = 'head';", lines.get(13).trim());
+        assertEquals("public static final String row = 'row';", lines.get(14).trim());
+    }
+
+    /** Verify varargs usage and constants for multiple CSS classes */
+    @Test
+    void testSeparatedCssStylesVarargsWithMultipleElements() throws IOException {
+        var converter = new HtmlToJavaConverter();
+        var html = """
+                <div class='head row'>A</div>
+                <div class='panel body row'>B</div>
+                """;
+        var result = converter.convertHtmlToJavaElements(html, false, true);
+        var lines = Lines.ofQuoted(result);
+
+        // method call uses separate Css constants (varargs-like usage)
+        assertEquals("body.addDiv(Css.head, Css.row)", lines.get(5).trim());
+        assertEquals("body.addDiv(Css.panel, Css.body, Css.row)", lines.get(7).trim());
+
+        // constants are created for each distinct CSS class
+        assertEquals("public static final class Css {", lines.get(14).trim());
+        assertEquals("public static final String head = 'head';", lines.get(15).trim());
+        assertEquals("public static final String row = 'row';", lines.get(16).trim());
+        assertEquals("public static final String panel = 'panel';", lines.get(17).trim());
+        assertEquals("public static final String body = 'body';", lines.get(18).trim());
+    }
+
 }

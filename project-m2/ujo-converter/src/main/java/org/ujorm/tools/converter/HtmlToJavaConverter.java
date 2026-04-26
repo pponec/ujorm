@@ -21,7 +21,7 @@ public final class HtmlToJavaConverter {
     /** HTML heading pattern: h1 to h6 */
     private static final Pattern HEADING_PATTERN = Pattern.compile("^h[1-6]$");
     /** The default value of the Ujorm version */
-    private static final String DEFAULT_UJORM_VERSION = "2.30";
+    private static final String DEFAULT_UJORM_VERSION = "3.0.0";
     /** Space for indenting code. */
     private static final String OFFSET = " ".repeat(4);
     /** Class text */
@@ -119,16 +119,27 @@ public final class HtmlToJavaConverter {
 
     /** Convert a HTML code to the Java code with Element classes. */
     public String convertHtmlToJavaElements(String htmlContent, boolean blockStyle) throws IOException {
+        return convertHtmlToJavaElements(htmlContent, blockStyle, false);
+    }
+
+    /** Convert a HTML code to the Java code with Element classes. */
+    public String convertHtmlToJavaElements(String htmlContent, boolean blockStyle, boolean separatedCssStyles) throws IOException {
         var writer = new StringBuilder();
-        convertHtmlToJavaElements(htmlContent, blockStyle, writer);
+        convertHtmlToJavaElements(htmlContent, blockStyle, separatedCssStyles, writer);
         return writer.toString();
     }
 
     /** Convert a HTML code to the Java code with Element classes. */
     public void convertHtmlToJavaElements(String htmlContent, boolean blockStyle, Appendable writer) throws IOException {
+        convertHtmlToJavaElements(htmlContent, blockStyle, false, writer);
+    }
+
+    /** Convert a HTML code to the Java code with Element classes. */
+    public void convertHtmlToJavaElements(String htmlContent, boolean blockStyle, boolean separatedCssStyles, Appendable writer) throws IOException {
         var doc = Jsoup.parse(htmlContent);
         var docTitle = getAndRemoveTitle(doc);
         var root = doc.child(0); // typically <html>
+        var cssConstants = new LinkedHashMap<String, String>();
 
         // Added JavaDoc with version
         var version = Html.class.getPackage().getImplementationVersion();
@@ -141,16 +152,19 @@ public final class HtmlToJavaConverter {
                 .append(escapeJavaString(docTitle))
                 .append("\", result)) {\n");
 
-        writeAttributes(root, writer, OFFSET.repeat(2) + "html", ");\n", Set.of());
+        writeAttributes(root, writer, OFFSET.repeat(2) + "html", ");\n", Set.of(), separatedCssStyles, cssConstants);
 
         var ancestors = new ArrayDeque<String>();
         for (var child : root.childNodes()) {
-            writeRecursive(child, "html", writer, 2, ancestors, blockStyle);
+            writeRecursive(child, "html", writer, 2, ancestors, blockStyle, separatedCssStyles, cssConstants);
         }
 
         writer.append(OFFSET).append("}\n")
                 .append(OFFSET).append("return result.toString();\n")
                 .append("}");
+        if (separatedCssStyles) {
+            writeCssClass(cssConstants, writer);
+        }
     }
 
     private void writeRecursive(Node node,
@@ -158,7 +172,9 @@ public final class HtmlToJavaConverter {
                                 Appendable writer,
                                 int depth,
                                 Deque<String> ancestors,
-                                boolean blockStyle) throws IOException {
+                                boolean blockStyle,
+                                boolean separatedCssStyles,
+                                Map<String, String> cssConstants) throws IOException {
         var indent = OFFSET.repeat(depth);
 
         // 1. Handle Text and Data nodes (Leafs)
@@ -176,7 +192,7 @@ public final class HtmlToJavaConverter {
                 return;
             }
             var tagName = element.tagName();
-            var creation = resolveCreationCode(parentVar, element);
+            var creation = resolveCreationCode(parentVar, element, separatedCssStyles, cssConstants);
 
             // Check if element has any child Elements (recursive branches)
             var hasElementChildren = element.childNodes().stream().anyMatch(n -> n instanceof Element);
@@ -186,11 +202,11 @@ public final class HtmlToJavaConverter {
                 // BLOCK STYLE: try (var x = ...) { ... }
                 var currentVar = generateVariableName(tagName, ancestors);
                 writer.append(indent).append("try (var ").append(currentVar).append(" = ").append(creation.code).append(") {\n");
-                writeAttributes(element, writer, OFFSET.repeat(depth + 1) + currentVar, ");\n", creation.consumedAttributes);
+                writeAttributes(element, writer, OFFSET.repeat(depth + 1) + currentVar, ");\n", creation.consumedAttributes, separatedCssStyles, cssConstants);
 
                 ancestors.push(tagName);
                 for (var child : element.childNodes()) {
-                    writeRecursive(child, currentVar, writer, depth + 1, ancestors, blockStyle);
+                    writeRecursive(child, currentVar, writer, depth + 1, ancestors, blockStyle, separatedCssStyles, cssConstants);
                 }
                 ancestors.pop();
                 writer.append(indent).append("}\n");
@@ -201,7 +217,7 @@ public final class HtmlToJavaConverter {
                 var chainPrefix = "\n" + chainedIndent;
 
                 // Chain attributes
-                writeAttributes(element, writer, chainPrefix, ")", creation.consumedAttributes);
+                writeAttributes(element, writer, chainPrefix, ")", creation.consumedAttributes, separatedCssStyles, cssConstants);
 
                 // Chain text content (we know there are no Element children)
                 for (var child : element.childNodes()) {
@@ -310,14 +326,14 @@ public final class HtmlToJavaConverter {
         return false;
     }
 
-    private CreationResult resolveCreationCode(String parentVar, Element element) {
+    private CreationResult resolveCreationCode(String parentVar, Element element, boolean separatedCssStyles, Map<String, String> cssConstants) {
         var tagName = element.tagName();
         var classValue = element.attr(CLASS);
         var hasClass = !classValue.isBlank();
 
         if (HEADING_PATTERN.matcher(tagName).matches()) {
             var level = Integer.parseInt(tagName.substring(1));
-            var args = hasClass ? level + ", " + formatCssArgs(classValue) : String.valueOf(level);
+            var args = hasClass ? level + ", " + formatCssArgs(classValue, separatedCssStyles, cssConstants) : String.valueOf(level);
             return createResult(parentVar, "addHeadingX", args, Set.of(CLASS));
         }
 
@@ -326,14 +342,14 @@ public final class HtmlToJavaConverter {
             var url = element.attr("href");
             var args = new StringBuilder().append('"').append(escapeJavaString(url)).append('"');
             if (hasClass) {
-                args.append(", ").append(formatCssArgs(classValue));
+                args.append(", ").append(formatCssArgs(classValue, separatedCssStyles, cssConstants));
             }
             return createResult(parentVar, "addAnchor", args.toString(), Set.of("href", CLASS));
         }
 
         // 3. Standard resolution based on reflection maps
         if (hasClass && elementCssMethods.containsKey(tagName)) {
-            return createResult(parentVar, elementCssMethods.get(tagName), formatCssArgs(classValue), Set.of(CLASS));
+            return createResult(parentVar, elementCssMethods.get(tagName), formatCssArgs(classValue, separatedCssStyles, cssConstants), Set.of(CLASS));
         }
         if (elementNoArgMethods.containsKey(tagName)) {
             return createResult(parentVar, elementNoArgMethods.get(tagName), "", Collections.emptySet());
@@ -345,7 +361,7 @@ public final class HtmlToJavaConverter {
         // 4. Generic addElement
         var nameArg = htmlConstants.getOrDefault(tagName, "\"" + tagName + "\"");
         if (hasClass) {
-            return createResult(parentVar, "addElement", nameArg + ", " + formatCssArgs(classValue), Set.of(CLASS));
+            return createResult(parentVar, "addElement", nameArg + ", " + formatCssArgs(classValue, separatedCssStyles, cssConstants), Set.of(CLASS));
         } else {
             return createResult(parentVar, "addElement", nameArg, Collections.emptySet());
         }
@@ -361,10 +377,12 @@ public final class HtmlToJavaConverter {
      * Splits class string by whitespace and formats as comma-separated quoted strings.
      * Example: "foo bar" -> "foo", "bar"
      */
-    private String formatCssArgs(String classValue) {
+    private String formatCssArgs(String classValue, boolean separatedCssStyles, Map<String, String> cssConstants) {
         return Arrays.stream(classValue.split("\\s+"))
                 .filter(s -> !s.isBlank())
-                .map(s -> "\"" + escapeJavaString(s) + "\"")
+                .map(s -> separatedCssStyles
+                        ? ("Css." + getOrCreateCssConstantName(s, cssConstants))
+                        : ("\"" + escapeJavaString(s) + "\""))
                 .collect(Collectors.joining(", "));
     }
 
@@ -400,12 +418,19 @@ public final class HtmlToJavaConverter {
      * @param prefix String prepended to the setAttribute call. MUST NOT include the separator (dot).
      * @param suffix String appended to the call (e.g. ");\n" or ")")
      */
-    private void writeAttributes(Element element, Appendable writer, String prefix, String suffix, Set<String> ignoreKeys) throws IOException {
+    private void writeAttributes(Element element, Appendable writer, String prefix, String suffix, Set<String> ignoreKeys, boolean separatedCssStyles, Map<String, String> cssConstants) throws IOException {
         if (element.attributes().isEmpty()) return;
 
         for (var attr : element.attributes()) {
             var key = attr.getKey();
             if (ignoreKeys.contains(key)) {
+                continue;
+            }
+            if (CLASS.equals(key) && separatedCssStyles) {
+                writer.append(prefix)
+                        .append(".setClass(")
+                        .append(formatCssArgs(attr.getValue(), true, cssConstants))
+                        .append(suffix);
                 continue;
             }
 
@@ -515,5 +540,60 @@ public final class HtmlToJavaConverter {
         public String code() { return code; }
         /** JavaDoc atributu consumedAttributes */
         public Set<String> consumedAttributes() { return consumedAttributes; }
+    }
+
+    private String getOrCreateCssConstantName(String cssClass, Map<String, String> cssConstants) {
+        return cssConstants.computeIfAbsent(cssClass, key -> createUniqueCssConstantName(key, cssConstants));
+    }
+
+    private String createUniqueCssConstantName(String cssClass, Map<String, String> cssConstants) {
+        var base = toCssCamelCase(cssClass);
+        var used = new HashSet<>(cssConstants.values());
+        var candidate = base;
+        var index = 2;
+        while (used.contains(candidate)) {
+            candidate = base + index++;
+        }
+        return candidate;
+    }
+
+    private String toCssCamelCase(String cssClass) {
+        var normalized = cssClass.replaceAll("[^A-Za-z0-9]+", " ").trim();
+        if (normalized.isEmpty()) {
+            return "style";
+        }
+        var parts = normalized.split("\\s+");
+        var first = parts[0].toLowerCase(Locale.ROOT);
+        if (!Character.isJavaIdentifierStart(first.charAt(0))) {
+            first = "c" + first;
+        }
+        var sb = new StringBuilder(first);
+        for (int i = 1; i < parts.length; i++) {
+            var part = parts[i].toLowerCase(Locale.ROOT);
+            if (!part.isEmpty()) {
+                sb.append(Character.toUpperCase(part.charAt(0)));
+                if (part.length() > 1) {
+                    sb.append(part.substring(1));
+                }
+            }
+        }
+        return sb.toString();
+    }
+
+    private void writeCssClass(Map<String, String> cssConstants, Appendable writer) throws IOException {
+        writer.append("\n\n")
+                .append("public static final class Css {\n");
+        for (var item : cssConstants.entrySet()) {
+            writer.append(OFFSET)
+                    .append("public static final String ")
+                    .append(item.getValue())
+                    .append(" = \"")
+                    .append(escapeJavaString(item.getKey()))
+                    .append("\";\n");
+        }
+        writer.append("\n")
+                .append(OFFSET)
+                .append("private Css() {}\n")
+                .append("}");
     }
 }
