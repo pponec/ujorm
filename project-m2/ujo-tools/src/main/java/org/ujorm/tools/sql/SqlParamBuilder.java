@@ -17,10 +17,13 @@
 package org.ujorm.tools.sql;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.ujorm.tools.jdbc.SqlBuilder;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.util.stream.Stream;
 
 /**
  * A fluent wrapper over {@link PreparedStatement}.
@@ -32,4 +35,23 @@ public class SqlParamBuilder extends SqlBuilder {
     public SqlParamBuilder(@NotNull Connection dbConnection) {
         super(dbConnection);
     }
+
+    /** @deprecated Use the method {@link #toStream(SqlFunction)} rather. */
+    @NotNull
+    public <R> Stream<R> streamMap(SqlFunction<ResultSet, ? extends R> mapper ) {
+        return toStream(mapper);
+    }
+
+    /** @deprecated Use the method {@link #getGeneratedKeysResultSet()}  rather. */
+    @Nullable
+    protected ResultSet generatedKeysRs() {
+        return getGeneratedKeysResultSet();
+    }
+
+    /** @deprecated Use the method {@link #getGeneratedKeys(SqlFunction)} rather. */
+    @NotNull
+    public <R> Stream<R> generatedKeys(SqlFunction<ResultSet, ? extends R> mapper) {
+        return getGeneratedKeys(mapper);
+    }
+
 }
