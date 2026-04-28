@@ -176,11 +176,11 @@
    xml:space="preserve"><tspan
      x="1284.3629"
      y="104.02835"
-     id="tspan428">Ujorm3
+    id="tspan428">ORM
 </tspan><tspan
      x="1284.3629"
      y="223.42434"
-     id="tspan430">Benchmark</tspan></text><text
+    id="tspan430">Benchmarks</tspan></text><text
    x="1284.3629"
    y="104.02835"
    text-anchor="middle"
@@ -194,11 +194,11 @@
    xml:space="preserve"><tspan
      x="1284.3629"
      y="104.02835"
-     id="tspan432">Ujorm3
+    id="tspan432">ORM
 </tspan><tspan
      x="1284.3629"
      y="223.42434"
-     id="tspan434">Benchmark</tspan></text><line
+    id="tspan434">Benchmarks</tspan></text><line
    x1="337.15054"
    y1="255.69214"
    x2="487.64624"
@@ -280,7 +280,7 @@
    id="text44"
    style="stroke-width:1">Quality</text>
   <polygon
-   points="299.58,120.44 486.06,169.75 472.79,377.41 299.58,450.80 118.62,381.89 186.74,212.26"
+   points="299.58,91.19 486.11,169.72 487.65,385.99 299.58,479.05 118.62,381.89 186.74,212.26"
    fill="#ff7f0e"
    fill-opacity="0.05"
    stroke="#ff7f0e"
@@ -288,15 +288,15 @@
    stroke-linejoin="round"
    id="polygon46" />
   <polygon
-   points="299.58,75.01 478.93,173.86 442.52,359.94 299.58,430.03 121.12,380.45 249.43,248.45"
-   fill="#2ca02c"
+   points="299.58,189.09 487.65,168.83 414.23,343.60 299.58,480.00 121.18,380.41 249.42,248.45"
+  fill="#2ca02c"
    fill-opacity="0.05"
-   stroke="#2ca02c"
+  stroke="#2ca02c"
    stroke-width="1.7"
    stroke-linejoin="round"
    id="polygon48" />
   <polygon
-   points="299.58,124.39 407.94,214.85 463.67,372.14 299.58,443.78 261.97,299.13 224.35,233.98"
+   points="299.58,233.98 461.92,183.68 432.06,353.89 299.58,440.83 261.97,299.13 199.28,219.50"
    fill="#d62728"
    fill-opacity="0.05"
    stroke="#d62728"
@@ -304,7 +304,7 @@
    stroke-linejoin="round"
    id="polygon50" />
   <polygon
-   points="299.58,203.66 417.68,209.22 337.20,299.13 299.58,320.84 157.56,359.40 261.97,255.69"
+   points="299.58,230.04 337.20,255.69 337.20,299.13 299.58,434.83 157.63,359.37 224.35,233.98"
    fill="#9467bd"
    fill-opacity="0.05"
    stroke="#9467bd"
@@ -312,7 +312,7 @@
    stroke-linejoin="round"
    id="polygon52" />
   <polygon
-   points="299.58,223.95 403.54,217.39 472.39,377.18 299.58,321.66 115.79,383.52 236.89,241.21"
+   points="299.58,88.39 478.61,174.05 429.73,352.55 299.58,320.84 115.78,383.53 261.97,255.69"
    fill="#8c564b"
    fill-opacity="0.05"
    stroke="#8c564b"
@@ -320,7 +320,7 @@
    stroke-linejoin="round"
    id="polygon54" />
   <polygon
-   points="299.58,233.98 337.20,255.69 443.12,360.28 299.58,380.73 148.88,364.42 149.12,190.54"
+   points="299.58,96.77 478.29,174.23 382.63,325.36 299.58,415.68 148.94,364.38 236.90,241.22"
    fill="#e377c2"
    fill-opacity="0.05"
    stroke="#e377c2"
@@ -328,7 +328,7 @@
    stroke-linejoin="round"
    id="polygon56" />
   <polygon
-   points="299.58,83.31 431.51,201.24 475.73,379.11 299.58,459.65 154.80,361.00 199.28,219.50"
+   points="299.58,60.24 416.92,209.66 475.45,378.94 299.58,487.08 155.26,360.74 149.12,190.54"
    fill="#7f7f7f"
    fill-opacity="0.05"
    stroke="#7f7f7f"
@@ -336,7 +336,7 @@
    stroke-linejoin="round"
    id="polygon57" />
   <polygon
-   points="299.58,60.24 487.65,168.83 487.65,385.99 299.58,494.57 111.51,385.99 111.51,168.83"
+   points="299.58,100.05 485.83,169.88 452.28,365.57 299.58,494.57 111.51,385.99 111.51,168.83"
    fill="#1f77b4"
    fill-opacity="0.05"
    stroke="#1f77b4"
@@ -408,9 +408,9 @@
    y="251.92824"
    width="18.338104"
    height="18.326805"
-   fill="#2ca02c"
+  fill="#7f7f7f"
    fill-opacity="0.25"
-   stroke="#2ca02c"
+  stroke="#7f7f7f"
    stroke-width="1"
    id="rect156" /><text
    x="674.45697"
@@ -419,14 +419,14 @@
    fill="#333333"
    id="text158"
    transform="scale(1.0003082,0.99969186)"
-   style="stroke-width:1">MyBatis</text><rect
+  style="stroke-width:1">EBean</text><rect
    x="644.10138"
    y="282.4729"
    width="18.338104"
    height="18.326805"
-   fill="#d62728"
+  fill="#2ca02c"
    fill-opacity="0.25"
-   stroke="#d62728"
+  stroke="#2ca02c"
    stroke-width="1"
    id="rect160" /><text
    x="674.45697"
@@ -435,14 +435,14 @@
    fill="#333333"
    id="text162"
    transform="scale(1.0003082,0.99969186)"
-   style="stroke-width:1">Hibernate</text><rect
+  style="stroke-width:1">MyBatis</text><rect
    x="644.10138"
    y="313.01758"
    width="18.338104"
    height="18.326805"
-   fill="#9467bd"
+  fill="#e377c2"
    fill-opacity="0.25"
-   stroke="#9467bd"
+  stroke="#e377c2"
    stroke-width="1"
    id="rect164" /><text
    x="674.45697"
@@ -451,7 +451,7 @@
    fill="#333333"
    id="text166"
    transform="scale(1.0003082,0.99969186)"
-   style="stroke-width:1">Exposed</text><rect
+  style="stroke-width:1">Jooq</text><rect
    x="644.10138"
    y="343.56226"
    width="18.338104"
@@ -472,9 +472,9 @@
    y="374.10693"
    width="18.338104"
    height="18.326805"
-   fill="#e377c2"
+  fill="#d62728"
    fill-opacity="0.25"
-   stroke="#e377c2"
+  stroke="#d62728"
    stroke-width="1"
    id="rect172" /><text
    x="674.45697"
@@ -483,14 +483,14 @@
    fill="#333333"
    id="text174"
    transform="scale(1.0003082,0.99969186)"
-   style="stroke-width:1">Jooq</text><rect
+  style="stroke-width:1">Hibernate</text><rect
    x="644.10138"
    y="404.65161"
    width="18.338104"
    height="18.326805"
-   fill="#7f7f7f"
+  fill="#9467bd"
    fill-opacity="0.25"
-   stroke="#7f7f7f"
+  stroke="#9467bd"
    stroke-width="1"
    id="rect172-ebean" /><text
    x="674.45697"
@@ -499,7 +499,7 @@
    fill="#333333"
    id="text174-ebean"
    transform="scale(1.0003082,0.99969186)"
-   style="stroke-width:1">EBean</text><image
+  style="stroke-width:1">Exposed</text><image
    width="31.049414"
    height="27.599478"
    preserveAspectRatio="none"
