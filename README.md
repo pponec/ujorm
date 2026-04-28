@@ -29,7 +29,7 @@ To maintain a high utility-to-code ratio and minimize bugs, Ujorm3 intentionally
 <img src="docs/images/benchmark-graph.svg" alt="Benchmark graph" width="500" />
 </div>
 
-Ujorm3 outperforms popular ORM competitors across virtually all performance metrics while maintaining a minimal memory footprint.
+Ujorm3 delivers highly competitive performance compared to popular ORM frameworks while consistently maintaining a minimal memory footprint.
 Detailed results and methodology are available in the [Benchmarks](#benchmarks) section.
 
 ---
@@ -292,7 +292,7 @@ To ensure an objective methodology, scenarios and implementations were designed 
 The complete source code for these benchmarks is entirely open-source and fully auditable on GitHub, ensuring maximum transparency.
 
 **Conclusions:**
-* **Execution Speed:** Ujorm3 consistently ranks at the top across all tested database operations.
+* **Execution Speed:** Ujorm3 consistently ranks among the top performers across the tested database operations.
 * **Memory Efficiency:** The library exhibits the lowest memory allocation rate (Bytes/op), reducing Garbage Collector pressure.
 * **Minimal Footprint:** Zero external dependencies and a total compiled size under 3 MB makes it ideal for microservices and embedded devices.
 
@@ -330,10 +330,10 @@ The complete source code for these benchmarks is entirely open-source and fully 
   The library has an extremely compact codebase and is completely independent of third-party libraries.
 
 * **How to teach an AI to use the Ujorm3 ORM library?**<br/>
-For a quick understanding of the library, it is best to provide the AI directly with the source code of these two tutorial files (e.g., by copying the text or uploading files) so they are immediately available in its active context:
- [TutorialTest.java](https://raw.githubusercontent.com/pponec/ujorm/refs/heads/ujorm3/project-m2/ujo-orm/src/test/java/org/ujorm/orm/tutorial/TutorialTest.java)
-and
-[QuickStartTutorialTest.java](https://raw.githubusercontent.com/pponec/ujorm/refs/heads/ujorm3/project-m2/ujo-orm/src/test/java/org/ujorm/orm/tutorial/QuickStartTutorialTest.java) .
+  For a quick understanding of the library, it is best to provide the AI directly with the source code of these two tutorial files (e.g., by copying the text or uploading files) so they are immediately available in its active context:
+  [TutorialTest.java](https://raw.githubusercontent.com/pponec/ujorm/refs/heads/ujorm3/project-m2/ujo-orm/src/test/java/org/ujorm/orm/tutorial/TutorialTest.java)
+  and
+  [QuickStartTutorialTest.java](https://raw.githubusercontent.com/pponec/ujorm/refs/heads/ujorm3/project-m2/ujo-orm/src/test/java/org/ujorm/orm/tutorial/QuickStartTutorialTest.java) .
 
 ---
 
