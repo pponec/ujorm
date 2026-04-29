@@ -287,7 +287,7 @@ The library includes automated integration tests for PostgreSQL, MySQL, MariaDB,
 
 ## Benchmarks
 
-Performance tests comparing Ujorm3 to Hibernate, Jdbi, Exposed, and MyBatis were executed using an H2 database on Java 25.
+Performance tests comparing Ujorm3 to Hibernate, Jdbi, Exposed, and MyBatis were executed using PostgreSQL on Java 25.
 To ensure an objective methodology, scenarios and implementations were designed by the **Gemini Pro AI** model.
 The complete source code for these benchmarks is entirely open-source and fully auditable on GitHub, ensuring maximum transparency.
 
