@@ -20,15 +20,43 @@ public interface HttpContext {
     Set<String> parameterNames();
 
     /** Returns the last parameter */
-    String parameter(@NotNull CharSequence key, String defaultValue);
+    String parameter(@NotNull CharSequence key, @Nullable String defaultValue);
 
     /** Returns the type safe last parameter or the default value. */
-    <T> T parameter(@NotNull CharSequence key, @NotNull Function<String, T> converter, @NotNull T defaultValue);
+    <T> T parameter(@NotNull CharSequence key, @NotNull Function<String, T> converter, @Nullable T defaultValue);
 
     /** Returns the type safe last parameter or the default value. */
     default <T> T parameter(@NotNull CharSequence key, @NotNull Function<String, T> converter) {
         return parameter(key, converter, null);
     }
+
+    // --- DEPRECATED METHODS ---
+
+    /** @deprecated Use a method without the prefix `get` */
+    @Deprecated
+    default String getParameter(@NotNull CharSequence key) {
+        return parameter(key);
+    }
+
+    /** @deprecated Use a method without the prefix `get` */
+    @Deprecated
+    default Set<String> getParameterNames() {
+        return parameterNames();
+    }
+
+    /** @deprecated Use a method without the prefix `get` */
+    @Deprecated
+    default String getParameter(@NotNull CharSequence key, @Nullable String defaultValue) {
+        return parameter(key, defaultValue);
+    }
+
+    /** @deprecated Use a method without the prefix `get` */
+    @Deprecated
+    default <T> T getParameter(@NotNull CharSequence key, @Nullable T defaultValue, @NotNull Function<String, T> converter) {
+        return parameter(key, converter, defaultValue);
+    }
+
+    // --- STATIC METHODS ---
 
     /** HTTP Servlet Factory */
     static HttpContext ofServletResponse(Object httpServletResponse) {
@@ -40,43 +68,22 @@ public interface HttpContext {
         return HttpContextImpl.ofServlet(httpServletRequest, httpServletResponse);
     }
 
-    /** Create a default HTTP context from a map */
-    static HttpContext of(ManyMap map) {
-        return new HttpContextImpl(URequestImpl.ofMap(map), new StringBuilder());
-    }
-
     /** UContext from a map */
     static HttpContext of() {
-        return of (new ManyMap());
+        return of(new StringBuilder());
     }
 
-    // --- DEPRECATED METHODS ---
-
-    /** Returns the last parameter or the null value.
-     * @deprecated Use a method without the prefix `get` .*/
-    @Deprecated
-    default String getParameter(@NotNull CharSequence key) {
-        return parameter(key);
+    static @NotNull HttpContext of(@NotNull Appendable writer) {
+        return of(URequest.of(), writer);
     }
 
-    /** Returns the parameter name set.
-     * @deprecated Use a method without the prefix `get` .*/
-    @Deprecated
-    default Set<String> getParameterNames() {
-        return parameterNames();
-    };
+    /** Create a default HTTP context from the ManyMap */
+    static @NotNull HttpContext of(@NotNull ManyMap map) {
+        return of(URequestImpl.ofMap(map), new StringBuilder());
+    }
 
-    /** Returns the last parameter .
-     * @deprecated Use a method without the prefix `get` .*/
-    @Deprecated
-    default String getParameter(@NotNull CharSequence key, String defaultValue) {
-        return getParameter(key, defaultValue);
-    };
-
-    /** Returns the type safe last parameter or the default value..
-     * @deprecated Use a method without the prefix `get` .*/
-    @Deprecated
-    default <T> T getParameter(@NotNull CharSequence key, @NotNull T defaultValue, @NotNull Function<String, T> converter) {
-        return parameter(key, converter, defaultValue);
+    /** Create a default HTTP context from a map */
+    static @NotNull HttpContext of(URequest request, @NotNull Appendable writer) {
+        return new HttpContextImpl(request, writer);
     }
 }

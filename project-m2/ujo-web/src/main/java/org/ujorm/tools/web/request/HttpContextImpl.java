@@ -1,7 +1,5 @@
 package org.ujorm.tools.web.request;
 
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.ujorm.tools.web.ao.Reflections;
@@ -30,11 +28,6 @@ public class HttpContextImpl implements HttpContext {
         this(uRequest, new StringBuilder());
     }
 
-    /** Constructor with a default URequest and StringBuilder */
-    public HttpContextImpl() {
-        this(URequestImpl.of(), new StringBuilder());
-    }
-
     /** An abstract API of the HTTP request */
     @Override
     public URequest request() {
@@ -48,28 +41,27 @@ public class HttpContextImpl implements HttpContext {
     }
 
     /** Returns the last parameter or the null value */
+    @Override
     public String parameter(@NotNull CharSequence key) {
         return parameter(key, (String) null);
     }
 
     /** Returns the parameter names */
+    @Override
     public Set<String> parameterNames() {
         return uRequest.parameterNames();
     }
 
     /** Returns the last parameter */
     @Override
-    public String parameter(@NotNull CharSequence key, String defaultValue) {
+    public String parameter(@NotNull CharSequence key, @Nullable String defaultValue) {
         return parameter(key, Function.identity(), defaultValue);
     }
 
     /** Returns the last parameter */
     @Override
-    public <T> T parameter(@NotNull CharSequence key, @NotNull Function<String, T> converter, @NotNull T defaultValue) {
-        var request = request();
-        return request != null
-                ? request.parameter(key, converter, defaultValue)
-                : defaultValue;
+    public <T> T parameter(@NotNull CharSequence key, @NotNull Function<String, T> converter, @Nullable T defaultValue) {
+        return uRequest.parameter(key, converter, defaultValue);
     }
 
     /** Return a text of the writer object */
@@ -84,7 +76,7 @@ public class HttpContextImpl implements HttpContext {
             @NotNull final Object resp) {
         Reflections.setCharacterEncoding(resp, CHARSET.name());
         var writer = Reflections.getServletWriter(resp);
-        var ureq = req != null ? URequest.ofRequest(req) : URequestImpl.of();
+        var ureq = req != null ? URequest.ofRequest(req) : URequest.of();
         return new HttpContextImpl(ureq, writer);
     }
 }
