@@ -2,7 +2,6 @@ package org.ujorm.tools.web.request;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.ujorm.tools.web.ao.Reflections;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.Set;
@@ -70,13 +69,4 @@ public class ExchangeContext implements HttpContext {
         return writer.toString();
     }
 
-    /** Create a default HTTP Context by independent API (Jakarta vs Javax) */
-    public static HttpContext ofServlet(
-            @Nullable final Object req,
-            @NotNull final Object resp) {
-        Reflections.setCharacterEncoding(resp, CHARSET.name());
-        var writer = Reflections.getServletWriter(resp);
-        var ureq = req != null ? URequest.ofRequest(req) : URequest.of();
-        return new ExchangeContext(ureq, writer);
-    }
 }

@@ -1,5 +1,7 @@
 package org.ujorm.tools.web.request;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import java.util.Set;
@@ -58,14 +60,28 @@ public interface HttpContext {
 
     // --- STATIC METHODS ---
 
-    /** HTTP Servlet Factory */
-    static HttpContext ofServletResponse(Object httpServletResponse) {
-        return ofServlet(null, httpServletResponse);
+    /** Jakarta Servlet factory. */
+    static HttpContext ofServlet(@NotNull HttpServletRequest httpServletRequest, @NotNull HttpServletResponse httpServletResponse) {
+        return HttpContextImpl.of(httpServletRequest, httpServletResponse);
     }
 
-    /** Create a default HTTP Context */
+    /** Jakarta Servlet factory for response-only use-cases. */
+    static HttpContext ofServletResponse(@NotNull HttpServletResponse httpServletResponse) {
+        return ofServlet((HttpServletRequest) null, httpServletResponse);
+    }
+
+    /**
+     * Generic servlet-like factory (reflection-based).
+     * Use this method for compatibility with non-Jakarta servlet APIs.
+     */
     static HttpContext ofServlet(@Nullable Object httpServletRequest, @NotNull Object httpServletResponse) {
-        return ExchangeContext.ofServlet(httpServletRequest, httpServletResponse);
+        ServletBridge.prepareHtmlResponse(httpServletResponse, ExchangeContext.CHARSET, true);
+        if (httpServletRequest != null) {
+            ServletBridge.setCharacterEncoding(httpServletRequest, ExchangeContext.CHARSET.name());
+        }
+        var writer = ServletBridge.getServletWriter(httpServletResponse);
+        var request = httpServletRequest != null ? URequest.ofRequest(httpServletRequest) : URequest.of();
+        return new ExchangeContext(request, writer);
     }
 
     /** UContext from a map */

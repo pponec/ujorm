@@ -2,7 +2,6 @@ package org.ujorm.tools.web.request;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.ujorm.tools.web.ao.Reflections;
 import java.io.CharArrayReader;
 import java.io.Reader;
 import java.util.Collections;
@@ -52,7 +51,7 @@ public interface URequest {
 
         @Override
         public Reader reader() {
-            return Reflections.getServletReader(httpServletRequest);
+            return ServletBridge.getServletReader(httpServletRequest);
         }
 
         @Override
@@ -73,7 +72,7 @@ public interface URequest {
         @NotNull
         private Map<String, String[]> getMap(@Nullable Object request) {
             if (paramMap == null && request != null) {
-                paramMap = Reflections.getParameterMap(request);
+                paramMap = ServletBridge.getParameterMap(request);
             }
             return paramMap != null ? paramMap : Collections.emptyMap();
         }
@@ -81,7 +80,7 @@ public interface URequest {
 
     /** Convert the HttpServletRequest to the URequest */
     static URequest ofRequest(@Nullable final Object httpServletRequest) {
-        Reflections.setCharacterEncoding(httpServletRequest, ExchangeContext.CHARSET.name());
+        ServletBridge.setCharacterEncoding(httpServletRequest, ExchangeContext.CHARSET.name());
         return new ServletRequestWrapper(httpServletRequest);
     }
 

@@ -17,13 +17,9 @@
 package org.ujorm.tools.xml;
 
 import java.io.IOException;
-import java.lang.reflect.Method;
-import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
-import java.util.concurrent.ConcurrentHashMap;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.ujorm.tools.Check;
@@ -73,9 +69,6 @@ public abstract class AbstractWriter {
     public static final MsgFormatter FORMATTER = new MsgFormatter(){};
 
     private static final String[] CONTROL_ESCAPES = createControlEscapes();
-
-    /** Thread-safe cache for HttpServletResponse reflection methods */
-    private static final Map<Class<?>, ResponseMethods> METHOD_CACHE = new ConcurrentHashMap<>();
 
     /** Output */
     @NotNull
@@ -314,44 +307,4 @@ public abstract class AbstractWriter {
         return result;
     }
 
-    /** Cached reflection methods for HttpServletResponse */
-    private static final class ResponseMethods {
-        final Method setEncoding;
-        final Method setHeader;
-        final Method getWriter;
-
-        ResponseMethods(Class<?> clazz) {
-            try {
-                this.setEncoding = clazz.getMethod("setCharacterEncoding", String.class);
-                this.setHeader = clazz.getMethod("setHeader", String.class, String.class);
-                this.getWriter = clazz.getMethod("getWriter");
-            } catch (NoSuchMethodException e) {
-                throw new IllegalStateException("Failed to initialize HttpServletResponse methods", e);
-            }
-        }
-    }
-
-    // ---- STATIC METHOD(s) ---
-
-    /** Assign a no-cache and an Edge compatibility mode and returns a writer from HttpServletResponse */
-    @NotNull
-    public static Appendable createWriter(
-            @NotNull final Object httpServletResponse,
-            @NotNull final Charset charset,
-            final boolean noCache
-    ) throws ReflectiveOperationException {
-        var methods = METHOD_CACHE.computeIfAbsent(httpServletResponse.getClass(), ResponseMethods::new);
-
-        methods.setEncoding.invoke(httpServletResponse, charset.toString());
-        methods.setHeader.invoke(httpServletResponse, "Content-Type", "text/html; charset=" + charset);
-
-        if (noCache) {
-            methods.setHeader.invoke(httpServletResponse, "Cache-Control", "no-cache, no-store, must-revalidate"); // HTTP 1.1
-            methods.setHeader.invoke(httpServletResponse, "Pragma", "no-cache"); // HTTP 1.0
-            methods.setHeader.invoke(httpServletResponse, "Expires", "0"); // Proxies
-            methods.setHeader.invoke(httpServletResponse, "X-UA-Compatible", "IE=edge"); // Proxies
-        }
-
-        return (Appendable) methods.getWriter.invoke(httpServletResponse);
-    }
 }

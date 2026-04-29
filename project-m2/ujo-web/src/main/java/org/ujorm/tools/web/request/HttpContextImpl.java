@@ -3,18 +3,22 @@ package org.ujorm.tools.web.request;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
 import java.util.Map;
 
-/** An implementation of the Jakarta HTTP Servlet request context. */
+/** Jakarta Servlet HTTP request context. */
 public class HttpContextImpl extends ExchangeContext {
 
     private final HttpServletRequest request;
     private final HttpServletResponse response;
 
-    protected HttpContextImpl(@NotNull URequest uRequest, @NotNull Appendable writer, @NotNull HttpServletRequest request, @NotNull HttpServletResponse response) {
+    protected HttpContextImpl(
+            @NotNull URequest uRequest,
+            @NotNull Appendable writer,
+            @NotNull HttpServletRequest request,
+            @NotNull HttpServletResponse response
+    ) {
         super(uRequest, writer);
         this.request = request;
         this.response = response;
@@ -44,14 +48,20 @@ public class HttpContextImpl extends ExchangeContext {
     }
 
     /**
-     * Create a default HTTP Context by the Jakarta Servlet API
+     * Create a default HTTP Context by the Jakarta Servlet API.
      */
     public static @NotNull HttpContextImpl of(
-            @Nullable final HttpServletRequest request,
-            @NotNull final HttpServletResponse response) {
+            @NotNull final HttpServletRequest request,
+            @NotNull final HttpServletResponse response
+    ) {
         try {
-            request.setCharacterEncoding(ExchangeContext.CHARSET);
-            response.setCharacterEncoding(ExchangeContext.CHARSET);
+            request.setCharacterEncoding(ExchangeContext.CHARSET.name());
+            response.setCharacterEncoding(ExchangeContext.CHARSET.name());
+            response.setHeader("Content-Type", "text/html; charset=" + ExchangeContext.CHARSET.name());
+            response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
+            response.setHeader("Pragma", "no-cache");
+            response.setHeader("Expires", "0");
+            response.setHeader("X-UA-Compatible", "IE=edge");
             var map = manyMap(request.getParameterMap());
             var req = new URequestImpl(map, request.getReader());
             var writer = response.getWriter();

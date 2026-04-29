@@ -22,6 +22,7 @@ import java.nio.charset.Charset;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.ujorm.tools.Check;
+import org.ujorm.tools.web.request.ServletBridge;
 import org.ujorm.tools.xml.AbstractWriter;
 import org.ujorm.tools.xml.ApiElement;
 import org.ujorm.tools.xml.config.HtmlConfig;
@@ -241,15 +242,9 @@ public class XmlPrinter extends AbstractWriter {
             @NotNull final Object httpServletResponse,
             @NotNull final HtmlConfig config
     ) {
-        try {
-            var writer = createWriter(
-                    httpServletResponse,
-                    config.getCharset(),
-                    config.isCacheAllowed());
-            return new XmlPrinter(writer, config);
-        } catch (ReflectiveOperationException e) {
-            throw new IllegalArgumentException("Response must be type of HttpServletResponse", e);
-        }
+        ServletBridge.prepareHtmlResponse(httpServletResponse, config.getCharset(), !config.isCacheAllowed());
+        var writer = ServletBridge.getServletWriter(httpServletResponse);
+        return new XmlPrinter(writer, config);
     }
 
     /**
