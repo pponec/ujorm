@@ -56,12 +56,7 @@ public class HttpContextImpl extends ExchangeContext {
     ) {
         try {
             request.setCharacterEncoding(ExchangeContext.CHARSET.name());
-            response.setCharacterEncoding(ExchangeContext.CHARSET.name());
-            response.setHeader("Content-Type", "text/html; charset=" + ExchangeContext.CHARSET.name());
-            response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
-            response.setHeader("Pragma", "no-cache");
-            response.setHeader("Expires", "0");
-            response.setHeader("X-UA-Compatible", "IE=edge");
+            ServletBridge.prepareHtmlResponse(response, ExchangeContext.CHARSET, true);
             var map = manyMap(request.getParameterMap());
             var req = new URequestImpl(map, request.getReader());
             var writer = response.getWriter();

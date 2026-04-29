@@ -67,7 +67,7 @@ public interface HttpContext {
 
     /** Jakarta Servlet factory for response-only use-cases. */
     static HttpContext ofServletResponse(@NotNull HttpServletResponse httpServletResponse) {
-        return ofServlet((HttpServletRequest) null, httpServletResponse);
+        return ofServlet((Object) null, (Object) httpServletResponse);
     }
 
     /**
@@ -76,9 +76,6 @@ public interface HttpContext {
      */
     static HttpContext ofServlet(@Nullable Object httpServletRequest, @NotNull Object httpServletResponse) {
         ServletBridge.prepareHtmlResponse(httpServletResponse, ExchangeContext.CHARSET, true);
-        if (httpServletRequest != null) {
-            ServletBridge.setCharacterEncoding(httpServletRequest, ExchangeContext.CHARSET.name());
-        }
         var writer = ServletBridge.getServletWriter(httpServletResponse);
         var request = httpServletRequest != null ? URequest.ofRequest(httpServletRequest) : URequest.of();
         return new ExchangeContext(request, writer);
