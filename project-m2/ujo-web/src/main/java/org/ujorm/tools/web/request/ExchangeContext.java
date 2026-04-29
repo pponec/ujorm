@@ -14,7 +14,7 @@ public class ExchangeContext extends HttpContextImpl {
     private final HttpServletRequest request;
     private final HttpServletResponse response;
 
-    public ExchangeContext(@NotNull URequest uRequest, @NotNull Appendable writer, @NotNull HttpServletRequest request, @NotNull HttpServletResponse response) {
+    protected ExchangeContext(@NotNull URequest uRequest, @NotNull Appendable writer, @NotNull HttpServletRequest request, @NotNull HttpServletResponse response) {
         super(uRequest, writer);
         this.request = request;
         this.response = response;
@@ -48,12 +48,14 @@ public class ExchangeContext extends HttpContextImpl {
      */
     public static @NotNull ExchangeContext of(
             @Nullable final HttpServletRequest request,
-            @NotNull final HttpServletResponse resp) {
+            @NotNull final HttpServletResponse response) {
         try {
+            request.setCharacterEncoding(HttpContextImpl.CHARSET);
+            response.setCharacterEncoding(HttpContextImpl.CHARSET);
             var map = manyMap(request.getParameterMap());
             var req = new URequestImpl(map, request.getReader());
-            var writer = resp.getWriter();
-            return new ExchangeContext(req, writer, request, resp);
+            var writer = response.getWriter();
+            return new ExchangeContext(req, writer, request, response);
         } catch (Exception ex) {
             throw new IllegalStateException(ex);
         }
