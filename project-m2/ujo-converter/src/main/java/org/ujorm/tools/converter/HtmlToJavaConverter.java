@@ -124,9 +124,9 @@ public final class HtmlToJavaConverter {
 
     /** Convert a HTML code to the Java code with Element classes. */
     public String convertHtmlToJavaElements(String htmlContent, boolean blockStyle, boolean separatedCssStyles) throws IOException {
-        var writer = new StringBuilder();
-        convertHtmlToJavaElements(htmlContent, blockStyle, separatedCssStyles, writer);
-        return writer.toString();
+        var result = new StringBuilder();
+        convertHtmlToJavaElements(htmlContent, blockStyle, separatedCssStyles, result);
+        return result.toString();
     }
 
     /** Convert a HTML code to the Java code with Element classes. */
@@ -143,14 +143,17 @@ public final class HtmlToJavaConverter {
 
         // Added JavaDoc with version
         var version = Html.class.getPackage().getImplementationVersion();
-        writer.append("/** Generated for use with: org.ujorm:ujo-web:")
+        writer.append("public String htmlGenerator() {\n")
+                .append(OFFSET).append("return htmlGenerator(new StringBuilder()).toString();\n")
+                .append("}\n\n")
+                .append("/** Generated for use with: org.ujorm:ujo-web:")
                 .append(version != null ? version : DEFAULT_UJORM_VERSION)
                 .append(" (").append(LocalDate.now().toString()).append(") */\n")
-                .append("public String htmlGenerator() {\n")
-                .append(OFFSET).append("var result = HttpContext.of();\n")
+                .append("public Appendable htmlGenerator(Appendable writer) {\n")
+                .append(OFFSET).append("var ctx = HttpContext.of(writer);\n")
                 .append(OFFSET).append("try (var html = HtmlElement.niceOf(\"")
                 .append(escapeJavaString(docTitle))
-                .append("\", result)) {\n");
+                .append("\", ctx)) {\n");
 
         writeAttributes(root, writer, OFFSET.repeat(2) + "html", ");\n", Set.of(), separatedCssStyles, cssConstants);
 
@@ -160,7 +163,7 @@ public final class HtmlToJavaConverter {
         }
 
         writer.append(OFFSET).append("}\n")
-                .append(OFFSET).append("return result.toString();\n")
+                .append(OFFSET).append("return writer;\n")
                 .append("}");
         if (separatedCssStyles) {
             writeCssClass(cssConstants, writer);
@@ -201,8 +204,8 @@ public final class HtmlToJavaConverter {
             if (useBlock) {
                 // BLOCK STYLE: try (var x = ...) { ... }
                 var currentVar = generateVariableName(tagName, ancestors);
-                writer.append(indent).append("try (var ").append(currentVar).append(" = ").append(creation.code).append(") {\n");
-                writeAttributes(element, writer, OFFSET.repeat(depth + 1) + currentVar, ");\n", creation.consumedAttributes, separatedCssStyles, cssConstants);
+                writer.append(indent).append("try (var ").append(currentVar).append(" = ").append(creation.code()).append(") {\n");
+                writeAttributes(element, writer, OFFSET.repeat(depth + 1) + currentVar, ");\n", creation.consumedAttributes(), separatedCssStyles, cssConstants);
 
                 ancestors.push(tagName);
                 for (var child : element.childNodes()) {
@@ -212,12 +215,12 @@ public final class HtmlToJavaConverter {
                 writer.append(indent).append("}\n");
             } else {
                 // CHAIN STYLE: parent.addDiv().setAttribute(...).addText(...);
-                writer.append(indent).append(creation.code);
+                writer.append(indent).append(creation.code());
                 var chainedIndent = indent + OFFSET;
                 var chainPrefix = "\n" + chainedIndent;
 
                 // Chain attributes
-                writeAttributes(element, writer, chainPrefix, ")", creation.consumedAttributes, separatedCssStyles, cssConstants);
+                writeAttributes(element, writer, chainPrefix, ")", creation.consumedAttributes(), separatedCssStyles, cssConstants);
 
                 // Chain text content (we know there are no Element children)
                 for (var child : element.childNodes()) {
@@ -534,14 +537,6 @@ public final class HtmlToJavaConverter {
         return result;
     }
 
-    /** Helper record for the result of generating creation code. */
-    private record CreationResult(String code, Set<String> consumedAttributes) {
-        /** JavaDoc atributu code */
-        public String code() { return code; }
-        /** JavaDoc atributu consumedAttributes */
-        public Set<String> consumedAttributes() { return consumedAttributes; }
-    }
-
     private String getOrCreateCssConstantName(String cssClass, Map<String, String> cssConstants) {
         return cssConstants.computeIfAbsent(cssClass, key -> createUniqueCssConstantName(key, cssConstants));
     }
@@ -595,5 +590,14 @@ public final class HtmlToJavaConverter {
                 .append(OFFSET)
                 .append("private Css() {}\n")
                 .append("}");
+    }
+
+    /** Helper record for the result of generating creation code. */
+    private record CreationResult(
+            /** The generated Java code */
+            String code,
+            /** Set of consumed attributes */
+            Set<String> consumedAttributes
+    ) {
     }
 }
