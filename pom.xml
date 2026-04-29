@@ -9,13 +9,13 @@
 
     <groupId>org.ujorm</groupId>
     <artifactId>main</artifactId>
-    <version>3.0.0-RC5</version>
+    <version>3.0.0-RC6</version>
     <name>Main UJO</name>
     <packaging>pom</packaging>
     <description>Ujorm common project</description>
 
     <properties>
-        <revision>3.0.0-RC5</revision>
+        <revision>3.0.0-RC6</revision>
         <java.version>17</java.version>
         <maven.compiler.target>${java.version}</maven.compiler.target>
         <maven.compiler.source>${java.version}</maven.compiler.source>
