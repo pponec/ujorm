@@ -81,7 +81,7 @@ public interface URequest {
 
     /** Convert the HttpServletRequest to the URequest */
     static URequest ofRequest(@Nullable final Object httpServletRequest) {
-        Reflections.setCharacterEncoding(httpServletRequest, HttpContextImpl.CHARSET.name());
+        Reflections.setCharacterEncoding(httpServletRequest, ExchangeContext.CHARSET.name());
         return new ServletRequestWrapper(httpServletRequest);
     }
 

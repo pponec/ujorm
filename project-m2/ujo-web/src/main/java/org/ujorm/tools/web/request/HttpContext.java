@@ -65,7 +65,7 @@ public interface HttpContext {
 
     /** Create a default HTTP Context */
     static HttpContext ofServlet(@Nullable Object httpServletRequest, @NotNull Object httpServletResponse) {
-        return HttpContextImpl.ofServlet(httpServletRequest, httpServletResponse);
+        return ExchangeContext.ofServlet(httpServletRequest, httpServletResponse);
     }
 
     /** UContext from a map */
@@ -84,6 +84,6 @@ public interface HttpContext {
 
     /** Create a default HTTP context from a map */
     static @NotNull HttpContext of(URequest request, @NotNull Appendable writer) {
-        return new HttpContextImpl(request, writer);
+        return new ExchangeContext(request, writer);
     }
 }

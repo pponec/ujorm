@@ -1,82 +1,70 @@
 package org.ujorm.tools.web.request;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.ujorm.tools.web.ao.Reflections;
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
-import java.util.Set;
-import java.util.function.Function;
 
-/** A default implementation of the HTTP servlet request context */
-public class HttpContextImpl implements HttpContext {
+import java.io.IOException;
+import java.util.Map;
 
-    /** Default charset */
-    public static final Charset CHARSET = StandardCharsets.UTF_8;
+/** An implementation of the Jakarta HTTP Servlet request context. */
+public class HttpContextImpl extends ExchangeContext {
 
-    private final URequest uRequest;
-    private final Appendable writer;
+    private final HttpServletRequest request;
+    private final HttpServletResponse response;
 
-    /** Default constructor */
-    public HttpContextImpl(URequest uRequest, Appendable writer) {
-        this.uRequest = uRequest;
-        this.writer = writer;
+    protected HttpContextImpl(@NotNull URequest uRequest, @NotNull Appendable writer, @NotNull HttpServletRequest request, @NotNull HttpServletResponse response) {
+        super(uRequest, writer);
+        this.request = request;
+        this.response = response;
     }
 
-    /** Constructor with a default StringBuilder */
-    public HttpContextImpl(URequest uRequest) {
-        this(uRequest, new StringBuilder());
+    /** Original HTTP Jakarta Servlet Request */
+    @NotNull
+    public HttpServletRequest getServletRequest() {
+        return request;
     }
 
-    /** An abstract API of the HTTP request */
-    @Override
-    public URequest request() {
-        return uRequest;
+    /** Original HTTP Jakarta Servlet Response */
+    @NotNull
+    public HttpServletResponse getServletResponse() {
+        return response;
     }
 
-    /** Returns a writer of the HTTP response */
-    @Override
-    public Appendable writer() {
-        return writer;
+    /** @see HttpServletResponse#sendRedirect(String)  */
+    public void sendRedirect(@NotNull String location) throws IOException {
+        getServletResponse().sendRedirect(location);
     }
 
-    /** Returns the last parameter or the null value */
-    @Override
-    public String parameter(@NotNull CharSequence key) {
-        return parameter(key, (String) null);
+    /** Returns the context path with a trailing slash */
+    public String getPathSlash() {
+        var result = getServletRequest().getContextPath();
+        return result.isEmpty() ? "/" : (result + "/");
     }
 
-    /** Returns the parameter names */
-    @Override
-    public Set<String> parameterNames() {
-        return uRequest.parameterNames();
+    /**
+     * Create a default HTTP Context by the Jakarta Servlet API
+     */
+    public static @NotNull HttpContextImpl of(
+            @Nullable final HttpServletRequest request,
+            @NotNull final HttpServletResponse response) {
+        try {
+            request.setCharacterEncoding(ExchangeContext.CHARSET);
+            response.setCharacterEncoding(ExchangeContext.CHARSET);
+            var map = manyMap(request.getParameterMap());
+            var req = new URequestImpl(map, request.getReader());
+            var writer = response.getWriter();
+            return new HttpContextImpl(req, writer, request, response);
+        } catch (Exception ex) {
+            throw new IllegalStateException(ex);
+        }
     }
 
-    /** Returns the last parameter */
-    @Override
-    public String parameter(@NotNull CharSequence key, @Nullable String defaultValue) {
-        return parameter(key, Function.identity(), defaultValue);
-    }
-
-    /** Returns the last parameter */
-    @Override
-    public <T> T parameter(@NotNull CharSequence key, @NotNull Function<String, T> converter, @Nullable T defaultValue) {
-        return uRequest.parameter(key, converter, defaultValue);
-    }
-
-    /** Return a text of the writer object */
-    @Override
-    public String toString() {
-        return writer.toString();
-    }
-
-    /** Create a default HTTP Context by independent API (Jakarta vs Javax) */
-    public static HttpContext ofServlet(
-            @Nullable final Object req,
-            @NotNull final Object resp) {
-        Reflections.setCharacterEncoding(resp, CHARSET.name());
-        var writer = Reflections.getServletWriter(resp);
-        var ureq = req != null ? URequest.ofRequest(req) : URequest.of();
-        return new HttpContextImpl(ureq, writer);
+    /** * Converts a map of arrays to a map of lists using forEach */
+    private static ManyMap manyMap(@NotNull Map<String, String[]> map) {
+        var result = new ManyMap();
+        map.forEach((key, values) ->  result.put(key, values));
+        return result;
     }
 }
