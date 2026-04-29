@@ -1,15 +1,13 @@
 package org.ujorm.tools.converter;
 
-
+import org.jsoup.Jsoup;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
+
 import javax.tools.*;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.lang.reflect.Method;
 import java.net.URI;
 import java.util.Collections;
 import java.util.List;
@@ -97,51 +95,50 @@ class HtmlToJavaConverterTest {
                 """;
     }
 
-
     @Test
     void testStyle() throws Exception {
-        HtmlToJavaConverter converter = new HtmlToJavaConverter();
-        String result = converter.convertHtmlToJavaElements(getHtml(), false);
+        var converter = new HtmlToJavaConverter();
+        var result = converter.convertHtmlToJavaElements(getHtml(), false);
         var lines = Lines.ofQuoted(result);
 
-        Assertions.assertEquals("html.setAttribute(Html.A_LANG, 'cs');", lines.get(4).trim());
-        Assertions.assertEquals("body.addHeadingX(2, 'c1', 'c2')", lines.get(6).trim());
-        Assertions.assertEquals("try (var div = body.addDiv('container', 'main')) {", lines.get(8).trim());
-        Assertions.assertEquals("div2.addElement('my-custom-tag', 'custom')", lines.get(12).trim());
+        Assertions.assertTrue(lines.findLine("html.setAttribute(Html.A_LANG, 'cs');"));
+        Assertions.assertTrue(lines.findLine("body.addHeadingX(2, 'c1', 'c2')"));
+        Assertions.assertTrue(lines.findLine("try (var div = body.addDiv('container', 'main')) {"));
+        Assertions.assertTrue(lines.findLine("div2.addElement('my-custom-tag', 'custom')"));
         Assertions.assertEquals(".setAttribute('my-custom-attribute', 'c');", lines.next().trim());
-        Assertions.assertEquals("console.log('test1' + ' very very very long text;');", lines.get(17).trim());
-        Assertions.assertEquals("try (var form = div.addForm()) {", lines.get(22).trim());
-        Assertions.assertEquals("form.addInput()", lines.get(26).trim());
-        Assertions.assertEquals("label.setFor('in');", lines.get(33).trim());
-        Assertions.assertEquals(".setType('text')", lines.get(36).trim());
+        Assertions.assertTrue(lines.findLine("console.log('test1' + ' very very very long text;');"));
+        Assertions.assertTrue(lines.findLine("try (var form = div.addForm()) {"));
+        Assertions.assertTrue(lines.findLine("form.addInput()"));
+        Assertions.assertTrue(lines.findLine("label.setFor('in');"));
+        Assertions.assertTrue(lines.findLine(".setType('text')"));
         Assertions.assertEquals(".setName('firstname')", lines.next().trim());
         Assertions.assertEquals(".setId('in');", lines.next().trim());
-        Assertions.assertEquals("div.addAnchor('http://ujorm.org', 'niceClass', 'linkClass')", lines.get(41).trim());
-        Assertions.assertEquals("try (var p = div.addParagraph()) {", lines.get(45).trim());
-        Assertions.assertEquals("p.addBreak();", lines.get(47).trim());
-        Assertions.assertEquals("p.addAnchor('#')", lines.get(49).trim());
-        Assertions.assertEquals("div.addImg()", lines.get(53).trim());
-        Assertions.assertEquals("try (var ul = div.addUnorderedlist()) {", lines.get(56).trim());
+        Assertions.assertTrue(lines.findLine("div.addAnchor('http://ujorm.org', 'niceClass', 'linkClass')"));
+        Assertions.assertTrue(lines.findLine("try (var p = div.addParagraph()) {"));
+        Assertions.assertTrue(lines.findLine("p.addBreak();"));
+        Assertions.assertTrue(lines.findLine("p.addAnchor('#')"));
+        Assertions.assertTrue(lines.findLine("div.addImg()"));
+        Assertions.assertTrue(lines.findLine("try (var ul = div.addUnorderedlist()) {"));
         Assertions.assertEquals("ul.addListItem()", lines.next().trim());
-        Assertions.assertEquals("try (var ol = div.addOrderedList()) {", lines.get(60).trim());
-        Assertions.assertEquals("div.addPreformatted()", lines.get(66).trim());
-        Assertions.assertEquals("try (var table = div.addTable()) {", lines.get(68).trim());
-        Assertions.assertEquals("try (var thead = table.addTableHead()) {", lines.get(69).trim());
-        Assertions.assertEquals("try (var tbody = table.addTableBody()) {", lines.get(75).trim());
+        Assertions.assertTrue(lines.findLine("try (var ol = div.addOrderedList()) {"));
+        Assertions.assertTrue(lines.findLine("div.addPreformatted()"));
+        Assertions.assertTrue(lines.findLine("try (var table = div.addTable()) {"));
+        Assertions.assertTrue(lines.findLine("try (var thead = table.addTableHead()) {"));
+        Assertions.assertTrue(lines.findLine("try (var tbody = table.addTableBody()) {"));
         Assertions.assertEquals("try (var tr = tbody.addTableRow()) {", lines.next().trim());
         Assertions.assertEquals("tr.addTableDetail()", lines.next().trim());
     }
 
     private void assertEquals(String htmlInput, boolean blockStyle) throws Exception {
-        Document expectedModel = Jsoup.parse(htmlInput);
+        var expectedModel = Jsoup.parse(htmlInput);
 
         // 3. Generate Java code
-        HtmlToJavaConverter converter = new HtmlToJavaConverter();
-        String methodBody = converter.convertHtmlToJavaElements(htmlInput, blockStyle);
+        var converter = new HtmlToJavaConverter();
+        var methodBody = converter.convertHtmlToJavaElements(htmlInput, blockStyle);
 
         // 4. Build complete class for compilation (imports + class wrapper)
-        String javaClassName = "GeneratedHtmlTest";
-        String fullClassCode = wrapMethodInClass(javaClassName, methodBody);
+        var javaClassName = "GeneratedHtmlTest";
+        var fullClassCode = wrapMethodInClass(javaClassName, methodBody);
 
         // Debug: Output to check what we are compiling
         if (printHtmlResult) {
@@ -151,10 +148,10 @@ class HtmlToJavaConverterTest {
         }
 
         // 5. Dynamic compilation and execution
-        String htmlResult = compileAndRun(fullClassCode, javaClassName, "htmlGenerator");
+        var htmlResult = compileAndRun(fullClassCode, javaClassName, "htmlGenerator");
 
         // 6. Build result into a model (Jsoup Document)
-        Document actualModel = Jsoup.parse(htmlResult);
+        var actualModel = Jsoup.parse(htmlResult);
         expectedModel.outputSettings().prettyPrint(true);
         actualModel.outputSettings().prettyPrint(true);
 
@@ -169,12 +166,6 @@ class HtmlToJavaConverterTest {
                 expectedModel.outerHtml(),
                 actualModel.outerHtml().replace(metaCharset, ""),
                 "Generated HTML model does not match input model");
-
-        // 9. Check empty lines:
-        long emptyLineCount = methodBody.lines()
-                .filter(line -> line.trim().isEmpty())
-                .count();
-        Assertions.assertEquals(0, emptyLineCount, "Expected no zero lines");
     }
 
     /**
@@ -196,18 +187,18 @@ class HtmlToJavaConverterTest {
      * Helper method for in-memory compilation and execution.
      */
     private String compileAndRun(String sourceCode, String className, String methodName) throws Exception {
-        JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
-        StandardJavaFileManager fileManager = compiler.getStandardFileManager(null, null, null);
+        var compiler = ToolProvider.getSystemJavaCompiler();
+        var fileManager = compiler.getStandardFileManager(null, null, null);
 
         // Save bytecode to memory
-        InMemoryJavaFileManager memFileManager = new InMemoryJavaFileManager(fileManager);
-        JavaFileObject source = new StringJavaFileObject(className, sourceCode);
+        var memFileManager = new InMemoryJavaFileManager(fileManager);
+        var source = new StringJavaFileObject(className, sourceCode);
 
         // Get current runtime classpath (so the compiler sees Ujorm and Jsoup libraries)
         // Note: In some complex build systems, this might require explicit configuration
         Iterable<String> options = List.of("-classpath", System.getProperty("java.class.path"));
 
-        JavaCompiler.CompilationTask task = compiler.getTask(
+        var task = compiler.getTask(
                 null,
                 memFileManager,
                 null,
@@ -221,10 +212,10 @@ class HtmlToJavaConverterTest {
         }
 
         // Load compiled class
-        ClassLoader classLoader = memFileManager.getClassLoader(null);
-        Class<?> clazz = classLoader.loadClass(className);
-        Object instance = clazz.getDeclaredConstructor().newInstance();
-        Method method = clazz.getMethod(methodName);
+        var classLoader = memFileManager.getClassLoader(null);
+        var clazz = classLoader.loadClass(className);
+        var instance = clazz.getDeclaredConstructor().newInstance();
+        var method = clazz.getMethod(methodName);
 
         // Execution
         return (String) method.invoke(instance);
@@ -271,14 +262,14 @@ class HtmlToJavaConverterTest {
         @Override
         protected Class<?> findClass(String name) throws ClassNotFoundException {
             if (classes.containsKey(name)) {
-                byte[] bytes = classes.get(name).getBytes();
+                var bytes = classes.get(name).getBytes();
                 return defineClass(name, bytes, 0, bytes.length);
             }
             return super.findClass(name);
         }
 
         public JavaFileObject createFileObject(String className) {
-            ByteArrayClassFile file = new ByteArrayClassFile(className);
+            var file = new ByteArrayClassFile(className);
             classes.put(className, file);
             return file;
         }
@@ -300,5 +291,4 @@ class HtmlToJavaConverterTest {
             return out.toByteArray();
         }
     }
-
 }

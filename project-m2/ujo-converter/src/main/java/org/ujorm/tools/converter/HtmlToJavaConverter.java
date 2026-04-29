@@ -143,10 +143,7 @@ public final class HtmlToJavaConverter {
 
         // Added JavaDoc with version
         var version = Html.class.getPackage().getImplementationVersion();
-        writer.append("public String htmlGenerator() {\n")
-                .append(OFFSET).append("return htmlGenerator(new StringBuilder()).toString();\n")
-                .append("}\n\n")
-                .append("/** Generated for use with: org.ujorm:ujo-web:")
+        writer.append("/** Generated for use with: org.ujorm:ujo-web:")
                 .append(version != null ? version : DEFAULT_UJORM_VERSION)
                 .append(" (").append(LocalDate.now().toString()).append(") */\n")
                 .append("public Appendable htmlGenerator(Appendable writer) {\n")
@@ -165,9 +162,15 @@ public final class HtmlToJavaConverter {
         writer.append(OFFSET).append("}\n")
                 .append(OFFSET).append("return writer;\n")
                 .append("}");
+
         if (separatedCssStyles) {
             writeCssClass(cssConstants, writer);
         }
+
+        writer.append("\n\n")
+                .append("public String htmlGenerator() {\n")
+                .append(OFFSET).append("return htmlGenerator(new StringBuilder()).toString();\n")
+                .append("}");
     }
 
     private void writeRecursive(Node node,
@@ -577,10 +580,10 @@ public final class HtmlToJavaConverter {
 
     private void writeCssClass(Map<String, String> cssConstants, Appendable writer) throws IOException {
         writer.append("\n\n")
-                .append("public static final class Css {\n");
+                .append("static final class Css {\n");
         for (var item : cssConstants.entrySet()) {
             writer.append(OFFSET)
-                    .append("public static final String ")
+                    .append("static final String ")
                     .append(item.getValue())
                     .append(" = \"")
                     .append(escapeJavaString(item.getKey()))

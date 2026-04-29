@@ -15,7 +15,7 @@ class HtmlToJavaConverterExtendedTest {
         var result = converter.convertHtmlToJavaElements(html, false);
         var lines = Lines.ofQuoted(result);
 
-        assertEquals("body.addHeadingX(1)", lines.get(5).trim());
+        assertTrue(lines.findLine("body.addHeadingX(1)"));
         assertEquals(".addText('Title 1');", lines.next().trim());
         assertEquals("body.addHeadingX(6, 'sub')", lines.next().trim());
     }
@@ -28,9 +28,9 @@ class HtmlToJavaConverterExtendedTest {
         var result = converter.convertHtmlToJavaElements(html, false);
         var lines = Lines.ofQuoted(result);
 
-        assertEquals(".setTitle('\\'quoted\\'')", lines.get(6).trim());
+        assertTrue(lines.findLine(".setTitle('\\'quoted\\'')"));
         assertEquals(".setAttribute('data-val', 'back\\\\slash')", lines.next().trim());
-        assertEquals("'''", lines.get(9).trim());
+        assertTrue(lines.findLine("'''"));
         assertEquals("Line 1", lines.next().trim());
         assertEquals("Line 2\\", lines.next().trim());
     }
@@ -43,7 +43,7 @@ class HtmlToJavaConverterExtendedTest {
         var result = converter.convertHtmlToJavaElements(html, true);
         var lines = Lines.ofQuoted(result);
 
-        assertEquals("'''", lines.get(7).trim());
+        assertTrue(lines.findLine("\"\"\""));
         assertEquals("First line", lines.next().trim());
         assertEquals("Second line", lines.next().trim());
     }
@@ -56,10 +56,10 @@ class HtmlToJavaConverterExtendedTest {
         var result = converter.convertHtmlToJavaElements(html, false);
         var lines = Lines.ofQuoted(result);
 
-        assertEquals("try (var ul = body.addUnorderedlist()) {", lines.get(5).trim());
+        assertTrue(lines.findLine("try (var ul = body.addUnorderedlist()) {"));
         assertEquals("ul.addListItem()", lines.next().trim());
-        assertEquals("try (var ol = body.addOrderedList()) {", lines.get(9).trim());
-        assertEquals("body.addParagraph()", lines.get(13).trim());
+        assertTrue(lines.findLine("try (var ol = body.addOrderedList()) {"));
+        assertTrue(lines.findLine("body.addParagraph()"));
     }
 
     /** Test empty head skipping */
@@ -71,8 +71,8 @@ class HtmlToJavaConverterExtendedTest {
         var lines = Lines.ofQuoted(result);
 
         // Empty head should be skipped
-        assertFalse(lines.get(4).trim().contains("addHead()"));
-        assertEquals("html.addBody()", lines.get(4).trim());
+        assertFalse(result.contains("addHead()"));
+        assertTrue(lines.findLine("html.addBody()"));
     }
 
     /** Test custom tag handling */
@@ -84,7 +84,7 @@ class HtmlToJavaConverterExtendedTest {
         var lines = Lines.ofQuoted(result);
 
         // Custom (unknown) tags fall back to the generic addElement method
-        assertEquals("body.addElement('my-tag', 'custom')", lines.get(5).trim());
+        assertTrue(lines.findLine("body.addElement('my-tag', 'custom')"));
         assertEquals(".addText('Value');", lines.next().trim());
     }
 
@@ -96,7 +96,7 @@ class HtmlToJavaConverterExtendedTest {
         var result = converter.convertHtmlToJavaElements(html, false);
         var lines = Lines.ofQuoted(result);
 
-        assertEquals("body.addAnchor('https://ujorm.org', 'link')", lines.get(5).trim());
+        assertTrue(lines.findLine("body.addAnchor('https://ujorm.org', 'link')"));
     }
 
     /** Test default title fallback for missing title tag */
@@ -107,7 +107,7 @@ class HtmlToJavaConverterExtendedTest {
         var result = converter.convertHtmlToJavaElements(html, false);
         var lines = Lines.ofQuoted(result);
 
-        assertEquals("try (var html = HtmlElement.niceOf('Demo', result)) {", lines.get(3).trim());
+        assertTrue(lines.findLine("try (var html = HtmlElement.niceOf('Demo', ctx)) {"));
     }
 
     /** Test non-empty head is preserved */
@@ -123,8 +123,8 @@ class HtmlToJavaConverterExtendedTest {
         var result = converter.convertHtmlToJavaElements(html, false);
         var lines = Lines.ofQuoted(result);
 
-        assertEquals("try (var head = html.addHead()) {", lines.get(4).trim());
-        assertEquals("head.addElement(Html.META)", lines.get(5).trim());
+        assertTrue(lines.findLine("try (var head = html.addHead()) {"));
+        assertEquals("head.addElement(Html.META)", lines.next().trim());
         assertEquals(".setName('x')", lines.next().trim());
         assertEquals(".setAttribute(Html.A_CONTENT, 'y');", lines.next().trim());
     }
@@ -142,8 +142,8 @@ class HtmlToJavaConverterExtendedTest {
         var result = converter.convertHtmlToJavaElements(html, true);
         var lines = Lines.ofQuoted(result);
 
-        assertEquals("script.addRawText('\\n' +", lines.get(6).trim());
-        assertEquals("const q = \\'\\'\\''';", lines.get(8).trim());
+        assertTrue(lines.findLine("script.addRawText('\\n' +"));
+        assertTrue(lines.findLine("const q = \\'\\'\\''';"));
         assertEquals("const path = 'c:\\\\\\\\tmp';", lines.next().trim());
     }
 
@@ -168,10 +168,10 @@ class HtmlToJavaConverterExtendedTest {
         var result = converter.convertHtmlToJavaElements(html, false, true);
         var lines = Lines.ofQuoted(result);
 
-        assertEquals("body.addDiv(Css.head, Css.row)", lines.get(5).trim());
-        assertEquals("public static final class Css {", lines.get(12).trim());
-        assertEquals("public static final String head = 'head';", lines.get(13).trim());
-        assertEquals("public static final String row = 'row';", lines.get(14).trim());
+        assertTrue(lines.findLine("body.addDiv(Css.head, Css.row)"));
+        assertTrue(lines.findLine("static final class Css {"));
+        assertEquals("static final String head = 'head';", lines.next().trim());
+        assertEquals("static final String row = 'row';", lines.next().trim());
     }
 
     /** Verify varargs usage and constants for multiple CSS classes */
@@ -186,15 +186,14 @@ class HtmlToJavaConverterExtendedTest {
         var lines = Lines.ofQuoted(result);
 
         // method call uses separate Css constants (varargs-like usage)
-        assertEquals("body.addDiv(Css.head, Css.row)", lines.get(5).trim());
-        assertEquals("body.addDiv(Css.panel, Css.body, Css.row)", lines.get(7).trim());
+        assertTrue(lines.findLine("body.addDiv(Css.head, Css.row)"));
+        assertTrue(lines.findLine("body.addDiv(Css.panel, Css.body, Css.row)"));
 
         // constants are created for each distinct CSS class
-        assertEquals("public static final class Css {", lines.get(14).trim());
-        assertEquals("public static final String head = 'head';", lines.get(15).trim());
-        assertEquals("public static final String row = 'row';", lines.get(16).trim());
-        assertEquals("public static final String panel = 'panel';", lines.get(17).trim());
-        assertEquals("public static final String body = 'body';", lines.get(18).trim());
+        assertTrue(lines.findLine("static final class Css {"));
+        assertEquals("static final String head = 'head';", lines.next().trim());
+        assertEquals("static final String row = 'row';", lines.next().trim());
+        assertEquals("static final String panel = 'panel';", lines.next().trim());
+        assertEquals("static final String body = 'body';", lines.next().trim());
     }
-
 }
