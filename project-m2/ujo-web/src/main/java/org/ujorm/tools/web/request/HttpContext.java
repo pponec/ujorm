@@ -32,13 +32,12 @@ public interface HttpContext {
         return parameter(key, converter, null);
     }
 
-    // --- DEPRECATED METHODS ---
-
-    /** @deprecated Use a method without the prefix `get` */
-    @Deprecated
+    /** An alias for the method {@link #parameter(CharSequence)} */
     default String getParameter(@NotNull CharSequence key) {
         return parameter(key);
     }
+
+    // --- DEPRECATED METHODS ---
 
     /** @deprecated Use a method without the prefix `get` */
     @Deprecated
@@ -75,6 +74,9 @@ public interface HttpContext {
      * Use this method for compatibility with non-Jakarta servlet APIs.
      */
     static HttpContext ofServlet(@Nullable Object httpServletRequest, @NotNull Object httpServletResponse) {
+        if (httpServletRequest != null) {
+            ServletBridge.setCharacterEncoding(httpServletRequest, ExchangeContext.CHARSET.name());
+        }
         ServletBridge.prepareHtmlResponse(httpServletResponse, ExchangeContext.CHARSET, true);
         var writer = ServletBridge.getServletWriter(httpServletResponse);
         var request = httpServletRequest != null ? URequest.ofRequest(httpServletRequest) : URequest.of();
