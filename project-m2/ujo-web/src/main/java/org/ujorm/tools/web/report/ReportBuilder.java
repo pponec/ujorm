@@ -26,7 +26,7 @@ import java.util.stream.Stream;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import org.ujorm.tools.web.request.HttpContext;
+import org.ujorm.tools.web.request.AbstractExchangeContext;
 import org.ujorm.tools.Assert;
 import org.ujorm.tools.Check;
 import org.ujorm.tools.web.Element;
@@ -262,14 +262,14 @@ public class ReportBuilder<D> {
 
     /** Build the HTML page including a table */
     public void build(
-            @NotNull final HttpContext context,
+            @NotNull final AbstractExchangeContext context,
             @NotNull final Stream<D> resource) {
         build(context, tableBuilder -> resource);
     }
 
     /** Build the HTML page including a table */
     public void build(
-            @NotNull final HttpContext context,
+            @NotNull final AbstractExchangeContext context,
             @NotNull final Function<GridBuilder<D>, Stream<D>> resource) {
         try {
             setSort(ColumnModel.ofCode(config.getSortRequestParam().of(context)));
@@ -300,7 +300,7 @@ public class ReportBuilder<D> {
     }
 
     protected void printHtmlBody(
-            @NotNull final HttpContext context,
+            @NotNull final AbstractExchangeContext context,
             @NotNull final HtmlElement html,
             @NotNull final Function<GridBuilder<D>, Stream<D>> resource
     ) {
@@ -348,7 +348,7 @@ public class ReportBuilder<D> {
     }
 
     /** The hidden field contains an index of the last sorted column */
-    protected void printSortedField(Element parent, final HttpContext context) {
+    protected void printSortedField(Element parent, final AbstractExchangeContext context) {
         final int index = config.getSortRequestParam().of(context, -1);
         parent.addInput().setAttribute(Html.A_TYPE, Html.V_HIDDEN)
                 .setNameValue(config.getSortRequestParam(), index);
@@ -356,7 +356,7 @@ public class ReportBuilder<D> {
 
     protected void printTableBody(
             @NotNull final Element table,
-            @NotNull final HttpContext context,
+            @NotNull final AbstractExchangeContext context,
             @NotNull final Function<GridBuilder<D>, Stream<D>> resource
     ) {
         final ColumnModel sortedColumn = ColumnModel.ofCode(config.getSortRequestParam().of(context));
@@ -370,7 +370,7 @@ public class ReportBuilder<D> {
      * @throws IOException if an I/O error occurs
      */
     protected void doAjax(
-            @NotNull final HttpContext context,
+            @NotNull final AbstractExchangeContext context,
             @NotNull final JsonBuilder output,
             @NotNull final Function<GridBuilder<D>, Stream<D>> resource
     ) throws IOException {

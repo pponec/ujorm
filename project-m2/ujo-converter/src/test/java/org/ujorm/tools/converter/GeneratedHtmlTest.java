@@ -3,7 +3,7 @@ package org.ujorm.tools.converter;
 import org.junit.jupiter.api.Test;
 import org.ujorm.tools.web.Html;
 import org.ujorm.tools.web.HtmlElement;
-import org.ujorm.tools.web.request.HttpContext;
+import org.ujorm.tools.web.request.AbstractExchangeContext;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -12,7 +12,7 @@ class GeneratedHtmlTest {
 
     /** Generated for use with: org.ujorm:ujo-web:2.30 (2026-02-08) */
     public String htmlGenerator() {
-        var result = HttpContext.of();
+        var result = AbstractExchangeContext.of();
         try (var html = HtmlElement.niceOf("Test", result)) {
             html.setAttribute(Html.A_LANG, "cs");
             try (var body = html.addBody()) {

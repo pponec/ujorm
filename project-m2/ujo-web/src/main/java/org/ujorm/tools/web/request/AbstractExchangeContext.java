@@ -9,7 +9,7 @@ import java.util.function.Function;
 import org.ujorm.tools.xml.config.XmlConfig;
 
 /** HTTP servlet request context */
-public interface HttpContext {
+public interface AbstractExchangeContext {
 
     /** An abstract API of the HTTP request */
     URequest request();
@@ -61,12 +61,12 @@ public interface HttpContext {
     // --- STATIC METHODS ---
 
     /** Jakarta Servlet factory. */
-    static HttpContext ofServlet(@NotNull HttpServletRequest httpServletRequest, @NotNull HttpServletResponse httpServletResponse) {
+    static AbstractExchangeContext ofServlet(@NotNull HttpServletRequest httpServletRequest, @NotNull HttpServletResponse httpServletResponse) {
         return HttpContextImpl.of(httpServletRequest, httpServletResponse, XmlConfig.ofDefault());
     }
 
     /** Jakarta Servlet factory. */
-    static HttpContext ofServlet(
+    static AbstractExchangeContext ofServlet(
             @NotNull HttpServletRequest httpServletRequest,
             @NotNull HttpServletResponse httpServletResponse,
             @NotNull XmlConfig config
@@ -75,7 +75,7 @@ public interface HttpContext {
     }
 
     /** Jakarta Servlet factory for response-only use-cases. */
-    static HttpContext ofServletResponse(@NotNull HttpServletResponse httpServletResponse) {
+    static AbstractExchangeContext ofServletResponse(@NotNull HttpServletResponse httpServletResponse) {
         return ofServlet((Object) null, (Object) httpServletResponse);
     }
 
@@ -83,7 +83,7 @@ public interface HttpContext {
      * Generic servlet-like factory (reflection-based).
      * Use this method for compatibility with non-Jakarta servlet APIs.
      */
-    static HttpContext ofServlet(@Nullable Object httpServletRequest, @NotNull Object httpServletResponse) {
+    static AbstractExchangeContext ofServlet(@Nullable Object httpServletRequest, @NotNull Object httpServletResponse) {
         return ofServlet(httpServletRequest, httpServletResponse, XmlConfig.ofDefault());
     }
 
@@ -91,7 +91,7 @@ public interface HttpContext {
      * Generic servlet-like factory (reflection-based).
      * Use this method for compatibility with non-Jakarta servlet APIs.
      */
-    static HttpContext ofServlet(
+    static AbstractExchangeContext ofServlet(
             @Nullable Object httpServletRequest,
             @NotNull Object httpServletResponse,
             @NotNull XmlConfig config
@@ -107,21 +107,21 @@ public interface HttpContext {
     }
 
     /** UContext from a map */
-    static HttpContext of() {
+    static AbstractExchangeContext of() {
         return of(new StringBuilder());
     }
 
-    static @NotNull HttpContext of(@NotNull Appendable writer) {
+    static @NotNull AbstractExchangeContext of(@NotNull Appendable writer) {
         return of(URequest.of(), writer);
     }
 
     /** Create a default HTTP context from the ManyMap */
-    static @NotNull HttpContext of(@NotNull ManyMap map) {
+    static @NotNull AbstractExchangeContext of(@NotNull ManyMap map) {
         return of(URequestImpl.ofMap(map), new StringBuilder());
     }
 
     /** Create a default HTTP context from a map */
-    static @NotNull HttpContext of(URequest request, @NotNull Appendable writer) {
+    static @NotNull AbstractExchangeContext of(URequest request, @NotNull Appendable writer) {
         return new ExchangeContext(request, writer);
     }
 }

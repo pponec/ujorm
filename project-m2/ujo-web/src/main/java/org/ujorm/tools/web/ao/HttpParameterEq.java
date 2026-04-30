@@ -18,7 +18,7 @@ package org.ujorm.tools.web.ao;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.ujorm.tools.Check;
-import org.ujorm.tools.web.request.HttpContext;
+import org.ujorm.tools.web.request.AbstractExchangeContext;
 import org.ujorm.tools.web.request.URequest;
 
 import java.lang.reflect.Method;
@@ -143,13 +143,13 @@ public interface HttpParameterEq<T extends HttpParameterEq<T>> extends CharSeque
 
     /** Returns the last parameter value of the request or a default value */
     @NotNull
-    default String of(@NotNull final HttpContext context, @NotNull final String defaultValue) {
+    default String of(@NotNull final AbstractExchangeContext context, @NotNull final String defaultValue) {
         return of(context.request(), defaultValue);
     }
 
     /** Default value is an empty String */
     @NotNull
-    default String of(@NotNull final HttpContext context) {
+    default String of(@NotNull final AbstractExchangeContext context) {
         return of(context.request(), defaultValue());
     }
 
@@ -160,7 +160,7 @@ public interface HttpParameterEq<T extends HttpParameterEq<T>> extends CharSeque
     }
 
     /** Returns a parameter of the request or the default value */
-    default boolean of(@NotNull final HttpContext context, final boolean defaultValue) {
+    default boolean of(@NotNull final AbstractExchangeContext context, final boolean defaultValue) {
         return switch (of(context)) {
             case "true" -> true;
             case "false" -> false;
@@ -169,47 +169,47 @@ public interface HttpParameterEq<T extends HttpParameterEq<T>> extends CharSeque
     }
 
     /** Returns a parameter of the request or the default value */
-    default char of(@NotNull final HttpContext context, final char defaultValue) {
+    default char of(@NotNull final AbstractExchangeContext context, final char defaultValue) {
         var value = of(context);
         return value.isEmpty() ? defaultValue : value.charAt(0);
     }
 
     /** Returns a parameter of the request or the default value */
-    default short of(@NotNull final HttpContext context, final short defaultValue) {
+    default short of(@NotNull final AbstractExchangeContext context, final short defaultValue) {
         return of(context, defaultValue, Short::parseShort);
     }
 
     /** Returns a parameter of the request or the default value */
-    default int of(@NotNull final HttpContext context, final int defaultValue) {
+    default int of(@NotNull final AbstractExchangeContext context, final int defaultValue) {
         return of(context, defaultValue, Integer::parseInt);
     }
 
     /** Returns a parameter of the request or the default value */
-    default long of(@NotNull final HttpContext context, final long defaultValue) {
+    default long of(@NotNull final AbstractExchangeContext context, final long defaultValue) {
         return of(context, defaultValue, Long::parseLong);
     }
 
     /** Returns a parameter of the request or the default value */
-    default float of(@NotNull final HttpContext context, final float defaultValue) {
+    default float of(@NotNull final AbstractExchangeContext context, final float defaultValue) {
         return of(context, defaultValue, Float::parseFloat);
     }
 
     /** Returns a parameter of the request or the default value */
-    default double of(@NotNull final HttpContext context, final double defaultValue) {
+    default double of(@NotNull final AbstractExchangeContext context, final double defaultValue) {
         return of(context, defaultValue, Double::parseDouble);
     }
 
     /** Returns a parameter of the request or the Enum class */
     @NotNull
     @SuppressWarnings("unchecked")
-    default <V extends Enum<V>> V of(@NotNull final HttpContext context, @NotNull final V defaultValue) {
+    default <V extends Enum<V>> V of(@NotNull final AbstractExchangeContext context, @NotNull final V defaultValue) {
         var result = of(context, (Class<V>) defaultValue.getClass());
         return result != null ? result : defaultValue;
     }
 
     /** Returns a parameter of the request or the default value */
     @Nullable
-    default <V extends Enum<V>> V of(@NotNull final HttpContext context, @NotNull final Class<V> clazz) {
+    default <V extends Enum<V>> V of(@NotNull final AbstractExchangeContext context, @NotNull final Class<V> clazz) {
         var value = of(context);
         for (var item : clazz.getEnumConstants()) {
             if (item instanceof HttpParameterEq<?> p) {
@@ -224,7 +224,7 @@ public interface HttpParameterEq<T extends HttpParameterEq<T>> extends CharSeque
     }
 
     /** Returns a parameter of the request or the default value */
-    default <V> V of(@NotNull final HttpContext context, @NotNull final V defaultValue, @NotNull final Function<String, V> decoder) {
+    default <V> V of(@NotNull final AbstractExchangeContext context, @NotNull final V defaultValue, @NotNull final Function<String, V> decoder) {
         var value = of(context, EMPTY_VALUE);
         if (value.isEmpty()) {
             return defaultValue;

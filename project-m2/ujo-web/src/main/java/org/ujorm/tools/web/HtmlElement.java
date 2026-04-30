@@ -21,7 +21,7 @@ import java.nio.charset.Charset;
 import jakarta.servlet.http.HttpServletResponse;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.ujorm.tools.web.request.HttpContext;
+import org.ujorm.tools.web.request.AbstractExchangeContext;
 import org.ujorm.tools.xml.config.HtmlConfig;
 import org.ujorm.tools.xml.config.impl.DefaultHtmlConfig;
 
@@ -65,7 +65,7 @@ public class HtmlElement extends AbstractHtmlElement {
     /** Create a root element for a required element name. The MAIN factory method. */
     @NotNull
     public static HtmlElement of(
-            @NotNull final HttpContext context,
+            @NotNull final AbstractExchangeContext context,
             @Nullable final HtmlConfig myConfig) {
         return of(context.writer(), myConfig);
     }
@@ -75,7 +75,7 @@ public class HtmlElement extends AbstractHtmlElement {
     public static HtmlElement ofResponse(
             @NotNull final HttpServletResponse httpServletResponse,
             @Nullable final HtmlConfig config) {
-        return of(HttpContext.ofServletResponse(httpServletResponse).writer(), config);
+        return of(AbstractExchangeContext.ofServletResponse(httpServletResponse).writer(), config);
     }
 
     /** Create new instance.
@@ -152,7 +152,7 @@ public class HtmlElement extends AbstractHtmlElement {
         final var config = HtmlConfig.ofDefault();
         config.setTitle(title);
         config.setCssLinks(cssLinks);
-        return of(HttpContext.ofServletResponse(httpServletResponse).writer(), config);
+        return of(AbstractExchangeContext.ofServletResponse(httpServletResponse).writer(), config);
     }
 
     /** Create new instance with an indented output format.
@@ -167,7 +167,7 @@ public class HtmlElement extends AbstractHtmlElement {
         config.setNiceFormat();
         config.setTitle(title);
         config.setCssLinks(cssLinks);
-        return of(HttpContext.ofServletResponse(httpServletResponse).writer(), config);
+        return of(AbstractExchangeContext.ofServletResponse(httpServletResponse).writer(), config);
     }
 
     // 4. Servlet/Response variants (Response only)
@@ -181,7 +181,7 @@ public class HtmlElement extends AbstractHtmlElement {
             @NotNull final CharSequence... cssLinks) {
         final var config = HtmlConfig.ofDefault();
         config.setCssLinks(cssLinks);
-        return of(HttpContext.ofServletResponse(httpServletResponse).writer(), config);
+        return of(AbstractExchangeContext.ofServletResponse(httpServletResponse).writer(), config);
     }
 
     /** Create new instance with an indented output format.
@@ -194,7 +194,7 @@ public class HtmlElement extends AbstractHtmlElement {
         final var config = HtmlConfig.ofDefault();
         config.setNiceFormat();
         config.setCssLinks(cssLinks);
-        return of(HttpContext.ofServletResponse(httpServletResponse).writer(), config);
+        return of(AbstractExchangeContext.ofServletResponse(httpServletResponse).writer(), config);
     }
 
     // 5. HttpContext variants (Title + Context)
@@ -205,7 +205,7 @@ public class HtmlElement extends AbstractHtmlElement {
     @NotNull
     public static HtmlElement of(
             @NotNull final String title,
-            @NotNull final HttpContext context,
+            @NotNull final AbstractExchangeContext context,
             @NotNull final CharSequence... cssLinks) {
         final var config = HtmlConfig.ofDefault();
         config.setTitle(title);
@@ -219,7 +219,7 @@ public class HtmlElement extends AbstractHtmlElement {
     @NotNull
     public static HtmlElement niceOf(
             @NotNull final String title,
-            @NotNull final HttpContext context,
+            @NotNull final AbstractExchangeContext context,
             @NotNull final CharSequence... cssLinks) {
         final var config = HtmlConfig.ofDefault();
         config.setNiceFormat();
@@ -235,7 +235,7 @@ public class HtmlElement extends AbstractHtmlElement {
      */
     @NotNull
     public static HtmlElement of(
-            @NotNull final HttpContext context,
+            @NotNull final AbstractExchangeContext context,
             @NotNull final CharSequence... cssLinks) {
         final var conf = HtmlConfig.ofDefault().setCssLinks(cssLinks);
         return of(context.writer(), conf);
@@ -246,7 +246,7 @@ public class HtmlElement extends AbstractHtmlElement {
      */
     @NotNull
     public static HtmlElement niceOf(
-            @NotNull final HttpContext context,
+            @NotNull final AbstractExchangeContext context,
             @NotNull final CharSequence... cssLinks) {
         final var conf = HtmlConfig.ofDefault().setCssLinks(cssLinks);
         conf.setNiceFormat();
@@ -255,13 +255,13 @@ public class HtmlElement extends AbstractHtmlElement {
 
     /** Create new instance with an indented output format.
      * @see Appendable
-     * @deprecated Use the method {@link #of(HtmlConfig, HttpContext, CharSequence[])}
+     * @deprecated Use the method {@link #of(HtmlConfig, AbstractExchangeContext, CharSequence[])}
      */
     @NotNull
     @Deprecated
     public static HtmlElement niceOf(
             @NotNull final HtmlConfig config,
-            @NotNull final HttpContext context,
+            @NotNull final AbstractExchangeContext context,
             @NotNull final CharSequence... cssLinks) {
         final var conf = new DefaultHtmlConfig(config);
         if (cssLinks.length > 0) {
@@ -277,7 +277,7 @@ public class HtmlElement extends AbstractHtmlElement {
     @NotNull
     public static HtmlElement of(
             @NotNull final HtmlConfig config,
-            @NotNull final HttpContext context,
+            @NotNull final AbstractExchangeContext context,
             @NotNull final CharSequence... cssLinks) {
         final var conf = new DefaultHtmlConfig(config);
         if (cssLinks.length > 0) {
@@ -296,7 +296,7 @@ public class HtmlElement extends AbstractHtmlElement {
             @NotNull final HtmlConfig config,
             @NotNull final HttpServletResponse response,
             @NotNull final CharSequence... cssLinks) {
-        return niceOf(config, HttpContext.ofServletResponse(response), cssLinks);
+        return niceOf(config, AbstractExchangeContext.ofServletResponse(response), cssLinks);
     }
 
     /** Create new instance.
@@ -307,7 +307,7 @@ public class HtmlElement extends AbstractHtmlElement {
             @NotNull final HtmlConfig config,
             @NotNull final HttpServletResponse response,
             @NotNull final CharSequence... cssLinks) {
-        return of(config, HttpContext.ofServletResponse(response), cssLinks);
+        return of(config, AbstractExchangeContext.ofServletResponse(response), cssLinks);
     }
 
     //---
@@ -321,7 +321,7 @@ public class HtmlElement extends AbstractHtmlElement {
             @NotNull final CharSequence... cssLinks) {
         final var conf = HtmlConfig.ofDefault().setCssLinks(cssLinks);
         conf.setNiceFormat();
-        return of(HttpContext.ofServletResponse(httpServletResponse).writer(), conf);
+        return of(AbstractExchangeContext.ofServletResponse(httpServletResponse).writer(), conf);
     }
 
     /** Create new instance.
@@ -332,7 +332,7 @@ public class HtmlElement extends AbstractHtmlElement {
             @NotNull final HttpServletResponse httpServletResponse,
             @NotNull final CharSequence... cssLinks) {
         final var conf = HtmlConfig.ofDefault().setCssLinks(cssLinks);
-        return of(HttpContext.ofServletResponse(httpServletResponse).writer(), conf);
+        return of(AbstractExchangeContext.ofServletResponse(httpServletResponse).writer(), conf);
     }
 
     //---
@@ -349,7 +349,7 @@ public class HtmlElement extends AbstractHtmlElement {
         conf.setTitle(title);
         conf.setNiceFormat();
         conf.setIsoFormatter();
-        return of(HttpContext.ofServletResponse(httpServletResponse).writer(), conf);
+        return of(AbstractExchangeContext.ofServletResponse(httpServletResponse).writer(), conf);
     }
 
     /** Create new instance with an indented output format and ISO number formatting.
@@ -358,7 +358,7 @@ public class HtmlElement extends AbstractHtmlElement {
     @NotNull
     public static HtmlElement niceNumberOf(
             @NotNull final String title,
-            @NotNull final HttpContext httpContext,
+            @NotNull final AbstractExchangeContext httpContext,
             @NotNull final CharSequence... cssLinks) {
         final var conf = HtmlConfig.ofDefault().setCssLinks(cssLinks);
         conf.setTitle(title);

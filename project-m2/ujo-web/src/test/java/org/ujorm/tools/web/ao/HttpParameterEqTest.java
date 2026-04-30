@@ -16,7 +16,7 @@
 package org.ujorm.tools.web.ao;
 
 import org.junit.jupiter.api.Test;
-import org.ujorm.tools.web.request.HttpContext;
+import org.ujorm.tools.web.request.AbstractExchangeContext;
 import org.ujorm.tools.web.request.ManyMap;
 
 import static java.time.Month.DECEMBER;
@@ -276,7 +276,7 @@ class HttpParameterEqTest {
     }
 
     /** Helper method to create full context */
-    static HttpContext createContext() {
+    static AbstractExchangeContext createContext() {
         var map = new ManyMap();
         map.put(Param.TEXT.name(), "abc");
         map.put(Param.BOOLEAN.name(), "true");
@@ -289,13 +289,13 @@ class HttpParameterEqTest {
         map.put(Param.MONTH_ENUM.name(), JANUARY.name());
         map.put(Param.UNDEFINED.name(), (String) null);
 
-        return HttpContext.of(map);
+        return AbstractExchangeContext.of(map);
     }
 
     /** Helper method to create partial context */
-    static HttpContext createContext(String key, String value) {
+    static AbstractExchangeContext createContext(String key, String value) {
         var map = new ManyMap();
         map.put(key, value);
-        return HttpContext.of(map);
+        return AbstractExchangeContext.of(map);
     }
 }

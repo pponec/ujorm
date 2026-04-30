@@ -20,7 +20,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.ujorm.tools.Assert;
 import org.ujorm.tools.Check;
-import org.ujorm.tools.web.request.HttpContext;
+import org.ujorm.tools.web.request.AbstractExchangeContext;
 import org.ujorm.tools.xml.ApiElement;
 import org.ujorm.tools.xml.builder.XmlPrinter;
 import org.ujorm.tools.xml.config.HtmlConfig;
@@ -413,7 +413,7 @@ public abstract class AbstractHtmlElement implements ApiElement<Element>, Html {
      * @return HtmlElement instance
      */
     @NotNull
-    public static HtmlElement of(@NotNull final HttpContext context, @Nullable final HtmlConfig myConfig) {
+    public static HtmlElement of(@NotNull final AbstractExchangeContext context, @Nullable final HtmlConfig myConfig) {
         return of(context.writer(), myConfig);
     }
 
@@ -424,7 +424,7 @@ public abstract class AbstractHtmlElement implements ApiElement<Element>, Html {
      */
     @NotNull
     public static HtmlElement ofServlet(@NotNull final Object httpServletResponse, @Nullable final HtmlConfig config) {
-        return of(HttpContext.ofServlet(null, httpServletResponse).writer(), config);
+        return of(AbstractExchangeContext.ofServlet(null, httpServletResponse).writer(), config);
     }
 
     /** Create new instance
@@ -513,7 +513,7 @@ public abstract class AbstractHtmlElement implements ApiElement<Element>, Html {
     @NotNull
     public static HtmlElement of(
             @NotNull final String title,
-            @NotNull final HttpContext context,
+            @NotNull final AbstractExchangeContext context,
             @NotNull final CharSequence... cssLinks) {
         final var config = HtmlConfig.ofDefault();
         config.setTitle(title);
@@ -530,7 +530,7 @@ public abstract class AbstractHtmlElement implements ApiElement<Element>, Html {
     @NotNull
     public static HtmlElement niceOf(
             @NotNull final String title,
-            @NotNull final HttpContext context,
+            @NotNull final AbstractExchangeContext context,
             @NotNull final CharSequence... cssLinks) {
         final var config = HtmlConfig.ofDefault();
         config.setNiceFormat();
@@ -552,7 +552,7 @@ public abstract class AbstractHtmlElement implements ApiElement<Element>, Html {
         final var config = HtmlConfig.ofDefault();
         config.setTitle(title);
         config.setCssLinks(cssLinks);
-        return of(HttpContext.ofServlet(null, httpServletResponse).writer(), config);
+        return of(AbstractExchangeContext.ofServlet(null, httpServletResponse).writer(), config);
     }
 
     /** Create new instance with nice format for servlet response
@@ -567,7 +567,7 @@ public abstract class AbstractHtmlElement implements ApiElement<Element>, Html {
         config.setNiceFormat();
         config.setTitle(title);
         config.setCssLinks(cssLinks);
-        return of(HttpContext.ofServlet(null, httpServletResponse).writer(), config);
+        return of(AbstractExchangeContext.ofServlet(null, httpServletResponse).writer(), config);
     }
 
     /** Create new instance for servlet response
@@ -581,7 +581,7 @@ public abstract class AbstractHtmlElement implements ApiElement<Element>, Html {
             @NotNull final CharSequence... cssLinks) {
         final var config = HtmlConfig.ofDefault();
         config.setCssLinks(cssLinks);
-        return of(HttpContext.ofServlet(null, httpServletResponse).writer(), config);
+        return of(AbstractExchangeContext.ofServlet(null, httpServletResponse).writer(), config);
     }
 
     /** Create new instance with nice format for servlet response
@@ -596,7 +596,7 @@ public abstract class AbstractHtmlElement implements ApiElement<Element>, Html {
         final var config = HtmlConfig.ofDefault();
         config.setNiceFormat();
         config.setCssLinks(cssLinks);
-        return of(HttpContext.ofServlet(null, httpServletResponse).writer(), config);
+        return of(AbstractExchangeContext.ofServlet(null, httpServletResponse).writer(), config);
     }
 
 }

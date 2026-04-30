@@ -4,12 +4,12 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import java.nio.charset.Charset;
+
 import java.util.Set;
 import java.util.function.Function;
 
 /** A common implementation of the request and response context. Independent on the Servlet API. */
-public class ExchangeContext implements HttpContext {
+public class ExchangeContext implements AbstractExchangeContext {
 
     private final URequest uRequest;
     private final Appendable writer;
@@ -69,14 +69,14 @@ public class ExchangeContext implements HttpContext {
 
     /**
      * Backward-compatible Jakarta servlet factory.
-     * Prefer {@link HttpContext#ofServlet(HttpServletRequest, HttpServletResponse)} in new code.
+     * Prefer {@link AbstractExchangeContext#ofServlet(HttpServletRequest, HttpServletResponse)} in new code.
      */
     @Deprecated
     public static @NotNull ExchangeContext of(
             @NotNull final HttpServletRequest request,
             @NotNull final HttpServletResponse response
     ) {
-        return (ExchangeContext) HttpContext.ofServlet(request, response);
+        return (ExchangeContext) AbstractExchangeContext.ofServlet(request, response);
     }
 
 }
