@@ -3,6 +3,7 @@ package org.ujorm.tools.web.ajax;
 import org.junit.jupiter.api.Test;
 import org.ujorm.tools.web.HtmlElement;
 import org.ujorm.tools.web.request.AbstractExchangeContext;
+import org.ujorm.tools.web.request.ExchangeContext;
 
 import java.time.Duration;
 import java.util.LinkedHashMap;
@@ -15,7 +16,7 @@ class JavaScriptWriterTest {
     /** Test of default configuration and basic write */
     @Test
     void testDefaultWrite() {
-        var context = AbstractExchangeContext.of();
+        var context = ExchangeContext.of();
         try (var html = HtmlElement.of(context)) {
             var writer = new JavaScriptWriter();
             writer.write(html.getHead());
@@ -38,7 +39,7 @@ class JavaScriptWriterTest {
     /** Test custom properties and fluent setters */
     @Test
     void testCustomPropertiesAndSetters() {
-        var context = AbstractExchangeContext.of();
+        var context = ExchangeContext.of();
         try (var html = HtmlElement.of(context)) {
             var writer = new JavaScriptWriter()
                     .setFormSelector(".ajax-form")
@@ -61,7 +62,7 @@ class JavaScriptWriterTest {
     /** Test generating Javascript with custom function map */
     @Test
     void testWriteWithFunctionMap() {
-        var context = AbstractExchangeContext.of();
+        var context = ExchangeContext.of();
         try (var html = HtmlElement.of(context)) {
             var writer = new JavaScriptWriter();
 
@@ -81,7 +82,7 @@ class JavaScriptWriterTest {
     /** Test constructor with custom input selectors */
     @Test
     void testCustomInputSelectors() {
-        var context = AbstractExchangeContext.of();
+        var context = ExchangeContext.of();
         try (var html = HtmlElement.of(context)) {
             var writer = new JavaScriptWriter(".custom-input", ".custom-select");
             writer.write(html.getHead());
@@ -94,7 +95,7 @@ class JavaScriptWriterTest {
     /** Test constructor with empty input selectors (edge case) */
     @Test
     void testEmptyInputSelectors() {
-        var context = AbstractExchangeContext.of();
+        var context = ExchangeContext.of();
         try (var html = HtmlElement.of(context)) {
             var writer = new JavaScriptWriter(new CharSequence[0]);
             writer.write(html.getHead());

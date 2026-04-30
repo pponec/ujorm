@@ -22,6 +22,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.ujorm.tools.common.StringUtils;
 import org.ujorm.tools.web.request.AbstractExchangeContext;
+import org.ujorm.tools.web.request.ExchangeContext;
 import org.ujorm.tools.xml.config.HtmlConfig;
 import htmlflow.HtmlFlow;
 import java.util.function.Supplier;
@@ -65,7 +66,7 @@ class BenchmarkElementTest {
     /** Run Element of the Ujorm framework */
     private static String runUjorm(final Params params) {
         final var htmlConf = (HtmlConfig) HtmlConfig.ofDefault().setCompressedFormat();
-        var response = AbstractExchangeContext.of();
+        var response = ExchangeContext.of();
         try (var html = AbstractHtmlElement.of(response, htmlConf)) {
             try (var body = html.getBody()) {
                 try (var table = body.addTable()) {

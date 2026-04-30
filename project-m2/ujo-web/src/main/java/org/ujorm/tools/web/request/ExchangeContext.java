@@ -1,15 +1,18 @@
 package org.ujorm.tools.web.request;
 
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
+import org.ujorm.tools.web.ao.Reflections;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.Set;
 import java.util.function.Function;
 
 /** A common implementation of the request and response context. Independent on the Servlet API. */
 public class ExchangeContext implements AbstractExchangeContext {
+
+    /** Default charset */
+    public static final Charset CHARSET = StandardCharsets.UTF_8;
 
     private final URequest uRequest;
     private final Appendable writer;
@@ -67,16 +70,34 @@ public class ExchangeContext implements AbstractExchangeContext {
         return writer.toString();
     }
 
-    /**
-     * Backward-compatible Jakarta servlet factory.
-     * Prefer {@link AbstractExchangeContext#ofServlet(HttpServletRequest, HttpServletResponse)} in new code.
-     */
-    @Deprecated
-    public static @NotNull ExchangeContext of(
-            @NotNull final HttpServletRequest request,
-            @NotNull final HttpServletResponse response
-    ) {
-        return (ExchangeContext) AbstractExchangeContext.ofServlet(request, response);
+    // --- STATIC METHODS ---
+
+    /** UContext from a map */
+    public static ExchangeContext of() {
+        return of(new StringBuilder());
     }
 
+    public static @NotNull ExchangeContext of(@NotNull Appendable writer) {
+        return of(URequest.of(), writer);
+    }
+
+    /** Create a default HTTP context from the ManyMap */
+    public static @NotNull ExchangeContext of(@NotNull ManyMap map) {
+        return of(URequestImpl.ofMap(map), new StringBuilder());
+    }
+
+    /** Create a default HTTP context from a map */
+    public static @NotNull ExchangeContext of(URequest request, @NotNull Appendable writer) {
+        return new ExchangeContext(request, writer);
+    }
+
+    /** Create a default HTTP Context by independent API (Jakarta vs Javax) */
+    public static ExchangeContext ofServlet(
+            @Nullable final Object req,
+            @NotNull final Object resp) {
+        Reflections.setCharacterEncoding(resp, CHARSET.name());
+        var writer = Reflections.getServletWriter(resp);
+        var ureq = req != null ? URequest.ofRequest(req) : URequest.of();
+        return new ExchangeContext(ureq, writer);
+    }
 }

@@ -3,21 +3,24 @@ package org.ujorm.tools.web.request;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.ujorm.tools.xml.config.XmlConfig;
 
 import java.io.IOException;
+import java.io.StringReader;
 import java.util.Map;
+import java.util.Optional;
 
 /** Jakarta Servlet HTTP request context. */
-public class HttpContextImpl extends ExchangeContext {
+public class HttpContext extends ExchangeContext {
 
     private final HttpServletRequest request;
     private final HttpServletResponse response;
 
-    protected HttpContextImpl(
+    protected HttpContext(
             @NotNull URequest uRequest,
             @NotNull Appendable writer,
-            @NotNull HttpServletRequest request,
+            @Nullable HttpServletRequest request,
             @NotNull HttpServletResponse response
     ) {
         super(uRequest, writer);
@@ -27,8 +30,8 @@ public class HttpContextImpl extends ExchangeContext {
 
     /** Original HTTP Jakarta Servlet Request */
     @NotNull
-    public HttpServletRequest getServletRequest() {
-        return request;
+    public Optional<HttpServletRequest> getServletRequest() {
+        return Optional.ofNullable(request);
     }
 
     /** Original HTTP Jakarta Servlet Response */
@@ -44,14 +47,14 @@ public class HttpContextImpl extends ExchangeContext {
 
     /** Returns the context path with a trailing slash */
     public String getPathSlash() {
-        var result = getServletRequest().getContextPath();
+        var result = getServletRequest().map(HttpServletRequest::getContextPath).orElseThrow();
         return result.isEmpty() ? "/" : (result + "/");
     }
 
     /**
      * Create a default HTTP Context by the Jakarta Servlet API.
      */
-    public static @NotNull HttpContextImpl of(
+    public static @NotNull HttpContext of(
             @NotNull final HttpServletRequest request,
             @NotNull final HttpServletResponse response
     ) {
@@ -61,22 +64,29 @@ public class HttpContextImpl extends ExchangeContext {
     /**
      * Create a default HTTP Context by the Jakarta Servlet API.
      */
-    public static @NotNull HttpContextImpl of(
-            @NotNull final HttpServletRequest request,
+    public static @NotNull HttpContext of(
+            @Nullable final HttpServletRequest request,
             @NotNull final HttpServletResponse response,
             @NotNull final XmlConfig config
     ) {
         try {
             final var charset = config.getCharset();
-            request.setCharacterEncoding(charset.name());
+            if (request != null) request.setCharacterEncoding(charset.name());
             ServletBridge.prepareHtmlResponse(response, charset, true);
-            var map = manyMap(request.getParameterMap());
-            var req = new URequestImpl(map, request.getReader());
+            var map = request != null ? manyMap(request.getParameterMap()) : manyMap(Map.of());
+            var req = new URequestImpl(map, request != null ? request.getReader() : new StringReader(""));
             var writer = response.getWriter();
-            return new HttpContextImpl(req, writer, request, response);
+            return new HttpContext(req, writer, request, response);
         } catch (Exception ex) {
             throw new IllegalStateException(ex);
         }
+    }
+
+    /**
+     * Create a default HTTP Context by the Jakarta Servlet API.
+     */
+    public static @NotNull HttpContext of(@NotNull final HttpServletResponse response) {
+        return of(null, response);
     }
 
     /** * Converts a map of arrays to a map of lists using forEach */

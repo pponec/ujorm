@@ -2,6 +2,7 @@ package org.ujorm.tools.web;
 
 import org.junit.jupiter.api.Test;
 import org.ujorm.tools.web.request.AbstractExchangeContext;
+import org.ujorm.tools.web.request.ExchangeContext;
 import org.ujorm.tools.xml.config.HtmlConfig;
 
 import java.nio.charset.StandardCharsets;
@@ -13,7 +14,7 @@ class AbstractHtmlElementTest {
 
     @Test
     public void testBasicStructure() {
-        var context = AbstractExchangeContext.of();
+        var context = ExchangeContext.of();
         try (var html = AbstractHtmlElement.of(context, null)) {
             try (var body = html.getBody()) {
                 body.addHeading("Hello World");
@@ -30,7 +31,7 @@ class AbstractHtmlElementTest {
 
     @Test
     public void testAttributesAndLang() {
-        var context = AbstractExchangeContext.of();
+        var context = ExchangeContext.of();
         try (var html = AbstractHtmlElement.of(context, null)) {
             html.setAttribute(Html.A_LANG, "cs");
             html.getBody().addText("Text");
@@ -41,7 +42,7 @@ class AbstractHtmlElementTest {
 
     @Test
     public void testJavascriptLinks() {
-        var context = AbstractExchangeContext.of();
+        var context = ExchangeContext.of();
         try (var html = AbstractHtmlElement.of(context, null)) {
             html.addJavascriptLink(true, "https://example.com/script.js");
             html.addJavascriptBody("console.log('Hello');", "alert('World');");
@@ -54,7 +55,7 @@ class AbstractHtmlElementTest {
 
     @Test
     public void testJavascriptLinksBatch() {
-        var context = AbstractExchangeContext.of();
+        var context = ExchangeContext.of();
         try (var html = AbstractHtmlElement.of(context, null)) {
             html.addJavascriptLinks(true,
                     "https://example.com/one.js",
@@ -68,7 +69,7 @@ class AbstractHtmlElementTest {
 
     @Test
     public void testCssLinksAndBodies() {
-        var context = AbstractExchangeContext.of();
+        var context = ExchangeContext.of();
         try (var html = AbstractHtmlElement.of(context, null)) {
             html.addCssLink("style.css");
             html.addCssBody("body { color: red; }");
@@ -83,7 +84,7 @@ class AbstractHtmlElementTest {
 
     @Test
     public void testCssLinksBatch() {
-        var context = AbstractExchangeContext.of();
+        var context = ExchangeContext.of();
         try (var html = AbstractHtmlElement.of(context, null)) {
             html.addCssLinks("a.css", "b.css", "c.css");
             html.addBody().addText("X");
@@ -100,7 +101,7 @@ class AbstractHtmlElementTest {
         config.setTitle("Custom Title");
         config.setCharset(StandardCharsets.UTF_16);
 
-        var context = AbstractExchangeContext.of();
+        var context = ExchangeContext.of();
         try (var html = AbstractHtmlElement.of(context, config)) {
             html.addBody().addText("Content");
         }
@@ -111,7 +112,7 @@ class AbstractHtmlElementTest {
 
     @Test
     public void testNesting() {
-        var context = AbstractExchangeContext.of();
+        var context = ExchangeContext.of();
         var htmlElement = AbstractHtmlElement.of(context, null);
 
         htmlElement.nest(html -> {
@@ -126,7 +127,7 @@ class AbstractHtmlElementTest {
 
     @Test
     public void testNiceOfFactory() {
-        var context = AbstractExchangeContext.of();
+        var context = ExchangeContext.of();
         try (var html = AbstractHtmlElement.niceOf("Nice Page", context, "style1.css", "style2.css")) {
             html.addBody().addHeading("Title");
         }
@@ -142,7 +143,7 @@ class AbstractHtmlElementTest {
 
     @Test
     public void testLazyHeaderOnClose() {
-        var context = AbstractExchangeContext.of();
+        var context = ExchangeContext.of();
 
         // Nevytváříme explicitně tělo dokumentu ani nevkládáme obsah přímo do elementu html,
         // čímž předejdeme uzavření elementu pro zápis atributů před voláním initHeader.
@@ -158,7 +159,7 @@ class AbstractHtmlElementTest {
 
     @Test
     public void testCustomLangBeforeHeaderInitialization() {
-        var context = AbstractExchangeContext.of();
+        var context = ExchangeContext.of();
         try (var html = AbstractHtmlElement.of(context, null)) {
             html.setAttribute(Html.A_LANG, "sk");
             html.addBody().addText("Ahoj");

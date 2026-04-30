@@ -25,7 +25,7 @@ import org.ujorm.tools.web.Html;
 import org.ujorm.tools.web.ajax.JavaScriptWriter;
 import org.ujorm.tools.web.ao.HttpParameter;
 import org.ujorm.tools.web.json.JsonBuilder;
-import org.ujorm.tools.web.request.HttpContextImpl;
+import org.ujorm.tools.web.request.HttpContext;
 
 import java.io.IOException;
 
@@ -43,7 +43,7 @@ public class TutorialServlet extends HttpServlet {
     @Override
     protected final void doGet(HttpServletRequest request, HttpServletResponse response) {
         var title = "Uppercase Converter";
-        var ctx = HttpContextImpl.of(request, response);
+        var ctx = HttpContext.of(request, response);
 
         try (var html = AbstractHtmlElement.of(title, ctx)) {
             html.getHead().addStyle().addRawText(Css.styles);
@@ -66,17 +66,17 @@ public class TutorialServlet extends HttpServlet {
         }
     }
 
-    private String getInputText(HttpContextImpl ctx) {
+    private String getInputText(HttpContext ctx) {
         return ctx.parameter(Attrib.TEXT, "yahoo");
     }
 
     /** Print the result to required element) */
-    private void printResult(Element element, HttpContextImpl ctx) {
+    private void printResult(Element element, HttpContext ctx) {
         element.addText(getInputText(ctx).toUpperCase());
     }
 
     protected final void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        var ctx = HttpContextImpl.of(request, response);
+        var ctx = HttpContext.of(request, response);
         if (ctx.parameter(DEFAULT_AJAX_REQUEST_PARAM, Boolean::parseBoolean, false)) {
             try (var json = JsonBuilder.of(ctx)) {
                 // Replace a body of element(s) selected by the CSS class:

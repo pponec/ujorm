@@ -17,6 +17,7 @@ package org.ujorm.tools.web;
 
 import org.junit.jupiter.api.Test;
 import org.ujorm.tools.web.request.AbstractExchangeContext;
+import org.ujorm.tools.web.request.ExchangeContext;
 import org.ujorm.tools.xml.builder.XmlBuilder;
 import org.ujorm.tools.xml.config.HtmlConfig;
 import org.ujorm.tools.xml.config.impl.DefaultHtmlConfig;
@@ -133,7 +134,7 @@ class HtmlElementTest {
      */
     @Test
     public void sample_2c() {
-        var writer = AbstractExchangeContext.of();
+        var writer = ExchangeContext.of();
         try (var html = HtmlElement.niceOf("Hello", writer)) {
             html.setAttribute(Html.A_LANG, "cs");
             try (var body = html.addBody()) {
@@ -152,7 +153,7 @@ class HtmlElementTest {
     @Test
     public void sample_2d_table() {
         final var data = new Object[][]{{1000, 2000.2f, 3000.3d, new BigDecimal("4000.1415")}};
-        var writer = AbstractExchangeContext.of();
+        var writer = ExchangeContext.of();
         try (var html = HtmlElement.niceOf("Table", writer)) {
             html.getBody().addHeading(html.getTitle());
             html.getBody().addTable(data);
@@ -169,7 +170,7 @@ class HtmlElementTest {
     @Test
     public void sample_2e_formatNumbers() {
         var data = new Object[][]{{1000, 2000.2f, 3000.3d, new BigDecimal("4000.1415")}};
-        var writer = AbstractExchangeContext.of();
+        var writer = ExchangeContext.of();
         try (var html = HtmlElement.niceNumberOf("Table", writer)) {
             html.getBody().addHeading(html.getTitle());
             html.getBody().addTable(data);
@@ -189,7 +190,7 @@ class HtmlElementTest {
         final var lengthAttrib = 2_000;
         final var textValue = 3_000;
         final var nullValue = (Integer) null;
-        var writer = AbstractExchangeContext.of();
+        var writer = ExchangeContext.of();
         try (var html = HtmlElement.niceNumberOf("Table", writer)) {
             try (var body = html.getBody()) {
                 body.addTextInput()

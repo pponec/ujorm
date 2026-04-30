@@ -62,7 +62,7 @@ public interface AbstractExchangeContext {
 
     /** Jakarta Servlet factory. */
     static AbstractExchangeContext ofServlet(@NotNull HttpServletRequest httpServletRequest, @NotNull HttpServletResponse httpServletResponse) {
-        return HttpContextImpl.of(httpServletRequest, httpServletResponse, XmlConfig.ofDefault());
+        return HttpContext.of(httpServletRequest, httpServletResponse, XmlConfig.ofDefault());
     }
 
     /** Jakarta Servlet factory. */
@@ -71,7 +71,7 @@ public interface AbstractExchangeContext {
             @NotNull HttpServletResponse httpServletResponse,
             @NotNull XmlConfig config
     ) {
-        return HttpContextImpl.of(httpServletRequest, httpServletResponse, config);
+        return HttpContext.of(httpServletRequest, httpServletResponse, config);
     }
 
     /** Jakarta Servlet factory for response-only use-cases. */
@@ -103,25 +103,6 @@ public interface AbstractExchangeContext {
         ServletBridge.prepareHtmlResponse(httpServletResponse, charset, true);
         var writer = ServletBridge.getServletWriter(httpServletResponse);
         var request = httpServletRequest != null ? URequest.ofRequest(httpServletRequest, config) : URequest.of();
-        return new ExchangeContext(request, writer);
-    }
-
-    /** UContext from a map */
-    static AbstractExchangeContext of() {
-        return of(new StringBuilder());
-    }
-
-    static @NotNull AbstractExchangeContext of(@NotNull Appendable writer) {
-        return of(URequest.of(), writer);
-    }
-
-    /** Create a default HTTP context from the ManyMap */
-    static @NotNull AbstractExchangeContext of(@NotNull ManyMap map) {
-        return of(URequestImpl.ofMap(map), new StringBuilder());
-    }
-
-    /** Create a default HTTP context from a map */
-    static @NotNull AbstractExchangeContext of(URequest request, @NotNull Appendable writer) {
         return new ExchangeContext(request, writer);
     }
 }

@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test;
 import org.ujorm.tools.web.Html;
 import org.ujorm.tools.web.HtmlElement;
 import org.ujorm.tools.web.request.AbstractExchangeContext;
+import org.ujorm.tools.web.request.ExchangeContext;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -12,7 +13,7 @@ class GeneratedHtmlTest {
 
     /** Generated for use with: org.ujorm:ujo-web:2.30 (2026-02-08) */
     public String htmlGenerator() {
-        var result = AbstractExchangeContext.of();
+        var result = ExchangeContext.of();
         try (var html = HtmlElement.niceOf("Test", result)) {
             html.setAttribute(Html.A_LANG, "cs");
             try (var body = html.addBody()) {

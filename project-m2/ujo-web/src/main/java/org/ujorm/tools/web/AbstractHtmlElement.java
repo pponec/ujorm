@@ -21,6 +21,8 @@ import org.jetbrains.annotations.Nullable;
 import org.ujorm.tools.Assert;
 import org.ujorm.tools.Check;
 import org.ujorm.tools.web.request.AbstractExchangeContext;
+import org.ujorm.tools.web.request.ExchangeContext;
+import org.ujorm.tools.web.request.HttpContext;
 import org.ujorm.tools.xml.ApiElement;
 import org.ujorm.tools.xml.builder.XmlPrinter;
 import org.ujorm.tools.xml.config.HtmlConfig;
@@ -424,7 +426,7 @@ public abstract class AbstractHtmlElement implements ApiElement<Element>, Html {
      */
     @NotNull
     public static HtmlElement ofServlet(@NotNull final Object httpServletResponse, @Nullable final HtmlConfig config) {
-        return of(AbstractExchangeContext.ofServlet(null, httpServletResponse).writer(), config);
+        return of(ExchangeContext.ofServlet(null, httpServletResponse).writer(), config);
     }
 
     /** Create new instance
@@ -552,7 +554,7 @@ public abstract class AbstractHtmlElement implements ApiElement<Element>, Html {
         final var config = HtmlConfig.ofDefault();
         config.setTitle(title);
         config.setCssLinks(cssLinks);
-        return of(AbstractExchangeContext.ofServlet(null, httpServletResponse).writer(), config);
+        return of(ExchangeContext.ofServlet(null, httpServletResponse).writer(), config);
     }
 
     /** Create new instance with nice format for servlet response
@@ -567,7 +569,7 @@ public abstract class AbstractHtmlElement implements ApiElement<Element>, Html {
         config.setNiceFormat();
         config.setTitle(title);
         config.setCssLinks(cssLinks);
-        return of(AbstractExchangeContext.ofServlet(null, httpServletResponse).writer(), config);
+        return of(ExchangeContext.ofServlet(null, httpServletResponse).writer(), config);
     }
 
     /** Create new instance for servlet response
@@ -581,7 +583,7 @@ public abstract class AbstractHtmlElement implements ApiElement<Element>, Html {
             @NotNull final CharSequence... cssLinks) {
         final var config = HtmlConfig.ofDefault();
         config.setCssLinks(cssLinks);
-        return of(AbstractExchangeContext.ofServlet(null, httpServletResponse).writer(), config);
+        return of(ExchangeContext.ofServlet(null, httpServletResponse).writer(), config);
     }
 
     /** Create new instance with nice format for servlet response
@@ -596,7 +598,7 @@ public abstract class AbstractHtmlElement implements ApiElement<Element>, Html {
         final var config = HtmlConfig.ofDefault();
         config.setNiceFormat();
         config.setCssLinks(cssLinks);
-        return of(AbstractExchangeContext.ofServlet(null, httpServletResponse).writer(), config);
+        return of(ExchangeContext.ofServlet(null, httpServletResponse).writer(), config);
     }
 
 }

@@ -14,7 +14,7 @@ class URequestTest {
         MockHttpServletRequest request = new MockHttpServletRequest();
         request.setParameter("p1", "v1");
         request.setParameter("p2", "v2a", "v2b");
-        URequest uRequest = AbstractExchangeContext.ofServlet(request, new MockHttpServletResponse()).request();
+        URequest uRequest = ExchangeContext.ofServlet(request, new MockHttpServletResponse()).request();
 
         assertEquals(0, uRequest.parameters("p0").length);
         assertEquals(1, uRequest.parameters("p1").length);
@@ -31,7 +31,7 @@ class URequestTest {
         request.setParameter("p1", "1");
         request.setParameter("p2", "3", "2");
         request.setParameter("p3", "X");
-        URequest uRequest = AbstractExchangeContext.ofServlet(request, new MockHttpServletResponse()).request();
+        URequest uRequest = ExchangeContext.ofServlet(request, new MockHttpServletResponse()).request();
 
         assertEquals("0", uRequest.parameter("p0", "0"));
         assertEquals("1", uRequest.parameter("p1", "0"));
@@ -45,7 +45,7 @@ class URequestTest {
         request.setParameter("p1", "1");
         request.setParameter("p2", "3", "2");
         request.setParameter("p3", "X");
-        URequest uRequest = AbstractExchangeContext.ofServlet(request, new MockHttpServletResponse()).request();
+        URequest uRequest = ExchangeContext.ofServlet(request, new MockHttpServletResponse()).request();
 
         assertEquals(0, uRequest.parameter("p0", Integer::parseInt, 0));
         assertEquals(1, uRequest.parameter("p1", Integer::parseInt, 0));
