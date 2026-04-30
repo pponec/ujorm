@@ -3,6 +3,7 @@ package org.ujorm.tools.web.request;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.jetbrains.annotations.NotNull;
+import org.ujorm.tools.xml.config.XmlConfig;
 
 import java.io.IOException;
 import java.util.Map;
@@ -54,9 +55,21 @@ public class HttpContextImpl extends ExchangeContext {
             @NotNull final HttpServletRequest request,
             @NotNull final HttpServletResponse response
     ) {
+        return of(request, response, XmlConfig.ofDefault());
+    }
+
+    /**
+     * Create a default HTTP Context by the Jakarta Servlet API.
+     */
+    public static @NotNull HttpContextImpl of(
+            @NotNull final HttpServletRequest request,
+            @NotNull final HttpServletResponse response,
+            @NotNull final XmlConfig config
+    ) {
         try {
-            request.setCharacterEncoding(ExchangeContext.CHARSET.name());
-            ServletBridge.prepareHtmlResponse(response, ExchangeContext.CHARSET, true);
+            final var charset = config.getCharset();
+            request.setCharacterEncoding(charset.name());
+            ServletBridge.prepareHtmlResponse(response, charset, true);
             var map = manyMap(request.getParameterMap());
             var req = new URequestImpl(map, request.getReader());
             var writer = response.getWriter();

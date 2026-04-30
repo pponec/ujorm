@@ -4,10 +4,12 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import java.io.CharArrayReader;
 import java.io.Reader;
+import java.nio.charset.Charset;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Function;
+import org.ujorm.tools.xml.config.XmlConfig;
 
 public interface URequest {
 
@@ -80,7 +82,13 @@ public interface URequest {
 
     /** Convert the HttpServletRequest to the URequest */
     static URequest ofRequest(@Nullable final Object httpServletRequest) {
-        ServletBridge.setCharacterEncoding(httpServletRequest, ExchangeContext.CHARSET.name());
+        return ofRequest(httpServletRequest, XmlConfig.ofDefault());
+    }
+
+    /** Convert the HttpServletRequest to the URequest */
+    static URequest ofRequest(@Nullable final Object httpServletRequest, @NotNull final XmlConfig config) {
+        final Charset charset = config.getCharset();
+        ServletBridge.setCharacterEncoding(httpServletRequest, charset.name());
         return new ServletRequestWrapper(httpServletRequest);
     }
 

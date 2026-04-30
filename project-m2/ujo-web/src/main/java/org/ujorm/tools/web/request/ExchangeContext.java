@@ -1,17 +1,15 @@
 package org.ujorm.tools.web.request;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
 import java.util.Set;
 import java.util.function.Function;
 
 /** A common implementation of the request and response context. Independent on the Servlet API. */
 public class ExchangeContext implements HttpContext {
-
-    /** Default charset */
-    public static final Charset CHARSET = StandardCharsets.UTF_8;
 
     private final URequest uRequest;
     private final Appendable writer;
@@ -67,6 +65,18 @@ public class ExchangeContext implements HttpContext {
     @Override
     public String toString() {
         return writer.toString();
+    }
+
+    /**
+     * Backward-compatible Jakarta servlet factory.
+     * Prefer {@link HttpContext#ofServlet(HttpServletRequest, HttpServletResponse)} in new code.
+     */
+    @Deprecated
+    public static @NotNull ExchangeContext of(
+            @NotNull final HttpServletRequest request,
+            @NotNull final HttpServletResponse response
+    ) {
+        return (ExchangeContext) HttpContext.ofServlet(request, response);
     }
 
 }

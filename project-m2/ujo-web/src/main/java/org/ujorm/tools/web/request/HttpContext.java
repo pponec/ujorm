@@ -6,6 +6,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import java.util.Set;
 import java.util.function.Function;
+import org.ujorm.tools.xml.config.XmlConfig;
 
 /** HTTP servlet request context */
 public interface HttpContext {
@@ -61,7 +62,16 @@ public interface HttpContext {
 
     /** Jakarta Servlet factory. */
     static HttpContext ofServlet(@NotNull HttpServletRequest httpServletRequest, @NotNull HttpServletResponse httpServletResponse) {
-        return HttpContextImpl.of(httpServletRequest, httpServletResponse);
+        return HttpContextImpl.of(httpServletRequest, httpServletResponse, XmlConfig.ofDefault());
+    }
+
+    /** Jakarta Servlet factory. */
+    static HttpContext ofServlet(
+            @NotNull HttpServletRequest httpServletRequest,
+            @NotNull HttpServletResponse httpServletResponse,
+            @NotNull XmlConfig config
+    ) {
+        return HttpContextImpl.of(httpServletRequest, httpServletResponse, config);
     }
 
     /** Jakarta Servlet factory for response-only use-cases. */
@@ -74,12 +84,25 @@ public interface HttpContext {
      * Use this method for compatibility with non-Jakarta servlet APIs.
      */
     static HttpContext ofServlet(@Nullable Object httpServletRequest, @NotNull Object httpServletResponse) {
+        return ofServlet(httpServletRequest, httpServletResponse, XmlConfig.ofDefault());
+    }
+
+    /**
+     * Generic servlet-like factory (reflection-based).
+     * Use this method for compatibility with non-Jakarta servlet APIs.
+     */
+    static HttpContext ofServlet(
+            @Nullable Object httpServletRequest,
+            @NotNull Object httpServletResponse,
+            @NotNull XmlConfig config
+    ) {
+        final var charset = config.getCharset();
         if (httpServletRequest != null) {
-            ServletBridge.setCharacterEncoding(httpServletRequest, ExchangeContext.CHARSET.name());
+            ServletBridge.setCharacterEncoding(httpServletRequest, charset.name());
         }
-        ServletBridge.prepareHtmlResponse(httpServletResponse, ExchangeContext.CHARSET, true);
+        ServletBridge.prepareHtmlResponse(httpServletResponse, charset, true);
         var writer = ServletBridge.getServletWriter(httpServletResponse);
-        var request = httpServletRequest != null ? URequest.ofRequest(httpServletRequest) : URequest.of();
+        var request = httpServletRequest != null ? URequest.ofRequest(httpServletRequest, config) : URequest.of();
         return new ExchangeContext(request, writer);
     }
 
