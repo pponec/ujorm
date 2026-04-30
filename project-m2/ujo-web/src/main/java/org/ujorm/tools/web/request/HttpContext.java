@@ -63,6 +63,18 @@ public class HttpContext extends ExchangeContext {
 
     /**
      * Create a default HTTP Context by the Jakarta Servlet API.
+     * @deprecated Use the method {@link #of(HttpServletRequest, HttpServletResponse)}
+     */
+    @Deprecated
+    public static @NotNull HttpContext ofServlet(
+            @NotNull final HttpServletRequest request,
+            @NotNull final HttpServletResponse response
+    ) {
+        return of(request, response, XmlConfig.ofDefault());
+    }
+
+    /**
+     * Create a default HTTP Context by the Jakarta Servlet API.
      */
     public static @NotNull HttpContext of(
             @Nullable final HttpServletRequest request,
