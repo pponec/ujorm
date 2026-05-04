@@ -148,7 +148,7 @@ class HtmlToJavaConverterTest {
         }
 
         // 5. Dynamic compilation and execution
-        var htmlResult = compileAndRun(fullClassCode, javaClassName, "htmlGenerator");
+        var htmlResult = compileAndRun(fullClassCode, javaClassName, "webPage");
 
         // 6. Build result into a model (Jsoup Document)
         var actualModel = Jsoup.parse(htmlResult);

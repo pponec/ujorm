@@ -146,8 +146,8 @@ public final class HtmlToJavaConverter {
         writer.append("/** Generated for use with: org.ujorm:ujo-web:")
                 .append(version != null ? version : DEFAULT_UJORM_VERSION)
                 .append(" (").append(LocalDate.now().toString()).append(") */\n")
-                .append("public Appendable htmlGenerator(Appendable writer) {\n")
-                .append(OFFSET).append("var ctx = HttpContext.of(writer);\n")
+                .append("public void webPage(Appendable writer) {\n")
+                .append(OFFSET).append("var ctx = ExchangeContext.of(writer);\n")
                 .append(OFFSET).append("try (var html = HtmlElement.niceOf(\"")
                 .append(escapeJavaString(docTitle))
                 .append("\", ctx)) {\n");
@@ -160,7 +160,6 @@ public final class HtmlToJavaConverter {
         }
 
         writer.append(OFFSET).append("}\n")
-                .append(OFFSET).append("return writer;\n")
                 .append("}");
 
         if (separatedCssStyles) {
@@ -168,8 +167,10 @@ public final class HtmlToJavaConverter {
         }
 
         writer.append("\n\n")
-                .append("public String htmlGenerator() {\n")
-                .append(OFFSET).append("return htmlGenerator(new StringBuilder()).toString();\n")
+                .append("public String webPage() {\n")
+                .append(OFFSET).append("var writer = new StringBuilder();\n")
+                .append(OFFSET).append("webPage(writer);\n")
+                .append(OFFSET).append("return writer.toString();\n")
                 .append("}");
     }
 
