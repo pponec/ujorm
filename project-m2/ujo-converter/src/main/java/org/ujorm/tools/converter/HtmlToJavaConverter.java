@@ -18,6 +18,8 @@ import java.util.stream.Collectors;
 @Generated("org.ujorm.tools.converter")
 public final class HtmlToJavaConverter {
 
+    /** Name of the generated method */
+    private static final String METHOD_NAME = "webPage";
     /** HTML heading pattern: h1 to h6 */
     private static final Pattern HEADING_PATTERN = Pattern.compile("^h[1-6]$");
     /** The default value of the Ujorm version */
@@ -146,7 +148,7 @@ public final class HtmlToJavaConverter {
         writer.append("/** Generated for use with: org.ujorm:ujo-web:")
                 .append(version != null ? version : DEFAULT_UJORM_VERSION)
                 .append(" (").append(LocalDate.now().toString()).append(") */\n")
-                .append("public void webPage(Appendable writer) {\n")
+                .append("public void ").append(METHOD_NAME).append("(Appendable writer) {\n")
                 .append(OFFSET).append("var ctx = ExchangeContext.of(writer);\n")
                 .append(OFFSET).append("try (var html = HtmlElement.niceOf(\"")
                 .append(escapeJavaString(docTitle))
@@ -167,9 +169,9 @@ public final class HtmlToJavaConverter {
         }
 
         writer.append("\n\n")
-                .append("public String webPage() {\n")
+                .append("public String ").append(METHOD_NAME).append("() {\n")
                 .append(OFFSET).append("var writer = new StringBuilder();\n")
-                .append(OFFSET).append("webPage(writer);\n")
+                .append(OFFSET).append(METHOD_NAME).append("(writer);\n")
                 .append(OFFSET).append("return writer.toString();\n")
                 .append("}");
     }
