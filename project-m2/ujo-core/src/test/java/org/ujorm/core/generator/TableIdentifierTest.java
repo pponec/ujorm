@@ -47,9 +47,16 @@ class TableIdentifierTest {
     void testGetQualifiedName() {
         var tableWithAll = new TableIdentifier("users", "public", "my_db");
         assertEquals("my_db.public.users", tableWithAll.getQualifiedName());
+        assertEquals("\"my_db\".\"public\".\"users\"", tableWithAll.getQualifiedName("\""));
+        assertEquals("[my_db].[public].[users]", tableWithAll.getQualifiedName("[]"));
 
         var tableOnlyName = new TableIdentifier("users", null, null);
         assertEquals("users", tableOnlyName.getQualifiedName());
+        assertEquals("users", tableOnlyName.getQualifiedName(""));
+
+        var tableWithSchema = new TableIdentifier("users", "public", null);
+        assertEquals("public.users", tableWithSchema.getQualifiedName());
+        assertEquals("\"public\".\"users\"", tableWithSchema.getQualifiedName("\""));
     }
 
     @Test

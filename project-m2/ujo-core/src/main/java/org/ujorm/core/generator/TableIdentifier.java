@@ -80,6 +80,40 @@ public record TableIdentifier(
     }
 
     /**
+     * Get table name in the full format with each identifier segment quoted separately.
+     * Example with "[]": {@code [catalog].[schema].[table]}.
+     */
+    public String getQualifiedName(@NotNull String quotes) {
+        var result = new StringBuilder(64);
+        var q = Check.hasLength(quotes) ? quotes : " ";
+        writeQualifiedName(q.charAt(0), q.charAt(q.length() - 1), result);
+        return result.toString();
+    }
+
+    /** Writes a qualified table name to a target writer without creating intermediate strings. */
+    public void writeQualifiedName(char open, char close, StringBuilder writer) {
+        var hasQuotes = open != ' ' || close != ' ';
+        var startLength = writer.length();
+
+        appendSegment(writer, catalog, hasQuotes, open, close, startLength);
+        appendSegment(writer, schema, hasQuotes, open, close, startLength);
+        appendSegment(writer, table, hasQuotes, open, close, startLength);
+    }
+
+    private void appendSegment(StringBuilder writer, String segment, boolean hasQuotes, char open, char close, int startLength) {
+        if (Check.hasLength(segment)) {
+            if (writer.length() > startLength) {
+                writer.append('.');
+            }
+            if (hasQuotes) {
+                writer.append(open).append(segment).append(close);
+            } else {
+                writer.append(segment);
+            }
+        }
+    }
+
+    /**
      * Converts CamelCase string to snake_case using Regex.
      *
      * @param text The text to convert.

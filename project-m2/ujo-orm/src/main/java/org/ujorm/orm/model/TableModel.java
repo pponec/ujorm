@@ -19,6 +19,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.ujorm.core.DomainHandler;
 import org.ujorm.core.Key;
+import org.ujorm.core.generator.TableIdentifier;
 
 import java.util.*;
 
@@ -34,7 +35,7 @@ public record TableModel<D>(
         List<ColumnModel<D, ?>> columns,
 
         /** Gets the table name. */
-        String tableName,
+        TableIdentifier tableName,
 
         /** Gets the inserted columns without PK. */
         @NotNull

@@ -63,6 +63,8 @@ public final class EntityManager<D, V> {
 
     /** Lazy initialized TableModel. Use {@link #tableModel()} method to access it safely. */
     private volatile TableModel<D> _tableModel;
+    /** Lazy initialized qualified table name including SQL quotes. */
+    private volatile String _qualifiedTableName;
 
     public EntityManager(
             @NotNull DomainHandler<D> domainHandler,
@@ -215,6 +217,34 @@ public final class EntityManager<D, V> {
         return tableModel().jdbc().quotes();
     }
 
+    /** Returns cached qualified table name and initializes the model if needed. */
+    @NotNull
+    public String qualifiedTableName(@NotNull Connection connection) {
+        if (_tableModel == null) {
+            initModel(connection);
+        }
+        return qualifiedTableName();
+    }
+
+    /** Thread-safe access to the lazily computed qualified table name. */
+    @NotNull
+    private String qualifiedTableName() {
+        var result = _qualifiedTableName;
+        if (result == null) {
+            synchronized (utilities) {
+                result = _qualifiedTableName;
+                if (result == null) {
+                    var q = getQuote();
+                    var writer = new StringBuilder(64);
+                    tableModel().tableName().writeQualifiedName(q.open(), q.close(), writer);
+                    result = writer.toString();
+                    _qualifiedTableName = result;
+                }
+            }
+        }
+        return result;
+    }
+
     // --- Inner classes ---
 
     /** Utilities for EntityManager */
@@ -319,10 +349,9 @@ public final class EntityManager<D, V> {
         /** Builds an SQL INSERT statement for the specified columns. */
         public String buildInsertSql(@NotNull List<ColumnModel<D, ?>> columns) {
             var q = getQuote();
-            var tableName = tableModel().tableName();
             var sql = new StringBuilder(256)
                     .append("INSERT INTO ")
-                    .append(q.open()).append(tableName).append(q.close())
+                    .append(qualifiedTableName())
                     .append(" (");
             write(sql, columns, ", ", q);
             sql.append(") VALUES (?");
@@ -334,10 +363,9 @@ public final class EntityManager<D, V> {
         /** Builds an SQL UPDATE statement for the specified columns. */
         public String buildUpdateSql(@NotNull List<ColumnModel<D, ?>> columns) {
             var q = getQuote();
-            var tableName = tableModel().tableName();
             var sql = new StringBuilder(256)
                     .append("UPDATE ")
-                    .append(q.open()).append(tableName).append(q.close());
+                    .append(qualifiedTableName());
             for (var i = 0; i < columns.size(); i++) {
                 var column = columns.get(i);
                 sql.append(i == 0 ? " SET " : ", ");
@@ -610,7 +638,6 @@ public final class EntityManager<D, V> {
         @Nullable
         private Key[] buildSelectSql(boolean includeAliases, @NotNull StringBuilder sql) {
             var q = getQuote();
-            var tableName = tableModel().tableName();
             var columns = tableModel().columns();
             var labels = includeAliases ? null : new Key[columns.size()];
 
@@ -626,7 +653,7 @@ public final class EntityManager<D, V> {
                     labels[i] = column.key();
                 }
             }
-            sql.append(" FROM ").append(q.open()).append(tableName).append(q.close());
+            sql.append(" FROM ").append(qualifiedTableName());
             return labels;
         }
 
@@ -786,9 +813,9 @@ public final class EntityManager<D, V> {
         public int deleteById(@NotNull V id) {
             Objects.requireNonNull(id, "Identifier must not be null");
             var q = getQuote();
-            var tableName = tableModel().tableName();
             var sql = new StringBuilder(64)
-                    .append("DELETE FROM ").append(q.open()).append(tableName).append(q.close())
+                    .append("DELETE FROM ")
+                    .append(qualifiedTableName())
                     .append(" WHERE ").append(q.open()).append(pkColumn().name()).append(q.close()).append(" = ?");
             return utilities.run(false, dbconnection, sql, false, ps -> {
                 ps.setObject(1, utilities.toDbValue(id, pkColumn()));
@@ -800,9 +827,9 @@ public final class EntityManager<D, V> {
         public int delete(@NotNull Stream<D> domains) {
             Objects.requireNonNull(domains, "Stream of domains must not be null");
             var q = getQuote();
-            var tableName = tableModel().tableName();
             var sql = new StringBuilder(64)
-                    .append("DELETE FROM ").append(q.open()).append(tableName).append(q.close())
+                    .append("DELETE FROM ")
+                    .append(qualifiedTableName())
                     .append(" WHERE ").append(q.open()).append(pkColumn().name()).append(q.close()).append(" = ?");
 
             var limit = utilities.getBatchLimit();

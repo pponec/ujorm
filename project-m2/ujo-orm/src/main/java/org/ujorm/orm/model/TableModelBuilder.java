@@ -33,6 +33,7 @@ import java.sql.SQLException;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 /** Table Model Builder */
 @RequiredArgsConstructor
@@ -48,18 +49,18 @@ public class TableModelBuilder<D> {
         var softTableModel = TableIdentifier.of(handler.getDomainClass());
         var realTableModel = createTableIdentifier(softTableModel, initConnection);
         dbColumMapLowerCase = findDatabaseColumnMap(realTableModel, initConnection);
-        var columns = handler.getKeyList().stream()
-                .map(this::column)
-                .toList();
+        List<ColumnModel<D, ?>> columns = handler.getKeyList().stream()
+                .<ColumnModel<D, ?>>map(this::column)
+                .collect(Collectors.toList());
         var pk = findPk(columns);
-        var insertedColumns = columns.stream()
+        List<ColumnModel<D, ?>> insertedColumns = columns.stream()
                 .filter(c -> c != pk)
-                .toList();
+                .collect(Collectors.toList());
         var isOracleDb = getDbVendor(initConnection);
         var sqlQuote = getSqlQuote(initConnection, config);
         var jdbc = new Jdbc(isOracleDb, sqlQuote);
-        var tableName = softTableModel.merge(realTableModel).getQualifiedName();
-        return new TableModel(handler, pk, columns, tableName, insertedColumns, jdbc);
+        var tableName = softTableModel.merge(realTableModel);
+        return new TableModel<>(handler, pk, columns, tableName, insertedColumns, jdbc);
     }
 
     /**

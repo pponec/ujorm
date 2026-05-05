@@ -13,6 +13,13 @@ public record QuotePair(
         char close
 ) {
 
+    /** Returns the combined string representation of the quotes or empty string if none. */
+    public String toQuotes() {
+        return open == ' ' ? ""
+                : open == close ? String.valueOf(open)
+                : (String.valueOf(open) + close);
+    }
+
     /** The default ANSI SQL quote instance. */
     private static final QuotePair DEFAULT_QUOTE = new QuotePair('"', '"');
 

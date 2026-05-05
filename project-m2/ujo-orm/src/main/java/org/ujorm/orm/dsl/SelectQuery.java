@@ -236,9 +236,7 @@ public class SelectQuery<D> extends AbstractSqlQuery<SelectQuery<D>> {
                 var alias = builder.findTableAlias(key);
                 dslWriter.writeColumnName(alias, key, EMPTY_KEY);
             } else if (item instanceof TableAlias tableAlias) { // Config.DSL_SELECT_ONLY ?
-                var tableModel = entityManager.getTableModelService()
-                        .getTableModel(tableAlias.domainClass(), dbConnection);
-                dslWriter.append(q.open()).append(tableModel.tableName()).append(q.close());
+                dslWriter.writeTableName("", tableAlias.domainClass());
                 if (!tableAlias.alias().isEmpty()) {
                     dslWriter.append(' ').append(tableAlias.alias());
                 }
@@ -295,11 +293,15 @@ public class SelectQuery<D> extends AbstractSqlQuery<SelectQuery<D>> {
         /** Write database table name. */
         @Override
         public void writeTableName(@NotNull String tableAlias, @NotNull Class<?> entityClass) {
-            var tableModel = entityManager.getTableModelService().getTableModel(entityClass, dbConnection);
-            writer.append(q.open())
-                    .append(tableModel.tableName())
-                    .append(q.close())
-                    .append(' ').append(tableAlias);
+            if (entityManager.getDomainClass() == entityClass) {
+                writer.append(entityManager.qualifiedTableName(dbConnection));
+            } else {
+                var tableModel = entityManager.getTableModelService().getTableModel(entityClass, dbConnection);
+                tableModel.tableName().writeQualifiedName(q.open(), q.close(), writer);
+            }
+            if (!tableAlias.isEmpty()) {
+                writer.append(' ').append(tableAlias);
+            }
         }
 
         /** Write database column name. If labels are available, append labels for the SQL SELECT statement. */
