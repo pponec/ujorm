@@ -60,6 +60,15 @@ class TableIdentifierTest {
     }
 
     @Test
+    void testWriteQualifiedNameAppendsWithoutLeadingDot() {
+        var table = new TableIdentifier("users", "public", "my_db");
+        var writer = new StringBuilder("FROM ");
+        table.writeQualifiedName('"', '"', writer);
+
+        assertEquals("FROM \"my_db\".\"public\".\"users\"", writer.toString());
+    }
+
+    @Test
     void testOfMethodWithCompleteAnnotation() {
         var result = TableIdentifier.of(DummyEntity.class);
 
