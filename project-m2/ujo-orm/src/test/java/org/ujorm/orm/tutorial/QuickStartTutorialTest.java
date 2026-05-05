@@ -70,26 +70,22 @@ class QuickStartTutorialTest extends AbstractDemo {
         }
     }
 
-    /** Select cities using Meta-model templates and type-safe result mapping (by the label method). */
+    /** Selects cities using Meta-model templates and type-safe result mapping (by the label method).<br/>
+     * NOTE: Methods {@code column} and {@code label} cannot be combined. */
     @Test
     @Order(200)
-    void select() {
+    void select_by_column() {
         try (var query = new SqlQuery(connection())) {
             var cities = query.sql("""
-                            SELECT c.id      AS ${c.id}
-                            , c.name         AS ${c.name}
-                            , c.country_code AS ${c.countryCode}
+                            SELECT ${COLUMNS}
                             FROM city c
                             WHERE c.id >= :id
                             """)
-                    .label("c.id", MetaCity.id)
-                    .label("c.name", MetaCity.name)
-                    .label("c.countryCode", MetaCity.countryCode)
+                    .column("c.id", MetaCity.id)
+                    .column("c.name", MetaCity.name)
+                    .column("c.country_code", MetaCity.countryCode)
                     .bind("id", 1L)
-                    .toStream(rs -> new City( // Use the method `CITY_MAPPER.mapper()` rather.
-                            rs.getLong(MetaCity.id.name()),
-                            rs.getString(MetaCity.name.name()),
-                            rs.getString(MetaCity.countryCode.name())))
+                    .toStream(CITY_MAPPER.mapper())
                     .toList();
 
             assertEquals(2, cities.size());
@@ -103,21 +99,23 @@ class QuickStartTutorialTest extends AbstractDemo {
         }
     }
 
-    /** Select cities using Meta-model templates and type-safe result mapping (by the column method). */
+    /** Select cities using Meta-model templates and type-safe result mapping (by the label method). */
     @Test
     @Order(210)
-    void select_by_column() {
+    void select_by_label() {
         try (var query = new SqlQuery(connection())) {
             var cities = query.sql("""
-                            SELECT ${COLUMNS}
+                            SELECT c.id      AS ${c.id}
+                            , c.name         AS ${c.name}
+                            , c.country_code AS ${c.countryCode}
                             FROM city c
                             WHERE c.id >= :id
                             """)
-                    .column("c.id", MetaCity.id)
-                    .column("c.name", MetaCity.name)
-                    .column("c.countryCode", MetaCity.countryCode)
+                    .label("c.id", MetaCity.id)
+                    .label("c.name", MetaCity.name)
+                    .label("c.countryCode", MetaCity.countryCode)
                     .bind("id", 1L)
-                    .toStream(rs -> new City(
+                    .toStream(rs -> new City( // Use the method `CITY_MAPPER.mapper()` rather.
                             rs.getLong(MetaCity.id.name()),
                             rs.getString(MetaCity.name.name()),
                             rs.getString(MetaCity.countryCode.name())))
