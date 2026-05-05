@@ -225,4 +225,30 @@ class TableModelBuilderTest {
 
         assertTrue(exception.getMessage().contains("No table was found"));
     }
+
+    @Test
+    void testCreateTableIdentifierFallbackForCaseSensitiveSchemaFilter() throws SQLException {
+        var softIdentifier = new TableIdentifier("user_movie_rating", "topmovies", null);
+        var strictResultSet = mock(ResultSet.class);
+        var fallbackResultSet = mock(ResultSet.class);
+
+        when(mockConnection.getMetaData()).thenReturn(mockMetaData);
+        when(mockMetaData.getTables(any(), eq("topmovies"), isNull(), any(String[].class)))
+                .thenReturn(strictResultSet);
+        when(mockMetaData.getTables(isNull(), isNull(), isNull(), any(String[].class)))
+                .thenReturn(fallbackResultSet);
+
+        when(strictResultSet.next()).thenReturn(false);
+
+        when(fallbackResultSet.next()).thenReturn(true, false);
+        when(fallbackResultSet.getString("TABLE_NAME")).thenReturn("USER_MOVIE_RATING");
+        when(fallbackResultSet.getString("TABLE_SCHEM")).thenReturn("TOPMOVIES");
+        when(fallbackResultSet.getString("TABLE_CAT")).thenReturn(null);
+
+        var result = builder.createTableIdentifier(softIdentifier, mockConnection);
+
+        assertEquals("USER_MOVIE_RATING", result.table());
+        assertEquals("TOPMOVIES", result.schema());
+        assertNull(result.catalog());
+    }
 }
