@@ -22,6 +22,7 @@ import org.ujorm.core.Key;
 import org.ujorm.core.impl.AbstractKey;
 import org.ujorm.tools.common.Array;
 
+import java.util.Collection;
 import java.util.Objects;
 
 /**
@@ -263,6 +264,25 @@ public abstract class Criterion {
             case 0 -> Criterion.forConstant(key, !positive);
             case 1 -> new ValueCriterion<>(key, positive ? Operator.EQ : Operator.NOT_EQ, array.get(0));
             default -> new ValueCriterion<>(key, positive ? Operator.IN : Operator.NOT_IN, array);
+        };
+    }
+
+    /**
+     * Create new Criterion for operator IN to compare value to a collection of constants.
+     * @param positive A sign of the Criterion: true for IN, false for NOT IN.
+     * @param key A direct or indirect Ujo key
+     * @param values A collection of the values. If the argument is EMPTY, the result is TRUE for the negative sign and FALSE for the positive sign.
+     * @return The new immutable Criterion.
+     */
+    @NotNull
+    public static <U, TYPE> Criterion whereInCollection(
+            boolean positive,
+            @NotNull final Key<U, TYPE> key,
+            @NotNull final Collection<? extends TYPE> values) {
+        return switch (values.size()) {
+            case 0 -> Criterion.forConstant(key, !positive);
+            case 1 -> new ValueCriterion<>(key, positive ? Operator.EQ : Operator.NOT_EQ, values.iterator().next());
+            default -> new ValueCriterion<>(key, positive ? Operator.IN : Operator.NOT_IN, Array.of(key.type(), values));
         };
     }
 

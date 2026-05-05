@@ -20,6 +20,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.ujorm.core.Key;
 import org.ujorm.tools.common.Array;
+import java.util.Collection;
 
 public interface CriterionProvider<DOMAIN, VALUE> {
 
@@ -83,6 +84,24 @@ public interface CriterionProvider<DOMAIN, VALUE> {
      */
     @NotNull default Criterion whereNotIn(@NotNull Array<VALUE> array) {
         return Criterion.whereIn(false, self(), array);
+    }
+
+    /**
+     * Create new Criterion where this key value is in one of parameter values.
+     * @param values A collection of values. If the argument is EMPTY, the result is always FALSE.
+     * @return The new immutable Criterion.
+     */
+    @NotNull default Criterion whereIn(@NotNull Collection<? extends VALUE> values) {
+        return Criterion.whereInCollection(true, self(), values);
+    }
+
+    /**
+     * Create new Criterion where this key value is not in any of parameter values.
+     * @param values A collection of values. If the argument is EMPTY, the result is always TRUE.
+     * @return The new immutable Criterion.
+     */
+    @NotNull default Criterion whereNotIn(@NotNull Collection<? extends VALUE> values) {
+        return Criterion.whereInCollection(false, self(), values);
     }
 
     /** Create a new Criterion for all values. The method evaluate(ujo) always returns TRUE. */

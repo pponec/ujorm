@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.ujorm.core.Key;
 import org.ujorm.core.criterion.domains.MetaEmployee;
 import org.ujorm.tools.common.Array;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -63,6 +64,11 @@ public class CriterionProviderTest {
         var array = Array.of("X", "Y");
         assertEquals("Employee(name IN [X, Y])", nameProvider.whereIn(array).toString());
         assertEquals("Employee(name NOT_IN [X, Y])", nameProvider.whereNotIn(array).toString());
+
+        // Test with Collection object
+        var collection = List.of("C", "D");
+        assertEquals("Employee(name IN [C, D])", nameProvider.whereIn(collection).toString());
+        assertEquals("Employee(name NOT_IN [C, D])", nameProvider.whereNotIn(collection).toString());
     }
 
     /** Test custom SQL templates */
