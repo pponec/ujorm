@@ -28,6 +28,7 @@ import org.ujorm.tools.common.StreamUtils;
 import org.ujorm.tools.jdbc.SQLExceptionBuilder;
 
 import java.sql.Connection;
+import java.sql.DatabaseMetaData;
 import java.sql.JDBCType;
 import java.sql.SQLException;
 import java.util.*;
@@ -77,15 +78,14 @@ public class TableModelBuilder<D> {
 
         try {
             var metaData = initConnection.getMetaData();
-            try (var resultSet = metaData.getTables(catalog, schema, null, new String[]{"TABLE", "VIEW"})) {
-                while (resultSet.next()) {
-                    var realTableName = resultSet.getString("TABLE_NAME");
-                    if (tableName.equalsIgnoreCase(realTableName)) {
-                        var realCatalog = resultSet.getString("TABLE_CAT");
-                        var realSchema = resultSet.getString("TABLE_SCHEM");
-                        return new TableIdentifier(realTableName, realSchema, realCatalog);
-                    }
-                }
+            var result = findTableIdentifier(metaData, catalog, schema, tableName, false);
+            if (result != null) {
+                return result;
+            }
+
+            result = findTableIdentifier(metaData, null, null, tableName, true);
+            if (result != null) {
+                return result;
             }
         } catch (SQLException e) {
             var msg = "Cannot retrieve table metadata for: " + table;
@@ -94,6 +94,38 @@ public class TableModelBuilder<D> {
 
         var msg = "No table was found in database for: " + table;
         throw new IllegalStateException(msg);
+    }
+
+    private TableIdentifier findTableIdentifier(
+            DatabaseMetaData metaData,
+            String catalog,
+            String schema,
+            String tableName,
+            boolean strictSchemaCatalogCheck
+    ) throws SQLException {
+        try (var resultSet = metaData.getTables(catalog, schema, null, new String[]{"TABLE", "VIEW"})) {
+            while (resultSet.next()) {
+                var realTableName = resultSet.getString("TABLE_NAME");
+                if (!tableName.equalsIgnoreCase(realTableName)) {
+                    continue;
+                }
+                var realCatalog = resultSet.getString("TABLE_CAT");
+                var realSchema = resultSet.getString("TABLE_SCHEM");
+                if (!strictSchemaCatalogCheck
+                        || (matchesCatalog(catalog, realCatalog) && matchesSchema(schema, realSchema))) {
+                    return new TableIdentifier(realTableName, realSchema, realCatalog);
+                }
+            }
+        }
+        return null;
+    }
+
+    private boolean matchesCatalog(String expectedCatalog, String realCatalog) {
+        return !Check.hasLength(expectedCatalog) || expectedCatalog.equalsIgnoreCase(realCatalog);
+    }
+
+    private boolean matchesSchema(String expectedSchema, String realSchema) {
+        return !Check.hasLength(expectedSchema) || expectedSchema.equalsIgnoreCase(realSchema);
     }
 
     /**
