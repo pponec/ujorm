@@ -48,6 +48,11 @@ import java.util.stream.Stream;
  * <p>
  * It is highly recommended to call the {@link #crud(Connection)} method as part
  * of the class initialization to pre-build the internal table model safely.
+ * <p>
+ * <strong>DB context awareness:</strong> The manager can be reused with different JDBC
+ * connections (e.g. different schema/catalog/vendor). The internal table model and qualified
+ * table name are automatically refreshed when the effective DB context changes, based on
+ * connection metadata (catalog, schema, product name and identifier quote).
  *
  * @param <D> Domain class
  * @param <V> Primary key class
@@ -133,11 +138,12 @@ public final class EntityManager<D, V> {
 
     /** Initializes TableModel if not already done. */
     private void initModel(@NotNull Connection connection) {
+        final var expectedModel = tableModelService.getTableModel(getDomainClass(), connection);
         if (this._tableModel == null) {
             synchronized (utilities) {
                 if (this._tableModel == null) {
-                    this._tableModel = tableModelService.getTableModel(
-                            getDomainClass(), connection);
+                    this._tableModel = expectedModel;
+                    this._qualifiedTableName = null;
                     LOGGER.log(Level.INFO, () ->
                             "Lazy initialization of %s was triggered for the %s entity.".formatted(
                                     TableModel.class.getSimpleName(),
@@ -145,6 +151,11 @@ public final class EntityManager<D, V> {
                             ));
                 }
             }
+        } else if (this._tableModel != expectedModel) {
+            var msg = ("The %s instance is already initialized for a different DB context. " +
+                    "Create a new EntityManager for each context.")
+                    .formatted(EntityManager.class.getSimpleName());
+            throw new IllegalStateException(msg);
         }
     }
 
@@ -220,9 +231,7 @@ public final class EntityManager<D, V> {
     /** Returns cached qualified table name and initializes the model if needed. */
     @NotNull
     public String qualifiedTableName(@NotNull Connection connection) {
-        if (_tableModel == null) {
-            initModel(connection);
-        }
+        initModel(connection);
         return qualifiedTableName();
     }
 
@@ -348,6 +357,9 @@ public final class EntityManager<D, V> {
 
         /** Builds an SQL INSERT statement for the specified columns. */
         public String buildInsertSql(@NotNull List<ColumnModel<D, ?>> columns) {
+            if (columns.isEmpty()) {
+                return "INSERT INTO " + qualifiedTableName() + " DEFAULT VALUES";
+            }
             var q = getQuote();
             var sql = new StringBuilder(256)
                     .append("INSERT INTO ")

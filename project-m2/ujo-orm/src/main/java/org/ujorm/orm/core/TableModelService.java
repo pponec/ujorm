@@ -11,6 +11,8 @@ import org.ujorm.orm.model.TableModel;
 import org.ujorm.orm.model.TableModelBuilder;
 
 import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 
 /** Service provides meta models of domain objects */
@@ -30,7 +32,8 @@ public class TableModelService {
      * The {@code ConcurrentHashMap} is still strictly required to guarantee memory visibility and safe,
      * lock-free reads during the initial non-synchronized check.
      */
-    private final ConcurrentHashMap<Class<?>, TableModel<?>> tableMap = new ConcurrentHashMap<>();
+    private static final char KEY_SEPARATOR = '\u001f';
+    private final ConcurrentHashMap<String, TableModel<?>> tableMap = new ConcurrentHashMap<>();
 
     private final DomainHandlerService domainService;
 
@@ -60,17 +63,35 @@ public class TableModelService {
     @NotNull
     @SuppressWarnings("unchecked")
     public <D> TableModel<D> getTableModel(Class<D> domainClass, Connection connection) {
-        var result = (TableModel<D>) tableMap.get(domainClass);
+        var key = createKey(domainClass, connection);
+        var result = (TableModel<D>) tableMap.get(key);
         if (result == null) {
             synchronized (tableMap) {
-                result = (TableModel<D>) tableMap.get(domainClass);
+                result = (TableModel<D>) tableMap.get(key);
                 if (result == null) {
                     result = createTableModel(domainClass, connection);
-                    tableMap.put(domainClass, result);
+                    tableMap.put(key, result);
                 }
             }
         }
         return result;
+    }
+
+    @NotNull
+    private static <D> String createKey(Class<D> domainClass, Connection connection) {
+        try {
+            var metadata = connection.getMetaData();
+            return String.join(
+                    String.valueOf(KEY_SEPARATOR),
+                    domainClass.getName(),
+                    Objects.toString(connection.getCatalog(), ""),
+                    Objects.toString(connection.getSchema(), ""),
+                    Objects.toString(metadata.getDatabaseProductName(), ""),
+                    Objects.toString(metadata.getIdentifierQuoteString(), "")
+            );
+        } catch (SQLException e) {
+            throw new IllegalStateException("Failed to inspect DB metadata for table model cache key.", e);
+        }
     }
 
     @NotNull

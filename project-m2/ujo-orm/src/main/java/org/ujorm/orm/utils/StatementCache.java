@@ -122,13 +122,25 @@ public final class StatementCache<V> implements AutoCloseable {
         var result = 0L;
         for (var statement : cache.values()) {
             var counts = statement.executeBatch();
-            for (var count : counts) {
-                result += count;
-            }
+            result += sumBatchRows(counts);
             statement.close();
         }
         cache.clear();
         activeIds.clear();
+        return result;
+    }
+
+    private static long sumBatchRows(int[] batchResults) throws SQLException {
+        var result = 0L;
+        for (var rowCount : batchResults) {
+            if (rowCount >= 0) {
+                result += rowCount;
+            } else if (rowCount == java.sql.Statement.SUCCESS_NO_INFO) {
+                result++; // Safe fallback for drivers without exact row count.
+            } else if (rowCount == java.sql.Statement.EXECUTE_FAILED) {
+                throw new SQLException("Batch execution failed.");
+            }
+        }
         return result;
     }
 
