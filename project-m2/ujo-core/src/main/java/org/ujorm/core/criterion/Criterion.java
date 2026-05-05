@@ -282,7 +282,7 @@ public abstract class Criterion {
         return switch (values.size()) {
             case 0 -> Criterion.forConstant(key, !positive);
             case 1 -> new ValueCriterion<>(key, positive ? Operator.EQ : Operator.NOT_EQ, values.iterator().next());
-            default -> new ValueCriterion<>(key, positive ? Operator.IN : Operator.NOT_IN, Array.of(key.type(), values));
+            default -> new ValueCriterion<>(key, positive ? Operator.IN : Operator.NOT_IN, Array.of(values, key.type()));
         };
     }
 

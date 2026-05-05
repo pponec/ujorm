@@ -214,22 +214,6 @@ public final class Array<T> implements Serializable, Iterable<T> {
     }
 
     /**
-     * Factory method creating an immutable snapshot of the provided collection.
-     * <p>
-     * <strong>Type note:</strong> due to Java type erasure, this overload stores data in an internal
-     * array created from {@link Collection#toArray()}, which is typically an {@code Object[]}.
-     * Therefore this method is safe for common {@link Array} operations ({@code size()}, {@code get()},
-     * iteration, streaming), but it does not guarantee a reified component type for {@link #toArray()}.
-     * If callers require a runtime-typed array (e.g. {@code String[]}), use {@link #of(Class, Collection)}.
-     */
-    @SuppressWarnings("unchecked")
-    @NotNull
-    public static <T> Array<T> of(@NotNull final Collection<? extends T> items) {
-        // Java generics cannot create reified T[] here; we keep a snapshot in Object[].
-        return new Array<>((T[]) items.toArray());
-    }
-
-    /**
      * Factory method creating an immutable snapshot of the provided collection
      * with a runtime-typed backing array.
      */
