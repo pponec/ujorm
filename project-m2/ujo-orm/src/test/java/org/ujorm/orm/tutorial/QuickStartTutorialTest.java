@@ -70,7 +70,7 @@ class QuickStartTutorialTest extends AbstractDemo {
         }
     }
 
-    /** Select cities using Meta-model templates and type-safe result mapping. */
+    /** Select cities using Meta-model templates and type-safe result mapping (by the label method). */
     @Test
     @Order(200)
     void select() {
@@ -85,6 +85,37 @@ class QuickStartTutorialTest extends AbstractDemo {
                     .label("c.id", MetaCity.id)
                     .label("c.name", MetaCity.name)
                     .label("c.countryCode", MetaCity.countryCode)
+                    .bind("id", 1L)
+                    .toStream(rs -> new City( // Use the method `CITY_MAPPER.mapper()` rather.
+                            rs.getLong(MetaCity.id.name()),
+                            rs.getString(MetaCity.name.name()),
+                            rs.getString(MetaCity.countryCode.name())))
+                    .toList();
+
+            assertEquals(2, cities.size());
+
+            // --- Reuse the query with the sophisticated ResultSetMapper ---
+
+            var nextCities = query.bind("id", 2L)
+                    .toStream(CITY_MAPPER.mapper())
+                    .toList();
+            assertEquals(1, nextCities.size());
+        }
+    }
+
+    /** Select cities using Meta-model templates and type-safe result mapping (by the column method). */
+    @Test
+    @Order(210)
+    void select_by_column() {
+        try (var query = new SqlQuery(connection())) {
+            var cities = query.sql("""
+                            SELECT ${COLUMNS}
+                            FROM city c
+                            WHERE c.id >= :id
+                            """)
+                    .column("c.id", MetaCity.id)
+                    .column("c.name", MetaCity.name)
+                    .column("c.countryCode", MetaCity.countryCode)
                     .bind("id", 1L)
                     .toStream(rs -> new City(
                             rs.getLong(MetaCity.id.name()),
