@@ -29,17 +29,17 @@ import java.sql.JDBCType;
 @Deprecated
 @Retention(value=RetentionPolicy.RUNTIME)
 @Target(value=ElementType.FIELD)
-public @interface Column {
+public @interface UColumn {
 
     /** A named parameter for the database column name.
      * If an appropriate Key is a relation to another ORM object with more primary keys,
      * then the several names can be separated by a space or comma character.
      */
-    String name() default Table.NULL;
+    String name() default UTable.NULL;
     /** A shortcut for the attribute "name" of Column.
      * @see #name()
      */
-    String value() default Table.NULL;
+    String value() default UTable.NULL;
     /** The primary key */
     boolean pk() default false;
     /** Database column type */
@@ -52,11 +52,11 @@ public @interface Column {
     boolean mandatory() default false;
     /** A name of the non-unique database index for the column, where the same index can contain more columns.
      * If a single column of the index is marked as non-unique, than the entire index will be non-unique. */
-    String[] index() default Table.NULL;
+    String[] index() default UTable.NULL;
     /** A name of the unique database index for the column, where the same index can contain more columns.
      * If a single column of the index is marked as non-unique, than the entire index will be non-unique. */
-    String[] uniqueIndex() default Table.NULL;
+    String[] uniqueIndex() default UTable.NULL;
     /** A name of the constraint for the case a foreign key */
-    String constraintName() default Table.NULL;
+    String constraintName() default UTable.NULL;
 
 }
