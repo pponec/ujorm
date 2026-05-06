@@ -11,7 +11,7 @@ import org.ujorm.core.criterion.TemplateValue;
 import org.ujorm.core.criterion.ValueCriterion;
 import org.ujorm.orm.model.QuotePair;
 import org.ujorm.orm.dsl.meta.*;
-import org.ujorm.orm.utils.Lines;
+import org.ujorm.tools.Lines;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.ujorm.core.composed.ComposedKeyImpl.EMPTY_KEY;
 

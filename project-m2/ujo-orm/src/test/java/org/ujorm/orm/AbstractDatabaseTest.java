@@ -3,7 +3,7 @@ package org.ujorm.orm;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.TestInstance;
-import org.ujorm.orm.utils.Lines;
+import org.ujorm.tools.Lines;
 
 import java.sql.Connection;
 import java.sql.DriverManager;

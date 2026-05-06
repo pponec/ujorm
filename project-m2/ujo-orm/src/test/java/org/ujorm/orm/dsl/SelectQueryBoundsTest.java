@@ -7,7 +7,7 @@ import org.ujorm.core.criterion.Criterion;
 import org.ujorm.core.criterion.Operator;
 import org.ujorm.orm.dsl.meta.QCity;
 import org.ujorm.orm.dsl.meta.QEmployee;
-import org.ujorm.orm.utils.Lines;
+import org.ujorm.tools.Lines;
 import static org.junit.jupiter.api.Assertions.*;
 
 class SelectQueryBoundsTest {

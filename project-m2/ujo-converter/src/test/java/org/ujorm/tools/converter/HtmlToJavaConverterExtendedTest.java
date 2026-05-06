@@ -1,6 +1,8 @@
 package org.ujorm.tools.converter;
 
 import org.junit.jupiter.api.Test;
+import org.ujorm.tools.Lines;
+
 import java.io.IOException;
 import static org.junit.jupiter.api.Assertions.*;
 

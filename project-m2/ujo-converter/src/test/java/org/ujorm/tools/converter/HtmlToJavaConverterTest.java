@@ -3,6 +3,7 @@ package org.ujorm.tools.converter;
 import org.jsoup.Jsoup;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.ujorm.tools.Lines;
 
 import javax.tools.*;
 import java.io.ByteArrayOutputStream;

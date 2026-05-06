@@ -5,7 +5,7 @@
 > *"Do the simplest thing that could possibly work."*
 — Kent Beck, creator of Extreme Programming and pioneer of Test-Driven Development.
 
-Ujorm3 is a lightweight Object-Relational Mapping (ORM) library designed for efficient relational database development with minimalist code and a straightforward API.
+Ujorm3 is a lightweight object-relational mapping (ORM) library designed for efficient relational database development with minimalist code and a straightforward API.
 The library maps database rows to standard Java objects using clean SQL without unnecessary abstraction.
 It supports mapping to both mutable JavaBeans and immutable Records, including M:1 relations.
 
@@ -17,7 +17,7 @@ Consequently, the overhead of Java reflection is strictly limited to the initial
 ### Design Philosophy
 
 To maintain a high utility-to-code ratio and minimize bugs, Ujorm3 intentionally limits its scope:
-* **No Lazy-Loading:** Relationships are not lazily fetched to prevent hidden performance costs and the N+1 query problem.
+* **No Lazy Loading:** Relationships are not lazily fetched to prevent hidden performance costs and the N+1 query problem.
 * **M:1 Relations Only:** Collection attributes (1:M) are not supported.
   Query from the "many" side or use a secondary SQL query instead.
 * **No Magic / No Stateful Lifecycle:** The library does not manage database transactions or entity caching.
@@ -55,7 +55,7 @@ Detailed results and methodology are available in the [Benchmarks](#benchmarks) 
 
 ## Quick Start (TL;DR)
 
-Ujorm3 provides a specialized toolset for different levels of complexity. Choose the one that best fits your immediate task:
+Ujorm3 provides a specialized toolset for different levels of complexity. Choose the one that best fits your current task:
 
 ### 1. EntityManager (Simple CRUD by ID)
 The fastest way to handle single-table operations by primary key. It requires no SQL writing and supports standard Jakarta annotations.
@@ -111,7 +111,7 @@ List<Employee> findEmployees(Connection connection) {
 
 ## Detailed Operations & Relations
 
-While the Quick Start covers basics, real-world development involves complex relationships and batch processing.
+While the Quick Start covers the basics, real-world development involves complex relationships and batch processing.
 
 ### SELECT: Joins and Advanced Filtering
 
@@ -192,8 +192,14 @@ void delete(Connection connection) {
 
 ### All Examples
 
-These snippets are extracted from a sequential JUnit test suite demonstrating the full entity lifecycle.
-You can run and modify this test locally: [TutorialTest.java](project-m2/ujo-orm/src/test/java/org/ujorm/orm/tutorial/TutorialTest.java).
+These snippets are extracted from sequential JUnit test suites demonstrating the full entity lifecycle.
+You can run and modify these tests locally:
+[TutorialTest.java](project-m2/ujo-orm/src/test/java/org/ujorm/orm/tutorial/TutorialTest.java)
+and
+[AdvancedTutorialTest.java](project-m2/ujo-orm/src/test/java/org/ujorm/orm/tutorial/AdvancedTutorialTest.java),
+plus the
+[PATTERNS.md](project-m2/ujo-orm/src/test/java/org/ujorm/orm/tutorial/PATTERNS.md)
+index for quick pattern lookup.
 
 ## Class Diagram
 
@@ -227,7 +233,7 @@ Metadata is cached to maximize speed:
 
 ## Generated Meta Models
 
-The Ujorm3 Annotation Processor generates `Meta` classes at compile time for type safety without string literals.
+The Ujorm3 annotation processor generates `Meta` classes at compile time for type safety without string literals.
 
 ```java
 /** Auto-generated metamodel for Employee */
@@ -280,7 +286,7 @@ Ujorm3 requires **Java 17 or higher**.
 </dependencies>
 ```
 
-To enable the Meta Processor, configure the `maven-compiler-plugin`.
+To enable the meta processor, configure the `maven-compiler-plugin`.
 The library includes automated integration tests for PostgreSQL, MySQL, MariaDB, Oracle, and MS SQL Server via Testcontainers.
 
 ---
@@ -294,7 +300,7 @@ The complete source code for these benchmarks is entirely open-source and fully 
 **Conclusions:**
 * **Execution Speed:** Ujorm3 consistently ranks among the top performers across the tested database operations.
 * **Memory Efficiency:** The library exhibits the lowest memory allocation rate (Bytes/op), reducing Garbage Collector pressure.
-* **Minimal Footprint:** Zero external dependencies and a total compiled size under 3 MB makes it ideal for microservices and embedded devices.
+* **Minimal Footprint:** Zero external dependencies and a total compiled size under 3 MB make it ideal for microservices and embedded devices.
 
 **Version tested:** `3.0.0-RC5`  
 **Full metrics:** 👉 [GitHub: orm-benchmarks](https://github.com/pponec/orm-benchmarks?tab=readme-ov-file#orm-benchmark)
@@ -329,11 +335,15 @@ The complete source code for these benchmarks is entirely open-source and fully 
   and no code performs binary modification of classes.
   The library has an extremely compact codebase and is completely independent of third-party libraries.
 
-* **How to teach an AI to use the Ujorm3 ORM library?**<br/>
-  For a quick understanding of the library, it is best to provide the AI directly with the source code of these two tutorial files (e.g., by copying the text or uploading files) so they are immediately available in its active context:
-  [TutorialTest.java](https://raw.githubusercontent.com/pponec/ujorm/refs/heads/ujorm3/project-m2/ujo-orm/src/test/java/org/ujorm/orm/tutorial/TutorialTest.java)
+* **How can I teach an AI to use the Ujorm3 ORM library?**<br/>
+  For a quick understanding of the library, it is best to provide the AI directly with the source code of these tutorial files (e.g., by copying the text or uploading files) so they are immediately available in its active context:
+  [TutorialTest.java](project-m2/ujo-orm/src/test/java/org/ujorm/orm/tutorial/TutorialTest.java)
   and
-  [QuickStartTutorialTest.java](https://raw.githubusercontent.com/pponec/ujorm/refs/heads/ujorm3/project-m2/ujo-orm/src/test/java/org/ujorm/orm/tutorial/QuickStartTutorialTest.java) .
+  [QuickStartTutorialTest.java](project-m2/ujo-orm/src/test/java/org/ujorm/orm/tutorial/QuickStartTutorialTest.java),
+  and
+  [AdvancedTutorialTest.java](project-m2/ujo-orm/src/test/java/org/ujorm/orm/tutorial/AdvancedTutorialTest.java),
+  plus the pattern index:
+  [PATTERNS.md](project-m2/ujo-orm/src/test/java/org/ujorm/orm/tutorial/PATTERNS.md).
 
 ---
 
@@ -349,5 +359,5 @@ Join the conversation or report issues on GitHub:
 * [Ujorm Main Project](https://github.com/pponec/ujorm)
 * [Petstore Demo](https://github.com/pponec/ujorm-petstore)
 * [ORM Benchmarks](https://github.com/pponec/ujorm/tree/ujorm3)
-* [Ujorm Element](README_ELEMENT.md) build web pages by the Element class.
+* [Ujorm Element](README_ELEMENT.md) builds web pages using the Element class.
 * [HTML Builder Benchmarks](https://github.com/pponec/html-benchmarks)

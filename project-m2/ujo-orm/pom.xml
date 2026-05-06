@@ -55,6 +55,13 @@
         </dependency>
         <dependency>
             <groupId>org.ujorm</groupId>
+            <artifactId>ujo-tools</artifactId>
+            <version>3.0.0-RC6</version>
+            <type>test-jar</type>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.ujorm</groupId>
             <artifactId>ujo-core</artifactId>
             <version>3.0.0-RC6</version>
         </dependency>
