@@ -59,7 +59,7 @@ class SelectQueryBuilderTest {
     @Test
     void testBasicSelectWithJoinsAndWhereExt() {
         var builder = getBuilder();
-        var metaBossName = QEmployee.as("bb").key(QEmployee.name);
+        var metaBossName = TableAlias.aliasedKey("bb", QEmployee.name);
 
         // 1. Column definition (generates base alias 'e' and joins 'c' for city, 'bb' for boss)
         builder.column(QEmployee.id);

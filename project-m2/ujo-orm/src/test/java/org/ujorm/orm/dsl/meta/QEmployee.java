@@ -17,10 +17,8 @@ public abstract class QEmployee {
     public static final Key<Employee, String> name = meta.getKey("name");
     public static final Key<Employee, City> city = meta.getKey("city");
     public static final Key<Employee, Employee> boss = meta.getKey("boss");
+    public static final Key<Employee, EmployeeState> stateOrdinal = meta.getKey("stateOrdinal");
+    public static final Key<Employee, EmployeeState> stateString = meta.getKey("stateString");
 
-    /** Creates a table alias for the Employee entity */
-    public static TableAlias<Employee> as(String alias) {
-        return new TableAlias<>(alias, Employee.class);
-    }
 }
 

@@ -27,7 +27,7 @@ class SelectQueryDemoTest {
                 .where(QEmployee.id.whereGt(1L))
                 .tail("ORDER BY", QEmployee.id, "DESC" );
 
-        var bossAlias = QEmployee.as("b");
+        var bossAlias = TableAlias.of(Employee.class, "b");
         var emplId2 = bossAlias.key(QEmployee.id);
         var tableAlias = emplId2.tableAlias();
 
@@ -35,7 +35,7 @@ class SelectQueryDemoTest {
 
         //---
 
-        var bossNameKey = QEmployee.as("b").key(QEmployee.name);
+        var bossNameKey = TableAlias.aliasedKey("b", QEmployee.name);
 
         var crn1 = QEmployee.name.whereEq("Joe");
         var crn2 = QCity.name.whereEq("Prague");
@@ -51,13 +51,12 @@ class SelectQueryDemoTest {
 
     /** @Test  : Only demo */
     void count() {
-
-        var select = new SelectQuery<Employee>(connection(), employeeEm);
+        var select = new SelectQuery<>(connection(), employeeEm);
         select.sql("SELECT COUNT(*)")
                 .where(QEmployee.id.whereGt(1L))
                 .tail("ORDER BY", QEmployee.id, "DESC" );
 
-        var bossAlias = QEmployee.as("b");
+        var bossAlias = TableAlias.of(Employee.class, "b");
         var emplId2 = bossAlias.key(QEmployee.id);
         var tableAlias = emplId2.tableAlias();
 

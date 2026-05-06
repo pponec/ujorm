@@ -43,7 +43,7 @@ public record TableAlias<T> (
     /**
      * Factory method for TableAlias
      * @param domainClass Domain class
-     * @param alias Table alias
+     * @param alias Database table alias
      * @return A new instance of TableAlias
      */
     public static <T> TableAlias<T> of(@NotNull Class<T> domainClass, @NotNull String alias) {

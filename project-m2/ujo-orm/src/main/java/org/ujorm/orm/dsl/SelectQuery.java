@@ -341,15 +341,40 @@ public class SelectQuery<D> extends AbstractSqlQuery<SelectQuery<D>> {
                     var placeholder = nextPlaceholder(alias, key);
                     writeColumnName(alias, key, EMPTY_KEY);
                     writer.append(' ').append(operator.term()).append(" (:").append(placeholder).append(')');
-                    bindObject(true, placeholder, jdbcType, Array.ofObject(value));
+                    var values = Array.ofObject(value);
+                    bindObject(true, placeholder, jdbcType, key.type().isEnum()
+                            ? mapEnumArrayToDbValues(values, key)
+                            : values);
                 }
                 default -> {
                     var placeholder = nextPlaceholder(alias, key);
                     writeColumnName(alias, key, EMPTY_KEY);
                     writer.append(' ').append(operator.term()).append(" :").append(placeholder);
-                    bindObject(true, placeholder, jdbcType, Array.ofObject(value));
+                    var values = Array.ofObject(value);
+                    bindObject(true, placeholder, jdbcType, key.type().isEnum()
+                            ? mapEnumArrayToDbValues(values, key)
+                            : values);
                 }
             }
+        }
+
+        /** Maps enum criterion values to DB representation (ordinal/name). */
+        private Array<Object> mapEnumArrayToDbValues(Array<?> values, Key<?, ?> key) {
+            final var converted = new Object[values.size()];
+            final var mapByOrdinal = key.info().mapEnumByOrdinal();
+            for (int i = 0; i < values.size(); i++) {
+                converted[i] = mapEnumValueToDb(values.get(i), mapByOrdinal);
+            }
+            return Array.of(converted);
+        }
+
+        /** Maps a single enum value to DB representation according to enum mapping. */
+        private Object mapEnumValueToDb(Object value, boolean mapByOrdinal) {
+            if (value == null) {
+                return value;
+            }
+            final var enumValue = (Enum<?>) value;
+            return mapByOrdinal ? enumValue.ordinal() : enumValue.name();
         }
 
         /** Format custom SQL templates with named parameters */
@@ -367,7 +392,10 @@ public class SelectQuery<D> extends AbstractSqlQuery<SelectQuery<D>> {
                         } else {
                             var placeholder = nextPlaceholder(alias, key);
                             writer.append(':').append(placeholder);
-                            bindObject(true, placeholder, jdbcType, templateValue.valuesNonNull());
+                            var values = templateValue.valuesNonNull();
+                            bindObject(true, placeholder, jdbcType, key.type().isEnum()
+                                    ? mapEnumArrayToDbValues(values, key)
+                                    : values);
                         }
                         i += 3;
                         last = i;

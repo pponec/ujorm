@@ -229,6 +229,37 @@ class TutorialTest extends AbstractDemo {
         assertNull(employeeCrud.findByIdNullable(2L).getBoss());
     }
 
+    /** Demonstrates enum persistence using ORDINAL mapping (ACTIVE=0, INACTIVE=1). */
+    @Test
+    @Order(310)
+    void update_state_enum() {
+        var employeeCrud = EMPLOYEE_EM.crud(connection());
+        var activeEmployee = SelectQuery.run(connection(), EMPLOYEE_EM, query -> query
+                .columns(true)
+                .where(MetaEmployee.state.whereEq(EmployeeState.ACTIVE))
+                .tail("ORDER BY", MetaEmployee.id)
+                .findFirst()
+                .orElseThrow());
+
+        activeEmployee.setState(EmployeeState.INACTIVE);
+        employeeCrud.update(activeEmployee, MetaEmployee.state);
+
+        var reloaded = employeeCrud.findById(activeEmployee.getId()).orElseThrow();
+        assertEquals(EmployeeState.INACTIVE, reloaded.getState());
+
+        var inactiveCount = SqlQuery.run(connection(), query -> query
+                .sql("""
+                        SELECT COUNT(*)
+                        FROM employee
+                        WHERE state = :state
+                        """)
+                .bind("state", MetaEmployee.state, EmployeeState.INACTIVE)
+                .toStream(rs -> rs.getInt(1))
+                .findFirst()
+                .orElseThrow());
+        assertEquals(1, inactiveCount);
+    }
+
     /** Handles batch deletion with specialized filtering and ordering for related entities. */
     @Test
     @Order(400)
@@ -273,6 +304,7 @@ class TutorialTest extends AbstractDemo {
                     , name VARCHAR(50) NOT NULL
                     , boss_id BIGINT NULL
                     , city_id BIGINT NOT NULL
+                    , state SMALLINT NOT NULL DEFAULT 0
                     )
                     """).execute();
             query.sql("""

@@ -22,12 +22,17 @@ public class Employee {
     @JoinColumn(name = "boss_id")
     private Employee boss;
 
+    @Column(nullable = false)
+    @Enumerated(EnumType.ORDINAL)
+    private EmployeeState state = EmployeeState.ACTIVE;
+
     /** Create new instance without ID */
     public static Employee of(String name, City city, @Nullable Employee boss) {
         var result = new Employee();
         result.setName(name);
         result.setCity(city);
         result.setBoss(boss);
+        result.setState(EmployeeState.ACTIVE);
         return result;
     }
 

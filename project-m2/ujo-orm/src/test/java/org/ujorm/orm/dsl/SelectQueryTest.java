@@ -11,6 +11,7 @@ import java.sql.Connection;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /** DslQuery test class with shared connection */
 class SelectQueryTest extends AbstractDatabaseTest {
@@ -20,6 +21,7 @@ class SelectQueryTest extends AbstractDatabaseTest {
 
     private final EntityContext ctx = EntityContext.ofDefault();
     private final EntityManager<Employee, Long> entityManager = ctx.entityManager(Employee.class);
+    private final EntityManager<City, Long> cityManager = ctx.entityManager(City.class);
     private final ResultSetMapper<Employee> employeeMapper = ResultSetMapper.of(Employee.class);
 
     @Test
@@ -81,7 +83,7 @@ class SelectQueryTest extends AbstractDatabaseTest {
     void testUpdate() {
         if (DSL_SELECT_ONLY) return;
 
-        var employeeTable = QEmployee.as("emp");
+        var employeeTable = TableAlias.of(Employee.class, "emp");
         try (var query = new SelectQuery<>(connection(), entityManager)) {
             query.sql("UPDATE", employeeTable,
                             "SET", employeeTable.key(QEmployee.name), "= :name")
@@ -100,6 +102,54 @@ class SelectQueryTest extends AbstractDatabaseTest {
             // Execute the query:
             var count = query.execute();
             assertEquals(0, count);
+        }
+    }
+
+    @Test
+    void testEnumWhereEqForBothMappings() {
+        var city = cityManager.crud(connection()).insert(new City(null, "Prague", "CZ"));
+        var employee = Employee.of("Joe", city, null);
+        employee.setStateOrdinal(EmployeeState.INACTIVE);
+        employee.setStateString(EmployeeState.INACTIVE);
+        entityManager.crud(connection()).insert(employee);
+
+        try (var query = new SelectQuery<>(connection(), entityManager)) {
+            var employees = query.sql("SELECT")
+                    .column(QEmployee.id)
+                    .column(QEmployee.name)
+                    .where(QEmployee.stateOrdinal.whereEq(EmployeeState.INACTIVE)
+                            .and(QEmployee.stateString.whereEq(EmployeeState.INACTIVE)))
+                    .toList();
+
+            var sqlWithValues = query.toString();
+            assertEquals(1, employees.size());
+            assertTrue(sqlWithValues.contains("[1]"), sqlWithValues);
+            assertTrue(sqlWithValues.contains("[INACTIVE]"), sqlWithValues);
+        }
+    }
+
+    @Test
+    void testEnumWhereInForBothMappings() {
+        var city = cityManager.crud(connection()).insert(new City(null, "London", "UK"));
+        var employee = Employee.of("Bob", city, null);
+        employee.setStateOrdinal(EmployeeState.ACTIVE);
+        employee.setStateString(EmployeeState.ACTIVE);
+        entityManager.crud(connection()).insert(employee);
+
+        try (var query = new SelectQuery<>(connection(), entityManager)) {
+            var employees = query.sql("SELECT")
+                    .column(QEmployee.id)
+                    .column(QEmployee.name)
+                    .where(QEmployee.stateOrdinal.whereIn(EmployeeState.ACTIVE, EmployeeState.INACTIVE)
+                            .and(QEmployee.stateString.whereIn(EmployeeState.ACTIVE, EmployeeState.INACTIVE)))
+                    .toList();
+
+            var sqlWithValues = query.toString();
+            assertEquals(1, employees.size());
+            assertTrue(sqlWithValues.contains("[0]"), sqlWithValues);
+            assertTrue(sqlWithValues.contains("[1]"), sqlWithValues);
+            assertTrue(sqlWithValues.contains("[ACTIVE]"), sqlWithValues);
+            assertTrue(sqlWithValues.contains("[INACTIVE]"), sqlWithValues);
         }
     }
 
@@ -158,6 +208,8 @@ class SelectQueryTest extends AbstractDatabaseTest {
                     , name VARCHAR(50) NOT NULL
                     , boss_id BIGINT NULL
                     , city_id BIGINT NOT NULL
+                    , state_ordinal SMALLINT NOT NULL
+                    , state_string VARCHAR(16) NOT NULL
                     )
                     """).execute();
             query.sql("""
