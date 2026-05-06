@@ -102,6 +102,28 @@ public class Config {
      */
     public static final Key<Boolean> logConfigValues = meta.key("logConfigValues", true);
 
+
+    /**
+     * Enables multi-tenant routing for a shared {@link org.ujorm.orm.core.EntityManager}: one instance
+     * may be used with {@link java.sql.Connection}s that resolve to a different
+     * {@link org.ujorm.orm.model.TableModel} (e.g. another JDBC schema, catalog, or database product context).
+     * The ORM refreshes the cached model when the connection metadata implies a different tenant context.
+     * <p>
+     * Typical deployments:
+     * <ul>
+     *   <li><b>Tenant per schema</b> — each tenant uses its own schema on the same server; connections differ by {@code schema}.</li>
+     *   <li><b>Tenant per database</b> — each tenant has its own database or catalog; connections differ by catalog/url.</li>
+     *   <li>Mixed usage is allowed; isolation is driven by how {@link org.ujorm.orm.core.TableModelService}
+     *       builds its cache key from connection metadata.</li>
+     * </ul>
+     * The default is {@code false}. When {@code false}, reusing one {@code EntityManager} with another
+     * resolved table model triggers {@link IllegalStateException}.
+     *
+     * @see #tenantPerDatabaseSchema()
+     * @see org.ujorm.orm.core.EntityManager
+     */
+    public static final Key<Boolean> tenantPerDatabaseSchema = meta.key("tenantPerDatabaseSchema", false);
+
     // --- End of the list ---
 
     /** A technical parameter for the jUnit test only. The default value is an empty string. */
@@ -155,6 +177,9 @@ public class Config {
     public boolean isEnableSqlQuoting() { return enableSqlQuoting.getValue(values); }
     public String getQuotePair() { return quotePair.getValue(values); }
     public boolean logConfigValues() { return logConfigValues.getValue(values); }
+
+    /** @see #tenantPerDatabaseSchema */
+    public boolean tenantPerDatabaseSchema() { return tenantPerDatabaseSchema.getValue(values); }
     /** @deprecated For jUnit test only */
     @Deprecated
     String _testOnly() { return testOnly.getValue(values); }

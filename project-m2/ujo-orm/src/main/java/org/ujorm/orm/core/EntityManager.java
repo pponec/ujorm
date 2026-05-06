@@ -49,10 +49,14 @@ import java.util.stream.Stream;
  * It is highly recommended to call the {@link #crud(Connection)} method as part
  * of the class initialization to pre-build the internal table model safely.
  * <p>
- * <strong>DB context awareness:</strong> The manager can be reused with different JDBC
- * connections (e.g. different schema/catalog/vendor). The internal table model and qualified
- * table name are automatically refreshed when the effective DB context changes, based on
- * connection metadata (catalog, schema, product name and identifier quote).
+ * <strong>DB context and reuse:</strong> By default, this instance is tied to a single resolved
+ * database context after the first {@link #crud(Connection)} or {@link #qualifiedTableName(Connection)}
+ * call. Passing a {@link Connection} that resolves to a different {@link org.ujorm.orm.model.TableModel}
+ * (e.g. another schema or database) causes {@link IllegalStateException}.
+ * <p>
+ * To reuse one {@code EntityManager} across tenants (per-schema, per-database/catalog, or both),
+ * set {@link Config#tenantPerDatabaseSchema()} to {@code true}. Then the internal table model and
+ * qualified table name are refreshed when the connection implies a different cached model.
  *
  * @param <D> Domain class
  * @param <V> Primary key class
@@ -136,7 +140,7 @@ public final class EntityManager<D, V> {
         return resultSetMapper.mapper(columnLabels);
     }
 
-    /** Initializes TableModel if not already done. */
+    /** Initializes TableModel if not already done; optionally switches model for multi-tenant config. */
     private void initModel(@NotNull Connection connection) {
         final var expectedModel = tableModelService.getTableModel(getDomainClass(), connection);
         if (this._tableModel == null) {
@@ -151,11 +155,24 @@ public final class EntityManager<D, V> {
                             ));
                 }
             }
-        } else if (this._tableModel != expectedModel) {
-            var msg = ("The %s instance is already initialized for a different DB context. " +
-                    "Create a new EntityManager for each context.")
-                    .formatted(EntityManager.class.getSimpleName());
-            throw new IllegalStateException(msg);
+        }
+        if (this._tableModel != expectedModel) {
+            if (config.tenantPerDatabaseSchema()) {
+                synchronized (utilities) {
+                    if (_tableModel != expectedModel) {
+                        _tableModel = expectedModel;
+                        _qualifiedTableName = null;
+                        LOGGER.log(Level.FINE, () ->
+                                "Switched %s for %s to match current DB context (tenant mode)."
+                                        .formatted(TableModel.class.getSimpleName(), getDomainClass().getSimpleName()));
+                    }
+                }
+            } else {
+                var msg = ("The %s instance is already initialized for a different DB context. " +
+                        "Create a new EntityManager for each context, or enable Config.tenantPerDatabaseSchema.")
+                        .formatted(EntityManager.class.getSimpleName());
+                throw new IllegalStateException(msg);
+            }
         }
     }
 
