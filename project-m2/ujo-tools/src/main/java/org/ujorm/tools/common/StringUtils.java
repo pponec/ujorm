@@ -275,4 +275,18 @@ public class StringUtils {
         symbols.setGroupingSeparator(NARROW_NBSP);
         return new DecimalFormat(pattern, symbols);
     }
+
+    /**
+     * Returns the given text value, or an empty string when the value is {@code null}.
+     *
+     * <p>Use this helper when the application prefers empty text over SQL/Java {@code null}
+     * for optional textual fields.
+     *
+     * @param value text value that may be {@code null}
+     * @return {@code value} when non-null; otherwise {@code ""}
+     */
+    @NotNull
+    public static String emptyIfNull(@Nullable String value) {
+        return value != null ? value : "";
+    }
 }
