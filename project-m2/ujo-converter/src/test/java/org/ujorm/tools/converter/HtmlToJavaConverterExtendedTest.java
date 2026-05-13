@@ -171,7 +171,7 @@ class HtmlToJavaConverterExtendedTest {
         var lines = Lines.ofQuoted(result);
 
         assertTrue(lines.findLine("body.addDiv(Css.head, Css.row)"));
-        assertTrue(lines.findLine("static final class Css {"));
+        assertTrue(lines.findLine("static abstract class Css {"));
         assertEquals("static final String head = 'head';", lines.next().trim());
         assertEquals("static final String row = 'row';", lines.next().trim());
     }
@@ -192,7 +192,7 @@ class HtmlToJavaConverterExtendedTest {
         assertTrue(lines.findLine("body.addDiv(Css.panel, Css.body, Css.row)"));
 
         // constants are created for each distinct CSS class
-        assertTrue(lines.findLine("static final class Css {"));
+        assertTrue(lines.findLine("static abstract class Css {"));
         assertEquals("static final String head = 'head';", lines.next().trim());
         assertEquals("static final String row = 'row';", lines.next().trim());
         assertEquals("static final String panel = 'panel';", lines.next().trim());

@@ -583,7 +583,7 @@ public final class HtmlToJavaConverter {
 
     private void writeCssClass(Map<String, String> cssConstants, Appendable writer) throws IOException {
         writer.append("\n\n")
-                .append("static final class Css {\n");
+                .append("static abstract class Css {\n");
         for (var item : cssConstants.entrySet()) {
             writer.append(OFFSET)
                     .append("static final String ")
@@ -592,10 +592,7 @@ public final class HtmlToJavaConverter {
                     .append(escapeJavaString(item.getKey()))
                     .append("\";\n");
         }
-        writer.append("\n")
-                .append(OFFSET)
-                .append("private Css() {}\n")
-                .append("}");
+        writer.append("}");
     }
 
     /** Helper record for the result of generating creation code. */
