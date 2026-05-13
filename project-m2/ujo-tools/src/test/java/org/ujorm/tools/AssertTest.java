@@ -19,7 +19,7 @@ class AssertTest {
     public void testDemo() {
         Assert.isTrue(true, () -> "TEST:%s%s".formatted("A", "B"));
         Assert.isTrue(10, (x) -> x < 20, () -> "Wrong No");
-        Assert.notNull("ABC", null);
+        Assert.notNull("ABC", (String) null);
         Assert.hasLength("ABC", null);
 
         assertTrue(Assert.isPresented("A", TEST_MESSAGE).isPresent());

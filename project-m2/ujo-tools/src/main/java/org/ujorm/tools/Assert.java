@@ -17,6 +17,7 @@ package org.ujorm.tools;
 
 import java.util.Collection;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
@@ -135,6 +136,18 @@ public abstract class Assert {
             throw new IllegalArgumentException(getMessage(message));
         }
         return value;
+    }
+
+
+    /**
+     * Checks if the argument is not {@code null}.
+     * @return The original value
+     * @deprecated Use the method {@link Objects#requireNonNull(Object, String)} rather.
+     */
+    @Deprecated
+    @NotNull
+    public static <V> V notNull(@Nullable final V value, String message) {
+        return Objects.requireNonNull(value, message);
     }
 
     /**
