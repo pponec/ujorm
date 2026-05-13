@@ -20,9 +20,10 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.ujorm.tools.jdbc.SqlBuilder;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
+import java.math.BigDecimal;
+import java.sql.*;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.stream.Stream;
 
 /**
@@ -52,6 +53,94 @@ public class SqlParamBuilder extends SqlBuilder {
     @NotNull
     public <R> Stream<R> generatedKeys(SqlFunction<ResultSet, ? extends R> mapper) {
         return getGeneratedKeys(mapper);
+    }
+
+    /** Sets a new SQL template and resets current parameters. Any existing resources are closed. */
+    public SqlParamBuilder sql(@NotNull CharSequence... sqlLines) {
+        return (SqlParamBuilder) super.sql(sqlLines);
+    }
+
+    // --- BINDS ---
+
+
+    public SqlParamBuilder bind(@NotNull final String key, final Boolean... values) {
+        return (SqlParamBuilder) super.bind(key, values);
+    }
+
+    public SqlParamBuilder bind(final boolean enabled, @NotNull final String key, final Boolean... values) {
+        return (SqlParamBuilder) super.bind(enabled, key, values);
+    }
+
+    /** Bind Bytes */
+    public SqlParamBuilder bind(@NotNull final String key, final Byte... values) {
+        return (SqlParamBuilder) super.bind(key, values);
+    }
+
+    public SqlParamBuilder bind(final boolean enabled, @NotNull final String key, final Byte... values) {
+        return (SqlParamBuilder) super.bind(enabled, key, values);
+    }
+
+    /** Bind Shorts */
+    public SqlParamBuilder bind(@NotNull final String key, final Short... values) {
+        return (SqlParamBuilder) super.bind(key, values);
+    }
+
+    public SqlParamBuilder bind(final boolean enabled, @NotNull final String key, final Short... values) {
+        return (SqlParamBuilder) super.bind(enabled, key, values);
+    }
+
+    /** Bind Integers */
+    public SqlParamBuilder bind(@NotNull final String key, final Integer... values) {
+        return (SqlParamBuilder) super.bind(key, values);
+    }
+
+    public SqlParamBuilder bind(final boolean enabled, @NotNull final String key, final Integer... values) {
+        return (SqlParamBuilder) super.bind(enabled, key, values);
+    }
+
+    /** Bind Longs */
+    public SqlParamBuilder bind(@NotNull final String key, final Long... values) {
+        return (SqlParamBuilder) super.bind(key, values);
+    }
+
+    public SqlParamBuilder bind(final boolean enabled, @NotNull final String key, final Long... values) {
+        return (SqlParamBuilder) super.bind(enabled, key, values);
+    }
+
+    /** Bind BigDecimal */
+    public SqlParamBuilder bind(@NotNull final String key, final BigDecimal... values) {
+        return (SqlParamBuilder) super.bind(key, values);
+    }
+
+    public SqlParamBuilder bind(final boolean enabled, @NotNull final String key, final BigDecimal... values) {
+        return (SqlParamBuilder) super.bind(enabled, key, values);
+    }
+
+    /** Bind String */
+    public SqlParamBuilder bind(@NotNull final String key, final String... values) {
+        return (SqlParamBuilder) super.bind(key, values);
+    }
+
+    public SqlParamBuilder bind(final boolean enabled, @NotNull final String key, final String... values) {
+        return (SqlParamBuilder) super.bind(enabled, key, values);
+    }
+
+    /** Bind LocalDates */
+    public SqlParamBuilder bind(@NotNull final String key, final LocalDate... values) {
+        return (SqlParamBuilder) super.bind(true, key, values);
+    }
+
+    public SqlParamBuilder bind(final boolean enabled, @NotNull final String key, final LocalDate... values) {
+        return (SqlParamBuilder) super.bind(enabled, key, values);
+    }
+
+    /** Bind LocalDateTimes */
+    public SqlParamBuilder bind(@NotNull final String key, final LocalDateTime... values) {
+        return (SqlParamBuilder) super.bind(key, values);
+    }
+
+    public SqlParamBuilder bind(final boolean enabled, @NotNull final String key, final LocalDateTime... values) {
+        return (SqlParamBuilder) super.bind(enabled, key, values);
     }
 
 }
