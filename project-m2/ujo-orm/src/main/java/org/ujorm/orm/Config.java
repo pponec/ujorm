@@ -35,6 +35,29 @@ import java.util.logging.Level;
  * It is highly recommended to <b>lock</b> the configuration instance using the {@link #lock()} method
  * before passing it to the ORM engine or using it in a multi-threaded environment.
  * Once locked, the configuration becomes immutable, ensuring consistency and thread safety.
+ *
+ * <h3>SQL statement logging</h3>
+ *
+ * <p>
+ * Generated SQL is optionally written through {@code java.util.logging} (JUL).
+ * Use {@link #logSqlLevel} to choose the severity of each log record (for example
+ * {@link java.util.logging.Level#INFO} for console-friendly output, or {@link java.util.logging.Level#FINE}
+ * for quieter diagnostics) and {@link #logSqlParams} to include bound parameter values in the message
+ * instead of placeholder marks only.
+ * Set {@link #logSqlLevel} to {@link java.util.logging.Level#OFF} to disable SQL logging from the ORM side.
+ * These keys follow the same priority order as the rest of this class: explicit {@link #setValue(Key, Object)},
+ * JVM system properties ({@code -Dorg.ujorm.logSqlLevel=INFO}, {@code -Dorg.ujorm.logSqlParams=true}),
+ * {@code ujorm-config.properties}, then built-in defaults.
+ * </p>
+ * <p>
+ * For a fixed {@code INFO} preset, you can use {@link #ofSqlInfoWithParams(boolean)} or
+ * {@link org.ujorm.orm.utils.EntityContext#ofSqlInfoWithParams(boolean)} when building the context.
+ * </p>
+ * <p>
+ * Even when the ORM emits a log record, it appears only if JUL accepts that severity: statements routed
+ * through {@link org.ujorm.orm.core.EntityManager} or {@link org.ujorm.tools.jdbc.AbstractSqlQuery} require
+ * matching logger and handler levels (for example in {@code logging.properties}) at or below {@link #logSqlLevel}.
+ * </p>
  */
 @Log
 public class Config {
