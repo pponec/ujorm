@@ -10,6 +10,7 @@ import org.ujorm.orm.core.EntityManager;
 import org.ujorm.orm.dsl.SelectQuery;
 import org.ujorm.orm.tutorial.domains.City;
 import org.ujorm.orm.tutorial.domains.Employee;
+import org.ujorm.orm.tutorial.domains.EmployeeState;
 import org.ujorm.orm.tutorial.domains.MetaCity;
 import org.ujorm.orm.tutorial.domains.MetaEmployee;
 import org.ujorm.orm.utils.EntityContext;
@@ -214,6 +215,37 @@ public abstract class AbstractTutorialIT {
                 MetaEmployee.boss);
 
         assertNull(employeeCrud.findByIdNullable(2L).getBoss());
+    }
+
+    /** Enum column: SELECT by criterion, partial UPDATE, reload, raw SQL bind (regression for multi-DB JDBC types). */
+    @Test
+    @Order(310)
+    void update_state_enum() {
+        var employeeCrud = employeeEm.crud(connection());
+        var activeEmployee = SelectQuery.run(connection(), employeeEm, query -> query
+                .columns(true)
+                .where(MetaEmployee.state.whereEq(EmployeeState.ACTIVE))
+                .tail("ORDER BY", MetaEmployee.id)
+                .findFirst()
+                .orElseThrow());
+
+        activeEmployee.setState(EmployeeState.INACTIVE);
+        employeeCrud.update(activeEmployee, MetaEmployee.state);
+
+        var reloaded = employeeCrud.findById(activeEmployee.getId()).orElseThrow();
+        assertEquals(EmployeeState.INACTIVE, reloaded.getState());
+
+        var inactiveCount = SqlQuery.run(connection(), query -> query
+                .sql("""
+                        SELECT COUNT(*)
+                        FROM employee
+                        WHERE state = :state
+                        """)
+                .bind("state", MetaEmployee.state, EmployeeState.INACTIVE)
+                .toStream(rs -> rs.getInt(1))
+                .findFirst()
+                .orElseThrow());
+        assertEquals(1, inactiveCount);
     }
 
     /** Note the returned row count at the end of the method. */
