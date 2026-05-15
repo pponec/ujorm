@@ -12,7 +12,7 @@ To maintain high performance and code clarity, Ujorm Element follows these core 
 
 ---
 
-## Menu
+## Table of Contents
 * [Quick Start (TL;DR)](#quick-start-tldr)
 * [Core Components](#core-components)
 * [AJAX Workflow](#ajax-workflow)
@@ -68,9 +68,16 @@ The library includes a `JavaScriptWriter` that attaches lightweight AJAX behavio
 4. **DOM Update:** The client-side script receives the JSON and updates the specified DOM elements without a full page reload.
 
 ```java
-/** AJAX POST Example */
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import org.ujorm.tools.web.json.JsonBuilder;
+import org.ujorm.tools.web.request.HttpContext;
+
+import java.io.IOException;
+
+/** AJAX POST Example (Jakarta Servlet) */
 protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    var ctx = ExchangeContext.of(request, response);
+    var ctx = HttpContext.of(request, response);
     if (ctx.parameter("_ajax", Boolean::parseBoolean, false)) {
         try (var json = JsonBuilder.of(ctx)) {
             // Replace the content of elements with class "ajax-output"

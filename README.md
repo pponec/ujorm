@@ -17,7 +17,7 @@ Consequently, the overhead of Java reflection is strictly limited to the initial
 ### Design Philosophy
 
 To maintain a high utility-to-code ratio and minimize bugs, Ujorm3 intentionally limits its scope:
-* **No Lazy Loading:** Relationships are not lazily fetched to prevent hidden performance costs and the N+1 query problem.
+* **No Lazy Loading:** Relationships are not lazily fetched to avoid hidden database round-trips typical of transparent lazy loading. You still need explicit fetches or batch queries where you would otherwise load related data in a loop (an N+1 pattern).
 * **M:1 Relations Only:** Collection attributes (1:M) are not supported.
   Query from the "many" side or use a secondary SQL query instead.
 * **No Magic / No Stateful Lifecycle:** The library does not manage database transactions or entity caching.
@@ -34,7 +34,7 @@ Detailed results and methodology are available in the [Benchmarks](#benchmarks) 
 
 ---
 
-## Menu
+## Table of Contents
 * [Quick Start (TL;DR)](#quick-start-tldr)
 * [Detailed Operations & Relations](#detailed-operations--relations)
     * [SELECT](#select-joins-and-advanced-filtering)
@@ -192,7 +192,7 @@ void delete(Connection connection) {
 
 ### All Examples
 
-These snippets are extracted from sequential JUnit test suites demonstrating the full entity lifecycle.
+These snippets are extracted from the JUnit tutorial tests demonstrating the full entity lifecycle.
 You can run and modify these tests locally:
 [TutorialTest.java](project-m2/ujo-orm/src/test/java/org/ujorm/orm/tutorial/TutorialTest.java)
 and
@@ -280,7 +280,7 @@ Ujorm3 requires **Java 17 or higher**.
     </dependency>
     <dependency>
         <groupId>org.ujorm</groupId>
-        <artifactId>ujorm-orm</artifactId>
+        <artifactId>ujo-orm</artifactId>
         <version>3.0.0-RC5</version>
     </dependency>
 </dependencies>
@@ -310,7 +310,7 @@ The complete source code for these benchmarks is entirely open-source and fully 
 ## FAQ
 
 * **Do domain objects need to implement `Serializable`?**<br/>
-  No, Ujorm3 works with stateless data structures and the `Serializable` is not required.
+  No, Ujorm3 works with stateless data structures and `Serializable` is not required.
 
 * **Is `@JoinColumn` required?**<br/>
   No, it is optional.
@@ -322,8 +322,8 @@ The complete source code for these benchmarks is entirely open-source and fully 
 
 * **Does Ujorm3 support native SQL queries?**<br/>
   Yes, for complex or database-specific queries you can use the `SqlQuery` class to execute native SQL.
-  This also lowers the barrier to entry: developers transitioning from JDBC/JDBI can start with plain SQL
-  and gradually adopt the type-safe `SelectQuery` class.
+  This also lowers the barrier to entry: developers transitioning from JDBC or Jdbi can start with plain SQL
+  and gradually adopt the type-safe `SelectQuery` API.
 
 * **Is runtime bytecode generation secure?**<br/>
   Yes. It relies purely on your project's domain classes with no external data input —
@@ -331,8 +331,8 @@ The complete source code for these benchmarks is entirely open-source and fully 
 
 * **Is the library difficult to maintain?**<br/>
   Easy maintenance was one of the main goals of the project.
-  The ORM library consists of a few well-defined components with clearly defined responsibilities,
-  and no code performs binary modification of classes.
+  The ORM library consists of a few well-defined components with clearly defined responsibilities.
+  It does not use Java agents or rewrite arbitrary application bytecode at runtime; mapping helpers are generated from your domain model.
   The library has an extremely compact codebase and is completely independent of third-party libraries.
 
 * **How can I teach an AI to use the Ujorm3 ORM library?**<br/>
