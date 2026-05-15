@@ -85,7 +85,7 @@ public class ReportBuilder<D> {
     /** Form injector */
     @NotNull
     protected Injector formAdditions = footer;
-    /** Javascript writer */
+    /** JavaScript injector for the page head (AJAX wiring, etc.) */
     @NotNull
     protected Supplier<Injector> javascritWriter = () -> new JavaScriptWriter()
             .setAjax(ReportBuilder.this.ajaxEnabled)
@@ -156,7 +156,7 @@ public class ReportBuilder<D> {
         return this;
     }
 
-    /** Add new column for a row counting */
+    /** Add a row-number column */
     @NotNull
     public ReportBuilder<D> addOrder(@NotNull final CharSequence title) {
         gridBuilder.addOrder(title);
@@ -168,7 +168,7 @@ public class ReportBuilder<D> {
         return gridBuilder.getColumn(index);
     }
 
-    /** Returns a count of columns */
+    /** Returns the number of columns */
     public int getColumnSize() {
         return gridBuilder.getColumnSize();
     }
@@ -204,7 +204,7 @@ public class ReportBuilder<D> {
         return this;
     }
 
-    /** Get sorted column or a stub if the sorted column is not found */
+    /** Get the sorted column model, or a stub if no column is sorted */
     @NotNull
     public ColumnModel<D,?> getSortedColumn() {
         return gridBuilder.getSortedColumn();
@@ -240,7 +240,7 @@ public class ReportBuilder<D> {
         return this;
     }
 
-    /** Enable of disable an AJAX feature, default value si {@code true} */
+    /** Enable or disable AJAX; default is {@code true} */
     public ReportBuilder<D> setAjaxEnabled(boolean ajaxEnabled) {
         this.ajaxEnabled = ajaxEnabled;
         return this;

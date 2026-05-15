@@ -150,7 +150,7 @@ public abstract class Criterion {
         return join(BinaryOperator.NOT, this);
     }
 
-    /** Print the Criterion including the main domain name along the example: Order(id EQ 1) */
+    /** Print the criterion including the domain name, as in: {@code Order(id EQ 1)} */
     @NotNull
     public String toStringFull() {
         var printer = new SimpleValuePrinter(128).append(getDomain().getSimpleName());
@@ -158,7 +158,7 @@ public abstract class Criterion {
     }
 
     /**
-     * Print the Criterion including the main domain name along the example: Order(id EQ 1)
+     * Print the criterion including the domain name, as in: {@code Order(id EQ 1)}
      * @param out Printer instance
      * @return Printer instance
      */

@@ -101,7 +101,7 @@ public class GridBuilder<D> {
         return addInternal(column, title, null);
     }
 
-    /** Add new column for a row counting */
+    /** Add a row-number column */
     @NotNull
     public GridBuilder<D> addOrder(@NotNull final CharSequence title) {
         final String textRight = "text-right";
@@ -132,7 +132,7 @@ public class GridBuilder<D> {
         return columns.get(index);
     }
 
-    /** Returns a count of columns */
+    /** Returns the number of columns */
     public int getColumnSize() {
         return columns.size();
     }
@@ -168,7 +168,7 @@ public class GridBuilder<D> {
         return this;
     }
 
-    /** Get sorted column or a stub if the sorted column was not found */
+    /** Get the sorted column model, or a stub if no column is sorted */
     @NotNull
     public ColumnModel<D,?> getSortedColumn() {
         return (sortedColumn >= 0 && sortedColumn < getColumnSize())
@@ -301,7 +301,7 @@ public class GridBuilder<D> {
         void write(Element rowElement, D row);
     }
 
-    /** Returns the true in case the table is sortable.
+    /** Returns {@code true} if the table has at least one sortable column.
      *
      * NOTE: Calculated result is cached, call the method on a final model only!
      */
@@ -312,7 +312,7 @@ public class GridBuilder<D> {
         return isSortable;
     }
 
-    /** Calculate if the table has an sortable column */
+    /** Returns whether the table has at least one sortable column */
     public boolean isSortableCalculated() {
         for (ColumnModel<D, ?> column : columns) {
             if (column.isSortable()) {

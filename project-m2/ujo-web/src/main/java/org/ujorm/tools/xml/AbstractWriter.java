@@ -58,11 +58,11 @@ public abstract class AbstractWriter {
     public static final char NARROW_NBSP = StringUtils.NARROW_NBSP;
     /** A forward slash character */
     public static final char FORWARD_SLASH = '/';
-    /** A CDATA beg markup sequence */
+    /** A CDATA section start sequence */
     public static final String CDATA_BEG = "<![CDATA[";
-    /** A CDATA end markup sequence */
+    /** A CDATA section end sequence */
     public static final String CDATA_END = "]]>";
-    /** A comment beg sequence */
+    /** XML comment start sequence (empty placeholder in this implementation) */
     public static final String COMMENT_BEG = "";
 
     /** Common formatter */

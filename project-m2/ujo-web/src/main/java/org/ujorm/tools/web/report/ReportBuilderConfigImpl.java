@@ -57,19 +57,19 @@ public class ReportBuilderConfigImpl<D> implements ReportBuilderConfig<D> {
     /** Link to CSS file */
     @NotNull
     private String cssLink;
-    /** Link to an external JavaScript library where no-library returns an empty String */
+    /** URL of an external JavaScript library; empty string when none is configured */
     @NotNull
     private String jqueryLink;
-    /** Iddle delay in millis */
+    /** Idle delay before AJAX auto-submit (milliseconds) */
     @NotNull
     private Duration idleDelay;
-    /** AJAX request param */
+    /** HTTP parameter that triggers an AJAX table refresh */
     @NotNull
     private HttpParameter ajaxRequestParam;
-    /** AJAX request param */
+    /** HTTP parameter carrying the requested sort column */
     @NotNull
     private HttpParameter sortRequestParam;
-    /** AJA ready param */
+    /** Message shown while AJAX content is loading */
     @NotNull
     private CharSequence ajaxReadyMessage = "AJAX ready";
     /** Form identifier */
@@ -99,7 +99,7 @@ public class ReportBuilderConfigImpl<D> implements ReportBuilderConfig<D> {
     /** Sortable column undefined CSS style */
     @NotNull
     private final CharSequence sortableBoth;
-    /** Use an external images for sortable icons */
+    /** When {@code true}, use embedded (packaged) sort icons; when {@code false}, reference icon URLs in CSS */
     private boolean embeddedIcons;
     /** Inline CSS writer */
     @Nullable
@@ -161,7 +161,7 @@ public class ReportBuilderConfigImpl<D> implements ReportBuilderConfig<D> {
         this.cssWriter = cssWriter;
     }
 
-    /** Returns a fist class of table element by defult */
+    /** Returns the first CSS class applied to the table element by default */
     @NotNull
     protected CharSequence getTableClassSelector() {
         return tableCssClass.isEmpty()
@@ -230,7 +230,7 @@ public class ReportBuilderConfigImpl<D> implements ReportBuilderConfig<D> {
         return this;
     }
 
-    /** Use an external images for sortable icons */
+    /** Sets whether embedded sort icons are used ({@code true}) or CSS background URLs ({@code false}). */
     public boolean setEmbeddedIcons(boolean embeddedIcons) {
         return this.embeddedIcons = embeddedIcons;
     }
@@ -249,7 +249,7 @@ public class ReportBuilderConfigImpl<D> implements ReportBuilderConfig<D> {
         return cssLink;
     }
 
-    /** Link to an external Javascript library */
+    /** URL of the external JavaScript library (often jQuery); empty when disabled */
     @Override
     @NotNull
     public String getJavascriptLink() {
@@ -338,15 +338,16 @@ public class ReportBuilderConfigImpl<D> implements ReportBuilderConfig<D> {
         return sortableBoth;
     }
 
-    /** Inline CSS writer where a default value is generated from the {@link #inlineCssWriter() } method.
-     * } */
+    /**
+     * Optional inline CSS writer; when unset, {@link #inlineCssWriter()} is used.
+     */
     @Override
     @NotNull
     public BiConsumer<Element, Boolean> getCssWriter() {
         return cssWriter != null ? cssWriter : inlineCssWriter();
     }
 
-    /** Use an external images for sortable icons */
+    /** {@inheritDoc} */
     public boolean isEmbeddedIcons() {
         return this.embeddedIcons;
     }
@@ -396,7 +397,7 @@ public class ReportBuilderConfigImpl<D> implements ReportBuilderConfig<D> {
         public static final String SUBTITLE_CSS = "subtitle";
         /** Table CSS classes */
         public static List<CharSequence> TABLE_CSS_CLASS = Arrays.asList("table", "table-striped", "table-bordered");
-        /** Key delay */
+        /** Default idle delay before AJAX actions */
         public static final Duration IDLE_DELAY = Duration.ofMillis(250);
     }
 }

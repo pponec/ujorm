@@ -122,7 +122,7 @@ public class ValueFormatter extends MsgFormatter {
         }
     }
 
-    /** Write bytes as hexa */
+    /** Write bytes as hexadecimal */
     protected void writeByteArray(@NotNull byte[] bytes, @NotNull final Appendable out) throws IOException {
         var length = bytes != null ? bytes.length : -1;
         var limit = getSizeLimit() >> 1;

@@ -287,12 +287,12 @@ public class MessageService {
 
     // ---------------- STATIC METHOD ----------------
 
-    /** Format a target message by a template with arguments */
+    /** Format a message from a template and a map of named arguments */
     public static final String formatMsg(@Nullable final String template, @Nullable final Map<String, Object> args) {
         return new MessageService().format(template, args);
     }
 
-    /** Format a target message by a template with arguments type of Map */
+    /** Format a message from a template, one key, and additional key-value pairs */
     public static final String formatMsg(
             @Nullable final String template,
             @NotNull final CharSequence key,
@@ -301,7 +301,7 @@ public class MessageService {
         return new MessageService().format(template, null, key, value, keyValuePairs);
     }
 
-    /** Format a target message by a template with arguments */
+    /** Format a message from a template and map, writing the result to {@code writer} */
     public static final void formatMsg(@Nullable final String template, @Nullable final Map<String, Object> args, @NotNull Appendable writer) {
         try {
             new MessageService().format(template, args, Locale.ENGLISH, writer);

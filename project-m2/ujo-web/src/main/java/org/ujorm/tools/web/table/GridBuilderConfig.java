@@ -52,7 +52,7 @@ public interface GridBuilderConfig<D> {
 
     @NotNull String getCssLink();
 
-    /** Link to an external Javascript library where a no-library returns an empty String */
+    /** URL of an external JavaScript library; empty string when none is configured */
     @NotNull String getJavascriptLink();
 
     @NotNull Duration getIdleDelay();
@@ -81,10 +81,10 @@ public interface GridBuilderConfig<D> {
 
     @NotNull CharSequence getSortableBoth();
 
-    /** Use inner icons for sortable images */
+    /** When {@code true}, use embedded sort icons; when {@code false}, use CSS background image URLs */
     boolean isEmbeddedIcons();
 
-    /** Inline CSS writer where the first method is an Element and the seconnd one is a sortable  */
+    /** Optional CSS injector: first argument is the target element, second is {@code true} when the grid is sortable */
     BiConsumer<Element, Boolean> getCssWriter();
 
     /** Get a CSS direction style */
@@ -102,7 +102,7 @@ public interface GridBuilderConfig<D> {
         }
     }
 
-    /** Get a CSS direction style */
+    /** Opens the embedded sort icon for the given direction as a classpath resource stream */
     @Nullable
     default InputStream getInnerSortableImageToStream(@NotNull final Direction direction) {
         return getClass().getResourceAsStream(getInnerSortableImage(direction));
@@ -125,7 +125,7 @@ public interface GridBuilderConfig<D> {
         return dataUri.isEmpty() ? null : dataUri;
     }
 
-    /** Get a CSS direction style */
+    /** Classpath path to the embedded PNG sort icon for the given direction */
     @NotNull
     default String getInnerSortableImage(@NotNull final Direction direction) {
         final String baseDir = "/META-INF/resources/org/ujorm/images/v1/order";

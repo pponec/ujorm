@@ -159,7 +159,7 @@ public interface Html {
     String A_TARGET = "target";
     /** Type attribute */
     String A_TYPE = "type";
-    /** A tooltip of an element*/
+    /** A tooltip for an element */
     String A_TITLE = "title";
     /** Value attribute */
     String A_VALUE = "value";
