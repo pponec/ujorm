@@ -5,7 +5,17 @@ The Ujorm release notes
 release 3.0.1-SNAPSHOT (?)
 
 release 3.0.0 (2026-05-15)
-+ Code cleaning
++ WEB: HtmlToJavaConverter generated API reordered (Appendable htmlGenerator(Appendable) as the primary entry; String htmlGenerator() convenience after); generated nested Css constants are package-private.
++ ORM: New configuration flag Config.tenantPerDatabaseSchema allows reusing one EntityManager with JDBC connections that resolve to different tenants (schema, catalog, or equivalent); the ORM refreshes the cached table model when connection metadata changes. Default false keeps the previous strict check (IllegalStateException when the model would differ).
++ ORM: SqlQuery.bind(...) overloads bind enum arrays using ORM Key metadata (@Enumerated ordinal vs. string) and the correct JDBC type.
++ ORM: Fluent SelectQuery maps enum criterion values to the database representation according to the attribute mapping.
++ WEB: New interface AbstractExchangeContext as the common API for HTTP exchange context; HttpContext extends ExchangeContext; servlet factory HttpContext.of applies XmlConfig.getCharset() for request encoding and HTML response (UTF-8 related fix).
++ WEB: New MarkdownToHtmlConverter renders a practical subset of Markdown into Element (headings, lists, quotes, fenced code, GFM tables, inline emphasis/links) with the same HTML escaping as the builder API.
++ WEB: Deprecated XmlModel subclass of XmlBuilder restores backward compatibility for legacy code paths (including toString() closing open elements like historical XmlModel).
++ TOOLS: XmlConfig exposes getCharset().
++ TOOLS: New helper StringUtils.emptyIfNull(String) for optional text mapped to empty string instead of null.
++ CORE: Criterion IN / NOT_IN uses the typed Array.of(Collection, Class) factory for varargs-safe array construction.
++ Code cleaning, JavaDoc, and tutorial tests.
 
 release 3.0.0-RC5 (2026-04-24)
 + Code cleaning
