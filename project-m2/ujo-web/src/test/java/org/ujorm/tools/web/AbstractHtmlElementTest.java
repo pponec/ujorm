@@ -1,0 +1,171 @@
+package org.ujorm.tools.web;
+
+import org.junit.jupiter.api.Test;
+import org.ujorm.tools.web.request.ExchangeContext;
+import org.ujorm.tools.xml.config.HtmlConfig;
+
+import java.nio.charset.StandardCharsets;
+
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+/** Short comment */
+class AbstractHtmlElementTest {
+
+    @Test
+    public void testBasicStructure() {
+        var context = ExchangeContext.of();
+        try (var html = AbstractHtmlElement.of(context, null)) {
+            try (var body = html.getBody()) {
+                body.addHeading("Hello World");
+            }
+        }
+        var result = context.toString();
+        assertTrue(result.contains("<!DOCTYPE html>"));
+        assertTrue(result.contains("<html"));
+        assertTrue(result.contains("<head>"));
+        assertTrue(result.contains("<h1>Hello World</h1>"));
+        assertTrue(result.contains("</body>"));
+        assertTrue(result.contains("</html>"));
+    }
+
+    @Test
+    public void testAttributesAndLang() {
+        var context = ExchangeContext.of();
+        try (var html = AbstractHtmlElement.of(context, null)) {
+            html.setAttribute(Html.A_LANG, "cs");
+            html.getBody().addText("Text");
+        }
+        var result = context.toString();
+        assertTrue(result.contains("lang=\"cs\""));
+    }
+
+    @Test
+    public void testJavascriptLinks() {
+        var context = ExchangeContext.of();
+        try (var html = AbstractHtmlElement.of(context, null)) {
+            html.addJavascriptLink(true, "https://example.com/script.js");
+            html.addJavascriptBody("console.log('Hello');", "alert('World');");
+            html.addBody().addText("Body content");
+        }
+        var result = context.toString();
+        assertTrue(result.contains("<script src=\"https://example.com/script.js\" defer=\"defer\""));
+        assertTrue(result.contains("console.log('Hello');\nalert('World');"));
+    }
+
+    @Test
+    public void testJavascriptLinksBatch() {
+        var context = ExchangeContext.of();
+        try (var html = AbstractHtmlElement.of(context, null)) {
+            html.addJavascriptLinks(true,
+                    "https://example.com/one.js",
+                    "https://example.com/two.js");
+            html.addBody().addText("Body content");
+        }
+        var result = context.toString();
+        assertTrue(result.contains("src=\"https://example.com/one.js\" defer=\"defer\""));
+        assertTrue(result.contains("src=\"https://example.com/two.js\" defer=\"defer\""));
+    }
+
+    @Test
+    public void testCssLinksAndBodies() {
+        var context = ExchangeContext.of();
+        try (var html = AbstractHtmlElement.of(context, null)) {
+            html.addCssLink("style.css");
+            html.addCssBody("body { color: red; }");
+            html.addCssBodies("\n", ".main { margin: 0; }", ".footer { padding: 0; }");
+            html.addBody();
+        }
+        var result = context.toString();
+        assertTrue(result.contains("<link href=\"style.css\" rel=\"stylesheet\""));
+        assertTrue(result.contains("<style>body { color: red; }</style>"));
+        assertTrue(result.contains(".main { margin: 0; }\n.footer { padding: 0; }"));
+    }
+
+    @Test
+    public void testCssLinksBatch() {
+        var context = ExchangeContext.of();
+        try (var html = AbstractHtmlElement.of(context, null)) {
+            html.addCssLinks("a.css", "b.css", "c.css");
+            html.addBody().addText("X");
+        }
+        var result = context.toString();
+        assertTrue(result.contains("<link href=\"a.css\" rel=\"stylesheet\"/>"));
+        assertTrue(result.contains("<link href=\"b.css\" rel=\"stylesheet\"/>"));
+        assertTrue(result.contains("<link href=\"c.css\" rel=\"stylesheet\"/>"));
+    }
+
+    @Test
+    public void testConfiguration() {
+        var config = HtmlConfig.ofDefault();
+        config.setTitle("Custom Title");
+        config.setCharset(StandardCharsets.UTF_16);
+
+        var context = ExchangeContext.of();
+        try (var html = AbstractHtmlElement.of(context, config)) {
+            html.addBody().addText("Content");
+        }
+        var result = context.toString();
+        assertTrue(result.contains("<title>Custom Title</title>"));
+        assertTrue(result.contains("<meta charset=\"UTF-16\""));
+    }
+
+    @Test
+    public void testNesting() {
+        var context = ExchangeContext.of();
+        var htmlElement = AbstractHtmlElement.of(context, null);
+
+        htmlElement.nest(html -> {
+            html.addHead().addElement(Html.TITLE).addText("Nested Title");
+            html.addBody().addText("Nested Content");
+        });
+
+        var result = context.toString();
+        assertTrue(result.contains("<title>Nested Title</title>"));
+        assertTrue(result.contains("Nested Content"));
+    }
+
+    @Test
+    public void testNiceOfFactory() {
+        var context = ExchangeContext.of();
+        try (var html = AbstractHtmlElement.niceOf("Nice Page", context, "style1.css", "style2.css")) {
+            html.addBody().addHeading("Title");
+        }
+        var result = context.toString();
+
+        // Zkoumáme přítomnost nových řádků potvrzujících nice format
+        assertTrue(result.contains("\n"));
+        assertTrue(result.contains("<body"));
+        assertTrue(result.contains("<title>Nice Page</title>"));
+        assertTrue(result.contains("href=\"style1.css\""));
+        assertTrue(result.contains("href=\"style2.css\""));
+    }
+
+    @Test
+    public void testLazyHeaderOnClose() {
+        var context = ExchangeContext.of();
+
+        // Nevytváříme explicitně tělo dokumentu ani nevkládáme obsah přímo do elementu html,
+        // čímž předejdeme uzavření elementu pro zápis atributů před voláním initHeader.
+        try (var html = AbstractHtmlElement.of(context, null)) {
+            // Prázdný blok
+        }
+        var result = context.toString();
+
+        // Hlavička by se měla vygenerovat automaticky při zavolání close()
+        assertTrue(result.contains("<head>"));
+        assertTrue(result.contains("<meta charset=\"UTF-8\""));
+    }
+
+    @Test
+    public void testCustomLangBeforeHeaderInitialization() {
+        var context = ExchangeContext.of();
+        try (var html = AbstractHtmlElement.of(context, null)) {
+            html.setAttribute(Html.A_LANG, "sk");
+            html.addBody().addText("Ahoj");
+        }
+        var result = context.toString();
+        assertTrue(result.contains("<html lang=\"sk\">"));
+        assertFalse(result.contains("<html lang=\"en\">"));
+    }
+}

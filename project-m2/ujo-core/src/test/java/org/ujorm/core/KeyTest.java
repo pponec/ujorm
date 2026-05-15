@@ -1,131 +1,166 @@
-/*
- * UjoManagerTest.java
- * JUnit based test
- *
- * Created on 27. June 2007, 19:21
- */
-
 package org.ujorm.core;
 
-import java.util.ArrayList;
-
+import org.jetbrains.annotations.NotNull;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.ujorm.Key;
-import org.ujorm.AbstractTest;
-import org.ujorm.extensions.PathProperty;
-import org.ujorm.extensions.PersonExt;
-import static org.ujorm.extensions.PersonExt.*;
 
-/**
- *
- * @author Pavel Ponec
- */
-public class KeyTest extends AbstractTest {
+import static org.junit.jupiter.api.Assertions.*;
 
-    /**
-     * Test of encodeBytes method, of class org.ujorm.core.UjoManager.
-     */
-    @Test
-    public void testCopy() {
+/** Tests for methods of the Key interface */
+class KeyTest {
 
-        PersonExt from = new PersonExt(1);
-        PersonExt to = new PersonExt(2);
+    private Key<Employee, String> nameKey;
+    private Employee employee;
 
-        PersonExt.ID.copy(from, to);
-        assertSame(from.get(ID), to.get(ID));
-
-        // ---
-
-        from.set(PERS, new ArrayList<>());
-        PERS.copy(from, to);
-        assertSame(from.get(PERS), to.get(PERS));
+    @BeforeEach
+    void setUp() {
+        employee = new Employee();
+        nameKey = new EmployeeNameKey();
     }
 
-
-    /**
-     * Test of encodeBytes method, of class org.ujorm.core.UjoManager.
-     */
     @Test
-    public void testDescending_1() {
-
-        boolean descending = false;
-        Key<PersonExt, Integer> id = PersonExt.ID;
-        assertEquals(descending, !id.isAscending());
-
-        descending = true;
-        id = id.descending();
-        assertEquals(descending, !id.isAscending());
-
-        descending = true;
-        id = id.descending(descending);
-        assertEquals(descending, !id.isAscending());
-
-        descending = false;
-        id = id.descending(descending);
-        assertEquals(descending, !id.isAscending());
-
-        descending = false;
-        id = id.descending(descending);
-        assertEquals(descending, !id.isAscending());
-
-        descending = true;
-        id = id.descending(descending);
-        assertEquals(descending, !id.isAscending());
-
+    void testName() {
+        assertEquals("firstName", nameKey.name());
     }
 
-    /**
-     * Test of encodeBytes method, of class org.ujorm.core.UjoManager.
-     */
     @Test
-    public void testDescending_2() {
-
-        boolean descending = false;
-        Key<PersonExt, Integer> id = new PathProperty<PersonExt, Integer>(null, PersonExt.ID);
-        assertEquals(descending, !id.isAscending());
-
-        descending = true;
-        id = id.descending();
-        assertEquals(descending, !id.isAscending());
-
-        descending = true;
-        id = id.descending(descending);
-        assertEquals(descending, !id.isAscending());
-
-        descending = false;
-        id = id.descending(descending);
-        assertEquals(descending, !id.isAscending());
-
-        descending = false;
-        id = id.descending(descending);
-        assertEquals(descending, !id.isAscending());
-
-        descending = true;
-        id = id.descending(descending);
-        assertEquals(descending, !id.isAscending());
+    void testType() {
+        assertEquals(String.class, nameKey.type());
     }
 
-    /**
-     * Test the toString name
-     */
     @Test
-    public void testToStringFullTrue_1() {
-        Key<PersonExt, Integer> key = PersonExt.ID;
-
-        String expectedResult = "PersonExt.id {index=0, ascending=true, composite=false, default=null, validator=null, type=class java.lang.Integer, domainType=class org.ujorm.extensions.PersonExt, class=org.ujorm.extensions.Property}";
-        String result = key.toStringFull(true);
-        assertEquals(expectedResult, result);
+    void testDomainClass() {
+        assertEquals(Employee.class, nameKey.domainClass());
     }
 
-    /**
-     * Test the toString name
-     */
     @Test
-    public void testToStringFullTrue_2() {
-        Key<PersonExt, Integer> key = new PathProperty<PersonExt, Integer>(null, PersonExt.PERS);
+    void testSetValueAndGetValue() {
+        nameKey.setValue(employee, "Alice");
+        assertEquals("Alice", nameKey.getValue(employee));
+    }
 
-        String expectedResult = "PersonExt.person {index=-1, ascending=true, composite=true, default=null, validator=null, type=interface java.util.List, domainType=class org.ujorm.extensions.PersonExt, class=org.ujorm.extensions.PathProperty}";
-        String result = key.toStringFull(true);
-        assertEquals(expectedResult, result);
+    @Test
+    void testGetDefaultValue() {
+        assertEquals("N/A", nameKey.getDefaultValue());
+    }
+
+    @Test
+    void testIndex() {
+        assertEquals((short) 10, nameKey.index());
+    }
+
+    @Test
+    void testInfo() {
+        assertNotNull(nameKey.info());
+    }
+
+    @Test
+    void testIsTypeOf() {
+        assertTrue(nameKey.isTypeOf(String.class));
+        assertTrue(nameKey.isTypeOf(CharSequence.class));
+        assertTrue(nameKey.isTypeOf(Object.class));
+        assertFalse(nameKey.isTypeOf(Integer.class));
+    }
+
+    @Test
+    void testIsInstanceOf() {
+        assertTrue(nameKey.isInstanceOf("Alice"));
+        assertFalse(nameKey.isInstanceOf(new StringBuilder("Bob")));
+        assertFalse(nameKey.isInstanceOf(123));
+        assertFalse(nameKey.isInstanceOf(null));
+    }
+
+    @Test
+    void testIsDomainOf() {
+        assertTrue(nameKey.isDomainOf(Employee.class));
+        assertTrue(nameKey.isDomainOf(Object.class));
+        assertFalse(nameKey.isDomainOf(String.class));
+    }
+
+    // --- SUPPORTING DUMMY CLASSES ---
+
+    /** Dummy domain class */
+    static class Employee {
+        private String firstName;
+    }
+
+    /** Dummy implementation of the Key interface */
+    static class EmployeeNameKey implements Key<Employee, String> {
+
+        @Override
+        public Key<Employee, String> self() {
+            return this;
+        }
+
+        @Override
+        public String name() {
+            return "firstName";
+        }
+
+        @Override
+        public Class<String> type() {
+            return String.class;
+        }
+
+        @Override
+        public Class<Employee> domainClass() {
+            return Employee.class;
+        }
+
+        @Override
+        public void setValue(Employee bean, String value) throws UnsupportedOperationException {
+            bean.firstName = value;
+        }
+
+        @Override
+        public String getValue(Employee bean) {
+            return bean.firstName;
+        }
+
+        @Override
+        public String getDefaultValue() {
+            return "N/A";
+        }
+
+        @Override
+        public short index() {
+            return 10;
+        }
+
+        @Override
+        public KeyInfo info() {
+            return new KeyInfo() {
+
+                @Override
+                public @NotNull String columnLabel() {
+                    return "";
+                }
+
+                @Override
+                public boolean required() {
+                    return false;
+                }
+
+                @Override
+                public boolean primaryKey() {
+                    return false;
+                }
+
+                @Override
+                public boolean foreignKey() {
+                    return false;
+                }
+
+                @Override
+                public boolean mapEnumByOrdinal() {
+                    return false;
+                }
+
+                @Override
+                public String toString() {
+                    return "DummyKeyInfo";
+                }
+            };
+        }
     }
 }

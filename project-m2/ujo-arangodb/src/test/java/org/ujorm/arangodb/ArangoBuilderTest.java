@@ -1,5 +1,5 @@
 /*
- *  Copyright 2021-2022 Pavel Ponec
+ *  Copyright 2021-2026 Pavel Ponec
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -37,11 +37,10 @@ import java.util.stream.Stream;
  *
  * @author Pavel Ponec
  */
-public class ArangoBuilderTest extends org.junit.jupiter.api.Assertions {
+class ArangoBuilderTest extends org.junit.jupiter.api.Assertions {
     private static final boolean DISABLED = true;
 
-    @Disabled
-    @Test
+    @Disabled // @Test
     public void testBulder() throws ArangoDBException {
         if (DISABLED) {
             return;
@@ -75,7 +74,7 @@ public class ArangoBuilderTest extends org.junit.jupiter.api.Assertions {
     }
 
     @Test
-    public void testAQL() {
+    void testAQL() {
         String collectionName = "firstCollection";
 
         // A sample with an argument type of date-time:

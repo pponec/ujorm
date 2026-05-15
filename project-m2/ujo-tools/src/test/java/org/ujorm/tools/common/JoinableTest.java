@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2022 Pavel Ponec.
+ * Copyright 2021-2026 Pavel Ponec.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,7 +25,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
  *
  * @author Pavel Ponec
  */
-public class JoinableTest {
+class JoinableTest {
 
     @Test
     public void testOf() {
@@ -34,9 +34,9 @@ public class JoinableTest {
         Person p1 = new Person(1, "Name-1", p2);
         Person p0 = null;
 
-        Function<Person, String> nameProvider1 = Joinable.of(Person::getName);
-        Function<Person, String> nameProvider2 = Joinable.of(Person::getBoss).add(Person::getName);
-        Function<Person, String> nameProvider3 = Joinable.of(Person::getBoss).add(Person::getBoss).add(Person::getName);
+        Function<Person, String> nameProvider1 = Joinable.of(Person::name);
+        Function<Person, String> nameProvider2 = Joinable.of(Person::boss).add(Person::name);
+        Function<Person, String> nameProvider3 = Joinable.of(Person::boss).add(Person::boss).add(Person::name);
 
         assertEquals("Name-1", nameProvider1.apply(p1));
         assertEquals("Name-2", nameProvider2.apply(p1));
@@ -47,28 +47,7 @@ public class JoinableTest {
         assertNull(nameProvider3.apply(p3));
     }
 
-    final static class Person {
+    record Person(Integer id, String name, Person boss) {
 
-        final Integer id;
-        final String name;
-        final Person boss;
-
-        public Person(Integer id, String name, Person boss) {
-            this.id = id;
-            this.name = name;
-            this.boss = boss;
-        }
-
-        Integer getId() {
-            return id;
-        }
-
-        String getName() {
-            return name;
-        }
-
-        Person getBoss() {
-            return boss;
-        }
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2022 Pavel Ponec
+ * Copyright 2021-2026 Pavel Ponec
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,7 +22,7 @@ import org.jetbrains.annotations.Nullable;
 /**
  * A joinable function
  *
- * <h3>Usage</h3>
+ * <h4>Usage</h4>
  * <pre>
  *  Function&lt;Person, String&gt; nameProvider = Joinable
  *     .of (Person::getBoss)

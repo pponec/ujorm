@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2022 Pavel Ponec, https://github.com/pponec
+ * Copyright 2021-2026 Pavel Ponec, https://github.com/pponec
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,8 +16,8 @@
 package org.ujorm.tools.common;
 
 import java.io.IOException;
+import java.util.Objects;
 import org.jetbrains.annotations.NotNull;
-import org.ujorm.tools.Assert;
 
 /**
  * Building a text.
@@ -46,7 +46,7 @@ public class TextBuilder implements CharSequence {
     }
 
     public TextBuilder(final StringBuilder builder) {
-        this.builder = Assert.notNull(builder, "builder");
+        this.builder = Objects.requireNonNull(builder, "builder");
     }
 
     public TextBuilder add(@NotNull final CharSequence... items) {

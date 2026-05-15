@@ -1,5 +1,5 @@
 /*
- * Copyright 2020-2022 Pavel Ponec, https://github.com/pponec
+ * Copyright 2020-2026 Pavel Ponec, https://github.com/pponec
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,12 +28,12 @@ import org.ujorm.tools.web.table.GridBuilderConfig;
 import org.ujorm.tools.xml.config.HtmlConfig;
 
 /**
- * A HTML page builder for table based an AJAX.
+ * {@link GridBuilderConfig} with defaults tailored to {@link ReportBuilder} (styling, AJAX parameters, resources).
  *
- * <h3>Usage<h3>
+ * <h4>Usage</h4>
  *
  * <pre class="pre">
- *  TableBuilder.of("Hotel Report")
+ *  ReportBuilder.of("Hotel Report")
  *          .add(Hotel::getName, "Hotel", NAME)
  *          .add(Hotel::getCity, "City", CITY)
  *          .add(Hotel::getStreet, "Street")
@@ -43,82 +43,6 @@ import org.ujorm.tools.xml.config.HtmlConfig;
  * @author Pavel Ponec
  */
 public interface ReportBuilderConfig<D> extends GridBuilderConfig<D> {
-
-    @NotNull HtmlConfig getConfig();
-
-    @NotNull String getCssLink();
-
-    /** Link to an external Javascript library where a no-library returns an empty String */
-    @NotNull String getJavascriptLink();
-
-    @NotNull Duration getIdleDelay();
-
-    @NotNull HttpParameter getAjaxRequestParam();
-
-    @NotNull HttpParameter getSortRequestParam();
-
-    @NotNull CharSequence getAjaxReadyMessage();
-
-    @NotNull String getFormId();
-
-    @NotNull String getControlCss();
-
-    @NotNull String getSubtitleCss();
-
-    @NotNull CharSequence getTableSelector();
-
-    @NotNull List<CharSequence> getTableCssClass();
-
-    @NotNull CharSequence getSortable();
-
-    @NotNull CharSequence getSortableAsc();
-
-    @NotNull CharSequence getSortableDesc();
-
-    @NotNull CharSequence getSortableBoth();
-
-    /** Use inner icons for sortable images */
-    boolean isEmbeddedIcons();
-
-    /** Inline CSS writer where the first method is an Element and the seconnd one is a sortable  */
-    BiConsumer<Element, Boolean> getCssWriter();
-
-    /** Get a CSS direction style */
-    @NotNull
-    default CharSequence getSortableDirection(@NotNull final Direction direction) {
-        switch (direction) {
-            case ASC:
-                return getSortableAsc();
-            case DESC:
-                return getSortableDesc();
-            case NONE:
-                return getSortableBoth();
-            default:
-                throw new IllegalArgumentException("Unsupported " + direction);
-        }
-    }
-
-    /** Get a CSS direction style */
-    @Nullable
-    default InputStream getInnerSortableImageToStream(@NotNull final Direction direction) {
-        return getClass().getResourceAsStream(getInnerSortableImage(direction));
-    }
-
-    /** Get a CSS direction style */
-    @NotNull
-    default String getInnerSortableImage(@NotNull final Direction direction) {
-        final String baseDir = "/META-INF/resources/org/ujorm/images/v1/order";
-        switch (direction) {
-            case ASC:
-                return String.join("/", baseDir, "up.png");
-            case DESC:
-                return String.join("/", baseDir, "down.png");
-            case NONE:
-                return String.join("/", baseDir, "both.png");
-            default:
-                throw new IllegalArgumentException("Unsupported " + direction);
-        }
-    }
 
     /** Returns a default implementation */
     @NotNull

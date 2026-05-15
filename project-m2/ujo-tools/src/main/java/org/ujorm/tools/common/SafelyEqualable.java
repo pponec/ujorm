@@ -1,5 +1,5 @@
 /*
- * Copyright 2019-2022 Pavel Ponec
+ * Copyright 2019-2026 Pavel Ponec
  * https://github.com/pponec/ujorm/blob/master/project-m2/ujo-tools/src/main/java/org/ujorm/tools/jdbc/JdbcBuilder.java
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -25,7 +25,7 @@ import org.jetbrains.annotations.Nullable;
  */
 public interface SafelyEqualable<T> {
 
-    /** Type-safe equivalent of the {@link #equals(java.lang.Object) } method. */
+    /** Type-safe equivalent of the {@link Object#equals(Object)} method. */
     default boolean equalsSafely(@Nullable final T value) {
         return equals(value);
     }

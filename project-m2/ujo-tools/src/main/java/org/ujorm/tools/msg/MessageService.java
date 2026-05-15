@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2022 Pavel Ponec, https://github.com/pponec
+ * Copyright 2012-2026 Pavel Ponec, https://github.com/pponec
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,10 +16,7 @@
 package org.ujorm.tools.msg;
 
 import java.io.IOException;
-import java.util.Formatter;
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Supplier;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -28,7 +25,7 @@ import org.ujorm.tools.Assert;
 import org.ujorm.tools.common.ObjectUtils;
 
 /**
- * Message Service. See the next example:
+ * Message templating service. Example:
  * <pre class="pre">
  *  final MessageArg TYPE = MessageArg.of("TYPE");
  *  final MessageArg NAME = MessageArg.of("NAME");
@@ -39,7 +36,7 @@ import org.ujorm.tools.common.ObjectUtils;
  *  assertEquals(expResult, result);
  * </pre>
  *
- * or an similar usage:
+ * or a similar usage:
  *
  * <pre class="pre">
  *  final MessageArg NAME = MessageArg.of("NAME");
@@ -65,9 +62,9 @@ import org.ujorm.tools.common.ObjectUtils;
 @Unmodifiable
 public class MessageService {
 
-    /** Two-character mark ("${") to introducing a template argument. */
+    /** Two-character opening mark ({@code "${"}) that starts each template placeholder. */
     protected final String begTag ;
-    /** The mark ("}") to finishing a template argument. */
+    /** Closing mark ({@code "}"}) that ends each template placeholder. */
     protected final char endTag;
 
     /** Default locale */
@@ -83,12 +80,12 @@ public class MessageService {
             @NotNull final String begTag,
             @NotNull final char endTag,
             @NotNull final Locale defaultLocale) {
-        this.begTag = Assert.hasLength(begTag, "begTag");
+        this.begTag = Assert.hasLength(begTag, () -> "begTag");
         this.endTag = endTag;
-        this.defaultLocale = Assert.notNull(defaultLocale, "defaultLocale");
+        this.defaultLocale = Objects.requireNonNull(defaultLocale, "defaultLocale");
     }
 
-    /** Create a map from man pairs key-value
+    /** Create a map from many key-value pairs.
      * @param args Key-value pairs
      */
     public <T> Map<String, Object> map(@NotNull final T... args) {
@@ -100,8 +97,8 @@ public class MessageService {
         return result;
     }
 
-    /** Create a message template from argument pairs key-value
-     * @param args Sequence of the Objects and Arguments
+    /** Build a message template from alternating text fragments and {@link MessageArg} markers.
+     * @param args sequence of objects (text parts and arguments)
      */
     public <T> String template(@NotNull final T... args) {
         final StringBuilder result = new StringBuilder(256);
@@ -119,7 +116,7 @@ public class MessageService {
      * <pre class="pre">"The input date ${KEY,%s} must be less than: ${DATE,%F}"</pre>
      * or
      * <pre class="pre">"The input date ${KEY,%s} must be less than: ${DATE,%tY-%tm-%td %tH:%tM:%tS}"</pre>
-     * The format expression is separated by the character (,) a and it is not mandatory.
+     * An optional format specifier may follow the key, separated by a comma ({@code ,}) from the placeholder name.
      * @param args Key-value map arguments
      * @return Target result
      * @see Formatter
@@ -136,9 +133,9 @@ public class MessageService {
      * <pre class="pre">"The input date ${KEY,%s} must be less than: ${DATE,%F}"</pre>
      * or
      * <pre class="pre">"The input date ${KEY,%s} must be less than: ${DATE,%tY-%tm-%td %tH:%tM:%tS}"</pre>
-     * The format expression is separated by the character (,) a and it is not mandatory.
+     * An optional format specifier may follow the key, separated by a comma ({@code ,}) from the placeholder name.
      * @param locale The target locale for an argument format, the {@code null} locale will be replaced by the {@code defaultLocale}.
-     * @param key The Key (see a {@link MessageArg})
+     * @param key the key (see {@link MessageArg})
      * @param value The Value
      * @param keyValuePairs Key-value pairs
      * @see Formatter
@@ -163,10 +160,10 @@ public class MessageService {
      * <pre class="pre">"The input date ${KEY,%s} must be less than: ${DATE,%F}"</pre>
      * or
      * <pre class="pre">"The input date ${KEY,%s} must be less than: ${DATE,%tY-%tm-%td %tH:%tM:%tS}"</pre>
-     * The format expression is separated by the character (,) a and it is not mandatory.
-     * @param args Key-value map arguments where arguments type of {@link Supplier} ares supported.
+     * An optional format specifier may follow the key, separated by a comma ({@code ,}) from the placeholder name.
+     * @param args key-value map; values of type {@link Supplier} are resolved when formatted
      * @param locale The target locale for an argument format, the {@code null} locale will be replaced by the {@code defaultLocale}.
-     * @return The result message or an empty String if the writter is available.
+     * @return formatted message text
      * @see Formatter
      */
     public final String format(
@@ -189,22 +186,52 @@ public class MessageService {
      * <pre class="pre">"The input date ${KEY,%s} must be less than: ${DATE,%F}"</pre>
      * or
      * <pre class="pre">"The input date ${KEY,%s} must be less than: ${DATE,%tY-%tm-%td %tH:%tM:%tS}"</pre>
-     * The format expression is separated by the character (,) a and it is not mandatory.
-     * @param args Key-value map arguments where arguments type of {@link Supplier} ares supported.
+     * An optional format specifier may follow the key, separated by a comma ({@code ,}) from the placeholder name.
+     * @param args key-value map; values of type {@link Supplier} are resolved when formatted
      * @param locale The target locale for an argument format, the {@code null} locale will be replaced by the {@code defaultLocale}.
-     * @return The result message of an empty string of writter is available.
+     * @return formatted message text when {@code writer} is {@code null}; otherwise an empty string after the content was written to {@code writer}
      * @see Formatter
+     * @deprecated Use {@link #formatMsg(String, Map, Appendable)} instead.
      */
+    @Deprecated
     public final String format(
             @Nullable final Appendable writer,
             @Nullable final String msg,
             @Nullable final Map<String, Object> args,
-            @Nullable Locale locale) throws IOException  {
+            @Nullable Locale locale) throws IOException {
         if (msg == null || args == null) {
             return String.valueOf(msg);
         }
         final int max = msg.length();
         final Appendable result = writer != null ? writer : new StringBuilder(Math.max(32, max + (max >> 1)));
+        format(msg, args, locale, result);
+        return writer == null ? result.toString() : "";
+    }
+
+    /**
+     * Format a template message using named variables.
+     * Each variable must be surrounded by two marks "${" and "}".
+     * The first mark is forbidden in a common text and can be replaced by the variable #{MARK}.
+     * @param msg Template message, see the simple example:
+     * <pre class="pre">"The input date ${KEY,%s} must be less than: ${DATE,%F}"</pre>
+     * or
+     * <pre class="pre">"The input date ${KEY,%s} must be less than: ${DATE,%tY-%tm-%td %tH:%tM:%tS}"</pre>
+     * An optional format specifier may follow the key, separated by a comma ({@code ,}) from the placeholder name.
+     * @param args key-value map; values of type {@link Supplier} are resolved when formatted
+     * @param locale The target locale for an argument format, the {@code null} locale will be replaced by the {@code defaultLocale}.
+     * @param writer A required writer.
+     * @see Formatter
+     */
+    public final void format(
+            @Nullable final String msg,
+            @Nullable final Map<String, Object> args,
+            @Nullable Locale locale,
+            @NotNull final Appendable writer
+    ) throws IOException  {
+        if (msg == null || args == null) {
+            writer.append(String.valueOf(msg));
+        }
+        final int max = msg.length();
         int i, last = 0;
         while ((i = msg.indexOf(begTag, last)) >= 0) {
             final int end = msg.indexOf(endTag, i);
@@ -216,25 +243,25 @@ public class MessageService {
                 ? ((Supplier)value).get()
                 : value;
             if (val != null) {
-                result.append(msg, last, i);
+                writer.append(msg, last, i);
                 if (formatIndex > 0) {
-                    new Formatter(result, locale != null ? locale : defaultLocale).format
-                          ( expr.substring(1 + formatIndex)
-                          , val, val, val, val, val, val); // Simplify Date format
+                    try (var formatter = new Formatter(writer, locale != null ? locale : defaultLocale)) {
+                        formatter.format( expr.substring(1 + formatIndex)
+                                        , val, val, val, val, val, val); // Simplify Date format
+                    }
                 } else {
-                    writeValue(val, result, locale);
+                    writeValue(val, writer, locale);
                 }
             } else {
-                result.append(msg, last, end + 1);
+                writer.append(msg, last, end + 1);
             }
             last = end + 1;
         }
-        result.append(msg, last, max);
-        return writer != null ? "" : result.toString();
+        writer.append(msg, last, max);
     }
 
-     /** Convert value.
-     * The method can be overwrited for special data types, for example: {@code Key -> Key.getFullName() }.
+    /** Convert value.
+     * May be overridden for special key types, for example {@code Key -> Key.getFullName()}.
      */
     @Nullable
     protected String convertKey(@NotNull final Object key) {
@@ -244,8 +271,7 @@ public class MessageService {
     }
 
     /** Write a value to the output buffer.
-     * The method can be overwrited to escaping values.
-     *  The method can be overwrited for special data types.
+     * May be overridden to escape values or support additional types.
      */
     protected void writeValue
         ( @NotNull final Object value
@@ -261,18 +287,27 @@ public class MessageService {
 
     // ---------------- STATIC METHOD ----------------
 
-    /** Format a target message by a template with arguments */
+    /** Format a message from a template and a map of named arguments */
     public static final String formatMsg(@Nullable final String template, @Nullable final Map<String, Object> args) {
         return new MessageService().format(template, args);
     }
 
-    /** Format a target message by a template with arguments type of Map */
+    /** Format a message from a template, one key, and additional key-value pairs */
     public static final String formatMsg(
             @Nullable final String template,
             @NotNull final CharSequence key,
             @Nullable final Object value,
             @NotNull final Object... keyValuePairs) {
         return new MessageService().format(template, null, key, value, keyValuePairs);
+    }
+
+    /** Format a message from a template and map, writing the result to {@code writer} */
+    public static final void formatMsg(@Nullable final String template, @Nullable final Map<String, Object> args, @NotNull Appendable writer) {
+        try {
+            new MessageService().format(template, args, Locale.ENGLISH, writer);
+        } catch (IOException ex) {
+            throw new IllegalStateException(ex);
+        }
     }
 
 }

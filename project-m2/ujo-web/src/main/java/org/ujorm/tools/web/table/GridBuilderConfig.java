@@ -1,5 +1,5 @@
 /*
- * Copyright 2020-2022 Pavel Ponec, https://github.com/pponec
+ * Copyright 2020-2026 Pavel Ponec, https://github.com/pponec
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,9 +16,12 @@
 package org.ujorm.tools.web.table;
 
 import org.ujorm.tools.web.report.*;
+import java.io.IOException;
 import java.io.InputStream;
 import java.time.Duration;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.BiConsumer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -27,12 +30,12 @@ import org.ujorm.tools.web.ao.HttpParameter;
 import org.ujorm.tools.xml.config.HtmlConfig;
 
 /**
- * A HTML page builder for table based an AJAX.
+ * Configuration and lifecycle hooks for building sortable HTML data grids (columns, sorting, rendering).
  *
- * <h3>Usage<h3>
+ * <h4>Usage</h4>
  *
  * <pre class="pre">
- *  TableBuilder.of("Hotel Report")
+ *  ReportBuilder.of("Hotel Report")
  *          .add(Hotel::getName, "Hotel", NAME)
  *          .add(Hotel::getCity, "City", CITY)
  *          .add(Hotel::getStreet, "Street")
@@ -43,11 +46,13 @@ import org.ujorm.tools.xml.config.HtmlConfig;
  */
 public interface GridBuilderConfig<D> {
 
+    Map<String, String> EMBEDDED_IMAGE_CACHE = new ConcurrentHashMap<>();
+
     @NotNull HtmlConfig getConfig();
 
     @NotNull String getCssLink();
 
-    /** Link to an external Javascript library where a no-library returns an empty String */
+    /** URL of an external JavaScript library; empty string when none is configured */
     @NotNull String getJavascriptLink();
 
     @NotNull Duration getIdleDelay();
@@ -76,13 +81,13 @@ public interface GridBuilderConfig<D> {
 
     @NotNull CharSequence getSortableBoth();
 
-    /** Use inner icons for sortable images */
+    /** When {@code true}, use embedded sort icons; when {@code false}, use CSS background image URLs */
     boolean isEmbeddedIcons();
 
-    /** Inline CSS writer where the first method is an Element and the seconnd one is a sortable  */
+    /** Optional CSS injector: first argument is the target element, second is {@code true} when the grid is sortable */
     BiConsumer<Element, Boolean> getCssWriter();
 
-    /** Get a CSS direction style */
+    /** Returns the CSS class token for the given sort direction */
     @NotNull
     default CharSequence getSortableDirection(@NotNull final Direction direction) {
         switch (direction) {
@@ -97,13 +102,30 @@ public interface GridBuilderConfig<D> {
         }
     }
 
-    /** Get a CSS direction style */
+    /** Opens the embedded sort icon for the given direction as a classpath resource stream */
     @Nullable
     default InputStream getInnerSortableImageToStream(@NotNull final Direction direction) {
         return getClass().getResourceAsStream(getInnerSortableImage(direction));
     }
 
-    /** Get a CSS direction style */
+    /** Returns an embedded sort icon for the direction as a {@code data:} URI, or {@code null} when unavailable. */
+    @Nullable
+    default String getInnerSortableImageDataUri(@NotNull final Direction direction) {
+        final String path = getInnerSortableImage(direction);
+        final String dataUri = EMBEDDED_IMAGE_CACHE.computeIfAbsent(path, key -> {
+            try (InputStream in = getClass().getResourceAsStream(key)) {
+                if (in == null) {
+                    return "";
+                }
+                return "data:image/png;base64," + java.util.Base64.getEncoder().encodeToString(in.readAllBytes());
+            } catch (IOException e) {
+                throw new IllegalStateException("Failed to load embedded image: " + key, e);
+            }
+        });
+        return dataUri.isEmpty() ? null : dataUri;
+    }
+
+    /** Classpath path to the embedded PNG sort icon for the given direction */
     @NotNull
     default String getInnerSortableImage(@NotNull final Direction direction) {
         final String baseDir = "/META-INF/resources/org/ujorm/images/v1/order";

@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2022 Pavel Ponec
+ * Copyright 2018-2026 Pavel Ponec
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,7 +28,7 @@ import static org.junit.jupiter.api.Assertions.*;
  * A test of the XmlNode class
  * @author Pavel Ponec
  */
-public class XmlBuilderTest implements Html {
+class XmlBuilderTest implements Html {
 
     @Test
     public void testXmlBuilding() throws IOException {

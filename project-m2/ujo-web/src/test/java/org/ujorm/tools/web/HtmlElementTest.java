@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2022 Pavel Ponec, https://github.com/pponec
+ * Copyright 2018-2026 Pavel Ponec, https://github.com/pponec
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,9 +16,12 @@
 package org.ujorm.tools.web;
 
 import org.junit.jupiter.api.Test;
+import org.ujorm.tools.web.request.AbstractExchangeContext;
+import org.ujorm.tools.web.request.ExchangeContext;
 import org.ujorm.tools.xml.builder.XmlBuilder;
 import org.ujorm.tools.xml.config.HtmlConfig;
 import org.ujorm.tools.xml.config.impl.DefaultHtmlConfig;
+import java.math.BigDecimal;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -28,7 +31,7 @@ import static org.junit.jupiter.api.Assertions.*;
  *
  * @author Pavel Ponec
  */
-public class HtmlElementTest {
+class HtmlElementTest {
 
     /**
      * Test of getName method, of class HtmlElement.
@@ -49,7 +52,7 @@ public class HtmlElementTest {
     public void sample_1() {
         StringBuilder writer = new StringBuilder();
         DefaultHtmlConfig config = HtmlConfig.ofDefault();
-        config.setRawHedaderCode("<meta name='description' content='Powered by Ujorm'>");
+        config.setRawHeaderText("<meta name='description' content='Powered by Ujorm'>");
 
         try (HtmlElement html = HtmlElement.of(writer, config)) {
             html.addBody().addHeading("Hello!");
@@ -75,7 +78,6 @@ public class HtmlElementTest {
         config.setRootElementName(XmlBuilder.HIDDEN_NAME);
         config.setHtmlHeader(false);
         config.setDoctype("");
-        config.setDocumentObjectModel(true);
 
         StringBuilder writer = new StringBuilder();
         try (HtmlElement html = HtmlElement.of(writer, config)) {
@@ -128,6 +130,86 @@ public class HtmlElementTest {
     }
 
     /**
+     * Test the assigning an attribute to the root element (html).
+     */
+    @Test
+    public void sample_2c() {
+        var writer = ExchangeContext.of();
+        try (var html = HtmlElement.niceOf("Hello", writer)) {
+            html.setAttribute(Html.A_LANG, "cs");
+            try (var body = html.addBody()) {
+                body.addHeading(html.getTitle());
+            }
+        }
+        var html = writer.toString();
+        assertTrue(html.contains("<html lang=\"cs\">"));
+        assertTrue(html.contains("<title>Hello</title>"));
+        assertTrue(html.contains("<h1>Hello</h1>"));
+    }
+
+    /**
+     * Test the assigning an attribute to the root element (html).
+     */
+    @Test
+    public void sample_2d_table() {
+        final var data = new Object[][]{{1000, 2000.2f, 3000.3d, new BigDecimal("4000.1415")}};
+        var writer = ExchangeContext.of();
+        try (var html = HtmlElement.niceOf("Table", writer)) {
+            html.getBody().addHeading(html.getTitle());
+            html.getBody().addTable(data);
+        }
+        var html = writer.toString();
+        assertTrue(html.contains("<title>Table</title>"));
+        assertTrue(html.contains("2000.2"));
+        assertTrue(html.contains("4000.1415"));
+    }
+
+    /**
+     * Test the assigning an attribute to the root element (html).
+     */
+    @Test
+    public void sample_2e_formatNumbers() {
+        var data = new Object[][]{{1000, 2000.2f, 3000.3d, new BigDecimal("4000.1415")}};
+        var writer = ExchangeContext.of();
+        try (var html = HtmlElement.niceNumberOf("Table", writer)) {
+            html.getBody().addHeading(html.getTitle());
+            html.getBody().addTable(data);
+        }
+        var html = writer.toString();
+        assertTrue(html.contains("<title>Table</title>"));
+        assertTrue(html.contains("<td>2&#8239;000.2</td>"));
+        assertTrue(html.contains("<td>4&#8239;000.1415</td>"));
+    }
+
+    /**
+     * Test the assigning an attribute to the root element (html).
+     */
+    @Test
+    public void sample_2f_numAtrrib() {
+        final var inputValue = 1_000;
+        final var lengthAttrib = 2_000;
+        final var textValue = 3_000;
+        final var nullValue = (Integer) null;
+        var writer = ExchangeContext.of();
+        try (var html = HtmlElement.niceNumberOf("Table", writer)) {
+            try (var body = html.getBody()) {
+                body.addTextInput()
+                        .setName("name")
+                        .setAttribute(Html.A_MAXLENGTH, lengthAttrib)
+                        .setValue(inputValue);
+                body.addDiv().addText(textValue);
+                body.addParagraph().addText(nullValue);
+            }
+        }
+        var html = writer.toString();
+        assertTrue(html.contains("<title>Table</title>"));
+        assertTrue(html.contains("1000"));
+        assertTrue(html.contains("2000"));
+        assertTrue(html.contains("3&#8239;000"));
+        assertTrue(html.contains("<p></p>"));
+    }
+
+    /**
      * Test of getName method, of class HtmlElement.
      */
     @Test
@@ -143,6 +225,56 @@ public class HtmlElementTest {
         String expected = "<script src='./prettify.js'></script>"
                 .replace('\'', '"');
         assertEquals(expected, result);
+    }
+
+    /**
+     * Test verifying that addHead and addBody return the exact same instance
+     * on subsequent calls and apply CSS only on creation.
+     */
+    @Test
+    public void testHeadAndBodySingletonWithCss() {
+        StringBuilder writer = new StringBuilder();
+        try (HtmlElement html = HtmlElement.of("Singleton Test", writer)) {
+            Element head1 = html.addHead("first-head-css");
+            Element head2 = html.addHead("second-head-css");
+
+            Element body1 = html.addBody("first-body-css");
+            Element body2 = html.getBody();
+
+            assertSame(head1, head2, "Head elements should be the exact same instance");
+            assertSame(body1, body2, "Body elements should be the exact same instance");
+
+            body1.addDiv().addText("Singleton body logic verified.");
+        }
+
+        String result = writer.toString();
+
+        // Ověříme, že element vznikl jen jednou a má aplikované první CSS
+        assertTrue(result.contains("<head class=\"first-head-css\">"));
+        assertTrue(result.contains("<body class=\"first-body-css\">"));
+
+        // Druhé volání addHead("second-head-css") nemělo přidat další element ani přepsat CSS
+        assertFalse(result.contains("second-head-css"));
+
+        // Ověření, že ve výstupu je tag <head> a <body> přesně jednou (nepřidaly se duplikáty)
+        assertEquals(1, result.split("<head").length - 1);
+        assertEquals(1, result.split("<body").length - 1);
+    }
+
+    /**
+     * Test verifying addCssBody and addJavascriptBody implementations.
+     */
+    @Test
+    public void testEmbeddedScriptsAndStyles() {
+        StringBuilder writer = new StringBuilder();
+        try (HtmlElement html = HtmlElement.of("Embedded Assets", writer)) {
+            html.addCssBody(".red-text { color: red; }");
+            html.addJavascriptBody("console.log('Hello from Ujorm!');");
+        }
+
+        String result = writer.toString();
+        assertTrue(result.contains("<style>.red-text { color: red; }</style>"));
+        assertTrue(result.contains("console.log('Hello from Ujorm!')"));
     }
 
     private static String substring(String body, String beg, String end) {

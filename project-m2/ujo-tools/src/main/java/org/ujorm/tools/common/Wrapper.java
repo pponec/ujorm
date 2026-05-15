@@ -1,5 +1,5 @@
 /*
- * Copyright 2020-2022 Pavel Ponec
+ * Copyright 2020-2026 Pavel Ponec
  * https://github.com/pponec/ujorm/blob/master/project-m2/ujo-tools/src/main/java/org/ujorm/tools/jdbc/JdbcBuilder.java
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -26,7 +26,7 @@ import org.ujorm.tools.Assert;
 /**
  * The wrapper implements a common {@code hash()}, {@code equals()} and {@code compareTo()} methods
  *
- * <h3>Usage:</h3>
+ * <h4>Usage:</h4>
  * <pre class="pre">
  *   Person p1 = new Person(1, "A");
  *   Person p2 = new Person(1, "B");
@@ -145,7 +145,7 @@ public final class Wrapper<V> implements Comparable<Wrapper<V>>, Confessionable 
             @NotNull final D value,
             final boolean nullFirst,
             @NotNull final Function<D, P>... functions) {
-        Assert.hasLength(functions, "Function is required");
+        Assert.hasLength(functions, () -> "Function is required");
         return new Wrapper<>(value, nullFirst, functions);
     }
 

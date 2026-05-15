@@ -1,0 +1,79 @@
+/*
+ * Copyright 2007-2026 Pavel Ponec
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package org.ujorm.core.criterion;
+
+/**
+ * Binary operators used to combine {@link Criterion} instances (AND, OR, NOT, …).
+ * @since 0.90
+ * @author Pavel Ponec
+ */
+public enum BinaryOperator implements AbstractOperator {
+    /** (a AND b) */
+    AND("AND"),
+    /** (a OR b) */
+    OR("OR"),
+    /** (a XOR b) <br>Note: the SQL language may not support the operator. */
+    XOR("XOR"),
+    /** NOT (a OR b) <br>Note: the SQL language may not support the operator. */
+    NOR("NOR"),
+    /** NOT (a AND b) <br>Note: the SQL language may not support the operator. */
+    NAND("NAND"),
+    /**
+     * (a == b) <br>Note: the SQL language may not support the operator.
+     * <br/> See also: XAND, XNOR, EQV
+     */
+    EQ("="),
+    /** NOT a */
+    NOT("NOT");
+
+    /** The SQL standard string representation of the operator */
+    private final String term;
+
+    /** Creates a new BinaryOperator with its SQL string representation */
+    BinaryOperator(String term) {
+        this.term = term;
+    }
+
+    /** Returns the SQL string representation of the operator */
+    @Override
+    public String term() {
+        return term;
+    }
+
+    /** Join two criteria. */
+    public <UJO> Criterion join(final Criterion a, final Criterion b) {
+        return a.join(this, b);
+    }
+
+    /** The operator is the BINARY type (not a value one) */
+    @Override
+    public final boolean isBinary() {
+        return true;
+    }
+
+    @Override
+    public boolean isConstant() {
+        return false;
+    }
+
+
+    /** Returns this enum constant (satisfies the {@link AbstractOperator} bridge). */
+    @Override
+    public final Enum getEnum() {
+        return this;
+    }
+}

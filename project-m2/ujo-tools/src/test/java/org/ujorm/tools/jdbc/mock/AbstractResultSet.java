@@ -1,5 +1,5 @@
 /*
- *  Copyright 2018-2022 Pavel Ponec
+ *  Copyright 2018-2026 Pavel Ponec
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -31,7 +31,7 @@ import org.mockito.Mockito;
  */
 public abstract class AbstractResultSet implements ResultSet {
 
-    private List<Map<String,Object>> rows;
+    private List<Map<String,?>> rows;
     private int pointer;
     private boolean closed = false;
 
@@ -49,7 +49,7 @@ public abstract class AbstractResultSet implements ResultSet {
         if (values.length == 1 && values[0] instanceof Object[]) {
             values = (Object[]) values[0];
         }
-        Map<String,Object> row = new HashMap<>(values.length);
+        Map<String, Object> row = new HashMap<>(values.length);
         for (int i = 0; i < values.length; i++) {
             row.put(String.valueOf(i + 1), values[i]);
         }
@@ -57,7 +57,7 @@ public abstract class AbstractResultSet implements ResultSet {
     }
 
     /** Create a one row */
-    public void addRow(Map<String,Object> dbRow) {
+    public void addRow(Map<String, ?> dbRow) {
         rows.add(dbRow);
     }
 

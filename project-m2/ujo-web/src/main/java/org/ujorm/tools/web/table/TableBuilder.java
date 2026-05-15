@@ -1,5 +1,5 @@
 /*
- * Copyright 2020-2022 Pavel Ponec, https://github.com/pponec
+ * Copyright 2020-2026 Pavel Ponec, https://github.com/pponec
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,9 +20,9 @@ import org.ujorm.tools.web.report.ReportBuilder;
 import org.ujorm.tools.web.report.ReportBuilderConfig;
 
 /**
- * A HTML page builder for table based an AJAX.
+ * @deprecated Use {@link ReportBuilder} instead. Deprecated subclass of {@link ReportBuilder} kept for compatibility.
  *
- * <h3>Usage<h3>
+ * <h4>Usage</h4>
  *
  * <pre class="pre">
  *  TableBuilder.of("Hotel Report")
@@ -33,7 +33,7 @@ import org.ujorm.tools.web.report.ReportBuilderConfig;
  * </pre>
  *
  * @author Pavel Ponec
- * @deprecated  Uset the {@link ReportBuilder} class rather.
+ * @deprecated  Use the {@link ReportBuilder} class rather.
  */
 @Deprecated
 public class TableBuilder<D> extends ReportBuilder {

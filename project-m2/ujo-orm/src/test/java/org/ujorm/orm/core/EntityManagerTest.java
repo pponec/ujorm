@@ -1,0 +1,122 @@
+package org.ujorm.orm.core;
+
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+import org.ujorm.core.SnapshotProvider;
+import org.ujorm.orm.demo.City;
+import org.ujorm.orm.demo.Employee;
+import org.ujorm.orm.utils.EntityContext;
+
+import java.time.LocalDate;
+import java.util.stream.Stream;
+
+class EntityManagerTest extends AbstractDaoTest {
+
+    private final EntityContext ctx = EntityContext.ofDefault();
+    private final Class<Long> pkType = Long.class;
+
+    @Test
+    void crud() {
+        var cityDao = ctx.entityManager(City.class, pkType).crud(dbConnection);
+        var cityInp = new City(null, "California", "US", 36.7783, -119.4179);
+        var cityOut = cityDao.insert(cityInp);
+        Assertions.assertNotNull(cityOut.id());
+        Assertions.assertEquals(1L, cityOut.id());
+        Assertions.assertNotSame(cityInp, cityOut);
+
+        // City including ID
+        cityInp = new City(101L, "Ottawa", "CA", 45.4215, 75.6972);
+        cityOut = cityDao.insert(cityInp);
+        Assertions.assertNotNull(cityOut.id());
+        Assertions.assertEquals(101L, cityOut.id());
+        Assertions.assertSame(cityInp, cityOut);
+
+        // Employee A
+        var emplDao = ctx.entityManager(Employee.class, pkType).crud(dbConnection);
+        var employeeInp = createEmployee("EmplA", cityInp);
+        var employeeOut = emplDao.insert(employeeInp);
+        Assertions.assertNotNull(employeeOut.getId());
+        Assertions.assertEquals(1L, employeeOut.getId());
+        Assertions.assertSame(employeeInp, employeeOut);
+
+        // Employee B
+        employeeInp = createEmployee(101L, "EmplB", cityOut);
+        employeeOut = emplDao.insert(employeeInp);
+        Assertions.assertNotNull(employeeOut.getId());
+        Assertions.assertEquals(101L, employeeOut.getId());
+        Assertions.assertSame(employeeInp, employeeOut);
+
+        // Update-1
+        employeeOut.setName("EmplC");
+        long count = emplDao.update(employeeOut, "name");
+        Assertions.assertEquals(1, count);
+
+        // Update-2
+        employeeOut.setName("EmplC");
+        count = emplDao.update(employeeOut, "city", "name");
+        Assertions.assertEquals(1, count);
+
+        // Delete the last employee
+        count = emplDao.delete(employeeOut);
+        Assertions.assertEquals(1, count);
+    }
+
+    @Test
+    void readRecord() {
+        var cityDao = ctx.entityManager(City.class, pkType).crud(dbConnection);
+        var cityInp = new City(null, "California", "US", 36.7783, -119.4179);
+        var cityOut = cityDao.insert(cityInp);
+        Assertions.assertNotNull(cityOut.id());
+        Assertions.assertEquals(1L, cityOut.id());
+
+
+        // Select Record:
+        var cityReloaded = cityDao.findById(cityOut.id());
+        Assertions.assertNotNull(cityReloaded);
+        Assertions.assertTrue(cityReloaded.isPresent());
+        Assertions.assertEquals(cityOut.id(), cityReloaded.get().id());
+    }
+
+    public Employee createEmployee(String name, City city) {
+        return createEmployee(null, name, city);
+    }
+
+    public Employee createEmployee(Long id, String name, City city) {
+        return Employee.of(id, name, null , city, LocalDate.of(2020,1,1), true);
+    }
+
+    /** Tests the fail-fast behavior when passing null arguments to Crud methods. */
+    @Test
+    @SuppressWarnings({"rawtypes", "unchecked"})
+    void testFailFastOnNullParameters() {
+        var cityDao = ctx.entityManager(City.class, pkType).crud(dbConnection);
+        var noSnapshost = (Stream<SnapshotProvider>) null;
+
+        Assertions.assertThrows(RuntimeException.class, () -> cityDao.insert((City) null));
+        Assertions.assertThrows(RuntimeException.class, () -> cityDao.findById(null));
+        Assertions.assertThrows(RuntimeException.class, () -> cityDao.update((City) null));
+        Assertions.assertThrows(RuntimeException.class, () -> cityDao.update((Stream<City>) null));
+        Assertions.assertThrows(RuntimeException.class, () -> cityDao.updateChanged(noSnapshost));
+        Assertions.assertThrows(RuntimeException.class, () -> cityDao.delete((City) null));
+        Assertions.assertThrows(RuntimeException.class, () -> cityDao.deleteById(null));
+        Assertions.assertThrows(RuntimeException.class, () -> cityDao.delete((Stream<City>) null));
+    }
+
+    @Test
+    void entityManagerCacheByDomainClass_IgnoresIdTypeArgument() {
+        var cityManagerWithLong = ctx.entityManager(City.class, Long.class);
+        var cityManagerWithInteger = ctx.entityManager(City.class, Integer.class);
+        var employeeManager = ctx.entityManager(Employee.class, Long.class);
+
+        Assertions.assertSame(
+                cityManagerWithLong,
+                cityManagerWithInteger,
+                "EntityManager should be cached by domain class only"
+        );
+        Assertions.assertNotSame(
+                cityManagerWithLong,
+                employeeManager,
+                "Different domain classes must not share the same EntityManager"
+        );
+    }
+}

@@ -1,5 +1,5 @@
 /*
- *  Copyright 2012-2022 Pavel Ponec
+ *  Copyright 2012-2026 Pavel Ponec
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -169,7 +169,7 @@ final public class StringService {
     /** Create comment */
     private Comment getComment(WorkingCopy workingCopy, VariableTree field) {
         final List<Comment> comments = workingCopy.getTreeUtilities().getComments(field, true);
-        final Comment comment = (comments!=null && !comments.isEmpty())
+        final Comment comment = StringUtils.isFilled(comments)
                 ? comments.get(comments.size() - 1)
                 : null;
 

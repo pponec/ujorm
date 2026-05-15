@@ -1,5 +1,5 @@
 /*
- * Copyright 2020-2022 Pavel Ponec, https://github.com/pponec
+ * Copyright 2020-2026 Pavel Ponec, https://github.com/pponec
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,7 +29,8 @@ import org.ujorm.tools.web.ao.WebUtils;
 import org.ujorm.tools.xml.config.HtmlConfig;
 
 /**
- * Build a content of a HTML page for a sortable data grid.
+ * Deprecated {@link GridBuilder} variant kept for compatibility.
+ * <p>Builds the content of an HTML page for a sortable data grid.
  *
  * @author Pavel Ponec
  */

@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2022 Pavel Ponec, https://github.com/pponec
+ * Copyright 2021-2026 Pavel Ponec, https://github.com/pponec
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,13 +17,11 @@ package org.ujorm.tools.web.table;
 
 import java.io.IOException;
 import java.util.Comparator;
+import java.util.Objects;
 import java.util.function.Function;
-import java.util.regex.Pattern;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.ujorm.tools.Assert;
 import org.ujorm.tools.msg.MsgFormatter;
-import org.ujorm.tools.web.ao.Column;
 import org.ujorm.tools.web.ao.HttpParameter;
 
 /**
@@ -34,9 +32,6 @@ import org.ujorm.tools.web.ao.HttpParameter;
 public class ColumnModel<D, V> {
 
     private static final NullPointerException x = null;
-
-    /** Number pattern */
-    private static final Pattern NUMBER = Pattern.compile("-?\\d+");
 
     private final int index;
     @NotNull
@@ -60,8 +55,8 @@ public class ColumnModel<D, V> {
                        @NotNull final CharSequence title,
                        @Nullable final HttpParameter param) {
         this.index = index;
-        this.column = Assert.notNull(column, "column");
-        this.title = Assert.notNull(title, "title");
+        this.column = Objects.requireNonNull(column, "column");
+        this.title = Objects.requireNonNull(title, "title");
         this.param = param;
     }
 
@@ -108,7 +103,7 @@ public class ColumnModel<D, V> {
     }
 
     public final void setDirection(@NotNull final Direction direction) {
-        this.direction = Assert.notNull(direction, "direction");
+        this.direction = Objects.requireNonNull(direction, "direction");
     }
 
     /**
@@ -154,11 +149,7 @@ public class ColumnModel<D, V> {
 
     /** Including is more common choice */
     protected boolean isIncludeColumnType() {
-        if (true) {
-            return true;
-        } else {
-            return !(column instanceof Column);
-        }
+        return true; // !(column instanceof Column);
     }
 
     @Override
@@ -168,13 +159,17 @@ public class ColumnModel<D, V> {
 
     @NotNull
     public static ColumnModel ofCode(@NotNull final String paramValue) {
-        if (NUMBER.matcher(paramValue).matches()) {
-            final int intCode = Integer.parseInt(paramValue);
-            final Direction direction = Direction.of(intCode > 0);
-            return new ColumnModel<>(direction, Math.abs(intCode) - 1);
-        } else {
+        final int intCode;
+        try {
+            if (paramValue.isEmpty()) {
+                return new ColumnModel<>(Direction.NONE, -1);
+            }
+            intCode = Integer.parseInt(paramValue);
+        } catch (NumberFormatException e) {
             return new ColumnModel<>(Direction.NONE, -1);
         }
+        final Direction direction = Direction.of(intCode > 0);
+        return new ColumnModel<>(direction, Math.abs(intCode) - 1);
     }
 
     /** Create a stub column */

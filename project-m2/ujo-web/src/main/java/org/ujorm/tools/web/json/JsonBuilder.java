@@ -1,5 +1,5 @@
 /*
- * Copyright 2020-2022 Pavel Ponec, https://github.com/pponec
+ * Copyright 2020-2026 Pavel Ponec, https://github.com/pponec
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,7 +21,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.ujorm.tools.web.HtmlElement;
 import org.ujorm.tools.web.ao.ObjectProvider;
-import org.ujorm.tools.web.request.HttpContext;
+import org.ujorm.tools.web.request.AbstractExchangeContext;
 import org.ujorm.tools.xml.config.HtmlConfig;
 
 /**
@@ -43,8 +43,8 @@ public class JsonBuilder implements Closeable {
     private final HtmlConfig config;
     /** Parameter counter */
     private int paramCounter = 0;
-    /** Dummy selector to run a JavaScript */
-    private final String JAVACRIPT_DUMMY_SELECTOR = "";
+    /** Dummy selector to run a JavaScript by the key */
+    private final String JAVACRIPT_KEY_SELECTOR = "";
 
     /** Constructor with a default HTML config */
     protected JsonBuilder(@NotNull final Appendable writer) {
@@ -121,12 +121,12 @@ public class JsonBuilder implements Closeable {
         return this;
     }
 
-    /** Write a Javascript to a call.
+    /** Write a key to a call a javacroptscript from the function map of the script.
      * The response can contain only one Javascript code,
      * so this method can be called only once per request.
      */
-    public JsonBuilder writeJs(@Nullable final CharSequence... javascript) throws IOException {
-        return write(JAVACRIPT_DUMMY_SELECTOR, javascript);
+    public JsonBuilder writeJsKey(@Nullable final CharSequence javascriptKey) throws IOException {
+        return write(JAVACRIPT_KEY_SELECTOR, javascriptKey);
     }
 
     /** Write a JSON property */
@@ -273,14 +273,14 @@ public class JsonBuilder implements Closeable {
     /** An object factory */
     @NotNull
     public static final JsonBuilder of(
-            @NotNull final HttpContext context,
+            @NotNull final AbstractExchangeContext context,
             @NotNull final HtmlConfig config) {
         return of(context.writer(), config);
     }
 
     /** An object factory */
     @NotNull
-    public static final JsonBuilder of(@NotNull final HttpContext context) {
+    public static final JsonBuilder of(@NotNull final AbstractExchangeContext context) {
         return of(context.writer());
     }
 

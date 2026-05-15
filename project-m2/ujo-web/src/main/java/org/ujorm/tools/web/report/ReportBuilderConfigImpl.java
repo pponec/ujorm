@@ -1,5 +1,5 @@
 /*
- * Copyright 2020-2022 Pavel Ponec, https://github.com/pponec
+ * Copyright 2020-2026 Pavel Ponec, https://github.com/pponec
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,6 +18,7 @@ package org.ujorm.tools.web.report;
 import java.time.Duration;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.function.BiConsumer;
 import java.util.logging.Logger;
 import org.jetbrains.annotations.NotNull;
@@ -31,12 +32,12 @@ import org.ujorm.tools.xml.config.HtmlConfig;
 import static org.ujorm.tools.web.report.ReportBuilderConfigImpl.Constants.*;
 
 /**
- * A HTML page builder for table based an AJAX.
+ * Default {@link ReportBuilderConfig} implementation (CSS classes, embedded icons, AJAX tuning).
  *
- * <h3>Usage</h3>
+ * <h4>Usage</h4>
  *
  * <pre class="pre">
- *  TableBuilder.of("Hotel Report")
+ *  ReportBuilder.of("Hotel Report")
  *          .add(Hotel::getName, "Hotel", NAME)
  *          .add(Hotel::getCity, "City", CITY)
  *          .add(Hotel::getStreet, "Street")
@@ -56,19 +57,19 @@ public class ReportBuilderConfigImpl<D> implements ReportBuilderConfig<D> {
     /** Link to CSS file */
     @NotNull
     private String cssLink;
-    /** Link to an external JavaScript library where no-library returns an empty String */
+    /** URL of an external JavaScript library; empty string when none is configured */
     @NotNull
     private String jqueryLink;
-    /** Iddle delay in millis */
+    /** Idle delay before AJAX auto-submit (milliseconds) */
     @NotNull
     private Duration idleDelay;
-    /** AJAX request param */
+    /** HTTP parameter that triggers an AJAX table refresh */
     @NotNull
     private HttpParameter ajaxRequestParam;
-    /** AJAX request param */
+    /** HTTP parameter carrying the requested sort column */
     @NotNull
     private HttpParameter sortRequestParam;
-    /** AJA ready param */
+    /** Message shown while AJAX content is loading */
     @NotNull
     private CharSequence ajaxReadyMessage = "AJAX ready";
     /** Form identifier */
@@ -98,7 +99,7 @@ public class ReportBuilderConfigImpl<D> implements ReportBuilderConfig<D> {
     /** Sortable column undefined CSS style */
     @NotNull
     private final CharSequence sortableBoth;
-    /** Use an external images for sortable icons */
+    /** When {@code true}, use embedded (packaged) sort icons; when {@code false}, reference icon URLs in CSS */
     private boolean embeddedIcons;
     /** Inline CSS writer */
     @Nullable
@@ -160,7 +161,7 @@ public class ReportBuilderConfigImpl<D> implements ReportBuilderConfig<D> {
         this.cssWriter = cssWriter;
     }
 
-    /** Returns a fist class of table element by defult */
+    /** Returns the first CSS class applied to the table element by default */
     @NotNull
     protected CharSequence getTableClassSelector() {
         return tableCssClass.isEmpty()
@@ -169,57 +170,57 @@ public class ReportBuilderConfigImpl<D> implements ReportBuilderConfig<D> {
     }
 
     public ReportBuilderConfigImpl<D> setCssLink(@NotNull final String cssLink) {
-        this.cssLink = Assert.notNull(cssLink, "cssLink");
+        this.cssLink = Objects.requireNonNull(cssLink, "cssLink");
         return this;
     }
 
     public ReportBuilderConfigImpl<D> setJqueryLink(@NotNull final String jqueryLink) {
-        this.jqueryLink = Assert.notNull(jqueryLink, "jqueryLink");
+        this.jqueryLink = Objects.requireNonNull(jqueryLink, "jqueryLink");
         return this;
     }
 
     public ReportBuilderConfigImpl<D> setIdleDelay(@NotNull final Duration idleDelay) {
-        this.idleDelay = Assert.notNull(idleDelay, "idleDelay");
+        this.idleDelay = Objects.requireNonNull(idleDelay, "idleDelay");
         return this;
     }
 
     public ReportBuilderConfigImpl<D> setAjaxRequestParam(@NotNull final HttpParameter ajaxRequestParam) {
-        this.ajaxRequestParam = Assert.notNull(ajaxRequestParam, "ajaxRequestParam");
+        this.ajaxRequestParam = Objects.requireNonNull(ajaxRequestParam, "ajaxRequestParam");
         return this;
     }
 
     public ReportBuilderConfigImpl<D> setSortRequestParam(@NotNull final HttpParameter sortRequestParam) {
-        this.sortRequestParam = Assert.notNull(sortRequestParam, "sortRequestParam");
+        this.sortRequestParam = Objects.requireNonNull(sortRequestParam, "sortRequestParam");
         return this;
     }
 
     public ReportBuilderConfigImpl<D> setAjaxReadyMessage(@NotNull final CharSequence ajaxReadyMessage) {
-        this.ajaxReadyMessage = Assert.hasLength(ajaxReadyMessage, "ajaxReadyMessage");
+        this.ajaxReadyMessage = Objects.requireNonNull(ajaxReadyMessage, "ajaxReadyMessage");
         return this;
     }
 
     public ReportBuilderConfigImpl<D> setFormId(@NotNull final String formId) {
-        this.formId = Assert.hasLength(formId, "formId");
+        this.formId = Assert.hasLength(formId, () -> "formId");
         return this;
     }
 
     public ReportBuilderConfigImpl<D> setControlCss(@NotNull final String controlCss) {
-        this.controlCss = Assert.hasLength(controlCss, "controlCss");
+        this.controlCss = Assert.hasLength(controlCss, () -> "controlCss");
         return this;
     }
 
     public ReportBuilderConfigImpl<D> setSubtitleCss(@NotNull final String subtitleCss) {
-        this.subtitleCss = Assert.hasLength(subtitleCss, "subtitleCss");
+        this.subtitleCss = Assert.hasLength(subtitleCss, () -> "subtitleCss");
         return this;
     }
 
     public ReportBuilderConfigImpl<D> setTableSelector(@NotNull final CharSequence tableSelector) {
-        this.tableSelector = Assert.notNull(tableSelector, "tableSelector");
+        this.tableSelector = Objects.requireNonNull(tableSelector, "tableSelector");
         return this;
     }
 
     public ReportBuilderConfigImpl<D> setTableCssClass(@NotNull final List<CharSequence> tableCssClass) {
-        this.tableCssClass = Assert.notNull(tableCssClass, "tableCssClass");
+        this.tableCssClass = Objects.requireNonNull(tableCssClass, "tableCssClass");
         return this;
     }
 
@@ -229,7 +230,7 @@ public class ReportBuilderConfigImpl<D> implements ReportBuilderConfig<D> {
         return this;
     }
 
-    /** Use an external images for sortable icons */
+    /** Sets whether embedded sort icons are used ({@code true}) or CSS background URLs ({@code false}). */
     public boolean setEmbeddedIcons(boolean embeddedIcons) {
         return this.embeddedIcons = embeddedIcons;
     }
@@ -248,7 +249,7 @@ public class ReportBuilderConfigImpl<D> implements ReportBuilderConfig<D> {
         return cssLink;
     }
 
-    /** Link to an external Javascript library */
+    /** URL of the external JavaScript library (often jQuery); empty when disabled */
     @Override
     @NotNull
     public String getJavascriptLink() {
@@ -337,15 +338,16 @@ public class ReportBuilderConfigImpl<D> implements ReportBuilderConfig<D> {
         return sortableBoth;
     }
 
-    /** Inline CSS writer where a default value is generated from the {@link #inlineCssWriter() } method.
-     * } */
+    /**
+     * Optional inline CSS writer; when unset, {@link #inlineCssWriter()} is used.
+     */
     @Override
     @NotNull
     public BiConsumer<Element, Boolean> getCssWriter() {
         return cssWriter != null ? cssWriter : inlineCssWriter();
     }
 
-    /** Use an external images for sortable icons */
+    /** {@inheritDoc} */
     public boolean isEmbeddedIcons() {
         return this.embeddedIcons;
     }
@@ -385,7 +387,7 @@ public class ReportBuilderConfigImpl<D> implements ReportBuilderConfig<D> {
 
     /** Config constants */
     public static class Constants {
-        /** Link to a Bootstrap URL of CDN */
+        /** Bootstrap CSS stylesheet URL on a CDN */
         public static final String BOOTSTRAP_CSS = "https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css";
         /** Form identifier */
         public static final String FORM_ID = "form";
@@ -395,7 +397,7 @@ public class ReportBuilderConfigImpl<D> implements ReportBuilderConfig<D> {
         public static final String SUBTITLE_CSS = "subtitle";
         /** Table CSS classes */
         public static List<CharSequence> TABLE_CSS_CLASS = Arrays.asList("table", "table-striped", "table-bordered");
-        /** Key delay */
+        /** Default idle delay before AJAX actions */
         public static final Duration IDLE_DELAY = Duration.ofMillis(250);
     }
 }

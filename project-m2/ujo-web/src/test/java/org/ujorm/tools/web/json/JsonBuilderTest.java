@@ -1,5 +1,5 @@
 /*
- * Copyright 2020-2022 Pavel Ponec, https://github.com/pponec
+ * Copyright 2020-2026 Pavel Ponec, https://github.com/pponec
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,7 +23,7 @@ import static org.junit.jupiter.api.Assertions.*;
  *
  * @author Pavel Ponec
  */
-public class JsonBuilderTest {
+class JsonBuilderTest {
 
     /**
      * Test of write method, of class JsonWriter.
@@ -105,5 +105,40 @@ public class JsonBuilderTest {
             writer.write(key, e -> e.addElementIf(true, Html.DIV).addText(value[0]));
         }
         assertEquals("{\"abc\":\"<div>&lt;text&gt;</div>\"}", builder.toString());
+    }
+
+    /** Test specific Unicode characters and sequences. */
+    @Test
+    public void testWriteSpecialChars() throws Exception {
+        StringBuilder builder = new StringBuilder();
+
+        try (JsonBuilder writer = JsonBuilder.of(builder)) {
+            writer.write("null", String.valueOf((char) 0x00));
+        }
+        assertEquals("{\"null\":\"\\u0000\"}", builder.toString());
+
+        builder.setLength(0);
+        try (JsonBuilder writer = JsonBuilder.of(builder)) {
+            writer.write("us", String.valueOf((char) 0x1F));
+        }
+        assertEquals("{\"us\":\"\\u001F\"}", builder.toString());
+
+        builder.setLength(0);
+        try (JsonBuilder writer = JsonBuilder.of(builder)) {
+            writer.write("LS", "\u2028");
+        }
+        assertEquals("{\"LS\":\"\\u2028\"}", builder.toString());
+
+        builder.setLength(0);
+        try (JsonBuilder writer = JsonBuilder.of(builder)) {
+            writer.write("NBSP", "\u00A0");
+        }
+        assertEquals("{\"NBSP\":\"\u00A0\"}", builder.toString());
+
+        builder.setLength(0);
+        try (JsonBuilder writer = JsonBuilder.of(builder)) {
+            writer.write("Euro", "€");
+        }
+        assertEquals("{\"Euro\":\"€\"}", builder.toString());
     }
 }

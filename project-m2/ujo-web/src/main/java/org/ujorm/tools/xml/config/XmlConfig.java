@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2022 Pavel Ponec, https://github.com/pponec
+ * Copyright 2018-2026 Pavel Ponec, https://github.com/pponec
  * https://github.com/pponec/ujorm/blob/master/samples/servlet/src/main/java/org/ujorm/ujoservlet/tools/Html.java
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -23,7 +23,8 @@ import org.ujorm.tools.xml.ApiElement;
 import org.ujorm.tools.xml.config.impl.DefaultXmlConfig;
 
 /**
- * Configuraion of HtmlPage
+ * Settings for XML/HTML serialization (charset, indentation, doctype, line breaks, caching).
+ *
  * @author Pavel Ponec
  */
 public interface XmlConfig {
@@ -46,9 +47,10 @@ public interface XmlConfig {
     int getFirstLevel();
 
     /**
-     * New line
-     * @return the newLine
+     * Indentation prefix added per nesting level (often a tab or spaces).
+     * @return the indentation sequence
      */
+    @NotNull
     CharSequence getIndentation();
 
     /** A replacement text instead of the {@code null} value */
@@ -60,8 +62,8 @@ public interface XmlConfig {
     CharSequence getNewLine();
 
     /**
-     * HTTP cache is allowed
-     * @return
+     * Whether HTTP client caching is allowed for the generated response.
+     * @return {@code true} if caching is allowed
      */
     boolean isCacheAllowed();
 
@@ -77,16 +79,16 @@ public interface XmlConfig {
     }
 
     /**
-     * Create a new default config
-     * @return
+     * Creates a new default configuration instance.
+     * @return default XML configuration
      */
     static DefaultXmlConfig ofDefault() {
         return new DefaultXmlConfig();
     }
 
     /**
-     * Create a new default config
-     * @return
+     * Creates a new configuration with the given doctype.
+     * @return a new {@link DefaultXmlConfig} with {@code doctype} set
      */
     static DefaultXmlConfig ofDoctype(@Nullable final String doctype) {
         final DefaultXmlConfig result = new DefaultXmlConfig();

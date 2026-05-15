@@ -1,5 +1,5 @@
 /*
- * Copyright 2020-2022 Pavel Ponec, https://github.com/pponec
+ * Copyright 2020-2026 Pavel Ponec, https://github.com/pponec
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,6 @@
 package org.ujorm.tools.web.ao;
 
 import org.jetbrains.annotations.NotNull;
-import org.ujorm.tools.Check;
 import java.util.stream.Stream;
 
 /**
@@ -40,14 +39,7 @@ public abstract class WebUtils {
 
     /** Check if any attribute is typeof the Renderer */
     public static final boolean isType(final Class type, final @NotNull Stream<Object> items) {
-        final boolean[] result = {false};
-        items.filter(t -> !result[0])
-                .forEach(t -> {
-                    if (type.isInstance(t)) {
-                        result[0] = true;
-                    }
-                });
-        return result[0];
+        return items.anyMatch(type::isInstance);
     }
 
 }

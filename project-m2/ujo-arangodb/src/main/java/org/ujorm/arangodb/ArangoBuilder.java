@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2022 Pavel Ponec.
+ * Copyright 2021-2026 Pavel Ponec.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,7 +23,7 @@ import com.arangodb.ArangoDatabase;
 import com.arangodb.entity.BaseDocument;
 
 /**
- * A prototype of the ArangoDB bulider.
+ * A prototype of the ArangoDB builder.
  *
  * See: https://www.arangodb.com/tutorials/tutorial-java-driver/
  *
@@ -31,15 +31,15 @@ import com.arangodb.entity.BaseDocument;
  */
 public class ArangoBuilder {
 
+    /** Query builder */
     private final StringBuilder builder = new StringBuilder();
+    /** Query parameters */
     private final Map<String, Object> params = new HashMap<>();
 
-    public ArangoBuilder() {
-    }
-
+    /** Add items to the builder */
     public ArangoBuilder add(String... items) {
-        for (String item : items) {
-            if (builder.length() > 0) {
+        for (var item : items) {
+            if (!builder.isEmpty()) {
                 builder.append(' ');
             }
             builder.append(item);
@@ -47,26 +47,31 @@ public class ArangoBuilder {
         return this;
     }
 
+    /** Add items and a new line */
     public ArangoBuilder line(String... items) {
         add(items);
         builder.append('\n');
         return this;
     }
 
+    /** Add a parameter with a default name */
     public ArangoBuilder param(Object value) {
         return param(value, getDefaultParameterName());
     }
 
+    /** Add a parameter with a specific name */
     public ArangoBuilder param(Object value, String name) {
         params.put(name, value);
         builder.append(" @").append(name);
         return this;
     }
 
+    /** Add a date parameter with a default name */
     public ArangoBuilder param(OffsetDateTime value) {
         return param(value, getDefaultParameterName());
     }
 
+    /** Add a date parameter with a specific name */
     public ArangoBuilder param(OffsetDateTime value, String name) {
         return param(value.toEpochSecond(), name);
     }
@@ -81,6 +86,7 @@ public class ArangoBuilder {
         return arangoDB.query(builder.toString(), params, null, returnType).stream();
     }
 
+    /** Get a default parameter name */
     protected String getDefaultParameterName() {
         return "param" + (params.size() + 1);
     }
@@ -90,5 +96,4 @@ public class ArangoBuilder {
     public String toString() {
         return builder.toString();
     }
-
 }

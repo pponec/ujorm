@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2022 Pavel Ponec, https://github.com/pponec
+ * Copyright 2017-2026 Pavel Ponec, https://github.com/pponec
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,27 +18,28 @@ package org.ujorm.tools;
 import java.util.Collection;
 import java.util.Map;
 import java.util.Objects;
+
 import org.jetbrains.annotations.Nullable;
 
 /**
- * Common checker. See the next positive tests:
+ * Common checker. Examples:
  * <pre class="pre">
- *  Check.hasLength("ABC");
- *  Check.hasLength(new char[]{'A', 'B', 'C'});
- *  Check.hasLength(new StringBuilder().append("ABC"));
- *  Check.hasLength(Arrays.asList("A", "B", "C"));
+ * Check.hasLength("ABC");
+ * Check.hasLength(new char[]{'A', 'B', 'C'});
+ * Check.hasLength(new StringBuilder().append("ABC"));
+ * Check.hasLength(Arrays.asList("A", "B", "C"));
  *
- *  Check.isEmpty("");
- *  Check.isEmpty(new char[0]);
- *  Check.isEmpty(new StringBuilder());
- *  Check.isEmpty((List) null);
+ * Check.isEmpty("");
+ * Check.isEmpty(new char[0]);
+ * Check.isEmpty(new StringBuilder());
+ * Check.isEmpty((List) null);
  * </pre>
  * @author Pavel Ponec
  * @since 1.73
  */
-    public abstract class Check {
+public abstract class Check {
 
-    /** Only static method are implemented */
+    /** Only static methods are implemented. */
     private Check() {
     }
 
@@ -63,7 +64,7 @@ import org.jetbrains.annotations.Nullable;
     }
 
     /** Checks if the argument is not empty, nor {@code null}. */
-    public static boolean hasLength(@Nullable final Map<?,?> values) {
+    public static boolean hasLength(@Nullable final Map<?, ?> values) {
         return values != null && values.size() > 0;
     }
 
@@ -93,7 +94,7 @@ import org.jetbrains.annotations.Nullable;
     }
 
     /** Checks if the argument is empty or {@code null}. */
-    public static boolean isEmpty(@Nullable final Map<?,?> value) {
+    public static boolean isEmpty(@Nullable final Map<?, ?> value) {
         return !hasLength(value);
     }
 

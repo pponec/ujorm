@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2022 Pavel Ponec
+ * Copyright 2021-2026 Pavel Ponec
  * https://github.com/pponec/ujorm/blob/master/project-m2/ujo-tools/src/main/java/org/ujorm/tools/jdbc/JdbcBuilder.java
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,11 +17,16 @@
 package org.ujorm.tools.common;
 
 import java.io.*;
+import java.math.BigDecimal;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
+import java.util.Locale;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.jetbrains.annotations.NotNull;
@@ -31,7 +36,7 @@ import org.ujorm.tools.Assert;
 /**
  * Methods to reading an text resource to the {@code String}.
  *
- * <h3>Usage</h3>
+ * <h4>Usage</h4>
  * <pre class="pre">
  * try (Stream&lt;String&gt; stream = StringUtils.readLines(StringUtils.class,  "text", "dummy.txt")) {
  *     String[] result = stream.toArray(String[]::new);
@@ -46,8 +51,33 @@ public class StringUtils {
      /** File separator (one character is required) */
      public static final String SEPARATOR = "/";
 
+    /**
+     * Non-breaking space used as a thousands separator.
+     * <p>
+     * This character is defined by the <b>ISO 80000-1</b> standard for
+     * separating groups of three digits. It ensures that large numbers
+     * remain on a single line while maintaining professional typographic
+     * spacing.
+     * </p> */
+    public static final char NARROW_NBSP = '\u202F';
+
+     /** Standard Non-breaking space (NBSP). */
+     public static final char NBSP = '\u00A0';
+
     /** A messge template: "Resource is not available: {}"  */
     private static final String NO_RESOURCE_MSG = "Resource is not available: ";
+
+    /** Number formatter using underscore as a thousand separator. */
+    public static final DecimalFormat INT_FORMAT = numberFormatter(false);
+
+    /** Number formatter using underscore as a thousand separator. */
+    public static final DecimalFormat DECIMAL_FORMAT = numberFormatter(true);
+
+    /**
+     * Technical Locale optimized for logging (Format: {@code 1 234.56}).
+     * Uses a dot for decimals and a space for grouping.
+     */
+    public static final Locale TECHNICAL_LOCALE = Locale.CANADA_FRENCH;
 
     /** Charset of the resource */
     @NotNull
@@ -67,8 +97,8 @@ public class StringUtils {
     }
 
     public StringUtils(@NotNull final Charset charset, @NotNull final Class<?> classOfLoader) {
-        this.charset = Assert.notNull(charset, "charset");
-        this.classOfLoader = Assert.notNull(classOfLoader, "classOfLoader");
+        this.charset = Objects.requireNonNull(charset, "charset");
+        this.classOfLoader = Objects.requireNonNull(classOfLoader, "classOfLoader");
     }
 
     /** Read a content of the resource encoded by UTF-8.
@@ -122,10 +152,8 @@ public class StringUtils {
      */
     @NotNull
     public Stream<String> readRows(@NotNull final URL url) throws IOException {
-        final InputStream is = url.openStream();
-        if (is == null) {
-            throw new IllegalStateException("Can't open: " + url);
-        } else return readRows(is).onClose(()-> {
+        final var is = url.openStream();
+        return readRows(is).onClose(()-> {
             try {
                 is.close();
             } catch (IOException e) {
@@ -214,4 +242,51 @@ public class StringUtils {
         return readLines(StringUtils.class, resourcePath);
     }
 
+    /**
+     * Format number using THIN_NBSP for the thousand separator.
+     * <br>Examples:
+     * <br> 10000 -> "10 000"
+     * <br> 1234.56 -> "1 234.56"
+     * <br> 100 (Integer) -> "100"
+     * <br> null -> ""
+     */
+    @NotNull
+    public static String formatSeparator(@Nullable Number number) {
+        if (number == null) return "";
+        if (number instanceof Float) {
+            number = new BigDecimal(number.toString());
+        }
+        final var isDecimal = number instanceof Double || number instanceof BigDecimal;
+        final var formatter = isDecimal ? DECIMAL_FORMAT : INT_FORMAT;
+        return formatter.format(number);
+    }
+
+    /** Crete a number formatter using underscore as a thousand separator. */
+    public static final DecimalFormat numberFormatter(boolean isDecimal) {
+        final var pattern = isDecimal
+                ? "#,##0.################"
+                : "#,##0";
+        return numberFormatter(pattern);
+    }
+
+    /** Crete a number formatter using underscore as a thousand separator. */
+    public static final DecimalFormat numberFormatter(String pattern) {
+        final var symbols = new DecimalFormatSymbols(Locale.ROOT);
+        symbols.setGroupingSeparator(NARROW_NBSP);
+        return new DecimalFormat(pattern, symbols);
+    }
+
+    /**
+     * Returns the given text value, or an empty string when the value is {@code null}.
+     *
+     * <p>Use this helper when the application prefers empty text over SQL/Java {@code null}
+     * for optional textual fields.
+     *
+     * @param value text value that may be {@code null}
+     * @return {@code value} when non-null; otherwise {@code ""}
+     */
+    @NotNull
+    public static String emptyIfNull(@Nullable String value) {
+        return value != null ? value : "";
+    }
 }

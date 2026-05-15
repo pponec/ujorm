@@ -1,7 +1,10 @@
 package org.ujorm.tools.sql;
 
-/** Unchecked SQL exception */
-public class SQLException extends IllegalStateException {
+/** Unchecked SQL exception
+ * @deprecated Use the same class from the package {@code org.ujorm.tools.jdbc} rather.
+ */
+@Deprecated
+public class SQLException extends org.ujorm.tools.jdbc.SQLException {
 
     public SQLException(String s) {
         super(s);
@@ -12,6 +15,10 @@ public class SQLException extends IllegalStateException {
     }
 
     public SQLException(Throwable cause, String message) {
+        super(message, cause);
+    }
+
+    public SQLException(String message, Throwable cause) {
         super(message, cause);
     }
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2020-2022 Pavel Ponec, https://github.com/pponec
+ * Copyright 2020-2026 Pavel Ponec, https://github.com/pponec
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,7 +20,7 @@ import java.util.logging.Logger;
 import org.jetbrains.annotations.NotNull;
 
 import org.ujorm.tools.Assert;
-import org.ujorm.tools.web.request.HttpContext;
+import org.ujorm.tools.web.request.AbstractExchangeContext;
 import org.ujorm.tools.web.HtmlElement;
 import org.ujorm.tools.web.ao.HttpParameter;
 import org.ujorm.tools.web.json.JsonBuilder;
@@ -30,7 +30,9 @@ import org.ujorm.tools.web.ao.IORunnable;
 import org.ujorm.tools.xml.config.HtmlConfig;
 
 /**
- * A Reqest Dispatcher
+ * Dispatches an AJAX-style request: runs the processor registered for the first matching
+ * {@linkplain HttpParameter HTTP parameter}, or falls back to a default handler.
+ *
  * @author Pavel Ponec
  */
 public class ReqestDispatcher {
@@ -41,7 +43,7 @@ public class ReqestDispatcher {
     private static final Logger LOGGER = Logger.getLogger(ReqestDispatcher.class.getName());
 
     @NotNull
-    private final HttpContext context;
+    private final AbstractExchangeContext context;
 
     @NotNull
     private final HtmlConfig htmlConfig;
@@ -54,20 +56,20 @@ public class ReqestDispatcher {
     private final boolean noCache = true;
 
     public ReqestDispatcher(
-            @NotNull HttpContext context) {
+            @NotNull AbstractExchangeContext context) {
         this("Info", context);
     }
 
     public ReqestDispatcher(
             @NotNull CharSequence title,
-            @NotNull HttpContext context) {
+            @NotNull AbstractExchangeContext context) {
         this(context, HtmlConfig.ofDefault()
                 .setTitle(title)
                 .setNiceFormat());
     }
 
     public ReqestDispatcher(
-            @NotNull HttpContext context,
+            @NotNull AbstractExchangeContext context,
             @NotNull HtmlConfig htmlConfig
     ) {
         this.context = context;
@@ -80,14 +82,14 @@ public class ReqestDispatcher {
     }
 
     /**
-     * Registre new processor.
+     * Registers a processor invoked when the given HTTP parameter is present in the request.
      *
-     * @param key A key type of HttpParameter
-     * @param processor processor
-     * @return
+     * @param key parameter key used to select the branch
+     * @param processor writes the JSON response via {@link JsonBuilder}
+     * @return this instance for method chaining
      */
     public ReqestDispatcher onParam(@NotNull final HttpParameter key, @NotNull final IOConsumer<JsonBuilder> processor) throws IOException {
-        Assert.notNull(key, "Parameter {} is required", "key");
+        Assert.notNull(key, () -> "Parameter %s is required".formatted("key"));
         if (!done && key.of(context, false)) {
             try (JsonBuilder builder = JsonBuilder.of(context.writer(), getAjaxConfig())) {
                 done = true;

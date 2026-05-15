@@ -1,47 +1,110 @@
 package org.ujorm.tools.web.request;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import java.util.Set;
-import java.util.function.Function;
+import org.ujorm.tools.xml.config.XmlConfig;
 
-/** HTTP servlet request context */
-public interface HttpContext {
+import java.io.IOException;
+import java.io.StringReader;
+import java.util.Map;
+import java.util.Optional;
 
-    /** An abstract API of the HTTP request */
-    URequest request();
+/** Jakarta Servlet HTTP request context. */
+public class HttpContext extends ExchangeContext {
 
-    Appendable writer();
+    private final HttpServletRequest request;
+    private final HttpServletResponse response;
 
-    /** Returns the last parameter or the null value. */
-    String getParameter(@NotNull String key);
-
-    /** Returns the parameter names */
-    Set<String> getParameterNames();
-
-    /** Returns the last parameter */
-    String getParameter(@NotNull String key, String defaultValue);
-
-    /** Returns the type safe last parameter or the default value. */
-    <T> T getParameter(@NotNull String key, @NotNull T defaultValue, @NotNull Function<String, T> converter);
-
-    /** HTTP Servlet Factory */
-    public static HttpContext ofServletResponse(Object httpServletResponse) {
-        return ofServlet(null, httpServletResponse);
+    protected HttpContext(
+            @NotNull URequest uRequest,
+            @NotNull Appendable writer,
+            @Nullable HttpServletRequest request,
+            @NotNull HttpServletResponse response
+    ) {
+        super(uRequest, writer);
+        this.request = request;
+        this.response = response;
     }
 
-    /** Create a default HTTP Context */
-    public static HttpContext ofServlet(@Nullable Object httpServletRequest, @NotNull Object httpServletResponse) {
-        return HttpContextImpl.ofServlet(httpServletRequest, httpServletResponse);
+    /** Original HTTP Jakarta Servlet Request */
+    @NotNull
+    public Optional<HttpServletRequest> getServletRequest() {
+        return Optional.ofNullable(request);
     }
 
-    /** Create a default HTTP context from a map */
-    public static HttpContext of(ManyMap map) {
-        return new HttpContextImpl(URequestImpl.ofMap(map), new StringBuilder());
+    /** Original HTTP Jakarta Servlet Response */
+    @NotNull
+    public HttpServletResponse getServletResponse() {
+        return response;
     }
 
-    /** UContext from a map */
-    public static HttpContext of() {
-        return of (new ManyMap());
+    /** @see HttpServletResponse#sendRedirect(String)  */
+    public void sendRedirect(@NotNull String location) throws IOException {
+        getServletResponse().sendRedirect(location);
+    }
+
+    /** Returns the context path with a trailing slash */
+    public String getPathSlash() {
+        var result = getServletRequest().map(HttpServletRequest::getContextPath).orElseThrow();
+        return result.isEmpty() ? "/" : (result + "/");
+    }
+
+    /**
+     * Create a default HTTP Context by the Jakarta Servlet API.
+     */
+    public static @NotNull HttpContext of(
+            @NotNull final HttpServletRequest request,
+            @NotNull final HttpServletResponse response
+    ) {
+        return of(request, response, XmlConfig.ofDefault());
+    }
+
+    /**
+     * Create a default HTTP Context by the Jakarta Servlet API.
+     * @deprecated Use the method {@link #of(HttpServletRequest, HttpServletResponse)}
+     */
+    @Deprecated
+    public static @NotNull HttpContext ofServlet(
+            @NotNull final HttpServletRequest request,
+            @NotNull final HttpServletResponse response
+    ) {
+        return of(request, response, XmlConfig.ofDefault());
+    }
+
+    /**
+     * Create a default HTTP Context by the Jakarta Servlet API.
+     */
+    public static @NotNull HttpContext of(
+            @Nullable final HttpServletRequest request,
+            @NotNull final HttpServletResponse response,
+            @NotNull final XmlConfig config
+    ) {
+        try {
+            final var charset = config.getCharset();
+            if (request != null) request.setCharacterEncoding(charset.name());
+            ServletBridge.prepareHtmlResponse(response, charset, true);
+            var map = request != null ? manyMap(request.getParameterMap()) : manyMap(Map.of());
+            var req = new URequestImpl(map, request != null ? request.getReader() : new StringReader(""));
+            var writer = response.getWriter();
+            return new HttpContext(req, writer, request, response);
+        } catch (Exception ex) {
+            throw new IllegalStateException(ex);
+        }
+    }
+
+    /**
+     * Create a default HTTP Context by the Jakarta Servlet API.
+     */
+    public static @NotNull HttpContext of(@NotNull final HttpServletResponse response) {
+        return of(null, response);
+    }
+
+    /** * Converts a map of arrays to a map of lists using forEach */
+    private static ManyMap manyMap(@NotNull Map<String, String[]> map) {
+        var result = new ManyMap();
+        map.forEach((key, values) ->  result.put(key, values));
+        return result;
     }
 }

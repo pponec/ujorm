@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2022 Pavel Ponec, https://github.com/pponec
+ * Copyright 2017-2026 Pavel Ponec, https://github.com/pponec
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,7 +23,7 @@ import static org.junit.jupiter.api.Assertions.*;
  * Tests of the MsgFormatter class
  * @author Pavel Ponec
  */
-public class MsgFormatterTest {
+class MsgFormatterTest {
 
     /**
      * Test of format method, of class MsgFormatter.

@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2022 Pavel Ponec,
+ * Copyright 2021-2026 Pavel Ponec,
  * https://github.com/pponec/ujorm/blob/master/project-m2/ujo-tools/src/main/java/org/ujorm/tools/XmlModel.java
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -23,7 +23,7 @@ import static org.junit.jupiter.api.Assertions.*;
  *
  * @author Pavel Ponec
  */
-public class ColumnModelTest {
+class ColumnModelTest {
 
     private static final boolean OPPSITE = true;
     private static final boolean NATURAL = !OPPSITE;

@@ -1,0 +1,1019 @@
+/*
+ * Copyright 2026-2026 Pavel Ponec
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package org.ujorm.orm.core;
+
+import lombok.RequiredArgsConstructor;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import org.ujorm.core.*;
+import org.ujorm.core.impl.AbstractUjo;
+import org.ujorm.orm.Config;
+import org.ujorm.orm.Crud;
+import org.ujorm.orm.SqlQuery;
+import org.ujorm.orm.jdbc.ResultSetMapper;
+import org.ujorm.orm.model.ColumnModel;
+import org.ujorm.orm.model.QuotePair;
+import org.ujorm.orm.model.TableModel;
+import org.ujorm.orm.utils.EntityContext;
+import org.ujorm.orm.utils.JdbcUtils;
+import org.ujorm.orm.utils.StatementCache;
+import org.ujorm.tools.Check;
+import org.ujorm.tools.jdbc.AbstractSqlQuery.SqlFunction;
+import org.ujorm.tools.jdbc.SQLExceptionBuilder;
+
+import java.sql.*;
+import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Consumer;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.stream.Stream;
+
+/**
+ * The Entity Manager for the JDBC API.
+ * Each method may throw an unchecked {@link org.ujorm.tools.jdbc.SQLException}.
+ * <p>
+ * It is highly recommended to call the {@link #crud(Connection)} method as part
+ * of the class initialization to pre-build the internal table model safely.
+ * <p>
+ * <strong>DB context and reuse:</strong> By default, this instance is tied to a single resolved
+ * database context after the first {@link #crud(Connection)} or {@link #qualifiedTableName(Connection)}
+ * call. Passing a {@link Connection} that resolves to a different {@link org.ujorm.orm.model.TableModel}
+ * (e.g. another schema or database) causes {@link IllegalStateException}.
+ * <p>
+ * To reuse one {@code EntityManager} across tenants (per-schema, per-database/catalog, or both),
+ * set {@link Config#tenantPerDatabaseSchema()} to {@code true}. Then the internal table model and
+ * qualified table name are refreshed when the connection implies a different cached model.
+ *
+ * @param <D> Domain class
+ * @param <V> Primary key class
+ */
+public final class EntityManager<D, V> {
+    private static final Logger LOGGER = Logger.getLogger(EntityManager.class.getName());
+
+    private final DomainHandler<D> domainHandler;
+    private final TableModelService tableModelService;
+    private final ResultSetMapper<D> resultSetMapper;
+    private final Config config;
+    private final Utilities utilities;
+
+    /** Lazy initialized TableModel. Use {@link #tableModel()} method to access it safely. */
+    private volatile TableModel<D> _tableModel;
+    /** Lazy initialized qualified table name including SQL quotes. */
+    private volatile String _qualifiedTableName;
+
+    public EntityManager(
+            @NotNull DomainHandler<D> domainHandler,
+            @NotNull TableModelService tableModelService,
+            @NotNull ResultSetMapper<D> resultSetMapper,
+            @NotNull Config config
+    ) {
+        this.domainHandler = domainHandler;
+        this.tableModelService = tableModelService;
+        this.resultSetMapper = resultSetMapper;
+        this.config = config;
+        this.utilities = new Utilities();
+    }
+
+    /**
+     * Returns a stateful mapper (mapping function) for efficient processing of multiple rows.
+     * This variant uses default column mapping from the ResultSet metadata.
+     * @return A reusable mapping function.
+     */
+    public @NotNull SqlFunction<ResultSet, D> mapper() {
+        return resultSetMapper.mapper();
+    }
+
+    /**
+     * Maps a single {@link ResultSet} row to the Domain object.
+     * <p>
+     * <strong>Usage:</strong> Best suited for isolated, single-row mappings where you only
+     * need to process a specific, individual record without iterating through a large dataset.
+     * <p>
+     * <strong>Relationship:</strong> This is a convenience wrapper that internally creates
+     * a mapping function (similar to calling {@link #mapper(CharSequence...)}) and applies it immediately.
+     * Because it resolves the mapping function and column metadata on every single call, it is less
+     * efficient for processing large result sets in a loop compared to reusing the function
+     * provided directly by {@link #mapper(CharSequence...)}.
+     *
+     * @param rs The ResultSet positioned at the current row.
+     * @param columnLabels Optional custom column labels to map.
+     * @return A newly instantiated Domain object mapped from the ResultSet.
+     */
+    public D map(@NotNull ResultSet rs, @Nullable CharSequence... columnLabels) {
+        try {
+            return resultSetMapper.mapper(columnLabels).applyFunction(rs);
+        } catch (SQLException e) {
+            throw SQLExceptionBuilder.build(e);
+        }
+    }
+
+    /**
+     * Returns a stateful mapper (mapping function) for efficient processing of multiple rows.
+     * <p>
+     * <strong>Usage:</strong> Highly recommended for stream processing (e.g., {@code .toStream(entityManager.mapper())})
+     * or manual {@code while(rs.next())} loops. By instantiating the mapper exactly once outside
+     * the loop, column metadata is resolved upfront. This makes it significantly more efficient
+     * for bulk operations.
+     * <p>
+     * <strong>Relationship:</strong> Acts as the core mapping mechanism. While {@link #map(ResultSet, CharSequence...)}
+     * creates and consumes this function on the fly for a single use, this method exposes the reusable
+     * function for high-performance, repeated iteration.
+     *
+     * @param columnLabels Optional custom column labels to map.
+     * @return A reusable mapping function.
+     */
+    public @NotNull SqlFunction<ResultSet, D> mapper(@Nullable CharSequence... columnLabels) {
+        return resultSetMapper.mapper(columnLabels);
+    }
+
+    /** Initializes TableModel if not already done; optionally switches model for multi-tenant config. */
+    private void initModel(@NotNull Connection connection) {
+        final var expectedModel = tableModelService.getTableModel(getDomainClass(), connection);
+        if (this._tableModel == null) {
+            synchronized (utilities) {
+                if (this._tableModel == null) {
+                    this._tableModel = expectedModel;
+                    this._qualifiedTableName = null;
+                    LOGGER.log(Level.INFO, () ->
+                            "Lazy initialization of %s was triggered for the %s entity.".formatted(
+                                    TableModel.class.getSimpleName(),
+                                    getDomainClass().getSimpleName()
+                            ));
+                }
+            }
+        }
+        if (this._tableModel != expectedModel) {
+            if (config.tenantPerDatabaseSchema()) {
+                synchronized (utilities) {
+                    if (_tableModel != expectedModel) {
+                        _tableModel = expectedModel;
+                        _qualifiedTableName = null;
+                        LOGGER.log(Level.FINE, () ->
+                                "Switched %s for %s to match current DB context (tenant mode)."
+                                        .formatted(TableModel.class.getSimpleName(), getDomainClass().getSimpleName()));
+                    }
+                }
+            } else {
+                var msg = ("The %s instance is already initialized for a different DB context. " +
+                        "Create a new EntityManager for each context, or enable Config.tenantPerDatabaseSchema.")
+                        .formatted(EntityManager.class.getSimpleName());
+                throw new IllegalStateException(msg);
+            }
+        }
+    }
+
+    /** Creates a new Crud instance to perform database operations. */
+    public Crud<D,V> crud(@NotNull Connection connection) {
+        initModel(connection);
+        return new CrudImpl(connection);
+    }
+
+    /** Package private method */
+    @NotNull
+    public TableModelService getTableModelService() {
+        return this.tableModelService;
+    }
+
+    /** Package private method */
+    @NotNull
+    public Class<D> getDomainClass() {
+        return this.domainHandler.getDomainClass();
+    }
+
+    /** Package private method */
+    @NotNull
+    public DomainHandler<D> getDomainHandler() {
+        return this.domainHandler;
+    }
+
+    /** Package private method */
+    @NotNull
+    public Config getConfig() {
+        return this.config;
+    }
+
+    /** Default batch size */
+    public int defaultBatchSize() {
+        return config.getBatchSize();
+    }
+
+    /** Thread-safe access to the TableModel. */
+    @NotNull
+    private TableModel<D> tableModel() {
+        var result = _tableModel;
+        if (result == null) {
+            var msg = "%s is not initialized.".formatted(getClass().getSimpleName());
+            throw new IllegalStateException(msg);
+        }
+        return result;
+    }
+
+    /** Thread-safe access to the TableModel. */
+    @NotNull
+    public TableModel<D> tableModel(@NotNull Connection dbConnection) {
+        var result = _tableModel;
+        if (result == null) {
+            initModel(dbConnection);
+        }
+        return tableModel();
+    }
+
+    @SuppressWarnings("unchecked")
+    private ColumnModel<D, V> pkColumn() {
+        return (ColumnModel<D, V>) tableModel().pk();
+    }
+
+    private Key<D, V> pk() {
+        return pkColumn().key();
+    }
+
+    private QuotePair getQuote() {
+        return tableModel().jdbc().quotes();
+    }
+
+    /** Returns cached qualified table name and initializes the model if needed. */
+    @NotNull
+    public String qualifiedTableName(@NotNull Connection connection) {
+        initModel(connection);
+        return qualifiedTableName();
+    }
+
+    /** Thread-safe access to the lazily computed qualified table name. */
+    @NotNull
+    private String qualifiedTableName() {
+        var result = _qualifiedTableName;
+        if (result == null) {
+            synchronized (utilities) {
+                result = _qualifiedTableName;
+                if (result == null) {
+                    var q = getQuote();
+                    var writer = new StringBuilder(64);
+                    tableModel().tableName().writeQualifiedName(q.open(), q.close(), writer);
+                    result = writer.toString();
+                    _qualifiedTableName = result;
+                }
+            }
+        }
+        return result;
+    }
+
+    // --- Inner classes ---
+
+    /** Utilities for EntityManager */
+    final class Utilities {
+        private boolean autoCommitLogged = false;
+
+        /** Checks autoCommit state and logs a warning once per instance if enabled. */
+        public void checkAutoCommit(@NotNull Connection connection) throws SQLException {
+            if (!autoCommitLogged && config.isAutoCommitWarned() && connection.getAutoCommit()) {
+                var msg = ("Connection has autoCommit=true in the entity '%s'. " +
+                        "Batch operations will be significantly slower and lack transactional safety.")
+                        .formatted(getDomainClass().getName());
+                LOGGER.warning(msg);
+                autoCommitLogged = true;
+            }
+        }
+
+        /** Returns a safe limit for batch operations (insert, update, select). */
+        public int getBatchLimit() {
+            var limit = config.getBatchSize();
+            return limit > 0 ? limit : 500;
+        }
+
+        /** Returns the value of the primary key. */
+        public V getPrimaryKeyValue(@NotNull final D domain) {
+            return pk().getValue(domain);
+        }
+
+        /** Checks if the primary key has an empty value (null or zero). */
+        public boolean isPkEmpty(@Nullable final V id) {
+            return id == null || (id instanceof Number n && n.longValue() == 0L);
+        }
+
+        /** Converts a domain value (like Enum) to its database representation. */
+        public Object toDbValue(@Nullable Object value, @NotNull ColumnModel<?, ?> column) {
+            if (value instanceof Enum<?> e) {
+                return switch (column.jdbcType().getVendorTypeNumber()) {
+                    case Types.INTEGER, Types.SMALLINT, Types.TINYINT, Types.BIGINT, Types.NUMERIC -> e.ordinal();
+                    default -> e.name();
+                };
+            }
+            return value;
+        }
+
+        /** Reads the generated key from ResultSet and assigns it to the domain object. */
+        public D assignGeneratedKey(D domain, java.sql.ResultSet rs, Key<D, V> pk) throws SQLException {
+            var id = rs.getObject(1, pk.type());
+            if (id == null) {
+                throw new IllegalArgumentException("No ID value was generated.");
+            }
+            var ujo = AbstractUjo.of(domain, domainHandler);
+            ujo.setValue(pk, id);
+            return ujo.buildDomain();
+        }
+
+        /** Set values to the Prepared Statement */
+        @SuppressWarnings("unchecked")
+        public void setValuesToStatement(D domain, List<ColumnModel<D, ?>> columns, PreparedStatement ps) throws SQLException {
+            for (var i = 0; i < columns.size(); i++) {
+                var column = columns.get(i);
+                var value = column.valueOf(domain);
+                var foreignKey = (Key<Object, Object>) column.foreignKey();
+                if (foreignKey != null && value != null) {
+                    value = foreignKey.getValue(value);
+                }
+
+                value = toDbValue(value, column);
+
+                if (value == null) {
+                    ps.setNull(i + 1, column.jdbcType().getVendorTypeNumber());
+                } else {
+                    ps.setObject(i + 1, value, column.jdbcType().getVendorTypeNumber());
+                }
+            }
+        }
+
+        /** Set PK to the Prepared Statement */
+        public void setPkToStatement(final D domain, final int index, final PreparedStatement ps) throws SQLException {
+            var value = toDbValue(getPrimaryKeyValue(domain), pkColumn());
+            ps.setObject(index, value, pkColumn().jdbcType().getVendorTypeNumber());
+        }
+
+        /** Set both column values and PK to the Prepared Statement for UPDATE queries */
+        public void setValuesAndPkToStatement(D domain, List<ColumnModel<D, ?>> columns, PreparedStatement ps) throws SQLException {
+            setValuesToStatement(domain, columns, ps);
+            setPkToStatement(domain, columns.size() + 1, ps);
+        }
+
+        /** Sums the affected rows from a batch execution, handling SUCCESS_NO_INFO. */
+        public long sumBatchRows(int[] batchResults) {
+            var result = 0L;
+            for (var rowCount : batchResults) {
+                if (rowCount >= 0) {
+                    result += rowCount;
+                } else if (rowCount == Statement.SUCCESS_NO_INFO) {
+                    result++; // Fallback for databases like Oracle
+                }
+            }
+            return result;
+        }
+
+        /** Builds the SQL {@code INSERT} statement for the specified columns. */
+        public String buildInsertSql(@NotNull List<ColumnModel<D, ?>> columns) {
+            if (columns.isEmpty()) {
+                return "INSERT INTO " + qualifiedTableName() + " DEFAULT VALUES";
+            }
+            var q = getQuote();
+            var sql = new StringBuilder(256)
+                    .append("INSERT INTO ")
+                    .append(qualifiedTableName())
+                    .append(" (");
+            write(sql, columns, ", ", q);
+            sql.append(") VALUES (?");
+            sql.append(",?".repeat(columns.size() - 1));
+            sql.append(")");
+            return sql.toString();
+        }
+
+        /** Builds the SQL {@code UPDATE} statement for the specified columns. */
+        public String buildUpdateSql(@NotNull List<ColumnModel<D, ?>> columns) {
+            var q = getQuote();
+            var sql = new StringBuilder(256)
+                    .append("UPDATE ")
+                    .append(qualifiedTableName());
+            for (var i = 0; i < columns.size(); i++) {
+                var column = columns.get(i);
+                sql.append(i == 0 ? " SET " : ", ");
+                sql.append(q.open()).append(column.name()).append(q.close()).append(" = ?");
+            }
+            sql.append(" WHERE ").append(q.open()).append(pkColumn().name()).append(q.close()).append(" = ?");
+            return sql.toString();
+        }
+
+        /** Builds the SQL {@code UPDATE} statement for columns referenced by the given keys. */
+        public String buildUpdateSql(Key<D, ?>[] keys) {
+            var model = tableModel();
+            var columns = new java.util.ArrayList<ColumnModel<D, ?>>(keys.length);
+            for (var key : keys) {
+                columns.add(model.getColumn(key.index()));
+            }
+            return buildUpdateSql(columns);
+        }
+
+        /** Logs and executes the SQL statement using the provided connection. */
+        public <R> R run(boolean batch, @NotNull Connection connection, final CharSequence sql, final boolean returnGeneratedKeys, final SqlQuery.SqlFunction<PreparedStatement, R> fun) {
+            try (var ps = !returnGeneratedKeys
+                    ? connection.prepareStatement(sql.toString())
+                    : tableModel().jdbc().isOracleDb()
+                    ? connection.prepareStatement(sql.toString(), new String[]{pkColumn().name()})
+                    : connection.prepareStatement(sql.toString(), Statement.RETURN_GENERATED_KEYS)
+            ) {
+                if (batch) {
+                    checkAutoCommit(connection);
+                }
+                final var logLevel = config.getLogSqlLevel();
+                LOGGER.log(logLevel, sql::toString);
+                return fun.applyFunction(ps);
+            } catch (SQLException ex) {
+                throw SQLExceptionBuilder.build(ex);
+            } catch (Exception ex) {
+                throw (ex instanceof RuntimeException re) ? re : new IllegalStateException(ex);
+            }
+        }
+
+        /** Write column name. */
+        public void write(
+                final StringBuilder writer,
+                final List<ColumnModel<D,?>> columns,
+                final String separator,
+                final QuotePair q
+        ) {
+            for (int i = 0, max = columns.size(); i < max; i++) {
+                if (i > 0) {
+                    writer.append(separator);
+                }
+                writer.append(q.open())
+                        .append(columns.get(i).name())
+                        .append(q.close());
+            }
+        }
+    }
+
+    /** The CRUD operations' implementation. */
+    public final class CrudImpl implements Crud<D, V> {
+        private final Connection dbconnection;
+
+        public CrudImpl(@NotNull Connection dbconnection) {
+            this.dbconnection = dbconnection;
+        }
+
+        @Override
+        @SafeVarargs
+        public final D[] insert(@NotNull D... domains) {
+            if (domains == null || domains.length == 0) {
+                return domains;
+            }
+            var index = new AtomicInteger(0);
+            insert(Arrays.stream(domains), newDomain -> {
+                while (index.get() < domains.length && domains[index.get()] == null) {
+                    index.incrementAndGet();
+                }
+
+                // Assign the returned domain object (e.g. new Record instance) back
+                if (index.get() < domains.length) {
+                    domains[index.getAndIncrement()] = newDomain;
+                }
+            });
+            return domains;
+        }
+
+        /**
+         * Inserts a stream of domain objects into the database using JDBC batching.
+         * Evaluates sequentially and eagerly to guarantee proper database execution.
+         * Memory efficient.
+         *
+         * @param domains Stream of entities to be inserted.
+         * @param onInserted Optional callback invoked for each successfully inserted entity.
+         * Useful for retrieving assigned generated primary keys.
+         * @return The total number of rows inserted.
+         */
+        @Override
+        public long insert(@NotNull Stream<D> domains, @Nullable Consumer<D> onInserted) {
+            var result = 0L;
+            if (domains == null) return result;
+            var safeStream = domains.isParallel() ? domains.sequential() : domains;
+            try (var inserter = new BatchInserter(onInserted)) {
+                utilities.checkAutoCommit(dbconnection);
+                var iterator = safeStream.iterator();
+                while (iterator.hasNext()) {
+                    var domain = iterator.next();
+                    if (domain != null) result += inserter.add(domain);
+                }
+                return result + inserter.flush();
+            } catch (SQLException e) {
+                throw SQLExceptionBuilder.build("Batch insert failed", e);
+            }
+        }
+
+        /**  If the primary key is empty (null or 0), an INSERT is performed; otherwise, an UPDATE is performed. */
+        @Override
+        public D insertOrUpdate(@NotNull D domain) {
+            var pkey = pk();
+            if (Objects.equals(pkey.getValue(domain), pkey.getDefault())) {
+                return insert(domain);
+            } else {
+                update(domain);
+                return domain;
+            }
+        }
+
+        /**
+         * Processes a stream of domain objects, deciding whether to insert or update each entity
+         * based on the state of its primary key. If the primary key is empty (null or 0),
+         * an INSERT is performed; otherwise, an UPDATE is performed.
+         * <p>
+         * Evaluates sequentially. Memory efficient: processes records in small batches.
+         *
+         * @param domains Stream of entities to be processed.
+         * @param onInserted Optional callback invoked specifically for entities that were INSERTED.
+         * Useful for retrieving assigned generated primary keys.
+         * @param properties Optional list of property names to update for the UPDATE operations.
+         * If empty, all properties are updated.
+         * @return The total number of rows affected (inserted + updated).
+         */
+        public long insertOrUpdate(@NotNull Stream<D> domains, @Nullable Consumer<D> onInserted, CharSequence... properties) {
+            var result = 0L;
+            if (domains == null) return result;
+            var safeStream = domains.isParallel() ? domains.sequential() : domains;
+            var limit = utilities.getBatchLimit();
+
+            try (var inserter = new BatchInserter(onInserted)) {
+                utilities.checkAutoCommit(dbconnection);
+                var iterator = safeStream.iterator();
+
+                var updateList = new ArrayList<D>(limit);
+                var updateColumns = tableModel().getColumns(properties);
+
+                while (iterator.hasNext()) {
+                    var domain = iterator.next();
+                    if (domain == null) continue;
+
+                    if (utilities.isPkEmpty(utilities.getPrimaryKeyValue(domain))) {
+                        result += inserter.add(domain);
+                    } else {
+                        updateList.add(domain);
+                        if (updateList.size() >= limit) {
+                            result += updateStreamInternal(updateList.stream(), updateColumns);
+                            updateList.clear();
+                        }
+                    }
+                }
+
+                result += inserter.flush();
+                if (!updateList.isEmpty()) {
+                    result += updateStreamInternal(updateList.stream(), updateColumns);
+                }
+
+            } catch (SQLException e) {
+                throw SQLExceptionBuilder.build("Batch insertOrUpdate failed", e);
+            }
+            return result;
+        }
+
+        @Override
+        public D insert(@NotNull D domain) {
+            Objects.requireNonNull(domain, "Domain object must not be null");
+            var pkOriginalValue = utilities.getPrimaryKeyValue(domain);
+            var returnGeneratedKeys = utilities.isPkEmpty(pkOriginalValue);
+            var columns = tableModel().createInsertedColumns(returnGeneratedKeys ? null : pkOriginalValue);
+            var sql = utilities.buildInsertSql(columns);
+
+            return utilities.run(false, dbconnection, sql, returnGeneratedKeys, ps -> {
+                utilities.setValuesToStatement(domain, columns, ps);
+                if (!returnGeneratedKeys) {
+                    ps.executeUpdate();
+                    return domain;
+                } else {
+                    ps.executeUpdate();
+                    var pk = pk();
+                    try (var rs = ps.getGeneratedKeys()) {
+                        if (rs.next()) {
+                            return utilities.assignGeneratedKey(domain, rs, pk);
+                        } else {
+                            throw new IllegalArgumentException("No ID value was generated.");
+                        }
+                    }
+                }
+            });
+        }
+
+        /** Finds a domain object by its identifier or returns null. */
+        @Override
+        @Nullable
+        public D findByIdNullable(@NotNull V id) {
+            return findById(id).orElse(null);
+        }
+
+        /** Finds a domain object by its identifier. */
+        @Override
+        @NotNull
+        public Optional<D> findById(@NotNull V id) {
+            Objects.requireNonNull(id, "Identifier must not be null");
+            var sql = new StringBuilder(128);
+            var labels = buildSelectSql(false, sql);
+            var q = getQuote();
+            sql.append(" WHERE ").append(q.open()).append(pkColumn().name()).append(q.close()).append(" = ?");
+
+            return utilities.run(false, dbconnection, sql, false, ps -> {
+                ps.setObject(1, utilities.toDbValue(id, pkColumn()));
+                try (var rs = ps.executeQuery()) {
+                    var mapFunction = resultSetMapper.mapper(labels);
+                    if (rs.next()) {
+                        return Optional.of(mapFunction.applyFunction(rs));
+                    }
+                    return Optional.empty();
+                }
+            });
+        }
+
+        /**
+         * Creates an instance of SqlQuery to bind parameters and execute SELECT.
+         * The builder shares the database connection with this object.
+         *
+         * @param whereCondition Undefined or empty value returns all records.
+         * @return Query builder
+         */
+        @Override
+        @NotNull
+        public <R> R selectWhere(
+                @Nullable String whereCondition,
+                @NotNull SqlQuery.SqlFunction<SqlQuery, R> fun
+        ) {
+            var sql = new StringBuilder(256);
+            buildSelectSql(true, sql);
+            sql.append(" WHERE ");
+            sql.append(Check.hasLength(whereCondition) ? whereCondition : "1=1");
+            try (var query = new SqlQuery(dbconnection, getQuote())) {
+                query.sql(sql.toString());
+                query.fetchSize(config.getBatchSize());
+                query.log(config.getLogSqlLevel(), config.isLogSqlParams());
+                return fun.applyFunction(query);
+            } catch (Exception ex) {
+                throw (ex instanceof RuntimeException re) ? re : SQLExceptionBuilder.build(ex);
+            }
+        }
+
+        /**
+         * Builds the common SELECT clause for read operations.
+         *
+         * @param includeAliases If true, column labels are appended using AS alias.
+         * @param sql The StringBuilder to append the SQL to.
+         * @return Array of column keys if includeAliases is false, otherwise an empty array.
+         */
+        @Nullable
+        private Key[] buildSelectSql(boolean includeAliases, @NotNull StringBuilder sql) {
+            var q = getQuote();
+            var columns = tableModel().columns();
+            var labels = includeAliases ? null : new Key[columns.size()];
+
+            sql.append("SELECT ");
+            for (var i = 0; i < columns.size(); i++) {
+                var column = columns.get(i);
+                if (i > 0) sql.append(", ");
+                sql.append(q.open()).append(column.name()).append(q.close());
+
+                if (includeAliases) {
+                    sql.append(" AS ").append(q.open()).append(column.key()).append(q.close());
+                } else {
+                    labels[i] = column.key();
+                }
+            }
+            sql.append(" FROM ").append(qualifiedTableName());
+            return labels;
+        }
+
+        @Override
+        public long update(@NotNull D domain, CharSequence... properties) {
+            Objects.requireNonNull(domain, "Domain object must not be null");
+            var columns = tableModel().getColumns(properties);
+            return updateInternal(domain, columns);
+        }
+
+        @Override
+        public long update(@NotNull Stream<D> domains, CharSequence... properties) {
+            Objects.requireNonNull(domains, "Stream of domains must not be null");
+            var columns = tableModel().getColumns(properties);
+            return updateStreamInternal(domains, columns);
+        }
+
+        @Override
+        public <D2 extends SnapshotProvider<D2>> long updateChanged(@NotNull Stream<D2> domains) {
+            Objects.requireNonNull(domains, "Stream of domains must not be null");
+            var result = 0L;
+            var limit = utilities.getBatchLimit();
+            var batchCount = 0;
+            var model = tableModel();
+            var changedColumnsCache = new HashMap<org.ujorm.orm.utils.BitSet, List<ColumnModel<D, ?>>>();
+
+            try (var cache = new StatementCache<V>()) {
+                utilities.checkAutoCommit(dbconnection);
+                var iterator = domains.iterator();
+                var index = -1;
+                while (iterator.hasNext()) {
+                    index++;
+                    var domain_ = iterator.next();
+                    if (domain_ == null || !getDomainClass().isInstance(domain_)) {
+                        var msg = domain_ == null
+                                ? "The entity at index %s must not be null.".formatted(index)
+                                : "The entity at index %s must be of type %s.".formatted(index,
+                                getDomainClass().getSimpleName());
+                        throw new IllegalArgumentException(msg);
+                    }
+                    var domain = (D) domain_;
+                    var snapshot = (D) domain_.readSnapshot();
+                    if (snapshot == null) {
+                        throw new IllegalStateException(("Missing snapshot for entity at index %s. " +
+                                "Call saveSnapshot() before update.").formatted(index));
+                    }
+                    var changes = JdbcUtils.findChanges(domain, snapshot, domainHandler);
+                    var modifiedIdx = changes.getActive();
+
+                    if (modifiedIdx.length == 0) {
+                        continue;
+                    }
+                    var id = utilities.getPrimaryKeyValue(domain);
+
+                    result += cache.flushOnCollision(id);
+
+                    var changedColumns = changedColumnsCache.get(changes);
+                    if (changedColumns == null) {
+                        changedColumns = new ArrayList<>(modifiedIdx.length);
+                        for (var modifiedColumnIndex : modifiedIdx) {
+                            changedColumns.add(model.getColumn(modifiedColumnIndex));
+                        }
+                        changedColumnsCache.put(changes, changedColumns);
+                    }
+
+                    var statement = cache.get(changes);
+                    if (statement == null) {
+                        var sql = utilities.buildUpdateSql(changedColumns);
+                        LOGGER.log(config.getLogSqlLevel(), sql);
+                        statement = dbconnection.prepareStatement(sql);
+                        result += cache.put(changes, statement);
+                    }
+
+                    updateInternalBinding(statement, domain, changedColumns);
+                    cache.addId(id);
+                    batchCount++;
+
+                    // Execute batch when the limit is reached across the cache
+                    if (batchCount >= limit) {
+                        result += cache.flush();
+                        batchCount = 0;
+                    }
+                }
+                result += cache.flush();
+            } catch (SQLException e) {
+                throw SQLExceptionBuilder.build("Batch update failed", e);
+            }
+            return result;
+        }
+
+        /** Binds values to the PreparedStatement and adds it to the current batch. */
+        private void updateInternalBinding(PreparedStatement statement, D entity, List<ColumnModel<D, ?>> columns) throws SQLException {
+            utilities.setValuesAndPkToStatement(entity, columns, statement);
+            statement.addBatch();
+        }
+
+        /**
+         * Updates a single domain object.
+         * @param domain Domain object to update.
+         * @param columns Optional list of property names to update. If empty, all properties are updated (excluding id).
+         * @return The number of affected rows.
+         */
+        private long updateInternal(@NotNull D domain, List<ColumnModel<D, ?>> columns) {
+            var sql = utilities.buildUpdateSql(columns);
+            return utilities.run(false, dbconnection, sql, false, ps -> {
+                utilities.setValuesAndPkToStatement(domain, columns, ps);
+                return (long) ps.executeUpdate();
+            });
+        }
+
+        /**
+         * Executes a batch update for a given stream of domain objects.
+         * Handles drivers returning SUCCESS_NO_INFO (-2).
+         * Note: Requires connection.setAutoCommit(false) for transactional safety.
+         *
+         * @param domains A stream of domain entities to be updated in the database.
+         * @param columns A list of column models defining which specific attributes should be updated.
+         * @return The total number of rows affected by the batch execution.
+         */
+        private long updateStreamInternal(@NotNull Stream<D> domains, @NotNull List<ColumnModel<D, ?>> columns) {
+            var sql = utilities.buildUpdateSql(columns);
+            var limit = utilities.getBatchLimit();
+
+            return utilities.run(true, dbconnection, sql, false, ps -> {
+                var result = 0L;
+                var batchCount = 0;
+                var iterator = domains.iterator();
+
+                while (iterator.hasNext()) {
+                    var domain = iterator.next();
+                    if (domain == null) continue;
+
+                    utilities.setValuesAndPkToStatement(domain, columns, ps);
+                    ps.addBatch();
+                    batchCount++;
+
+                    if (batchCount >= limit) {
+                        result += utilities.sumBatchRows(ps.executeBatch());
+                        batchCount = 0;
+                    }
+                }
+
+                if (batchCount > 0) {
+                    result += utilities.sumBatchRows(ps.executeBatch());
+                }
+                return result;
+            });
+        }
+
+        @Override
+        public int delete(@NotNull D domain) {
+            Objects.requireNonNull(domain, "Domain object must not be null");
+            return deleteById(utilities.getPrimaryKeyValue(domain));
+        }
+
+        @Override
+        public int deleteById(@NotNull V id) {
+            Objects.requireNonNull(id, "Identifier must not be null");
+            var q = getQuote();
+            var sql = new StringBuilder(64)
+                    .append("DELETE FROM ")
+                    .append(qualifiedTableName())
+                    .append(" WHERE ").append(q.open()).append(pkColumn().name()).append(q.close()).append(" = ?");
+            return utilities.run(false, dbconnection, sql, false, ps -> {
+                ps.setObject(1, utilities.toDbValue(id, pkColumn()));
+                return ps.executeUpdate();
+            });
+        }
+
+        @Override
+        public int delete(@NotNull Stream<D> domains) {
+            Objects.requireNonNull(domains, "Stream of domains must not be null");
+            var q = getQuote();
+            var sql = new StringBuilder(64)
+                    .append("DELETE FROM ")
+                    .append(qualifiedTableName())
+                    .append(" WHERE ").append(q.open()).append(pkColumn().name()).append(q.close()).append(" = ?");
+
+            var limit = utilities.getBatchLimit();
+
+            return utilities.run(true, dbconnection, sql, false, ps -> {
+                var result = 0L;
+                var batchCount = 0;
+                var iterator = domains.iterator();
+
+                while (iterator.hasNext()) {
+                    var domain = iterator.next();
+                    if (domain == null) continue;
+
+                    ps.setObject(1, utilities.toDbValue(utilities.getPrimaryKeyValue(domain), pkColumn()));
+                    ps.addBatch();
+                    batchCount++;
+
+                    if (batchCount >= limit) {
+                        result += utilities.sumBatchRows(ps.executeBatch());
+                        batchCount = 0;
+                    }
+                }
+
+                if (batchCount > 0) {
+                    result += utilities.sumBatchRows(ps.executeBatch());
+                }
+                return (int) result;
+            });
+        }
+
+        /**
+         * A stateful helper class to manage JDBC batch INSERT operations.
+         * Encapsulates the PreparedStatement lifecycle, handles switching between auto-generated
+         * primary keys and explicitly provided keys, and buffers entities to minimize memory footprint.
+         */
+        @RequiredArgsConstructor
+        private final class BatchInserter implements AutoCloseable {
+            @Nullable
+            private final Consumer<D> onInserted;
+            private final List<D> domains = new ArrayList<>(utilities.getBatchLimit());
+            private final Key<D,V> pk = pk();
+            private final boolean msSqlWorkaround = tableModel().jdbc().isMsSqlSrv();
+            private PreparedStatement ps = null;
+            private Boolean genKeys = null;
+            private List<ColumnModel<D, ?>> cols = null;
+
+            /**
+             * Adds a domain entity to the current batch.
+             * If the batch limit is reached, or if the primary key generation strategy changes
+             * for the incoming entity, the current batch is automatically flushed to the database.
+             *
+             * @param domain The entity to be inserted.
+             * @return The number of rows affected if a flush occurred, 0 otherwise.
+             * @throws SQLException If a database access error occurs.
+             */
+            public long add(D domain) throws SQLException {
+                var pkVal = utilities.getPrimaryKeyValue(domain);
+                var emptyPk = utilities.isPkEmpty(pkVal);
+                var result = 0L;
+
+                // Flush and recreate statement if the PK generation strategy changes
+                if (genKeys != null && genKeys != emptyPk) {
+                    result += flush();
+                    close(); // Closes the current PreparedStatement
+                }
+
+                if (ps == null) {
+                    genKeys = emptyPk;
+                    cols = tableModel().createInsertedColumns(emptyPk ? null : pkVal);
+                    var sql = utilities.buildInsertSql(cols);
+                    LOGGER.log(config.getLogSqlLevel(), sql);
+                    ps = !emptyPk
+                            ? dbconnection.prepareStatement(sql)
+                            : tableModel().jdbc().isOracleDb()
+                            ? dbconnection.prepareStatement(sql, new String[]{pkColumn().name()})
+                            : dbconnection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+                }
+
+                utilities.setValuesToStatement(domain, cols, ps);
+                if (emptyPk && msSqlWorkaround && onInserted != null) {
+                    var rowCount = ps.executeUpdate();
+                    try (var rs = ps.getGeneratedKeys()) {
+                        if (!rs.next()) throw new IllegalStateException("Missing key");
+                        onInserted.accept(utilities.assignGeneratedKey(domain, rs, pk));
+                    }
+                    return result + rowCount;
+                }
+
+                ps.addBatch();
+                domains.add(domain);
+                return result + (domains.size() >= utilities.getBatchLimit() ? flush() : 0L);
+            }
+
+            /**
+             * Executes the currently queued batch of INSERT statements, retrieves generated keys
+             * (if applicable), and invokes the {@code onInserted} Consumer callback.
+             *
+             * @return The number of rows affected by the batch execution.
+             * @throws SQLException If a database access error occurs.
+             */
+            public long flush() throws SQLException {
+                if (domains.isEmpty() || ps == null) return 0L;
+                var result = utilities.sumBatchRows(ps.executeBatch());
+                if (onInserted != null) {
+                    if (Boolean.TRUE.equals(genKeys)) {
+                        try (var rs = ps.getGeneratedKeys()) {
+                            for (var domain : domains) {
+                                if (!rs.next()) throw new IllegalStateException("Missing key");
+                                onInserted.accept(utilities.assignGeneratedKey(domain, rs, pk));
+                            }
+                        }
+                    } else {
+                        domains.forEach(onInserted);
+                    }
+                }
+                domains.clear();
+                return result;
+            }
+
+            /**
+             * Safely closes the underlying {@link PreparedStatement} if it is open.
+             * @throws SQLException If a database access error occurs.
+             */
+            @Override
+            public void close() throws SQLException {
+                try (var psOrig = ps) {
+                } finally { ps = null; }
+            }
+        }
+    }
+
+    // --- Static methods ---
+
+    /** Base Factory Method */
+    public static <D, V> EntityManager<D,V> of(@NotNull Class<D> domainClass, @NotNull TableModelService tableModelService, Config config) {
+        var handler = DomainHandlerProvider.getHandler(domainClass);
+        var rsMapper = ResultSetMapper.of(domainClass, config);
+        return new EntityManager<D, V>(handler, tableModelService, rsMapper, config);
+    }
+
+    /** Factory method */
+    public static <D, V> EntityManager<D, V> of(@NotNull Class<D> domainClass, @Nullable Class<V> idTypeIgnored, @NotNull TableModelService tableModelService, @NotNull Config config) {
+        return of(domainClass, tableModelService, config);
+    }
+
+    /** Factory method */
+    public static <D, V> EntityManager<D,V> of(@NotNull Class<D> domainClass, @NotNull TableModelService tableModelService, @NotNull EntityContext context) {
+        return of(domainClass, tableModelService, context.config());
+    }
+
+    /** Factory method with initialization */
+    public static <D, V> EntityManager<D,V> of(@NotNull Class<D> domainClass, @NotNull TableModelService tableModelService, @NotNull EntityContext context, @NotNull Connection dbConnection) {
+        var result = EntityManager.<D,V>of(domainClass, tableModelService, context);
+        result.initModel(dbConnection);
+        return result;
+    }
+
+}

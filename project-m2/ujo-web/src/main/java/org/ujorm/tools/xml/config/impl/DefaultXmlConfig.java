@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2022 Pavel Ponec, https://github.com/pponec
+ * Copyright 2018-2026 Pavel Ponec, https://github.com/pponec
  * https://github.com/pponec/ujorm/blob/master/samples/servlet/src/main/java/org/ujorm/ujoservlet/tools/Html.java
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,32 +17,36 @@
 package org.ujorm.tools.xml.config.impl;
 
 import java.nio.charset.Charset;
+import java.util.Objects;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.ujorm.tools.Assert;
 import org.ujorm.tools.Check;
+import org.ujorm.tools.common.StringUtils;
 import org.ujorm.tools.xml.AbstractWriter;
+import org.ujorm.tools.xml.ApiElement;
 import org.ujorm.tools.xml.config.Formatter;
 import org.ujorm.tools.xml.config.XmlConfig;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 /**
- * Configuration of HtmlPage
+ * Default {@link XmlConfig} implementation for XML/HTML serialization.
+ *
  * @author Pavel Ponec
  */
 public class DefaultXmlConfig implements XmlConfig {
 
-    /** Default intendation per level */
+    /** Default indentation per nesting level */
     public static final String DEFAULT_INTENDATION = "\t";
 
     /** Default string or the new line */
     public static final String DEFAULT_NEW_LINE = "\n";
 
-    /** Default first level of intendation */
+    /** Default first level of indentation */
     public static final int DEFAULT_FIRST_LEVEL = Integer.MIN_VALUE + 1;
 
     /** Assertion message template */
-    public static final String REQUIRED_MSG = "The argument {} is required";
+    public static final String REQUIRED_MSG = "The argument %s is required";
 
     /** An empty String */
     public static final String EMPTY = "";
@@ -130,13 +134,14 @@ public class DefaultXmlConfig implements XmlConfig {
      * @param charset the charset to set
      */
     public DefaultXmlConfig setCharset(@NotNull final Charset charset) {
-        this.charset = Assert.notNull(charset, REQUIRED_MSG, "charset");
+        this.charset = Assert.notNull(charset, () -> REQUIRED_MSG.formatted("charset"));
         return this;
     }
 
     /**
      * Assign parameters for a nice format of the HTML result
      */
+    @SuppressWarnings("unchecked")
     public final <T extends DefaultXmlConfig> T setNiceFormat() {
         setNiceFormat(DEFAULT_INTENDATION);
         return (T) this;
@@ -144,8 +149,9 @@ public class DefaultXmlConfig implements XmlConfig {
 
     /**
      * Assign parameters for a nice format of the HTML result
-     * @param indentation An empty String is replaced by a default intendation.
+     * @param indentation an empty string is replaced by the default indentation ({@link #DEFAULT_INTENDATION})
      */
+    @SuppressWarnings("unchecked")
     public final <T extends DefaultXmlConfig> T setNiceFormat(@Nullable final CharSequence indentation) {
         this.firstLevel = 0;
         this.indentation = Check.hasLength(indentation) ? indentation : DEFAULT_INTENDATION;
@@ -192,7 +198,7 @@ public class DefaultXmlConfig implements XmlConfig {
     /** An indentation space for elements of the next level,
      * where default value is an empty `String` */
     public DefaultXmlConfig setIndentationSpace(@NotNull CharSequence indentation) {
-        this.indentation = Assert.notNull(indentation, REQUIRED_MSG, "indentation");
+        this.indentation = Assert.notNull(indentation, () -> REQUIRED_MSG.formatted("indentation"));
         return this;
     }
 
@@ -201,7 +207,6 @@ public class DefaultXmlConfig implements XmlConfig {
     public CharSequence getDefaultValue() {
         return defaultValue;
     }
-
 
     /** A default implementation is: {@code String.valueOf(value)} */
     @NotNull
@@ -214,7 +219,7 @@ public class DefaultXmlConfig implements XmlConfig {
 
     /** A replacement text instead of the {@code null} value */
     public DefaultXmlConfig setDefaultValue(@NotNull String defaultValue) {
-        this.defaultValue = Assert.notNull(defaultValue, "defaultValue");
+        this.defaultValue = Assert.notNull(defaultValue, () -> "defaultValue");
         return this;
     }
 
@@ -236,14 +241,35 @@ public class DefaultXmlConfig implements XmlConfig {
 
     /** A new line sequence */
     public DefaultXmlConfig setNewLine(@NotNull final CharSequence newLine) {
-        this.newLine = Assert.notNull(newLine, "newLine");
+        this.newLine = Objects.requireNonNull(newLine, "newLine");
         return this;
     }
 
     /** A default value formatter is implemented by the method {@code String.valueOf(value)} */
     public DefaultXmlConfig setFormatter(@NotNull Formatter formatter) {
-        this.formatter = Assert.notNull(formatter, "formatter");
+        this.formatter = Objects.requireNonNull(formatter, "formatter");
         return this;
     }
 
+    /**
+     * Format number using NBSP as a thousand separator.
+     * <br>Examples:
+     * <br> 10000 -> "10 000"
+     * <br> 1234.56 -> "1 234.56"
+     * <br> 100 (Integer) -> "100"
+     * <br> null -> "null"
+     */
+    public DefaultXmlConfig setIsoFormatter() {
+        var formatter = new Formatter() {
+            @Override
+            public @NotNull CharSequence format(@Nullable Object value, @NotNull ApiElement element, @Nullable String attributeName) {
+                return (value == null)
+                    ? EMPTY
+                    : (attributeName == null && value instanceof Number number)
+                    ? StringUtils.formatSeparator(number)
+                    : value.toString();
+            }
+        };
+        return setFormatter(formatter);
+    }
 }

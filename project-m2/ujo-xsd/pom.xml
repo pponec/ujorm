@@ -7,16 +7,11 @@
         <artifactId>oss-parent</artifactId>
         <version>9</version>
     </parent>
-    <!--<parent>
-        <groupId>org.ujorm</groupId>
-        <artifactId>ujo</artifactId>
-        <version>2.28-SNAPSHOT</version>
-    </parent>-->
 
     <groupId>org.ujorm</groupId>
     <artifactId>ujo-xsd</artifactId>
     <packaging>jar</packaging>
-    <version>2.28-SNAPSHOT</version>
+    <version>3.0.0</version>
     <url>http://ujorm.org</url>
     <name>ujo-xsd</name>
     <description>XSD generator according the Ujo
@@ -38,13 +33,13 @@
     </licenses>
 
     <properties>
-        <revision>2.28-SNAPSHOT</revision>
+        <revision>3.0.0</revision>
         <java.version>17</java.version>
         <maven.compiler.target>${java.version}</maven.compiler.target>
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <maven.compiler.encoding>UTF-8</maven.compiler.encoding>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <junit.version>5.10.2</junit.version>
+        <junit.version>5.12.2</junit.version>
     </properties>
 
     <dependencies>
@@ -74,7 +69,7 @@
         <plugins>
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.8.1</version>
+                <version>3.14.1</version>
                 <configuration>
                     <source>${java.version}</source>
                     <target>${java.version}</target>
@@ -116,6 +111,7 @@
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-compiler-plugin</artifactId>
+                        <version>3.14.1</version>
                         <configuration>
                             <debug>true</debug>
                             <optimize>true</optimize>

@@ -26,7 +26,7 @@ import static org.junit.jupiter.api.Assertions.*;
  * StringService Test
  * @author Pavel Ponec
  */
-public class StringServiceTest {
+class StringServiceTest {
 
     public StringServiceTest() {
     }

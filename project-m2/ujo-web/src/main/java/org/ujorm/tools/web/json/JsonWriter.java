@@ -1,5 +1,5 @@
 /*
- * Copyright 2020-2022 Pavel Ponec, https://github.com/pponec
+ * Copyright 2020-2026 Pavel Ponec, https://github.com/pponec
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,8 +16,9 @@
 package org.ujorm.tools.web.json;
 
 import java.io.IOException;
+import java.util.HexFormat;
+import java.util.Objects;
 import org.jetbrains.annotations.NotNull;
-import org.ujorm.tools.Assert;
 
 /**
  * Simple JSON writer for object type of key-value.
@@ -26,13 +27,14 @@ import org.ujorm.tools.Assert;
  */
 public final class JsonWriter implements Appendable {
 
-    private static final char BACKSLASH = '\\';
+    static final char BACKSLASH = '\\';
     static final char DOUBLE_QUOTE = '"';
+    static final HexFormat HEX_FORMAT = HexFormat.of().withUpperCase();
 
     private final Appendable writer;
 
     JsonWriter(@NotNull final Appendable writer) {
-        this.writer = Assert.notNull(writer, "writer");
+        this.writer = Objects.requireNonNull(writer, "writer");
     }
 
     @Override
@@ -46,7 +48,7 @@ public final class JsonWriter implements Appendable {
             final int start,
             final int end)
             throws IOException {
-        for (int i = start; i < end; i++) {
+        for (var i = start; i < end; i++) {
             append(csq.charAt(i));
         }
         return this;
@@ -54,41 +56,29 @@ public final class JsonWriter implements Appendable {
 
     @Override
     public Appendable append(final char c) throws IOException {
-            switch (c) {
-                case BACKSLASH:
-                    writer.append(BACKSLASH);
-                    writer.append(BACKSLASH);
-                    break;
-                case DOUBLE_QUOTE:
-                    writer.append(BACKSLASH);
-                    writer.append(DOUBLE_QUOTE);
-                    break;
-                case '\b':
-                    writer.append(BACKSLASH);
-                    writer.append('b');
-                    break;
-                case '\f':
-                    writer.append(BACKSLASH);
-                    writer.append('f');
-                    break;
-                case '\n':
-                    writer.append(BACKSLASH);
-                    writer.append('n');
-                    break;
-                case '\r':
-                    writer.append(BACKSLASH);
-                    writer.append('r');
-                    break;
-                case '\t':
-                    writer.append(BACKSLASH);
-                    writer.append('t');
-                    break;
-                default:
-                    writer.append(c);
-            }
+        var escaped = switch (c) {
+            case BACKSLASH, DOUBLE_QUOTE -> c;
+            case '\b' -> 'b';
+            case '\f' -> 'f';
+            case '\n' -> 'n';
+            case '\r' -> 'r';
+            case '\t' -> 't';
+            default -> '\0';
+        };
+
+        if (escaped != '\0') {
+            writer.append(BACKSLASH);
+            writer.append(escaped);
+        } else if (c < ' ' || c == '\u2028' || c == '\u2029') {
+            writer.append("\\u");
+            writer.append(HEX_FORMAT.toHexDigits(c, 4));
+        } else {
+            writer.append(c);
+        }
         return this;
     }
 
+    /** Returns the original writer */
     @NotNull
     public Appendable original() {
         return writer;

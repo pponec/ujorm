@@ -1,5 +1,5 @@
 /*
- * Copyright 2019-2022 Pavel Ponec,
+ * Copyright 2019-2026 Pavel Ponec,
  * https://github.com/pponec/ujorm/blob/master/project-m2/ujo-tools/src/main/java/org/ujorm/tools/XmlModel.java
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -32,7 +32,7 @@ import org.ujorm.tools.web.ao.Injector;
 /**
  * @author Pavel Ponec
  */
-public class ElementTest {
+class ElementTest {
 
     /** Logger */
     private final Logger logger = Logger.getLogger(ElementTest.class.getName());
@@ -52,25 +52,23 @@ public class ElementTest {
         DefaultHtmlConfig config = HtmlConfig.ofDefault();
         HtmlElement resInstance = createHtmlPage(config);
 
-        String result = resInstance.toString();
-        String expectedResult = "<!DOCTYPE html>\n"
-                + "<html lang=\"en\">\n"
-                + "<head>\n"
-                + "<meta charset=\"UTF-8\"/>\n"
-                + "<title>Demo</title></head>\n"
-                + "<body>\n"
-                + "<select name=\"selectName\">\n"
-                + "<option value=\"1\">one</option>\n"
-                + "<option value=\"2\" selected=\"selected\">two</option>\n"
-                + "<option value=\"3\">three</option>"
-                + "</select>"
-                + "</body>"
-                + "</html>";
+        String result = resInstance.toString().trim();
+        String expectedResult = """
+                <!DOCTYPE html>
+                <html lang="en">
+                <head>
+                <meta charset="UTF-8"/>
+                <title>Demo</title></head>
+                <body>
+                <select name="selectName">
+                <option value="1" class="mySelect">one</option>
+                <option value="2" selected="selected" class="mySelect">two</option>
+                <option value="3" class="mySelect">three</option></select></body></html>
+                """.trim();
         assertEquals(expectedResult, result);
 
         // --- DOM model ---
 
-        config.setDocumentObjectModel(true);
         HtmlElement domInstance = createHtmlPage(config);
         result = domInstance.toString();
         assertEquals(expectedResult, result);
@@ -101,7 +99,6 @@ public class ElementTest {
     public void testAddElementIf() {
         System.out.println("addElementIf");
         DefaultHtmlConfig config = HtmlConfig.ofDefault();
-        config.setDocumentObjectModel(false);
         config.setHtmlHeader(true);
 
         HtmlElement resInstance = HtmlElement.of(config);
@@ -120,6 +117,7 @@ public class ElementTest {
                 "<body>text</body></html>");
         assertEquals(expectedResult, result);
     }
+
     /**
      * Test of addSelect method, of class Element.
      */
@@ -127,7 +125,6 @@ public class ElementTest {
     public void testAddElementIf_dom() {
         System.out.println("addElementIf");
         DefaultHtmlConfig config = HtmlConfig.ofDefault();
-        config.setDocumentObjectModel(true);
         config.setHtmlHeader(true);
 
         HtmlElement resInstance = HtmlElement.of(config);
@@ -243,7 +240,7 @@ public class ElementTest {
 
         CharSequence[] cssClasses = {"table"};
         CharSequence[] titles = {"Id", "Name", "Enabled",
-                    (Injector) td -> td.addSpan("red").addText("Home page")};
+                (Injector) td -> td.addSpan("red").addText("Home page")};
         try (HtmlElement html = HtmlElement.of("Demo", response, BOOTSTRAP_CSS)) {
             html.addBody().addHeading("Cars");
             html.addBody().addTable(getCars().stream(), cssClasses, titles,
@@ -262,11 +259,11 @@ public class ElementTest {
      * Test inner elements by a lambda
      */
     @Test
-    public void testNext() {
+    public void testNest() {
         Appendable response = new StringBuilder();
-        HtmlElement.niceOf("Demo", response).next(html -> html
-            .getBody().next(body -> body
-                .addHeading(html.getTitle()))
+        HtmlElement.niceOf("Demo", response).nest(html ->
+                html.getBody().nest(body ->
+                        body.addHeading(html.getTitle()))
         ).catchEx(e -> {
             throw new IllegalStateException("Error", e);
         });
@@ -284,6 +281,26 @@ public class ElementTest {
                 "\t</body>",
                 "</html>");
         assertEquals(expected, result);
+    }
+
+    /**
+     * Test for addCheckBox implementation containing the hidden fallback field.
+     */
+    @Test
+    public void testAddCheckBox() {
+        System.out.println("addCheckBox");
+        StringBuilder writer = new StringBuilder();
+        DefaultHtmlConfig config = HtmlConfig.ofEmptyElement();
+        config.setRootElementName(Html.DIV);
+
+        try (HtmlElement html = HtmlElement.of(writer, config)) {
+            html.original().addCheckBox("active", "my-checkbox-class").setCheckBoxValue(true);
+        }
+
+        String result = writer.toString();
+        // Zkontrolujeme, že se vložil hidden prvek jako fallback a že hlavní prvek má správné CSS a atributy
+        assertTrue(result.contains("<input type=\"hidden\" name=\"active\" value=\"false\"/>"));
+        assertTrue(result.contains("<input class=\"my-checkbox-class\" type=\"checkbox\" name=\"active\" value=\"true\" checked=\"true\"/>"));
     }
 
     private Collection<Car> getCars() {

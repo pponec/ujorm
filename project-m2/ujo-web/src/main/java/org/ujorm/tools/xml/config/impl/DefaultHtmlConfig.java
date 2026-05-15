@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2022 Pavel Ponec, https://github.com/pponec
+ * Copyright 2018-2026 Pavel Ponec, https://github.com/pponec
  * https://github.com/pponec/ujorm/blob/master/samples/servlet/src/main/java/org/ujorm/ujoservlet/tools/Html.java
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,7 +16,6 @@
  */
 package org.ujorm.tools.xml.config.impl;
 
-import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 import org.jetbrains.annotations.NotNull;
@@ -29,7 +28,8 @@ import org.ujorm.tools.xml.config.ApiInjector;
 import org.ujorm.tools.xml.config.HtmlConfig;
 
 /**
- * Configuraion of HtmlPage
+ * Default {@link HtmlConfig} implementation (title, CSS links, language, content type).
+ *
  * @author Pavel Ponec
  */
 public class DefaultHtmlConfig extends DefaultXmlConfig implements HtmlConfig {
@@ -38,20 +38,17 @@ public class DefaultHtmlConfig extends DefaultXmlConfig implements HtmlConfig {
     @NotNull
     private CharSequence title = "Demo";
 
-    /** Css links with a required order */
+    /** CSS links in display order */
     @NotNull
     private CharSequence[] cssLinks = new CharSequence[0];
 
     /** Language of the HTML page */
-    @NotNull
+    @Nullable
     private CharSequence language = "en";
 
     /** Application content type */
     @NotNull
     private String contentType = "text/html";
-
-    /** Build a real model or a plain writer */
-    private boolean buildDom = false;
 
     /** A request to generate a minimal HTML header */
     private boolean htmlHeaderRequest = true;
@@ -66,27 +63,29 @@ public class DefaultHtmlConfig extends DefaultXmlConfig implements HtmlConfig {
     private ApiInjector headerInjector = e -> {};
 
     /** A name of root element */
+    @NotNull
     private String rootElementName = XmlBuilder.HTML;
 
-    /** Unpair HTML element names */
-    private Set<String> unpairElements = new HashSet<String>() {{
-        add("area");
-        add("base");
-        add(Html.BR);
-        add("col");
-        add("embed");
-        add(Html.HR);
-        add(Html.IMAGE);
-        add(Html.INPUT);
-        add("keygen");
-        add(Html.LINK);
-        add(Html.META);
-        add("param");
-        // add(Html.SCRIPT); The script is umpair elemnt commonly
-        add("source");
-        add(Html.STYLE);
-        add("track");
-    }};
+    /** Unpair HTML element names (Replaced Double Brace Initialization with efficient Set.of) */
+    @NotNull
+    private Set<String> unpairElements = Set.of(
+            "area",
+            "base",
+            Html.BREAK,
+            "col",
+            "embed",
+            Html.HR,
+            Html.IMAGE,
+            Html.INPUT,
+            "keygen",
+            Html.LINK,
+            Html.META,
+            "param",
+            // Html.SCRIPT // The script is unpair element commonly
+            "source",
+            Html.STYLE,
+            "track"
+    );
 
     public DefaultHtmlConfig() {
     }
@@ -97,11 +96,11 @@ public class DefaultHtmlConfig extends DefaultXmlConfig implements HtmlConfig {
         this.cssLinks = htmlConfig.getCssLinks();
         this.language = htmlConfig.getLanguage().orElse(null);
         this.contentType = htmlConfig.getContentType();
-        this.buildDom = htmlConfig.isDocumentObjectModel();
-        this.htmlHeaderRequest = htmlConfig.isDocumentObjectModel();
         this.rawHeaderText = htmlConfig.getRawHeaderText();
         this.headerInjector = htmlConfig.getHeaderInjector();
         this.rootElementName = htmlConfig.getRootElementName();
+        this.htmlHeaderRequest = htmlConfig.isHtmlHeaderRequest();
+        this.unpairElements = Set.copyOf(htmlConfig.getUnpairElements());
     }
 
     @Override
@@ -117,6 +116,7 @@ public class DefaultHtmlConfig extends DefaultXmlConfig implements HtmlConfig {
     }
 
     @Override
+    @NotNull
     public CharSequence[] getCssLinks() {
         return cssLinks;
     }
@@ -133,12 +133,6 @@ public class DefaultHtmlConfig extends DefaultXmlConfig implements HtmlConfig {
         return contentType;
     }
 
-    /** Build a real model or a plain writer, the default value is {@code false} */
-    @Override
-    public boolean isDocumentObjectModel() {
-        return buildDom;
-    }
-
     /** A request to generate a minimal HTML header */
     @Override
     public boolean isHtmlHeaderRequest() {
@@ -147,6 +141,7 @@ public class DefaultHtmlConfig extends DefaultXmlConfig implements HtmlConfig {
 
     /** A raw text for HTML header */
     @Override
+    @Nullable
     public CharSequence getRawHeaderText() {
         return rawHeaderText;
     }
@@ -165,6 +160,8 @@ public class DefaultHtmlConfig extends DefaultXmlConfig implements HtmlConfig {
         return rootElementName;
     }
 
+    @Override
+    @NotNull
     public Set<String> getUnpairElements() {
         return unpairElements;
     }
@@ -172,42 +169,28 @@ public class DefaultHtmlConfig extends DefaultXmlConfig implements HtmlConfig {
     // --- SETTERS ---
 
     /** Title is a required element by HTML 5 */
-    public DefaultHtmlConfig setTitle(@NotNull CharSequence title) {
-        this.title = Assert.notNull(title, "title");
+    public DefaultHtmlConfig setTitle(@NotNull final CharSequence title) {
+        this.title = Assert.notNull(title, () -> "title");
         return this;
     }
 
-    public DefaultHtmlConfig setCssLinks(@NotNull CharSequence... cssLinks) {
-        this.cssLinks = Assert.notNull(cssLinks, REQUIRED_MSG, "cssLinks");
+    public DefaultHtmlConfig setCssLinks(@NotNull final CharSequence... cssLinks) {
+        this.cssLinks = Assert.notNull(cssLinks, () -> REQUIRED_MSG.formatted("cssLinks"));
         return this;
     }
 
-    public DefaultHtmlConfig setLanguage(@NotNull CharSequence language) {
+    public DefaultHtmlConfig setLanguage(@NotNull final CharSequence language) {
         this.language = language;
         return this;
     }
 
-    public DefaultHtmlConfig setContentType(@NotNull String contentType) {
-        this.contentType = Assert.notNull(contentType, REQUIRED_MSG, "contentType");
-        return this;
-    }
-
-    /** Build a real model or a plain writer, the default value is {@code false}.
-     * @deprecated Use the method {@link #setDocumentObjectModel(boolean) }.
-     */
-    @Deprecated
-    public void setDom(final boolean buildDom) {
-        setDocumentObjectModel(buildDom);
-    }
-
-    /** Build a real model or a plain writer, the default value is {@code false} */
-    public DefaultHtmlConfig setDocumentObjectModel(final boolean buildDom) {
-        this.buildDom = buildDom;
+    public DefaultHtmlConfig setContentType(@NotNull final String contentType) {
+        this.contentType = Assert.notNull(contentType, () -> REQUIRED_MSG.formatted("contentType"));
         return this;
     }
 
     /** A request to generate a minimal HTML header */
-    public DefaultHtmlConfig setHtmlHeader(boolean htmlHeaderRequest) {
+    public DefaultHtmlConfig setHtmlHeader(final boolean htmlHeaderRequest) {
         this.htmlHeaderRequest = htmlHeaderRequest;
         return this;
     }
@@ -215,7 +198,7 @@ public class DefaultHtmlConfig extends DefaultXmlConfig implements HtmlConfig {
     /** The element name must not be special HTML characters.
      * The {@code null} value is intended to build a root of AJAX queries.
      */
-    public DefaultHtmlConfig setRootElementName(@Nullable String rootElementName) {
+    public DefaultHtmlConfig setRootElementName(@Nullable final String rootElementName) {
         this.rootElementName = rootElementName != null
                 ? rootElementName
                 : XmlBuilder.HIDDEN_NAME;
@@ -223,25 +206,26 @@ public class DefaultHtmlConfig extends DefaultXmlConfig implements HtmlConfig {
     }
 
     /** Set Unpair element names */
-    public void setUnpairElements(@NotNull Set<String> unpairElements) {
-        this.unpairElements = Assert.notNull(unpairElements, REQUIRED_MSG, "unpairElements");
+    public DefaultHtmlConfig setUnpairElements(@NotNull final Set<String> unpairElements) {
+        this.unpairElements = Assert.notNull(unpairElements, () -> REQUIRED_MSG.formatted("unpairElements"));
+        return this;
     }
 
     /**
      * Use the {@link #setHeaderInjector(org.ujorm.tools.xml.config.ApiInjector) } method rather.
-     * @param rawHeaderText
-     * @return
+     * @param rawHeaderText Header text
+     * @return This config
      * @deprecated
      */
     @Deprecated
-    public DefaultHtmlConfig setRawHedaderCode(@Nullable String rawHeaderText) {
-        this.rawHeaderText = Assert.notNull(rawHeaderText, REQUIRED_MSG, "rawHeaderText");
+    public DefaultHtmlConfig setRawHeaderText(@NotNull final String rawHeaderText) {
+        this.rawHeaderText = Assert.notNull(rawHeaderText, () -> REQUIRED_MSG.formatted("rawHeaderText"));
         return this;
     }
 
     /** Assign a new header injector */
-    public DefaultHtmlConfig setHeaderInjector(@NotNull ApiInjector headerInjector) {
-        this.headerInjector = Assert.notNull(headerInjector, REQUIRED_MSG, "headerInjector");
+    public DefaultHtmlConfig setHeaderInjector(@NotNull final ApiInjector headerInjector) {
+        this.headerInjector = Assert.notNull(headerInjector, () -> REQUIRED_MSG.formatted("headerInjector"));
         return this;
     }
 }

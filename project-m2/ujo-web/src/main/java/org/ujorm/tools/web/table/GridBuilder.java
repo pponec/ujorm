@@ -1,5 +1,5 @@
 /*
- * Copyright 2020-2022 Pavel Ponec, https://github.com/pponec
+ * Copyright 2020-2026 Pavel Ponec, https://github.com/pponec
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,9 +15,10 @@
  */
 package org.ujorm.tools.web.table;
 
-import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.function.BiConsumer;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Function;
 import java.util.logging.Logger;
@@ -31,12 +32,11 @@ import org.ujorm.tools.web.Html;
 import org.ujorm.tools.web.ao.Column;
 import org.ujorm.tools.web.ao.HttpParameter;
 import org.ujorm.tools.web.ao.Injector;
-import org.ujorm.tools.web.ao.WebUtils;
 import org.ujorm.tools.xml.ApiElement;
 import org.ujorm.tools.xml.config.HtmlConfig;
 
 /**
- * Build a content of a HTML page for a sortable data grid.
+ * Builds the content of an HTML page for a sortable data grid.
  *
  * @author Pavel Ponec
  */
@@ -49,7 +49,7 @@ public class GridBuilder<D> {
     protected final List<ColumnModel<D,?>> columns = new ArrayList<>();
     /** Table builder config */
     protected final GridBuilderConfig config;
-    /** An order of sorted column whete a negavive value means a descending direction */
+    /** Index of the sorted column, or {@code -1} if the table is not sorted by any column */
     private int sortedColumn = -1;
     /** Is the table sortable */
     private Boolean isSortable;
@@ -101,7 +101,7 @@ public class GridBuilder<D> {
         return addInternal(column, title, null);
     }
 
-    /** Add new column for a row counting */
+    /** Add a row-number column */
     @NotNull
     public GridBuilder<D> addOrder(@NotNull final CharSequence title) {
         final String textRight = "text-right";
@@ -132,14 +132,14 @@ public class GridBuilder<D> {
         return columns.get(index);
     }
 
-    /** Returns a count of columns */
+    /** Returns the number of columns */
     public int getColumnSize() {
         return columns.size();
     }
 
     /**
      * Add a sortable indicator to the last column model
-     * @return
+     * @return this builder
      */
     @NotNull
     public <V> GridBuilder<D> sortable() {
@@ -147,8 +147,8 @@ public class GridBuilder<D> {
     }
     /**
      * Add a sortable indicator to the last column model
-     * @param ascending Ascending or descending direction of the sort
-     * @return
+     * @param ascending ascending ({@code true}) or descending ({@code false}) sort direction
+     * @return this builder
      */
     @NotNull
     public <V> GridBuilder<D> sortable(@Nullable final boolean ascending) {
@@ -157,18 +157,18 @@ public class GridBuilder<D> {
 
     /**
      * Add a sortable indicator to the last column model
-     * @param direction The {@code null} value shows an unused sorting action.
-     * @return
+     * @param direction sort direction; {@link Direction#NONE} means the column is not used for sorting
+     * @return this builder
      */
     @NotNull
     public <V> GridBuilder<D> sortable(@NotNull final Direction direction) {
-        Assert.notNull(direction, "direction");
-        Assert.hasLength(columns, "No column is available");
+        Assert.notNull(direction, () -> "direction");
+        Assert.hasLength(columns, () -> "No column is available");
         columns.get(columns.size() - 1).setSortable(direction);
         return this;
     }
 
-    /** Get sorted column or a stub of the sorted column was not found */
+    /** Get the sorted column model, or a stub if no column is sorted */
     @NotNull
     public ColumnModel<D,?> getSortedColumn() {
         return (sortedColumn >= 0 && sortedColumn < getColumnSize())
@@ -199,7 +199,7 @@ public class GridBuilder<D> {
             @NotNull final Function<GridBuilder<D>, Stream<D>> resource) {
 
         // An original code: setSort(ColumnModel.ofCode(config.getSortRequestParam().of(input)));
-        setSort(Assert.notNull(sortedColumn, "sortedColumn"));
+        setSort(Objects.requireNonNull(sortedColumn, "sortedColumn"));
         printTable(Element.of(parent), resource);
     }
 
@@ -247,31 +247,61 @@ public class GridBuilder<D> {
                 thLink.addText(value);
             }
             if (columnSortable && config.isEmbeddedIcons()) {
-                InputStream img = config.getInnerSortableImageToStream(col.getDirection());
-                if (img != null) {
-                    thLink.addImage(img, col.getDirection().toString());
+                final String dataUri = config.getInnerSortableImageDataUri(col.getDirection());
+                if (dataUri != null) {
+                    thLink.addImage(dataUri, col.getDirection().toString());
                 }
             }
         }
         try (Element tBody = table.addElement(Html.TBODY)) {
-            final Object cols = columns.stream().map(t -> t.getColumn());
-            final boolean hasRenderer = WebUtils.isType(Column.class, cols);
+            final boolean hasRenderer = hasRendererColumn();
+            final RowWriter<D>[] writers = hasRenderer ? precompileRowWriters() : null;
             resource.apply(this).forEach(value -> {
                 final Element rowElement = tBody.addElement(Html.TR);
-                for (ColumnModel<D, ?> col : columns) {
-                    final Function<D, ?> attribute = col.getColumn();
-                    final Element td = rowElement.addElement(Html.TD);
-                    if (hasRenderer && attribute instanceof Column) {
-                        ((Column)attribute).write(td, value);
-                    } else {
-                        td.addText(attribute.apply(value));
+                if (writers != null) {
+                    for (RowWriter<D> writer : writers) {
+                        writer.write(rowElement, value);
                     }
+                    return;
+                }
+                for (int i = 0, max = columns.size(); i < max; i++) {
+                    final Function<D, ?> attribute = columns.get(i).getColumn();
+                    final Element td = rowElement.addElement(Html.TD);
+                    td.addText(attribute.apply(value));
                 }
             });
         }
     }
 
-    /** Returns the true in case the table is sortable.
+    /** Returns true when any column uses a custom renderer. */
+    protected boolean hasRendererColumn() {
+        for (ColumnModel<D, ?> col : columns) {
+            if (col.getColumn() instanceof Column) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @SuppressWarnings("unchecked")
+    protected RowWriter<D>[] precompileRowWriters() {
+        final RowWriter<D>[] result = new RowWriter[columns.size()];
+        for (int i = 0, max = columns.size(); i < max; i++) {
+            final Function<D, ?> attribute = columns.get(i).getColumn();
+            final BiConsumer<Element, D> valueWriter = attribute instanceof Column
+                    ? (td, row) -> ((Column<D>) attribute).write(td, row)
+                    : (td, row) -> td.addText(attribute.apply(row));
+            result[i] = (rowElement, row) -> valueWriter.accept(rowElement.addElement(Html.TD), row);
+        }
+        return result;
+    }
+
+    @FunctionalInterface
+    protected interface RowWriter<D> {
+        void write(Element rowElement, D row);
+    }
+
+    /** Returns {@code true} if the table has at least one sortable column.
      *
      * NOTE: Calculated result is cached, call the method on a final model only!
      */
@@ -282,7 +312,7 @@ public class GridBuilder<D> {
         return isSortable;
     }
 
-    /** Calculate if the table has an sortable column */
+    /** Returns whether the table has at least one sortable column */
     public boolean isSortableCalculated() {
         for (ColumnModel<D, ?> column : columns) {
             if (column.isSortable()) {

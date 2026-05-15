@@ -1,5 +1,5 @@
 /*
- *  Copyright 2014-2022 Pavel Ponec
+ *  Copyright 2014-2026 Pavel Ponec
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -25,7 +25,7 @@ import org.ujorm.xsd.domains.Customer;
  * Test of the XSD Builder
  * @author Pavel Ponec
  */
-public class XsdBuilderTest extends org.junit.jupiter.api.Assertions {
+class XsdBuilderTest extends org.junit.jupiter.api.Assertions {
 
     /**
      * Test of print method, of class XsdBuilder.

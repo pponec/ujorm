@@ -1,5 +1,5 @@
 /*
- * Copyright 2020-2022 Pavel Ponec, https://github.com/pponec
+ * Copyright 2020-2026 Pavel Ponec, https://github.com/pponec
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,6 +17,7 @@ package org.ujorm.tools.web.report;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Objects;
 import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.logging.Level;
@@ -25,7 +26,7 @@ import java.util.stream.Stream;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import org.ujorm.tools.web.request.HttpContext;
+import org.ujorm.tools.web.request.AbstractExchangeContext;
 import org.ujorm.tools.Assert;
 import org.ujorm.tools.Check;
 import org.ujorm.tools.web.Element;
@@ -43,9 +44,9 @@ import org.ujorm.tools.web.table.GridBuilder;
 import org.ujorm.tools.xml.config.HtmlConfig;
 
 /**
- * A HTML page builder for table based report with an AJAX support.
+ * An HTML page builder for table-based reports with AJAX support.
  *
- * <h3>Usage</h3>
+ * <h4>Usage</h4>
  *
  * <pre class="pre">
  *  ReportBuilder.of("Hotel Report")
@@ -84,12 +85,12 @@ public class ReportBuilder<D> {
     /** Form injector */
     @NotNull
     protected Injector formAdditions = footer;
-    /** Javascript writer */
+    /** JavaScript injector for the page head (AJAX wiring, etc.) */
     @NotNull
     protected Supplier<Injector> javascritWriter = () -> new JavaScriptWriter()
             .setAjax(ReportBuilder.this.ajaxEnabled)
             .setSubtitleSelector("." + ReportBuilder.this.config.getSubtitleCss());
-    /** is An AJAX enabled? */
+    /** Whether AJAX is enabled */
     protected boolean ajaxEnabled = true;
     /** Call an autosubmit on first load */
     protected boolean autoSubmmitOnLoad = false;
@@ -155,7 +156,7 @@ public class ReportBuilder<D> {
         return this;
     }
 
-    /** Add new column for a row counting */
+    /** Add a row-number column */
     @NotNull
     public ReportBuilder<D> addOrder(@NotNull final CharSequence title) {
         gridBuilder.addOrder(title);
@@ -167,14 +168,14 @@ public class ReportBuilder<D> {
         return gridBuilder.getColumn(index);
     }
 
-    /** Returns a count of columns */
+    /** Returns the number of columns */
     public int getColumnSize() {
         return gridBuilder.getColumnSize();
     }
 
     /**
      * Add a sortable indicator to the last column model
-     * @return
+     * @return this builder
      */
     @NotNull
     public <V> ReportBuilder<D> sortable() {
@@ -183,8 +184,8 @@ public class ReportBuilder<D> {
     }
     /**
      * Add a sortable indicator to the last column model
-     * @param ascending Ascending or descending direction of the sort
-     * @return
+     * @param ascending ascending ({@code true}) or descending ({@code false}) sort direction
+     * @return this builder
      */
     @NotNull
     public <V> ReportBuilder<D> sortable(@Nullable final boolean ascending) {
@@ -194,8 +195,8 @@ public class ReportBuilder<D> {
 
     /**
      * Add a sortable indicator to the last column model
-     * @param direction The {@code null} value shows an unused sorting action.
-     * @return
+     * @param direction sort direction; {@link Direction#NONE} means the column is not used for sorting
+     * @return this builder
      */
     @NotNull
     public <V> ReportBuilder<D> sortable(@NotNull final Direction direction) {
@@ -203,7 +204,7 @@ public class ReportBuilder<D> {
         return this;
     }
 
-    /** Get sorted column or a stub if the sorted column not found */
+    /** Get the sorted column model, or a stub if no column is sorted */
     @NotNull
     public ColumnModel<D,?> getSortedColumn() {
         return gridBuilder.getSortedColumn();
@@ -211,42 +212,42 @@ public class ReportBuilder<D> {
 
     @NotNull
     public ReportBuilder<D> setAjaxRequestParam(@NotNull HttpParameter ajaxRequestParam) {
-        this.ajaxRequestParam = Assert.notNull(ajaxRequestParam, "ajaxRequestParam");
+        this.ajaxRequestParam = Objects.requireNonNull(ajaxRequestParam, "ajaxRequestParam");
         return this;
     }
 
     @NotNull
     public ReportBuilder<D> setHtmlHeader(@NotNull Injector htmlHeader) {
-        this.htmlHeader = Assert.notNull(htmlHeader, "htmlHeader");
+        this.htmlHeader = Objects.requireNonNull(htmlHeader, "htmlHeader");
         return this;
     }
 
     @NotNull
     public ReportBuilder<D> setHeader(@NotNull Injector header) {
-        this.header = Assert.notNull(header, "header");
+        this.header = Objects.requireNonNull(header, "header");
         return this;
     }
 
     @NotNull
     public ReportBuilder<D> setFooter(@NotNull Injector footer) {
-        this.footer = Assert.notNull(footer, "footer");
+        this.footer = Objects.requireNonNull(footer, "footer");
         return this;
     }
 
     @NotNull
     public ReportBuilder<D> setFormItem(@NotNull Injector formItem) {
-        this.formAdditions = Assert.notNull(formItem, "formAdditions");
+        this.formAdditions = Objects.requireNonNull(formItem, "formAdditions");
         return this;
     }
 
-    /** Enable of disable an AJAX feature, default value si {@code true} */
+    /** Enable or disable AJAX; default is {@code true} */
     public ReportBuilder<D> setAjaxEnabled(boolean ajaxEnabled) {
         this.ajaxEnabled = ajaxEnabled;
         return this;
     }
 
     public ReportBuilder<D> setJavascritWriter(@NotNull Supplier<Injector> javascritWriter) {
-        this.javascritWriter = Assert.notNull(javascritWriter, "javascritWriter");
+        this.javascritWriter = Objects.requireNonNull(javascritWriter, "javascritWriter");
         return this;
     }
 
@@ -254,21 +255,21 @@ public class ReportBuilder<D> {
         if (config instanceof ReportBuilderConfigImpl) {
             ((ReportBuilderConfigImpl)config).setEmbeddedIcons(embeddedIcons);
         } else {
-            throw new IllegalStateException("Configuration must be type of: " + ReportBuilderConfigImpl.class);
+            throw new IllegalStateException("Configuration must be of type: " + ReportBuilderConfigImpl.class);
         }
         return this;
     }
 
     /** Build the HTML page including a table */
     public void build(
-            @NotNull final HttpContext context,
+            @NotNull final AbstractExchangeContext context,
             @NotNull final Stream<D> resource) {
         build(context, tableBuilder -> resource);
     }
 
     /** Build the HTML page including a table */
     public void build(
-            @NotNull final HttpContext context,
+            @NotNull final AbstractExchangeContext context,
             @NotNull final Function<GridBuilder<D>, Stream<D>> resource) {
         try {
             setSort(ColumnModel.ofCode(config.getSortRequestParam().of(context)));
@@ -276,8 +277,9 @@ public class ReportBuilder<D> {
                     .onParam(config.getAjaxRequestParam(), jsonBuilder -> doAjax(context, jsonBuilder, resource))
                     .onDefaultToElement(element -> printHtmlBody(context, element, resource));
         } catch (Exception e) {
-            LOGGER.log(Level.WARNING, "Internal server error", e);
-            throw new IllegalStateException("500"); // TODO.pop
+            var msg = "Internal server error";
+            LOGGER.log(Level.WARNING, msg, e);
+            throw new IllegalStateException(msg, e);
         }
     }
 
@@ -298,13 +300,13 @@ public class ReportBuilder<D> {
     }
 
     protected void printHtmlBody(
-            @NotNull final HttpContext context,
+            @NotNull final AbstractExchangeContext context,
             @NotNull final HtmlElement html,
             @NotNull final Function<GridBuilder<D>, Stream<D>> resource
     ) {
-        Assert.notNull(context, "context");
-        Assert.notNull(html, "html");
-        Assert.notNull(resource, "resource");
+        Objects.requireNonNull(context, "context");
+        Objects.requireNonNull(html, "html");
+        Objects.requireNonNull(resource, "resource");
 
         if (Check.hasLength(config.getJavascriptLink())) {
             html.addJavascriptLink(false, config.getJavascriptLink());
@@ -316,7 +318,7 @@ public class ReportBuilder<D> {
         try (Element body = html.getBody()) {
             header.write(body);
             body.addDiv(config.getSubtitleCss()).addText(ajaxEnabled ? config.getAjaxReadyMessage() : "");
-            try (Element form =  body.addForm()
+            try (Element form = body.addForm()
                     .setId(config.getFormId())
                     .setMethod(Html.V_POST).setAction("?")) {
 
@@ -346,7 +348,7 @@ public class ReportBuilder<D> {
     }
 
     /** The hidden field contains an index of the last sorted column */
-    protected void printSortedField(Element parent, final HttpContext context) {
+    protected void printSortedField(Element parent, final AbstractExchangeContext context) {
         final int index = config.getSortRequestParam().of(context, -1);
         parent.addInput().setAttribute(Html.A_TYPE, Html.V_HIDDEN)
                 .setNameValue(config.getSortRequestParam(), index);
@@ -354,7 +356,7 @@ public class ReportBuilder<D> {
 
     protected void printTableBody(
             @NotNull final Element table,
-            @NotNull final HttpContext context,
+            @NotNull final AbstractExchangeContext context,
             @NotNull final Function<GridBuilder<D>, Stream<D>> resource
     ) {
         final ColumnModel sortedColumn = ColumnModel.ofCode(config.getSortRequestParam().of(context));
@@ -368,7 +370,7 @@ public class ReportBuilder<D> {
      * @throws IOException if an I/O error occurs
      */
     protected void doAjax(
-            @NotNull final HttpContext context,
+            @NotNull final AbstractExchangeContext context,
             @NotNull final JsonBuilder output,
             @NotNull final Function<GridBuilder<D>, Stream<D>> resource
     ) throws IOException {
@@ -381,19 +383,17 @@ public class ReportBuilder<D> {
 
     /** URL constants */
     public static class Url {
-        /** Link to a Bootstrap URL of CDN */
+        /** Bootstrap CSS stylesheet URL on a CDN */
         protected static final String BOOTSTRAP_CSS = "https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css";
-        /** Link to jQuery of CDN */
-        protected static final String JQUERY_JS = "";
 
         final String bootstrapCss;
 
         public Url() {
-            this(BOOTSTRAP_CSS, JQUERY_JS);
+            this(BOOTSTRAP_CSS);
         }
 
-        public Url(@NotNull final String bootstrapCss, @NotNull final String jQueryJs) {
-            this.bootstrapCss = Assert.hasLength(bootstrapCss, "bootstrapCss");
+        public Url(@NotNull final String bootstrapCss) {
+            this.bootstrapCss = Assert.hasLength(bootstrapCss, () -> "bootstrapCss");
         }
     }
 }

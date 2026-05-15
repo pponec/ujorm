@@ -1,5 +1,5 @@
 /*
- * Copyright 2020-2022 Pavel Ponec, https://github.com/pponec
+ * Copyright 2020-2026 Pavel Ponec, https://github.com/pponec
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,7 +27,7 @@ import org.jetbrains.annotations.NotNull;
 @FunctionalInterface
 public interface ObjectProvider {
 
-    /** Write a HTML code to the element */
+    /** Writes HTML markup into the given element */
     void accept(@NotNull JsonBuilder element) throws IOException;
 
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2022 Pavel Ponec
+ * Copyright 2021-2026 Pavel Ponec
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,12 +21,12 @@ import org.jetbrains.annotations.NotNull;
 
 /**
  * An interface for common export an object to an appendable writer
- * 
+ *
  * @author Pavel Ponec
  */
 @FunctionalInterface
 public interface Confessionable {
-    
+
     /**
      * Confess data to a writer
      * @param writer An output sequence
@@ -34,5 +34,5 @@ public interface Confessionable {
      */
     @NotNull
     Appendable confessTo(@NotNull Appendable writer) throws IOException;
-    
+
 }

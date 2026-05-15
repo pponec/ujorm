@@ -5,15 +5,9 @@
         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <!--<parent>
-        <groupId>org.ujorm</groupId>
-        <artifactId>ujo</artifactId>
-        <version>2.28-SNAPSHOT</version>
-    </parent>-->
-
     <groupId>org.ujorm</groupId>
     <artifactId>ujo-tools</artifactId>
-    <version>2.28-SNAPSHOT</version>
+    <version>3.0.0</version>
     <packaging>jar</packaging>
     <name>ujo-tools</name>
     <description>Ujorm-tools module is a basic library tools for common use</description>
@@ -40,13 +34,14 @@
     </scm>
 
     <properties>
-        <revision>2.28-SNAPSHOT</revision>
+        <revision>3.0.0</revision>
         <java.version>17</java.version>
         <maven.compiler.target>${java.version}</maven.compiler.target>
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <maven.compiler.encoding>UTF-8</maven.compiler.encoding>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <junit.version>5.10.2</junit.version>
+        <junit.version>5.12.2</junit.version>
+        <mockito.version>5.21.0</mockito.version>
     </properties>
 
     <dependencies>
@@ -84,7 +79,7 @@
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-junit-jupiter</artifactId>
-            <version>4.3.1</version>
+            <version>${mockito.version}</version>
             <scope>test</scope>
         </dependency>
 
@@ -115,7 +110,7 @@
         <plugins>
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.8.1</version>
+                <version>3.14.1</version>
                 <configuration>
                     <source>${java.version}</source>
                     <target>${java.version}</target>
@@ -153,14 +148,6 @@
                     </execution>
                 </executions>
             </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <configuration>
-                    <source>${java.version}</source>
-                    <target>${java.version}</target>
-                </configuration>
-            </plugin>
 
             <!-- Deployment (Needs the GnuPg) -->
             <plugin>
@@ -173,6 +160,7 @@
                     <autoPublish>true</autoPublish>
                 </configuration>
             </plugin>
+
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-gpg-plugin</artifactId>
@@ -191,29 +179,32 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-source-plugin</artifactId>
-                <version>3.3.1</version> <executions>
-                <execution>
-                    <id>attach-sources</id>
-                    <goals>
-                        <goal>jar-no-fork</goal>
-                    </goals>
-                </execution>
-            </executions>
+                <version>3.3.1</version>
+                <executions>
+                    <execution>
+                        <id>attach-sources</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
+
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
                 <version>3.6.3</version>
                 <configuration>
-                    <stylesheetfile>${basedir}/src/main/java/org/ujorm/doc-files/stylesheet.css</stylesheetfile>
+                    <!-- <stylesheetfile>${basedir}/src/main/java/org/ujorm/doc-files/stylesheet.css</stylesheetfile> -->
                     <javadocDirectory>${basedir}/src/javadoc</javadocDirectory>
                     <docfilessubdirs>true</docfilessubdirs>
                     <failOnError>false</failOnError>
                     <encoding>UTF-8</encoding>
-                    <bottom><![CDATA[Copyright 2025, <a target="_blank" href="https://ujorm.org/">PPonec<a>]]></bottom>
+                    <bottom><![CDATA[Copyright 2025, <a target="_blank" href="https://ujorm.org/">PPonec</a>]]></bottom>
                     <doctitle>Ujorm ${revision} (${project.name})</doctitle>
                     <windowtitle>Ujorm ${revision} - ${project.name}</windowtitle>
                     <packagesheader><![CDATA[<a class="UjoLogo" target="_top" href="https://ujorm.org/"> Ujorm<br>release ${project.version}</a>]]></packagesheader>
+                    <doclint>none</doclint><!-- Disables Javadoc warnings -->
                 </configuration>
                 <executions>
                     <execution>
@@ -226,27 +217,4 @@
             </plugin>
         </plugins>
     </build>
-
-    <!-- PROFILE(S) -->
-
-    <profiles>
-        <profile>
-            <id>production</id>
-            <build>
-                <plugins>
-                    <!-- code optimization: -->
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-compiler-plugin</artifactId>
-                        <configuration>
-                            <debug>true</debug>
-                            <optimize>true</optimize>
-                        </configuration>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-    </profiles>
-
 </project>
-

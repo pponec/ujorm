@@ -1,37 +1,37 @@
 package org.ujorm.tools.web.request;
 
 import org.jetbrains.annotations.NotNull;
-
 import java.io.CharArrayReader;
 import java.io.Reader;
 import java.util.Set;
 
-public final class URequestImpl implements URequest{
+public final class URequestImpl implements URequest {
+
     static final String[] emptyTexts = new String[0];
 
-    private final ManyMap map ;
-
+    private final ManyMap map;
     private final Reader reader;
 
-    public URequestImpl(@NotNull ManyMap map, @NotNull Reader reader ) {
+    public URequestImpl(@NotNull ManyMap map, @NotNull Reader reader) {
         this.map = map;
         this.reader = reader;
     }
 
-
     @NotNull
-    public Reader getReader() {
+    @Override
+    public Reader reader() {
         return reader;
     }
 
     @NotNull
-    public String[] getParameters(final String key) {
-        final String[] result = map.get(key);
+    @Override
+    public String[] parameters(final CharSequence key) {
+        var result = map.get(key.toString());
         return result != null ? result : emptyTexts;
     }
 
     @Override
-    public @NotNull Set<String> getParameterNames() {
+    public @NotNull Set<String> parameterNames() {
         return map.keySet();
     }
 
@@ -41,9 +41,5 @@ public final class URequestImpl implements URequest{
 
     public static URequestImpl ofMap(@NotNull ManyMap map) {
         return new URequestImpl(map, new CharArrayReader(new char[0]));
-    }
-
-    public static URequestImpl of() {
-        return new URequestImpl(new ManyMap(), new CharArrayReader(new char[0]));
     }
 }

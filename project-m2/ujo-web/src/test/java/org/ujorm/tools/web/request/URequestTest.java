@@ -5,8 +5,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 
-import java.io.IOException;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class URequestTest {
@@ -16,14 +14,14 @@ class URequestTest {
         MockHttpServletRequest request = new MockHttpServletRequest();
         request.setParameter("p1", "v1");
         request.setParameter("p2", "v2a", "v2b");
-        URequest uRequest = HttpContext.ofServlet(request, new MockHttpServletResponse()).request();
+        URequest uRequest = ExchangeContext.ofServlet(request, new MockHttpServletResponse()).request();
 
-        assertEquals(0, uRequest.getParameters("p0").length);
-        assertEquals(1, uRequest.getParameters("p1").length);
-        assertEquals(2, uRequest.getParameters("p2").length);
+        assertEquals(0, uRequest.parameters("p0").length);
+        assertEquals(1, uRequest.parameters("p1").length);
+        assertEquals(2, uRequest.parameters("p2").length);
 
-        assertEquals("v1", uRequest.getParameters("p1")[0]);
-        assertEquals("v2b", uRequest.getParameters("p2")[1]);
+        assertEquals("v1", uRequest.parameters("p1")[0]);
+        assertEquals("v2b", uRequest.parameters("p2")[1]);
     }
 
 
@@ -33,12 +31,12 @@ class URequestTest {
         request.setParameter("p1", "1");
         request.setParameter("p2", "3", "2");
         request.setParameter("p3", "X");
-        URequest uRequest = HttpContext.ofServlet(request, new MockHttpServletResponse()).request();
+        URequest uRequest = ExchangeContext.ofServlet(request, new MockHttpServletResponse()).request();
 
-        assertEquals("0", uRequest.getParameter("p0", "0"));
-        assertEquals("1", uRequest.getParameter("p1", "0"));
-        assertEquals("2", uRequest.getParameter("p2", "0"));
-        assertEquals("X", uRequest.getParameter("p3", "3"));
+        assertEquals("0", uRequest.parameter("p0", "0"));
+        assertEquals("1", uRequest.parameter("p1", "0"));
+        assertEquals("2", uRequest.parameter("p2", "0"));
+        assertEquals("X", uRequest.parameter("p3", "3"));
     }
 
     @Test
@@ -47,12 +45,12 @@ class URequestTest {
         request.setParameter("p1", "1");
         request.setParameter("p2", "3", "2");
         request.setParameter("p3", "X");
-        URequest uRequest = HttpContext.ofServlet(request, new MockHttpServletResponse()).request();
+        URequest uRequest = ExchangeContext.ofServlet(request, new MockHttpServletResponse()).request();
 
-        assertEquals(0, uRequest.getParameter("p0", 0, Integer::parseInt));
-        assertEquals(1, uRequest.getParameter("p1", 0, Integer::parseInt));
-        assertEquals(2, uRequest.getParameter("p2", 0, Integer::parseInt));
-        assertEquals(3, uRequest.getParameter("p3", 3, Integer::parseInt));
+        assertEquals(0, uRequest.parameter("p0", Integer::parseInt, 0));
+        assertEquals(1, uRequest.parameter("p1", Integer::parseInt, 0));
+        assertEquals(2, uRequest.parameter("p2", Integer::parseInt, 0));
+        assertEquals(3, uRequest.parameter("p3", Integer::parseInt, 3));
     }
 
 }

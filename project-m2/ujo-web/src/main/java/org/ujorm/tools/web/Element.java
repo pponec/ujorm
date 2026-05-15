@@ -1,12 +1,12 @@
 /*
- * Copyright 2018-2022 Pavel Ponec, https://github.com/pponec
+ * Copyright 2018-2026 Pavel Ponec, https://github.com/pponec
  * https://github.com/pponec/ujorm/blob/master/samples/servlet/src/main/java/org/ujorm/ujoservlet/tools/Html.java
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -24,103 +24,101 @@ import java.nio.charset.Charset;
 import java.util.Arrays;
 import java.util.Base64;
 import java.util.Collection;
-import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Objects;
-import java.util.StringJoiner;
 import java.util.function.Consumer;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import org.ujorm.tools.xml.model.XmlWriter;
 import org.ujorm.tools.Assert;
 import org.ujorm.tools.Check;
 import org.ujorm.tools.web.ao.Column;
 import org.ujorm.tools.web.ao.WebUtils;
 import org.ujorm.tools.xml.ApiElement;
 import org.ujorm.tools.xml.builder.XmlBuilder;
-import org.ujorm.tools.xml.model.XmlModel;
 import org.ujorm.tools.web.ao.HttpParameter;
 import org.ujorm.tools.web.ao.Injector;
+import org.ujorm.tools.xml.builder.XmlPrinter;
 
 /**
- * A HTML Element implements some methods for frequently used elements and attributes
+ * HTML element builder with convenience methods for common elements and attributes.
  *
- * <h3>Usage</h3>
- *
+ * <h4>Usage</h4>
  * <pre class="pre">
- *    ServletResponse response = new ServletResponse();
- *    try (HtmlElement html = HtmlElement.of(response)) {
- *        try (Element body = html.getBody()) {
- *            body.addHeading("Hello!");
- *        }
- *    }
- *    assertTrue(response.toString().contains("&lt;h1&gt;Hello!&lt;/h1&gt;"));
+ * var response = HttpContext.of();
+ * try (var html = AbstractHtmlElement.of(response)) {
+ *     try (var body = html.getBody()) {
+ *         body.addHeading("Hello!");
+ *         body.addLabel().addText("Active:")
+ *             .addCheckBox("active").setCheckBoxValue(true);
+ *     }
+ * }
+ * assertTrue(response.toString().contains("&lt;h1&gt;Hello!&lt;/h1&gt;"));
  * </pre>
  *
  * @see HtmlElement#of(org.ujorm.tools.xml.config.HtmlConfig)
  */
-public final class Element implements ApiElement<Element>, Html {
+public class Element extends XmlBuilder<Element> implements Html {
 
-    /** An original XML element */
-    final ApiElement internalElement;
+    /** No CSS styles */
+    public static final String[] NO_CSS = {};
 
-    /** New element for an API element
-     * @see #of(org.ujorm.tools.xml.ApiElement)
-     */
-    Element(@NotNull final ApiElement original) {
-        this.internalElement = original;
+    /** A reusable builder for CSS classes optimization */
+    private StringBuilder cssBuilder;
+
+    /** Constructor for a new HTML element */
+    public Element(@NotNull final String name, @NotNull final XmlPrinter writer, final int level) {
+        super(name, writer, level, true);
     }
 
-    @NotNull
+    /** Constructor for root elements without immediate print */
+    public Element(@NotNull final String name, @NotNull final XmlPrinter writer, final int level, final boolean printName) {
+        super(name, writer, level, printName);
+    }
+
+    /** Factory method for creating element children to allow method chaining */
     @Override
-    public String getName() {
-        return internalElement.getName();
+    @NotNull
+    protected Element createChild(@NotNull final String name) {
+        return new Element(name, getWriter(), getLevel() + 1, false);
     }
 
     /**
      * Set an attribute
      * @param name Required element name
-     * @param value The {@code null} value is silently ignored. Formatting is performed by the
-     *   {@link XmlWriter#writeValue(Object, ApiElement, String)}
-     *   method, where the default implementation calls a {@code toString()} only.
-     * @return The original element
-     */
-    @NotNull
-    @Override
-    public Element setAttribute(@NotNull final String name, @Nullable final Object value) {
-        internalElement.setAttribute(name, value);
-        return this;
-    }
-
-    /**
-     * Set an attribute
-     * @param name Required element name
-     * @param value The {@code null} value is silently ignored. Formatting is performed by the
-     *   {@link XmlWriter#writeValue(Object, ApiElement, String)}
-     *   method, where the default implementation calls a {@code toString()} only.
-     * @return The original element
+     * @param separator Separator for joining values
+     * @param value The {@code null} value is silently ignored.
+     * @return The current element
      */
     @NotNull
     public Element setAttributes(
             @NotNull final String name,
             @NotNull final CharSequence separator,
             @NotNull final Object... value) {
-        final String val = Stream.of(value)
-                .filter(Objects::nonNull)
-                .map(v -> v.toString())
-                .collect(Collectors.joining(separator));
-        internalElement.setAttribute(name, val);
+        if (Check.isEmpty(value)) {
+            return this;
+        }
+        var builder = new StringBuilder(64);
+        for (var val : value) {
+            if (val != null) {
+                if (!builder.isEmpty()) {
+                    builder.append(separator);
+                }
+                builder.append(val);
+            }
+        }
+        if (!builder.isEmpty()) {
+            setAttribute(name, builder.toString());
+        }
         return this;
     }
 
     /**
      * Set an attribute with no value
      * @param name Required element name
-     * @return The original element
+     * @return The current element
      */
     @NotNull
     public Element setAttribute(@NotNull final String name) {
@@ -128,43 +126,21 @@ public final class Element implements ApiElement<Element>, Html {
     }
 
     /**
-     * An deprecated shortcut for the method {@link #setAttribute(java.lang.String, java.lang.Object) }.
-     * @param name Required element name
-     * @param value The {@code null} value is silently ignored. Formatting is performed by the
-     *   {@link XmlWriter#writeValue(java.lang.Object, org.ujorm.tools.model.XmlModel, java.lang.String, java.io.Writer) }
-     *   method, where the default implementation calls a {@code toString()} only.
-     * @return The original element
-     */
-
-    /**
      * A shortcut for the method {@link #setAttribute(java.lang.String, java.lang.Object) }.
      * @param name Required element name
      * @param value The {@code null} value is silently ignored. Formatting is performed by the
-     *   {@link {@link XmlWriter#writeValue(Object, ApiElement, String)}
+     *   {@link XmlPrinter#writeValue(Object, ApiElement, String)}
      *   method, where the default implementation calls a {@code toString()} only.
-     * @return The original element
+     * @return The current element
      */
     @NotNull
     public Element setAttr(@NotNull final String name, @Nullable final Object value) {
         return setAttribute(name, value);
     }
 
-    /** Add simple text
+    /** Add many texts with no separator
      * @param data Text item
-     * @return A parent element.
-     * @see #addAnchor(String, CharSequence...)
-     */
-    @NotNull
-    @Override
-    public Element addText(final Object data) throws IllegalStateException {
-        internalElement.addText(data);
-        return this;
-    }
-
-    /**
-     * Add many texts with <strong>no separator</strong>
-     * @param data Text items
-     * @return A parent element.
+     * @return The current element
      * @see #addAnchor(String, CharSequence...)
      */
     @NotNull
@@ -172,131 +148,152 @@ public final class Element implements ApiElement<Element>, Html {
         return addTexts("", data);
     }
 
-    /**
-     * Add a template based text with parameters with hight performance.
-     *
-     * @param template A message template with an ENGLISH locale. See {@link String#format(java.lang.String, java.lang.Object...) for more parameters.
-     * @param values A template parameters
-     * @return A parent element.
-     */
+    /** Add many words separated by a delimiter */
     @NotNull
-    @Override
-    public Element addTextTemplated(CharSequence template, Object... values) {
-        internalElement.addTextTemplated(template, values);
-        return this;
-    }
-
-    /**
-     * Add many words separated by a delimeter
-     * @param separator The delimiter must contain no special HTML character.
-     * @param data Data to print
-     * @return The current element
-     * @throws IllegalStateException
-     */
     public Element addTexts(
             @NotNull final CharSequence separator,
             @NotNull final Object... data)
             throws IllegalStateException {
-        for (int i = 0, max = data.length; i < max; i++) {
+        for (int i = 0; i < data.length; i++) {
             if (i > 0) {
-                internalElement.addRawText(separator);
+                super.addRawText(separator);
             }
-            internalElement.addText(data[i]);
+            super.addText(data[i]);
         }
         return this;
     }
 
-    @NotNull
-    @Override
-    public Element addRawText(@Nullable final Object data) throws IllegalStateException {
-        internalElement.addRawText(data);
-        return this;
-    }
-
+    /** Add raw text items and return the current object. */
     @NotNull
     public Element addRawText(@NotNull final Object... data) throws IllegalStateException {
         for (Object item : data) {
-            internalElement.addRawText(item);
+            super.addRawText(item);
         }
         return this;
     }
 
     /**
-     * Add many words separated by a delimeter
+     * Add many words separated by a delimiter
      * @param separator The delimiter must contain no special HTML character.
      * @param data Data to print
      * @return The current element
-     * @throws IllegalStateException
+     * @throws IllegalStateException If an error occurs
      */
     public Element addRawTexts(
             @NotNull final CharSequence separator,
             @NotNull final Object... data)
             throws IllegalStateException {
-        for (int i = 0, max = data.length; i < max; i++) {
+        for (int i = 0; i < data.length; i++) {
             if (i > 0) {
-                internalElement.addRawText(separator);
+                super.addRawText(separator);
             }
-            internalElement.addRawText(data[i]);
+            super.addRawText(data[i]);
         }
         return this;
     }
 
-    @NotNull
-    @Override
-    public Element addComment(CharSequence comment) throws IllegalStateException {
-        internalElement.addComment(comment);
-        return this;
-    }
+    // -------------- Add ELEMENT (Overloaded specified methods) -----
 
-    @NotNull
-    @Override
-    public Element addCDATA(CharSequence charData) throws IllegalStateException {
-        internalElement.addCDATA(charData);
-        return this;
-    }
-
-    @NotNull
-    @Override
-    public void close() throws IllegalStateException {
-        internalElement.close();
-    }
-
-    // -------------- Add ELEMENT -----
-
-    /**
-     * Create new Element
-     * @param name The element name
-     * @return New instance of the Element
-     * @throws IllegalStateException An envelope for IO exceptions
+    /** Create a new element for a required name and add it to children.
+     * <b>WARNING: For performance reasons, this method returns a reusable instance
+     * of the child element. Do NOT store the reference to the returned element
+     * in a local variable if you intend to create another element at the same level!</b>
+     *
+     * @param name A name of the new XmlElement is required.
+     * @return The new XmlElement (reused instance!)
      */
-    @Override @NotNull
-    public Element addElement(@NotNull final String name) throws IllegalStateException {
-            return new Element(internalElement.addElement(name));
+    @Override
+    @NotNull
+    public Element addElement(@NotNull final String name) {
+        return super.addElement(name);
     }
 
-    /**
-     * Add a new Element with optional CSS classes
-     * @param name A required name of the element
-     * @param cssClasses Optional CSS classes.
-     * @return New instance of the Element
+    /** Create a new element for a required name and add it to children.
+     * <b>WARNING: For performance reasons, this method returns a reusable instance
+     * of the child element. Do NOT store the reference to the returned element
+     * in a local variable if you intend to create another element at the same level!</b>
+     *
+     * @param name A name of the new XmlElement is required.
+     * @return The new XmlElement (reused instance!)
      */
     @NotNull
     public Element addElement(@NotNull final String name, @NotNull final CharSequence... cssClasses) {
         return addElement(name).setClass(cssClasses);
     }
 
-    /**
-     * Add an element according to a condition.
+    /** Add new div element with no CSS classes */
+    @NotNull
+    public Element addDiv() {
+        return addElement(DIV);
+    }
+
+    /** Add new div element with optional CSS classes */
+    @NotNull
+    public Element addDiv(@NotNull final CharSequence... cssClasses) {
+        return addDiv().setClass(cssClasses);
+    }
+
+    /** Add new span element with no CSS classes */
+    @NotNull
+    public Element addSpan() {
+        return addElement(SPAN);
+    }
+
+    /** Add new span element with optional CSS classes */
+    @NotNull
+    public Element addSpan(@NotNull final CharSequence... cssClasses) {
+        return addSpan().setClass(cssClasses);
+    }
+
+    /** Add new paragraph element with no CSS classes */
+    @NotNull
+    public Element addParagraph() {
+        return addElement(P);
+    }
+
+    /** Add new paragraph element with optional CSS classes */
+    @NotNull
+    public Element addParagraph(@NotNull final CharSequence... cssClasses) {
+        return addParagraph().setClass(cssClasses);
+    }
+
+    /** Add new label element with no CSS classes */
+    @NotNull
+    public Element addLabel() {
+        return addElement(LABEL);
+    }
+
+    /** Add new label element with optional CSS classes */
+    @NotNull
+    public Element addLabel(@NotNull final CharSequence... cssClasses) {
+        return addLabel().setClass(cssClasses);
+    }
+
+    /** Add a list item element with no CSS classes */
+    @NotNull
+    public Element addListItem() {
+        return addElement(LI);
+    }
+
+    /** Add a list item element with optional CSS classes */
+    @NotNull
+    public Element addListItem(@NotNull final CharSequence... cssClasses) {
+        return addListItem().setClass(cssClasses);
+    }
+
+    // -------------- Standard Vararg Methods -----
+
+    /** Add an element according to a condition
      * @param enabled A condition for rendering the element.
      * @param name An element name
      * @param cssClasses CSS classes
-     * @return New instance of the Element
+     * @return A new nested element (or a hidden element if disabled)
      */
     @NotNull
     public Element addElementIf(final boolean enabled,
                                 @NotNull final String name,
                                 @NotNull final CharSequence... cssClasses) {
-        return addElement(enabled ? name : XmlBuilder.HIDDEN_NAME).setClass(cssClasses);
+        return addElement(enabled ? name : XmlBuilder.HIDDEN_NAME, cssClasses);
     }
 
     /** Add new Table */
@@ -305,7 +302,7 @@ public final class Element implements ApiElement<Element>, Html {
         return addElement(TABLE, cssClasses);
     }
 
-    /** Create a HTML table according to data */
+    /** Creates an HTML table from the supplied row data */
     @NotNull
     public Element addTable(
             @NotNull final Object[][] data,
@@ -313,60 +310,62 @@ public final class Element implements ApiElement<Element>, Html {
         return addTable(Arrays.asList(data), cssClass);
     }
 
-    /** Create a HTML table according to data */
+    /** Creates an HTML table from the supplied row data */
     @NotNull
     public Element addTable(
             @NotNull final Collection<Object[]> data,
             @NotNull final CharSequence... cssClass) {
-        final Element result = addTable(cssClass);
+        final var result = addTable(cssClass);
         for (final Object[] rowValue : data) {
             if (rowValue != null) {
-                final Element rowElement = result.addElement(Html.TR);
+                final var rowElement = result.addTableRow();
                 for (final Object value : rowValue) {
-                    rowElement.addElement(Html.TD).addText(value);
+                    rowElement.addTableDetail().addText(value);
                 }
             }
         }
         return result;
     }
 
-    /** Create a HTML table according to data
+    /** Creates an HTML table from the supplied row stream and column extractors.
      *
-     * <h3>Usage</h3>
+     * <h4>Usage</h4>
      * <pre>
      * element.addTable(getCars(), cssClasses, titles,
-     *         Car::getId,
-     *         Car::getName,
-     *         Car::getEnabled);
+     * Car::getId,
+     * Car::getName,
+     * Car::getEnabled);
      * </pre>
+     * @return A new table element
      */
+    @SafeVarargs
     @NotNull
-    public <D,V> Element addTable(
+    public final <D,V> Element addTable(
             @NotNull final Stream<D> domains,
             @Nullable final CharSequence[] cssClass,
             @Nullable final Object[] headers,
             @NotNull final Function<D,V>... attributes) {
 
-        final Element result = addTable(cssClass != null ? cssClass : new String[0]);
+        final var result = addTable(Check.isEmpty(cssClass) ? NO_CSS : cssClass);
         if (Check.hasLength(headers)) {
-            final Element rowElement = result.addElement(Html.THEAD).addElement(Html.TR);
+            final var rowElement = result.addTableHead().addTableRow();
             for (Object value : headers) {
-                Element th = rowElement.addElement(Html.TH);
-                if (value instanceof Injector) {
-                    ((Injector)value).write(th);
+                var th = rowElement.addElement(Html.TH);
+                if (value instanceof Injector injector) {
+                    injector.write(th);
                 } else {
                     th.addText(value);
                 }
             }
         }
-        try (Element tBody = result.addElement(TBODY)) {
+        try (var tBody = result.addTableBody()) {
             final boolean hasRenderer = WebUtils.isType(Column.class, attributes);
             domains.forEach(value -> {
-                final Element rowElement = tBody.addElement(Html.TR);
-                for (Function<D, V> attribute : attributes) {
-                    final Element td = rowElement.addElement(Html.TD);
-                    if (hasRenderer && attribute instanceof Column) {
-                        ((Column)attribute).write(td, value);
+                final var rowElement = tBody.addTableRow();
+                for (var attribute : attributes) {
+                    final var td = rowElement.addTableDetail();
+                    if (hasRenderer && attribute instanceof Column column) {
+                        column.write(td, value);
                     } else {
                         td.addText(attribute.apply(value));
                     }
@@ -376,32 +375,62 @@ public final class Element implements ApiElement<Element>, Html {
         return result;
     }
 
+    /** Add an image */
+    @NotNull
+    public Element addImg(@NotNull final CharSequence... cssClasses)
+            throws IllegalStateException {
+        return addElement(IMAGE, cssClasses);
+    }
+
+    /**
+     * Appends a checkbox input element to the current container, accompanied by a hidden fallback field.
+     * <p>
+     * This method implements a workaround for the standard HTML form submission behavior where
+     * unchecked checkboxes are not sent in the request. By prepending an {@code <input type="hidden">}
+     * with the same name and a value of {@code false}, this method ensures that the server
+     * always receives a boolean value (either {@code true} or {@code false}).
+     * </p>
+     * <p><b>Usage Note:</b>
+     * To set the checked state of the component, use {@link #setCheckBoxValue(boolean)}.
+     * </p>
+     * @param name       the {@code name} attribute shared by both the checkbox and the hidden input
+     * @param cssClasses optional CSS classes to be applied to the visible checkbox element
+     * @return A new checkbox element
+     * @see #setCheckBoxValue(boolean)
+     */
+    @NotNull
+    public Element addCheckBox(
+            @NotNull final CharSequence name,
+            @NotNull final CharSequence... cssClasses) {
+        addHiddenInput(name, false);
+        return addInput(cssClasses).setType(Html.V_CHECKBOX).setName(name);
+    }
+
     /**
      * Add a link to an image
      * @param imageLink A link to image
      * @param alt An alternate text
      * @param cssClasses Optional CSS classes
-     * @return
-     * @throws IllegalStateException
+     * @return A new image element
+     * @throws IllegalStateException If an error occurs
      */
     @NotNull
     public Element addImage(
             @NotNull final CharSequence imageLink,
             @NotNull final CharSequence alt,
-            @NotNull final CharSequence... cssClasses)
-            throws IllegalStateException {
-        return addElement(IMAGE, cssClasses)
+            @NotNull final CharSequence... cssClasses) throws IllegalStateException {
+        return addImg(cssClasses)
                 .setAttribute(A_ALT, alt)
                 .setAttribute(A_SRC, imageLink);
     }
 
     /**
-     * Add an embeded image
+     * Add an embedded image
      * @param imageStream Stream provides a PNG image and it will be closed after reading.
      * @param alt An alternate text
      * @param cssClasses Optional CSS classes
-     * @return
-     * @throws IllegalStateException
+     * @return A new image element
+     * @throws IllegalStateException If an error occurs
      */
     @NotNull
     public Element addImage(
@@ -414,23 +443,23 @@ public final class Element implements ApiElement<Element>, Html {
                 .setAttribute(A_SRC, createEmbededImage(imageStream, new StringBuilder(1024)));
     }
 
-    /** Create a content of an embeded image */
+    /** Create a content of an embedded image */
     @NotNull
     private CharSequence createEmbededImage(
             @NotNull final InputStream imageStream,
             @NotNull final StringBuilder result) {
         final int bufferSize = 3 * 1024;
-        final Base64.Encoder encoder = Base64.getEncoder();
-        try (BufferedInputStream in = new BufferedInputStream(imageStream)) {
+        final var encoder = Base64.getEncoder();
+        try (var in = new BufferedInputStream(imageStream)) {
             result.append("data:image/png;base64,");
             byte[] chunk = new byte[bufferSize];
-            int len = 0;
-            while ((len = in.read(chunk)) == bufferSize) {
-                result.append(encoder.encodeToString(chunk));
-            }
-            if (len > 0) {
-                chunk = Arrays.copyOf(chunk, len);
-                result.append(encoder.encodeToString(chunk));
+            int len;
+            while ((len = in.read(chunk)) != -1) {
+                if (len == bufferSize) {
+                    result.append(encoder.encodeToString(chunk));
+                } else {
+                    result.append(encoder.encodeToString(Arrays.copyOf(chunk, len)));
+                }
             }
         } catch (IOException e) {
             throw new IllegalStateException(e.getMessage(), e);
@@ -438,10 +467,16 @@ public final class Element implements ApiElement<Element>, Html {
         return result;
     }
 
+    /** Add new head element */
+    @NotNull
+    public Element addHead(@NotNull final CharSequence... cssClasses) {
+        return addElement(HEAD).setClass(cssClasses);
+    }
+
     /** Add new body element */
     @NotNull
     public Element addBody(@NotNull final CharSequence... cssClasses) {
-        return addElement(BODY, cssClasses);
+        return addElement(BODY).setClass(cssClasses);
     }
 
     /** Add new title element */
@@ -468,21 +503,15 @@ public final class Element implements ApiElement<Element>, Html {
         return addElement(SCRIPT, cssClasses);
     }
 
-    /** Add new div element */
-    @NotNull
-    public Element addDiv(@NotNull final CharSequence... cssClasses) {
-        return addElement(DIV, cssClasses);
-    }
-
     /** Add new fieldset element including a title
      * @param title An optional title
      * @param cssClasses CSS classes
-     * @return An instance of FieldSet
-     * @see LEGEND
+     * @return A new fieldset element
+     * @see #LEGEND
      */
     @NotNull
     public Element addFieldset(@Nullable final String title, @NotNull final CharSequence... cssClasses) {
-        final Element result = addElement(FIELDSET, cssClasses);
+        final var result = addElement(FIELDSET, cssClasses);
         if (Check.hasLength(title)) {
             result.addElement(LEGEND).addText(title);
         }
@@ -495,59 +524,53 @@ public final class Element implements ApiElement<Element>, Html {
         return addElement(PRE, cssClasses);
     }
 
-    /** Add new span element */
-    @NotNull
-    public Element addSpan(@NotNull final CharSequence... cssClasses) {
-        return addElement(SPAN, cssClasses);
-    }
-
-    /** Add new paragram element */
-    @NotNull
-    public Element addParagraph(@NotNull final CharSequence... cssClasses) {
-        return addElement(P, cssClasses);
-    }
-
     /** Add new form element */
     @NotNull
     public Element addForm(@NotNull final CharSequence... cssClasses) {
         return addElement(FORM, cssClasses);
     }
 
-    /** Add a top heading (level one)  */
+    /** Add a top heading (level one) */
     @NotNull
     public Element addHeading(@NotNull CharSequence title, @NotNull final CharSequence... cssClasses) {
         return addHeading(1, title, cssClasses);
     }
 
-    /** Add new heading with the required level where the first level is the one,  */
+    /** Add new heading with the required level */
     @NotNull
     public Element addHeading(int level, @NotNull CharSequence title, @NotNull final CharSequence... cssClasses) {
-        Assert.isTrue(level > 0, "Unsupported level {}", level);
-        return addElement(HEADING_PREFIX + level, cssClasses).addText(title);
+        return addHeadingX(level, cssClasses).addText(title);
     }
 
-    /** Add new head of table element */
+    /** Add new heading with the required level */
+    @NotNull
+    public Element addHeadingX(int level, @NotNull final CharSequence... cssClasses) {
+        Assert.isTrue(level > 0, () -> "Unsupported level " + level);
+        return addElement(HEADING_PREFIX + level, cssClasses);
+    }
+
+    /** Add new head of table element with CSS */
     @NotNull
     public Element addTableHead(@NotNull final CharSequence... cssClasses) {
         return addElement(THEAD, cssClasses);
     }
 
-    /** Add new table row element */
+    /** Add new table body element with CSS */
+    @NotNull
+    public Element addTableBody(@NotNull final CharSequence... cssClasses) {
+        return addElement(TBODY, cssClasses);
+    }
+
+    /** Add new table row element with CSS */
     @NotNull
     public Element addTableRow(@NotNull final CharSequence... cssClasses) {
         return addElement(TR, cssClasses);
     }
 
-    /** Add new detail of table element */
+    /** Add new detail of table element with CSS */
     @NotNull
     public Element addTableDetail(@NotNull final CharSequence... cssClasses) {
         return addElement(TD, cssClasses);
-    }
-
-    /** Add new label element */
-    @NotNull
-    public Element addLabel(@NotNull final CharSequence... cssClasses) {
-        return addElement(LABEL, cssClasses);
     }
 
     /** Add new input element */
@@ -562,7 +585,7 @@ public final class Element implements ApiElement<Element>, Html {
         return addInput(cssClasses).setType(V_TEXT);
     }
 
-    /** Add new input element type of text including attributes: name, value, placeholder and title */
+    /** Add new input element type of text including attributes */
     @NotNull
     public <V> Element addTextInp(
             @NotNull HttpParameter param,
@@ -596,9 +619,7 @@ public final class Element implements ApiElement<Element>, Html {
         return addElement(TEXT_AREA, cssClasses);
     }
 
-    /** Add new select element
-     * @see #addSelectOptions(java.lang.Object, java.util.Map, java.lang.CharSequence...)
-     */
+    /** Add new select element */
     @NotNull
     public Element addSelect(@NotNull final CharSequence... cssClasses) {
         return addElement(SELECT, cssClasses);
@@ -606,9 +627,9 @@ public final class Element implements ApiElement<Element>, Html {
 
     /** Add options from map to current select element
      * @param value Value of a select element
-     * @param options Consider an instance of the {@link LinkedHashMap} class predictable iteration order of options.
-     * @param cssClasses
-     * @return Return {@code this}
+     * @param options Consider an instance of the {@link java.util.LinkedHashMap} class for predictable iteration order.
+     * @param cssClasses CSS classes for the options
+     * @return The current element
      * @see #addSelect(java.lang.CharSequence...)
      */
     @NotNull
@@ -616,12 +637,13 @@ public final class Element implements ApiElement<Element>, Html {
             @NotNull Object value,
             @NotNull final Map<?,?> options,
             @NotNull final CharSequence... cssClasses) {
-        for (Object key : options.keySet()) {
-            this.addElement(Html.OPTION)
-                    .setAttribute(Html.A_VALUE, key)
-                    .setAttribute(Html.A_SELECTED, Objects.equals(value, key) ? Html.A_SELECTED : null)
-                    .addText(options.get(key));
-        }
+        options.forEach((key, val) ->
+                this.addElement(Html.OPTION)
+                        .setAttribute(Html.A_VALUE, key)
+                        .setAttribute(Html.A_SELECTED, Objects.equals(value, key) ? Html.A_SELECTED : null)
+                        .setClass(cssClasses)
+                        .addText(val)
+        );
         return this;
     }
 
@@ -640,23 +662,16 @@ public final class Element implements ApiElement<Element>, Html {
     /** Add a submit button */
     @NotNull
     public Element addSubmitButton(@NotNull final CharSequence... cssClasses) {
-        final Element result = addButton(cssClasses);
-        return result.setType(V_SUBMIT);
+        return addButton(cssClasses).setType(V_SUBMIT);
     }
 
     /** Add an anchor element with URL and CSS classes */
     @NotNull
     public Element addAnchor(@NotNull final String url, @NotNull final CharSequence... cssClasses) {
-        final Element result = addElement(A, cssClasses);
-        return result.setHref(url);
+        return addElement(A, cssClasses).setHref(url);
     }
 
-    /**
-     * Add a
-     * @param url
-     * @param text
-     * @return The original element!
-     */
+    /** Add a linked text */
     @NotNull
     public Element addLinkedText(@NotNull final String url, @NotNull final Object... text) {
         addElement(A).setHref(url).addTexts("", text);
@@ -675,27 +690,30 @@ public final class Element implements ApiElement<Element>, Html {
         return addElement(OL, cssClasses);
     }
 
-    @NotNull
-    public Element addListItem(@NotNull final CharSequence... cssClasses) {
-        return addElement(LI, cssClasses);
-    }
-
     /** Set a CSS class attribute optionally, the empty attribute is ignored.
      * @param cssClasses Optional CSS classes. The css item is ignored when the value is empty or {@code null}.
-     * @return The current instanlce
+     * @return The current element
      */
     @NotNull
     public Element setClass(@NotNull final CharSequence... cssClasses) {
         if (Check.hasLength(cssClasses)) {
-            final StringJoiner builder = new StringJoiner(" ");
-            for (CharSequence cssClass : cssClasses) {
+            if (this.cssBuilder == null) {
+                this.cssBuilder = new StringBuilder(64);
+            } else {
+                this.cssBuilder.setLength(0);
+            }
+
+            for (var cssClass : cssClasses) {
                 if (Check.hasLength(cssClass)) {
-                    builder.add(cssClass);
+                    if (!this.cssBuilder.isEmpty()) {
+                        this.cssBuilder.append(' ');
+                    }
+                    this.cssBuilder.append(cssClass);
                 }
             }
-            final String result = builder.toString();
-            if (Check.hasLength(result)) {
-                setAttribute(A_CLASS, result);
+
+            if (!this.cssBuilder.isEmpty()) {
+                setAttribute(A_CLASS, this.cssBuilder.toString());
             }
         }
         return this;
@@ -704,85 +722,43 @@ public final class Element implements ApiElement<Element>, Html {
     /** Add a line break */
     @NotNull
     public Element addBreak(@NotNull final CharSequence... cssClasses) {
-        return addElement(BR, cssClasses);
-    }
-
-    // ---- Static methods ----
-
-    /** Crate a root element
-     * @param cssLinks Nullable CSS link array
-     */
-    @NotNull
-    public static Element createHtmlRoot(@NotNull final Object title, @Nullable final CharSequence... cssLinks) {
-        return createHtmlRoot(title, null, cssLinks);
-    }
-
-
-    /** Crate a root element
-     * @param title A HTML title
-     * @param charset A charset
-     * @param cssLinks Nullable CSS link array
-     */
-    @NotNull
-    public static Element createHtmlRoot(
-            @NotNull final Object title,
-            @Nullable final Charset charset,
-            @Nullable final CharSequence... cssLinks) {
-        XmlModel result = new XmlModel(HTML);
-        XmlModel head = result.addElement(HEAD);
-        head.addElement(META).setAttribute(A_CHARSET, charset);
-        head.addElement(TITLE).addText(title);
-
-        if (cssLinks != null) {
-            for (CharSequence cssLink : cssLinks) {
-                head.addElement(LINK)
-                        .setAttribute(A_HREF, cssLink)
-                        .setAttribute(A_REL, "stylesheet");
-            }
-        }
-        return new Element(result);
+        return addElement(BREAK, cssClasses);
     }
 
     /** Set an identifier of the element */
     @NotNull
     public Element setId(@Nullable final CharSequence value) {
-        setAttribute(A_ID, value);
-        return this;
+        return setAttribute(A_ID, value);
     }
 
     /** Set a method of form */
     @NotNull
     public Element setMethod(@Nullable final Object value) {
-        setAttribute(A_METHOD, value);
-        return this;
+        return setAttribute(A_METHOD, value);
     }
 
-    /** Set an action type of from */
+    /** Set an action type of form */
     @NotNull
     public Element setAction(@Nullable final Object value) {
-        setAttribute(A_ACTION, value);
-        return this;
+        return setAttribute(A_ACTION, value);
     }
 
     /** Set a type of input element */
     @NotNull
     public Element setType(@Nullable final Object value) {
-        setAttribute(A_TYPE, value);
-        return this;
+        return setAttribute(A_TYPE, value);
     }
 
     /** Set an name of input element */
     @NotNull
     public Element setName(@Nullable final CharSequence value) {
-        setAttribute(A_NAME, value);
-        return this;
+        return setAttribute(A_NAME, value);
     }
 
-    /** Set an value of input element */
+    /** Set a value of input element. */
     @NotNull
     public Element setValue(@Nullable final Object value) {
-        setAttribute(A_VALUE, value);
-        return this;
+        return setAttribute(A_VALUE, value);
     }
 
     /** Set name &amp; value to the input element */
@@ -791,102 +767,117 @@ public final class Element implements ApiElement<Element>, Html {
         return setName(name).setValue(value);
     }
 
-    /** Set an value of input element */
+    /** Set a for attribute */
     @NotNull
     public Element setFor(@Nullable final CharSequence value) {
-        setAttribute(A_FOR, value);
-        return this;
+        return setAttribute(A_FOR, value);
     }
 
     /** Row count of a text area */
     @NotNull
     public Element setRows(@Nullable final int value) {
-        setAttribute(A_ROWS, value);
-        return this;
+        return setAttribute(A_ROWS, value);
     }
 
     /** Column count of a text area */
     @NotNull
     public Element setCols(@Nullable final Object value) {
-        setAttribute(A_COLS, value);
-        return this;
+        return setAttribute(A_COLS, value);
     }
 
     /** Column span inside the table */
     @NotNull
     public Element setColSpan(@Nullable final int value) {
-        setAttribute(A_COLSPAN, value);
-        return this;
+        return setAttribute(A_COLSPAN, value);
     }
 
     /** Row span inside the table */
     @NotNull
     public Element setRowSpan(@Nullable final int value) {
-        setAttribute(A_ROWSPAN, value);
-        return this;
+        return setAttribute(A_ROWSPAN, value);
     }
 
     /** Set hyperlink reference */
     @NotNull
     public Element setHref(@Nullable final CharSequence value) {
-        setAttribute(A_HREF, value);
-        return this;
+        return setAttribute(A_HREF, value);
     }
 
-    /** Set a placeholder name */
+    /** Set a placeholder attribute */
     @NotNull
     public Element setHint(@Nullable final CharSequence value) {
-        setAttribute(A_PLACEHOLDER, value);
-        return this;
+        return setAttribute(A_PLACEHOLDER, value);
     }
 
-    /** Apply body of element by a lambda expression.
-     *
-     * @deprecated Use the method {@link #next(Consumer)} rather.
-     */
+    /** Set a title attribute */
     @NotNull
-    public ExceptionProvider then(@NotNull final Consumer<Element> builder) {
-        return next(builder);
+    public Element setTitle(@Nullable final CharSequence value) {
+        return setAttribute(A_TITLE, value);
     }
 
-    /** Add nested elements to the element.
-     *
-     * <h3>Usage</h3>
-     *
-     * <pre class="pre">
-     *  HtmlElement.of(config, writer).addBody()
-     *      .next(body -> {
-     *         body.addHeading(config.getTitle());
-     *      })
-     *      .catche(e -> {
-     *          logger.log(Level.SEVERE, "An error", e);
-     *      });
-     * </pre>
-     */
+    /** Set a title attribute */
     @NotNull
-    public ExceptionProvider next(@NotNull final Consumer<Element> builder) {
+    public Element setChecked(@Nullable final CharSequence value) {
+        return setAttribute(A_CHECKED, value);
+    }
+
+    /** Sets the logical value for a CheckBox component. */
+    public Element setCheckBoxValue(final boolean value) {
+        return setValue(true).setChecked(value ? "" + value : null);
+    }
+
+    /** Add nested elements to the element. It is an alternative for try-with-resources. */
+    @NotNull
+    public ExceptionProvider nest(@NotNull final Consumer<Element> builder) {
         try {
             builder.accept(this);
             return ExceptionProvider.of();
-        } catch (Throwable e) {
+        } catch (Exception e) {
             return ExceptionProvider.of(e);
         } finally {
             close();
         }
     }
 
-    /** String value */
-    @Override
+    // ---- Static methods ----
+
+    /** Create a root element */
     @NotNull
-    public String toString() {
-        return internalElement.toString();
+    public static Element createHtmlRoot(@NotNull final Object title, @Nullable final CharSequence... cssLinks) {
+        return createHtmlRoot(title, null, cssLinks);
     }
 
-    /** New element for an API element */
+    /** Create a root element */
+    @NotNull
+    public static Element createHtmlRoot(
+            @NotNull final Object title,
+            @Nullable final Charset charset,
+            @Nullable final CharSequence... cssLinks) {
+        var result = new Element(Html.HTML, XmlPrinter.forHtml(), 0);
+        var head = result.addElement(HEAD);
+        head.addElement(META).setAttribute(A_CHARSET, charset);
+        head.addElement(TITLE).addText(title);
+
+        if (cssLinks != null) {
+            for (var cssLink : cssLinks) {
+                head.addElement(LINK)
+                        .setAttribute(A_HREF, cssLink)
+                        .setAttribute(A_REL, "stylesheet");
+            }
+        }
+        return result;
+    }
+
+    /** Overtype argument the Element or wrap it to a new instance */
     @NotNull
     public static Element of(@NotNull final ApiElement original) {
-        return (original instanceof Element)
-            ? (Element) original
-            : new Element(original);
+        if (original instanceof Element element) {
+            return element;
+        } else if (original instanceof AbstractHtmlElement htmlElement) {
+            return htmlElement.original();
+        } else if (original instanceof XmlBuilder builder) {
+            return new Element(builder.getName(), builder.getWriter(), builder.getLevel(), false);
+        }
+        throw new IllegalArgumentException("Unsupported ApiElement type: " + original.getClass().getName());
     }
 }

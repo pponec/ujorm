@@ -7,15 +7,10 @@
         <artifactId>oss-parent</artifactId>
         <version>9</version>
     </parent>
-    <!--<parent>
-        <groupId>org.ujorm</groupId>
-        <artifactId>ujo</artifactId>
-        <version>2.28-SNAPSHOT</version>
-    </parent>-->
 
     <groupId>org.ujorm</groupId>
     <artifactId>ujo-arangodb</artifactId>
-    <version>2.28-SNAPSHOT</version>
+    <version>3.0.0</version>
     <packaging>jar</packaging>
     <url>http://ujorm.org</url>
     <name>ujo-arangodb</name>
@@ -29,13 +24,14 @@
     </contributors>
 
     <properties>
-        <revision>2.28-SNAPSHOT</revision>
+        <revision>3.0.0</revision>
         <java.version>17</java.version>
         <maven.compiler.target>${java.version}</maven.compiler.target>
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <maven.compiler.encoding>UTF-8</maven.compiler.encoding>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <junit.version>5.10.2</junit.version>
+        <junit.version>5.12.2</junit.version>
+        <mockito.version>5.21.0</mockito.version>
     </properties>
 
     <licenses>
@@ -92,8 +88,8 @@
 
         <dependency>
             <groupId>org.mockito</groupId>
-            <artifactId>mockito-all</artifactId>
-            <version>1.10.19</version>
+            <artifactId>mockito-junit-jupiter</artifactId>
+            <version>${mockito.version}</version>
             <scope>test</scope>
         </dependency>
 
@@ -110,7 +106,7 @@
         <plugins>
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>2.1</version>
+                <version>3.14.1</version>
                 <configuration>
                     <source>${java.version}</source>
                     <target>${java.version}</target>
@@ -156,6 +152,7 @@
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-compiler-plugin</artifactId>
+                        <version>3.14.1</version>
                         <configuration>
                             <debug>true</debug>
                             <optimize>true</optimize>

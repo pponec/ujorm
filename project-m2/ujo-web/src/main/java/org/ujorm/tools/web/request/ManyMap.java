@@ -1,12 +1,25 @@
 package org.ujorm.tools.web.request;
 
 
+import org.jetbrains.annotations.NotNull;
+
 import java.io.Reader;
 import java.util.*;
 
-public class ManyMap {
+public final class ManyMap {
+
+    private static final String[] EMPTY_ARRAY = new String[0];
+
     /** Internal map to store keys and their associated lists of values */
-    private final Map<String, List<String>> map = new HashMap<>();
+    private final Map<String, List<String>> map;
+
+    public ManyMap(int capacity) {
+        map = new HashMap<>(capacity);
+    }
+
+    public ManyMap() {
+        this(10);
+    }
 
     /** Method to add a value to the specified key */
     public void put(String key, String... values) {
@@ -24,7 +37,10 @@ public class ManyMap {
     /** Method to retrieve the list of values for a specified key
      * If the key is not found, return an empty list */
     public String[] get(String key) {
-        return getList(key).toArray(new String[0]);
+        final List<String> result = map.get(key);
+        return result == null || result.isEmpty()
+                ? EMPTY_ARRAY
+                : result.toArray(String[]::new);
     }
 
     /** Returns a key set */
@@ -37,8 +53,8 @@ public class ManyMap {
         return new URequestImpl(this, reader);
     }
 
-    public static final ManyMap of(Map<String, String> map) {
-        ManyMap result = new ManyMap();
+    public static @NotNull ManyMap of(Map<String, String> map) {
+        ManyMap result = new ManyMap(map.size());
         map.forEach((key, value) -> result.put(key, value));
         return result;
     }

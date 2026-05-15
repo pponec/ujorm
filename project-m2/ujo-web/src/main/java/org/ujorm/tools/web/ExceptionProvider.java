@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2022 Pavel Ponec
+ * Copyright 2021-2026 Pavel Ponec
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,10 +15,10 @@
  */
 package org.ujorm.tools.web;
 
+import java.util.Objects;
 import java.util.function.Consumer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.ujorm.tools.Assert;
 
 /**
  *
@@ -64,7 +64,7 @@ public final class ExceptionProvider {
     /** A factory method */
     @NotNull
     public static ExceptionProvider of(@NotNull final Throwable e) {
-        return new ExceptionProvider(Assert.notNull(e, "Exception is required"));
+        return new ExceptionProvider(Objects.requireNonNull(e, "Exception is required"));
     }
 
     /** A factory method */

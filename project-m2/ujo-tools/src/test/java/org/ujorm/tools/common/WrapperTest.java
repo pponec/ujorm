@@ -1,5 +1,5 @@
 /*
- * Copyright 2020-2022 Pavel Ponec
+ * Copyright 2020-2026 Pavel Ponec
  * https://github.com/pponec/ujorm/blob/master/project-m2/ujo-tools/src/main/java/org/ujorm/tools/jdbc/JdbcBuilder.java
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -24,7 +24,7 @@ import static org.junit.jupiter.api.Assertions.*;
  *
  * @author Pavel Poone
  */
-public class WrapperTest {
+class WrapperTest {
 
     @Test
     public void testHashAndEquals() {

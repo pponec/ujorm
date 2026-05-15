@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2022 Pavel Ponec,
+ * Copyright 2018-2026 Pavel Ponec,
  * https://github.com/pponec/ujorm/blob/master/project-m2/ujo-tools/src/main/java/org/ujorm/tools/XmlWriter.java
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -21,11 +21,12 @@ import java.io.IOException;
 import java.nio.charset.Charset;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.ujorm.tools.Check;
+import org.ujorm.tools.web.request.ServletBridge;
 import org.ujorm.tools.xml.AbstractWriter;
+import org.ujorm.tools.xml.ApiElement;
 import org.ujorm.tools.xml.config.HtmlConfig;
 import org.ujorm.tools.xml.config.XmlConfig;
-import org.ujorm.tools.xml.config.impl.DefaultHtmlConfig;
-import org.ujorm.tools.xml.config.impl.DefaultXmlConfig;
 
 /**
  * If you need special formatting, overwrite responsible methods.
@@ -68,6 +69,7 @@ public class XmlPrinter extends AbstractWriter {
         out.append(rawValue.toString());
     }
 
+    /** Writes an attribute */
     void writeAttrib(@NotNull String name, Object data, XmlBuilder owner) throws IOException {
         if (owner.getName() != XmlBuilder.HIDDEN_NAME) {
             out.append(SPACE);
@@ -79,13 +81,14 @@ public class XmlPrinter extends AbstractWriter {
         }
     }
 
+    /** Writes raw text */
     void writeRawText(Object rawText) throws IOException {
         out.append(String.valueOf(rawText));
     }
 
     /** Open the Node */
     void writeBeg(XmlBuilder element, final boolean lastText) throws IOException {
-        final CharSequence name = element.getName();
+        var name = element.getName();
         if (name != XmlBuilder.HIDDEN_NAME) {
             if (!lastText) {
                 writeNewLine(element.getLevel());
@@ -104,37 +107,40 @@ public class XmlPrinter extends AbstractWriter {
 
     /** Close the Node */
     void writeEnd(XmlBuilder element) throws IOException {
-        final String name = element.getName();
-        final boolean pairElement = config.pairElement(element);
-        final boolean filled = element.isFilled();
-        if (name != XmlBuilder.HIDDEN_NAME) {
-            if (filled || pairElement) {
-                if (indentationEnabled && !element.isLastText()) {
-                    if (pairElement && !filled) {
-                        out.append(XML_GT);
-                    } else {
-                        writeNewLine(element.getLevel());
-                    }
-                } else if (!filled) {
+        var name = element.getName();
+        if (name == XmlBuilder.HIDDEN_NAME) {
+            return;
+        }
+
+        var filled = element.isFilled();
+        var pairElement = config.pairElement(element);
+
+        if (filled || pairElement) {
+            if (indentationEnabled && !element.isLastText()) {
+                if (pairElement && !filled) {
                     out.append(XML_GT);
+                } else {
+                    writeNewLine(element.getLevel());
                 }
-                out.append(XML_LT);
-                out.append(FORWARD_SLASH);
-                out.append(name);
-                out.append(XML_GT);
-            } else {
-                out.append(FORWARD_SLASH);
+            } else if (!filled) {
                 out.append(XML_GT);
             }
+            out.append(XML_LT);
+            out.append(FORWARD_SLASH);
+            out.append(name);
+            out.append(XML_GT);
+        } else {
+            out.append(FORWARD_SLASH);
+            out.append(XML_GT);
         }
     }
 
     @Override @NotNull
     public String toString() {
-        final String result = out.toString();
+        var result = out.toString();
         return result != null
-             ? result
-             : String.valueOf(result);
+                ? result
+                : String.valueOf(result);
     }
 
     // ------- FACTORY METHODS -------
@@ -158,7 +164,7 @@ public class XmlPrinter extends AbstractWriter {
      * @return New instance of the XmlPrinter
      */
     public static XmlPrinter forNiceXml() {
-        DefaultXmlConfig config = XmlConfig.ofDefault();
+        var config = XmlConfig.ofDefault();
         config.setNiceFormat();
         return forXml(null, config);
     }
@@ -185,26 +191,24 @@ public class XmlPrinter extends AbstractWriter {
 
     /** Create a new instance including a DOCTYPE */
     public static XmlPrinter forHtml(final Appendable out) {
-        DefaultHtmlConfig config = HtmlConfig.ofDefault();
-        return forXml(out, config);
+        return forHtml(out, HtmlConfig.ofDefault());
     }
 
     /** Create a new instance including a DOCTYPE */
     public static XmlPrinter forNiceHtml(final Appendable out) {
-        DefaultHtmlConfig config = HtmlConfig.ofDefault();
+        var config = HtmlConfig.ofDefault();
         config.setNiceFormat();
         return forHtml(out, config);
     }
 
     /** Create XmlPrinter for UTF-8 */
-    public static XmlPrinter forHtml(@NotNull final Object httpServletResponse) throws IOException {
-        DefaultHtmlConfig config = HtmlConfig.ofDefault();
-        return forHtml(httpServletResponse, config);
+    public static XmlPrinter forHtml(@NotNull final Object httpServletResponse) {
+        return forHtml(httpServletResponse, HtmlConfig.ofDefault());
     }
 
     /** Create XmlPrinter for UTF-8 */
-    public static XmlPrinter forNiceHtml(@NotNull final Object httpServletResponse) throws IOException {
-        DefaultHtmlConfig config = HtmlConfig.ofDefault();
+    public static XmlPrinter forNiceHtml(@NotNull final Object httpServletResponse) {
+        var config = HtmlConfig.ofDefault();
         config.setNiceFormat();
         return forHtml(httpServletResponse, config);
     }
@@ -223,8 +227,8 @@ public class XmlPrinter extends AbstractWriter {
             @NotNull final Charset charset,
             @NotNull final String indentationSpace,
             final boolean noCache
-    ) throws IOException {
-        final DefaultHtmlConfig config = HtmlConfig.ofDefault();
+    ) {
+        var config = HtmlConfig.ofDefault();
         config.setCharset(charset);
         config.setIndentationSpace(indentationSpace);
         config.setCacheAllowed(!noCache);
@@ -237,15 +241,26 @@ public class XmlPrinter extends AbstractWriter {
     public static XmlPrinter forHtml(
             @NotNull final Object httpServletResponse,
             @NotNull final HtmlConfig config
-    ) throws IOException {
-        try {
-            final Appendable writer = createWriter(
-                    httpServletResponse,
-                    config.getCharset(),
-                    config.isCacheAllowed());
-            return new XmlPrinter(writer, config);
-        } catch (ReflectiveOperationException e) {
-            throw new IllegalArgumentException("Response must be type of HttpServletResponse", e);
+    ) {
+        ServletBridge.prepareHtmlResponse(httpServletResponse, config.getCharset(), !config.isCacheAllowed());
+        var writer = ServletBridge.getServletWriter(httpServletResponse);
+        return new XmlPrinter(writer, config);
+    }
+
+    /**
+     * Write a comment with a security check for the forbidden sequence "--".
+     * If the sequence is found, it is replaced by "- -".
+     * @param comment The comment text. The null value is ignored.
+     * @param element Current element context.
+     * @throws IOException If an I/O error occurs.
+     */
+    public void writeComment(@Nullable final CharSequence comment, @NotNull final ApiElement<?> element) throws IOException {
+        if (Check.hasLength(comment)) {
+            writeNewLine(element.getLevel());
+            out.append("<!-- ");
+            var text = comment.toString().replace("--", "- -");
+            out.append(text);
+            out.append(" -->");
         }
     }
 }

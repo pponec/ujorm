@@ -1,5 +1,5 @@
 /*
- *  Copyright 2014-2022 Pavel Ponec
+ *  Copyright 2014-2026 Pavel Ponec
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -15,7 +15,7 @@
  */
 package org.ujorm.xsd.domains;
 
-import org.ujorm.Key;
+import org.ujorm.core.Key;
 import org.ujorm.UjoAction;
 import org.ujorm.core.KeyFactory;
 import org.ujorm.core.annot.XmlAttribute;

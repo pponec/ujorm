@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2022 Pavel Ponec, https://github.com/pponec
+ * Copyright 2021-2026 Pavel Ponec, https://github.com/pponec
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,7 +22,7 @@ import static org.junit.jupiter.api.Assertions.*;
  *
  * @author Pavel Ponec
  */
-public class TextBuilderTest {
+class TextBuilderTest {
 
     @Test
     public void sample() {

@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2022 Pavel Ponec, https://github.com/pponec
+ * Copyright 2021-2026 Pavel Ponec, https://github.com/pponec
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,7 +23,7 @@ import org.jetbrains.annotations.Nullable;
  * @author Pavel Ponec
  */
 public enum Direction {
-    
+
     /** Ascending sort */
     ASC,
     /** Desending sort */
@@ -35,7 +35,7 @@ public enum Direction {
     public boolean safeEquals(@Nullable final Direction direction) {
         return equals(direction);
     }
-    
+
     @NotNull
     public static final Direction of(@Nullable Boolean ascending) {
         if (ascending == null) {

@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2012 Pavel Ponec, https://github.com/pponec
+ * Copyright 2018-2026 Pavel Ponec, https://github.com/pponec
  * https://github.com/pponec/ujorm/blob/master/samples/servlet/src/main/java/org/ujorm/ujoservlet/tools/Html.java
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -25,7 +25,8 @@ import org.ujorm.tools.xml.config.impl.DefaultHtmlConfig;
 import static org.ujorm.tools.xml.config.impl.DefaultXmlConfig.*;
 
 /**
- * Configuraion of HtmlPage
+ * HTML-oriented {@link XmlConfig} extension (page title, CSS links, language, content type).
+ *
  * @author Pavel Ponec
  */
 public interface HtmlConfig extends XmlConfig {
@@ -34,20 +35,17 @@ public interface HtmlConfig extends XmlConfig {
     @NotNull
     CharSequence getTitle();
 
-    /** CSS links of a HTML page */
+    /** CSS link URLs for the HTML page */
     @NotNull
     CharSequence[] getCssLinks();
 
-    /** Language of a HTML page */
+    /** Language of the HTML page */
     @NotNull
     Optional<CharSequence> getLanguage();
 
     /** Get a content type where a recommended value is {@code "text/html"} */
     @NotNull
     String getContentType();
-
-    /** Build a real model or a plain writer with a recommended value {@code false} */
-    boolean isDocumentObjectModel();
 
     /** A request to generate a minimal HTML header */
     boolean isHtmlHeaderRequest();
@@ -76,7 +74,7 @@ public interface HtmlConfig extends XmlConfig {
 
     /** Clone the config for an AJAX processing */
     default DefaultHtmlConfig cloneForAjax() {
-        final DefaultHtmlConfig result = new DefaultHtmlConfig(this);
+        final var result = new DefaultHtmlConfig(this);
         result.setRootElementName(null);
         result.setNiceFormat();
         result.setDoctype(EMPTY);
@@ -85,9 +83,7 @@ public interface HtmlConfig extends XmlConfig {
         return result;
     }
 
-    /**
-     * Create a new default config
-     */
+    /** Create a new default config */
     @NotNull
     static DefaultHtmlConfig ofDefault() {
         return new DefaultHtmlConfig();
@@ -97,10 +93,10 @@ public interface HtmlConfig extends XmlConfig {
      * No HTML header is generated, no Doctype and no new lines
      *
      * @param rootElementName Element name cannot contain special HTML characters. An undefined value ignores the creation of the root element.
-     * @return
+     * @return New Html configuration
      */
     @NotNull
-    static DefaultHtmlConfig ofElementName(@Nullable String rootElementName) {
+    static DefaultHtmlConfig ofElementName(@Nullable final String rootElementName) {
         return ofElement(rootElementName, true);
     }
 
@@ -109,23 +105,21 @@ public interface HtmlConfig extends XmlConfig {
      *
      * @param rootElementName Element name cannot contain special HTML characters.
      * @param enabled Disabled root element ignores the creation of the root element.
-     * @return
+     * @return New Html configuration
      */
     @NotNull
-    static DefaultHtmlConfig ofElement(@Nullable String rootElementName, boolean enabled) {
-        final DefaultHtmlConfig result = ofDefault();
+    static DefaultHtmlConfig ofElement(@Nullable final String rootElementName, final boolean enabled) {
+        final var result = ofDefault();
         result.setRootElementName(enabled ? rootElementName : null);
         result.setHtmlHeader(false);
         result.setDoctype(EMPTY);
         return result;
     }
 
-    /**
-     * Create a configuration for an AJAX response.
-     */
+    /** Create a configuration for an AJAX response. */
     @NotNull
     static DefaultHtmlConfig ofEmptyElement() {
-        final DefaultHtmlConfig result = ofElement(EMPTY, false);
+        final var result = ofElement(EMPTY, false);
         result.setHtmlHeader(false);
         result.setDoctype(EMPTY);
         result.setNewLine(EMPTY);
@@ -133,6 +127,7 @@ public interface HtmlConfig extends XmlConfig {
     }
 
     /** Clone config form another */
+    @NotNull
     static DefaultHtmlConfig of(@NotNull final HtmlConfig htmlConfig) {
         return new DefaultHtmlConfig(htmlConfig);
     }
@@ -141,9 +136,25 @@ public interface HtmlConfig extends XmlConfig {
      * Create a new configuration with a nice format by an HTML title.
      * @param title If the title is null then create an EMPTY element.
      */
-    static DefaultHtmlConfig ofTitle(@NotNull String title) {
+    @NotNull
+    static DefaultHtmlConfig ofTitle(@NotNull final String title, @NotNull final CharSequence... cssLinks) {
         return ofDefault()
-                    .setTitle(title)
-                    .setNiceFormat();
+                .setTitle(title)
+                .setCssLinks(cssLinks)
+                .setNiceFormat();
+    }
+
+    /**
+     * Create a new configuration with an ISO number formatter.
+     * <p>
+     * The numbers are formatted with a <strong>dot</strong> as the decimal separator
+     * and a <strong>non-breaking space</strong> ({@code \u00A0}) as the thousands separator.
+     * @param title The HTML title. If the value is {@code null}, a headerless element is created.
+     * @param cssLinks Optional CSS links.
+     * @return A new configuration instance.
+     */
+    @NotNull
+    static DefaultHtmlConfig ofIsoFormatter(@NotNull final String title, @NotNull final CharSequence... cssLinks) {
+        return (DefaultHtmlConfig) ofTitle(title, cssLinks).setIsoFormatter();
     }
 }
