@@ -20,9 +20,9 @@ import org.ujorm.tools.web.report.ReportBuilder;
 import org.ujorm.tools.web.report.ReportBuilderConfig;
 
 /**
- * A HTML page builder for table based an AJAX.
+ * @deprecated Use {@link ReportBuilder} instead. Deprecated subclass of {@link ReportBuilder} kept for compatibility.
  *
- * <h4>Usage<h4>
+ * <h4>Usage</h4>
  *
  * <pre class="pre">
  *  TableBuilder.of("Hotel Report")
@@ -33,7 +33,7 @@ import org.ujorm.tools.web.report.ReportBuilderConfig;
  * </pre>
  *
  * @author Pavel Ponec
- * @deprecated  Uset the {@link ReportBuilder} class rather.
+ * @deprecated  Use the {@link ReportBuilder} class rather.
  */
 @Deprecated
 public class TableBuilder<D> extends ReportBuilder {

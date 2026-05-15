@@ -17,13 +17,13 @@
 
 package org.ujorm.tools.web;
 
-/** A proxy for a HTML element
- * <nr>NOTE: All fields in interface are public static final, i.e. they are constants. */
+/** Constants for common HTML element names, attribute names, and attribute values.
+ * <br>NOTE: All fields in this interface are {@code public static final}, i.e. constants. */
 public interface Html {
 
     // --- Element names ---
 
-    /** Body element */
+    /** Root {@code html} element */
     String HTML = "html";
     /** Head element */
     String HEAD = "head";
@@ -77,7 +77,7 @@ public interface Html {
     String LABEL = "label";
     /** Input element */
     String INPUT = "input";
-    /** Input element */
+    /** Text area element */
     String TEXT_AREA = "textarea";
     /** Select element */
     String SELECT = "select";
@@ -131,9 +131,9 @@ public interface Html {
     String A_HTTP_EQUIV = "http-equiv";
     /** Identifier attribute */
     String A_ID = "id";
-    /** Language attribute of the HTML pagee (e.g. "en")  */
+    /** Language attribute of the HTML page (e.g. {@code "en"}) */
     String A_LANG = "lang";
-    /** Reference of the programing language (e.g. "javascript") */
+    /** Scripting language for the element (e.g. {@code "javascript"}) */
     String A_LANGUAGE = "language";
     /** Maximum length attribute */
     String A_MAXLENGTH = "maxlength";
@@ -168,7 +168,7 @@ public interface Html {
     /** Columns attribute */
     String A_COLS = "cols";
     /** Rowspan attribute */
-    String A_ROWSPAN = "cols";
+    String A_ROWSPAN = "rowspan";
     /** Colspan attribute */
     String A_COLSPAN = "colspan";
     /** OnClick event attribute */

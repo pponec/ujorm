@@ -25,7 +25,8 @@ import org.ujorm.tools.xml.config.impl.DefaultHtmlConfig;
 import static org.ujorm.tools.xml.config.impl.DefaultXmlConfig.*;
 
 /**
- * Configuration of HtmlPage
+ * HTML-oriented {@link XmlConfig} extension (page title, CSS links, language, content type).
+ *
  * @author Pavel Ponec
  */
 public interface HtmlConfig extends XmlConfig {
@@ -34,11 +35,11 @@ public interface HtmlConfig extends XmlConfig {
     @NotNull
     CharSequence getTitle();
 
-    /** CSS links of a HTML page */
+    /** CSS link URLs for the HTML page */
     @NotNull
     CharSequence[] getCssLinks();
 
-    /** Language of a HTML page */
+    /** Language of the HTML page */
     @NotNull
     Optional<CharSequence> getLanguage();
 

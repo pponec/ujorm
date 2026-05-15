@@ -43,7 +43,7 @@ import org.ujorm.tools.web.ao.Injector;
 import org.ujorm.tools.xml.builder.XmlPrinter;
 
 /**
- * A HTML Element implements some methods for frequently used elements and attributes
+ * HTML element builder with convenience methods for common elements and attributes.
  *
  * <h4>Usage</h4>
  * <pre class="pre">

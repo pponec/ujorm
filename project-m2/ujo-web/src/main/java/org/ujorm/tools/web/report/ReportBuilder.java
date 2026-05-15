@@ -44,7 +44,7 @@ import org.ujorm.tools.web.table.GridBuilder;
 import org.ujorm.tools.xml.config.HtmlConfig;
 
 /**
- * A HTML page builder for table based report with an AJAX support.
+ * An HTML page builder for table-based reports with AJAX support.
  *
  * <h4>Usage</h4>
  *
@@ -90,7 +90,7 @@ public class ReportBuilder<D> {
     protected Supplier<Injector> javascritWriter = () -> new JavaScriptWriter()
             .setAjax(ReportBuilder.this.ajaxEnabled)
             .setSubtitleSelector("." + ReportBuilder.this.config.getSubtitleCss());
-    /** is An AJAX enabled? */
+    /** Whether AJAX is enabled */
     protected boolean ajaxEnabled = true;
     /** Call an autosubmit on first load */
     protected boolean autoSubmmitOnLoad = false;
@@ -175,7 +175,7 @@ public class ReportBuilder<D> {
 
     /**
      * Add a sortable indicator to the last column model
-     * @return
+     * @return this builder
      */
     @NotNull
     public <V> ReportBuilder<D> sortable() {
@@ -184,8 +184,8 @@ public class ReportBuilder<D> {
     }
     /**
      * Add a sortable indicator to the last column model
-     * @param ascending Ascending or descending direction of the sort
-     * @return
+     * @param ascending ascending ({@code true}) or descending ({@code false}) sort direction
+     * @return this builder
      */
     @NotNull
     public <V> ReportBuilder<D> sortable(@Nullable final boolean ascending) {
@@ -195,8 +195,8 @@ public class ReportBuilder<D> {
 
     /**
      * Add a sortable indicator to the last column model
-     * @param direction The {@code null} value shows an unused sorting action.
-     * @return
+     * @param direction sort direction; {@link Direction#NONE} means the column is not used for sorting
+     * @return this builder
      */
     @NotNull
     public <V> ReportBuilder<D> sortable(@NotNull final Direction direction) {
@@ -204,7 +204,7 @@ public class ReportBuilder<D> {
         return this;
     }
 
-    /** Get sorted column or a stub if the sorted column not found */
+    /** Get sorted column or a stub if the sorted column is not found */
     @NotNull
     public ColumnModel<D,?> getSortedColumn() {
         return gridBuilder.getSortedColumn();

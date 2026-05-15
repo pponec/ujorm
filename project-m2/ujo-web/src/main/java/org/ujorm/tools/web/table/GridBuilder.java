@@ -36,7 +36,7 @@ import org.ujorm.tools.xml.ApiElement;
 import org.ujorm.tools.xml.config.HtmlConfig;
 
 /**
- * Build a content of a HTML page for a sortable data grid.
+ * Builds the content of an HTML page for a sortable data grid.
  *
  * @author Pavel Ponec
  */
@@ -49,7 +49,7 @@ public class GridBuilder<D> {
     protected final List<ColumnModel<D,?>> columns = new ArrayList<>();
     /** Table builder config */
     protected final GridBuilderConfig config;
-    /** An order of sorted column whete a negavive value means a descending direction */
+    /** Index of the sorted column, or {@code -1} if the table is not sorted by any column */
     private int sortedColumn = -1;
     /** Is the table sortable */
     private Boolean isSortable;
@@ -139,7 +139,7 @@ public class GridBuilder<D> {
 
     /**
      * Add a sortable indicator to the last column model
-     * @return
+     * @return this builder
      */
     @NotNull
     public <V> GridBuilder<D> sortable() {
@@ -147,8 +147,8 @@ public class GridBuilder<D> {
     }
     /**
      * Add a sortable indicator to the last column model
-     * @param ascending Ascending or descending direction of the sort
-     * @return
+     * @param ascending ascending ({@code true}) or descending ({@code false}) sort direction
+     * @return this builder
      */
     @NotNull
     public <V> GridBuilder<D> sortable(@Nullable final boolean ascending) {
@@ -157,8 +157,8 @@ public class GridBuilder<D> {
 
     /**
      * Add a sortable indicator to the last column model
-     * @param direction The {@code null} value shows an unused sorting action.
-     * @return
+     * @param direction sort direction; {@link Direction#NONE} means the column is not used for sorting
+     * @return this builder
      */
     @NotNull
     public <V> GridBuilder<D> sortable(@NotNull final Direction direction) {
@@ -168,7 +168,7 @@ public class GridBuilder<D> {
         return this;
     }
 
-    /** Get sorted column or a stub of the sorted column was not found */
+    /** Get sorted column or a stub if the sorted column was not found */
     @NotNull
     public ColumnModel<D,?> getSortedColumn() {
         return (sortedColumn >= 0 && sortedColumn < getColumnSize())

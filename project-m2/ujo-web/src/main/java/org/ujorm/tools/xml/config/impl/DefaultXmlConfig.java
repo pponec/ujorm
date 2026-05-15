@@ -30,18 +30,19 @@ import org.ujorm.tools.xml.config.XmlConfig;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 /**
- * Configuration of HtmlPage
+ * Default {@link XmlConfig} implementation for XML/HTML serialization.
+ *
  * @author Pavel Ponec
  */
 public class DefaultXmlConfig implements XmlConfig {
 
-    /** Default intendation per level */
+    /** Default indentation per nesting level */
     public static final String DEFAULT_INTENDATION = "\t";
 
     /** Default string or the new line */
     public static final String DEFAULT_NEW_LINE = "\n";
 
-    /** Default first level of intendation */
+    /** Default first level of indentation */
     public static final int DEFAULT_FIRST_LEVEL = Integer.MIN_VALUE + 1;
 
     /** Assertion message template */
@@ -148,7 +149,7 @@ public class DefaultXmlConfig implements XmlConfig {
 
     /**
      * Assign parameters for a nice format of the HTML result
-     * @param indentation An empty String is replaced by a default intendation.
+     * @param indentation an empty string is replaced by the default indentation ({@link #DEFAULT_INTENDATION})
      */
     @SuppressWarnings("unchecked")
     public final <T extends DefaultXmlConfig> T setNiceFormat(@Nullable final CharSequence indentation) {

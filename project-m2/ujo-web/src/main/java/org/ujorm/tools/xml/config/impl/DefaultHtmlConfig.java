@@ -28,7 +28,8 @@ import org.ujorm.tools.xml.config.ApiInjector;
 import org.ujorm.tools.xml.config.HtmlConfig;
 
 /**
- * Configuration of HtmlPage
+ * Default {@link HtmlConfig} implementation (title, CSS links, language, content type).
+ *
  * @author Pavel Ponec
  */
 public class DefaultHtmlConfig extends DefaultXmlConfig implements HtmlConfig {
@@ -37,7 +38,7 @@ public class DefaultHtmlConfig extends DefaultXmlConfig implements HtmlConfig {
     @NotNull
     private CharSequence title = "Demo";
 
-    /** Css links with a required order */
+    /** CSS links in display order */
     @NotNull
     private CharSequence[] cssLinks = new CharSequence[0];
 

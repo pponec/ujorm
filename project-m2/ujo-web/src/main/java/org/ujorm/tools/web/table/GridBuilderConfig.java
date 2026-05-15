@@ -30,12 +30,12 @@ import org.ujorm.tools.web.ao.HttpParameter;
 import org.ujorm.tools.xml.config.HtmlConfig;
 
 /**
- * A HTML page builder for table based an AJAX.
+ * Configuration and lifecycle hooks for building sortable HTML data grids (columns, sorting, rendering).
  *
- * <h4>Usage<h4>
+ * <h4>Usage</h4>
  *
  * <pre class="pre">
- *  TableBuilder.of("Hotel Report")
+ *  ReportBuilder.of("Hotel Report")
  *          .add(Hotel::getName, "Hotel", NAME)
  *          .add(Hotel::getCity, "City", CITY)
  *          .add(Hotel::getStreet, "Street")

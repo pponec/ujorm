@@ -28,7 +28,7 @@ import org.ujorm.tools.xml.config.HtmlConfig;
 import org.ujorm.tools.xml.config.impl.DefaultHtmlConfig;
 
 /**
- * A HTML root element.
+ * An HTML root element.
  * The class manages singleton instances of the HEAD and BODY elements via its parent.
  */
 public class HtmlElement extends AbstractHtmlElement {
@@ -38,7 +38,7 @@ public class HtmlElement extends AbstractHtmlElement {
         super(config, writer);
     }
 
-    /** New instance - Changed ApiElement to Element */
+    /** New instance with an explicit root {@link Element}. */
     public HtmlElement(@NotNull Element root, @NotNull HtmlConfig config, @NotNull Appendable writer) {
         super(root, config, writer);
     }
@@ -81,8 +81,8 @@ public class HtmlElement extends AbstractHtmlElement {
     }
 
     /** Create new instance.
-     * @param config Html configuration
-     * @return An instance of the HtmlPage
+     * @param config HTML configuration
+     * @return a new {@link HtmlElement} writing to an internal {@link StringBuilder}
      */
     @NotNull
     public static HtmlElement of(@Nullable final HtmlConfig config) throws IllegalStateException {

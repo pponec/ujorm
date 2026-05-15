@@ -32,12 +32,12 @@ import org.ujorm.tools.xml.config.HtmlConfig;
 import static org.ujorm.tools.web.report.ReportBuilderConfigImpl.Constants.*;
 
 /**
- * A HTML page builder for table based an AJAX.
+ * Default {@link ReportBuilderConfig} implementation (CSS classes, embedded icons, AJAX tuning).
  *
  * <h4>Usage</h4>
  *
  * <pre class="pre">
- *  TableBuilder.of("Hotel Report")
+ *  ReportBuilder.of("Hotel Report")
  *          .add(Hotel::getName, "Hotel", NAME)
  *          .add(Hotel::getCity, "City", CITY)
  *          .add(Hotel::getStreet, "Street")

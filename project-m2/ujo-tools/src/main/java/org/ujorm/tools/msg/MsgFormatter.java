@@ -24,8 +24,8 @@ import org.ujorm.tools.Check;
 import org.ujorm.tools.common.ObjectUtils;
 
 /**
- * Formatter of log messages where argument is located by the {@code {} } characters.
- * See the next correct asserts:
+ * Formatter for log messages where placeholders are marked by {@code {}}.
+ * Examples:
  * <pre class="pre">
  *  assertEquals("TEST"    , MsgFormatter.format("TE{}T", "S"));
  *  assertEquals("TE, S, T", MsgFormatter.format("TE", "S", "T"));
@@ -37,7 +37,7 @@ import org.ujorm.tools.common.ObjectUtils;
 @Unmodifiable
 public class MsgFormatter {
 
-    /** An undefined writter */
+    /** Optional sink used only by instance formatting; static helpers use an internal buffer instead */
     @Nullable
     private static final Appendable NO_WRITER = null;
 
@@ -60,16 +60,11 @@ public class MsgFormatter {
     }
 
     /**
-     * Format the message, see the next correct asserts:
-     * <pre class="pre">
-     *  assertEquals("TEST"    , MsgFormatter.format("TE{}T", "S"));
-     *  assertEquals("TE, S, T", MsgFormatter.format("TE", "S", "T"));
-     *  assertEquals("TES{}"   , MsgFormatter.format("TE{}{}", "S"));
-     * </pre>
-     * @param writer An optional writer
-     * @param messageTemplate Template where argument position is marked by the {@code {}} characters.
-     * @param argumentValues Optional arguments, where the {@code Supplier} interface is supported.
-     * @return A result text or an empty text, if the writer is available.
+     * Format the message; see the class-level examples.
+     * @param writer optional output; when non-{@code null}, the template is written here and the method returns {@code ""}
+     * @param messageTemplate template where each {@code {}} marks the next argument position
+     * @param argumentValues optional values; {@link java.util.function.Supplier} entries are resolved when used
+     * @return formatted text when {@code writer} is {@code null}; otherwise an empty string after writing to {@code writer}
      */
     @NotNull
     public <T> String formatMsg
@@ -111,10 +106,10 @@ public class MsgFormatter {
     }
 
     /**
-     * Format the message from Object array
-     * @param templateAndArguments The first item is a template where parameters are located by {@code "{}"}
-     * text and the next arguments are optional parameters of the template.
-     * @return In case the argument have no length, the result message is {@code null}.
+     * Format the message from an object array (template followed by values).
+     * @param writer optional output; {@code null} builds a string, non-{@code null} writes to the appendable (see three-argument {@link #formatMsg})
+     * @param templateAndArguments first element is the template with {@code "{}"} placeholders; remaining elements are values
+     * @return formatted text, or {@code null} if {@code templateAndArguments} is empty or {@code null}
      */
     @Nullable
     protected <T> String formatMsg(@Nullable Appendable writer, @Nullable final T... templateAndArguments) throws IOException {
@@ -152,16 +147,16 @@ public class MsgFormatter {
 
     // --------------- STATIC METHODS ----------------------
 
-   /**
-     * Format the message, see the next correct asserts:
+    /**
+     * Format the message; see the examples below:
      * <pre class="pre">
      *  assertEquals("TEST"    , MsgFormatter.format("TE{}T", "S"));
      *  assertEquals("TE S T", MsgFormatter.format("TE", "S", "T"));
      *  assertEquals("TES{}"   , MsgFormatter.format("TE{}{}", "S"));
      * </pre>
-     * @param messageTemplate Template where argument position is marked by the {@code {}} characters.
-     * @param arguments Optional arguments, where the {@code Supplier} interface is supported.
-     * @return
+     * @param messageTemplate template where each {@code {}} marks the next argument position
+     * @param arguments optional arguments; {@link java.util.function.Supplier} values are resolved when used
+     * @return formatted message text
      */
     @NotNull
     public static <T> String format
@@ -175,11 +170,10 @@ public class MsgFormatter {
     }
 
     /**
-     * Format the message from Object array
-     * @param templateAndArguments The first item is a template where parameters are located by {@code "{}"}.
-     * The {@code Supplier} interface is supported.
-     * text and the next arguments are optional parameters of the template.
-     * @return In case the argument have no length, the result message is {@code null}.
+     * Format the message from an object array.
+     * @param templateAndArguments first element is the template with {@code "{}"} placeholders; remaining elements are values.
+     * {@link java.util.function.Supplier} arguments are resolved when used.
+     * @return formatted message, or {@code null} if {@code templateAndArguments} is empty or {@code null}
      */
     @Nullable
     public static <T> String format(@Nullable final T... templateAndArguments) {

@@ -28,12 +28,12 @@ import org.ujorm.tools.web.table.GridBuilderConfig;
 import org.ujorm.tools.xml.config.HtmlConfig;
 
 /**
- * A HTML page builder for table based an AJAX.
+ * {@link GridBuilderConfig} with defaults tailored to {@link ReportBuilder} (styling, AJAX parameters, resources).
  *
- * <h4>Usage<h4>
+ * <h4>Usage</h4>
  *
  * <pre class="pre">
- *  TableBuilder.of("Hotel Report")
+ *  ReportBuilder.of("Hotel Report")
  *          .add(Hotel::getName, "Hotel", NAME)
  *          .add(Hotel::getCity, "City", CITY)
  *          .add(Hotel::getStreet, "Street")

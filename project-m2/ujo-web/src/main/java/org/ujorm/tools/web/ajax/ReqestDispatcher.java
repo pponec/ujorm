@@ -30,7 +30,9 @@ import org.ujorm.tools.web.ao.IORunnable;
 import org.ujorm.tools.xml.config.HtmlConfig;
 
 /**
- * A Reqest Dispatcher
+ * Dispatches an AJAX-style request: runs the processor registered for the first matching
+ * {@linkplain HttpParameter HTTP parameter}, or falls back to a default handler.
+ *
  * @author Pavel Ponec
  */
 public class ReqestDispatcher {
@@ -80,11 +82,11 @@ public class ReqestDispatcher {
     }
 
     /**
-     * Registre new processor.
+     * Registers a processor invoked when the given HTTP parameter is present in the request.
      *
-     * @param key A key type of HttpParameter
-     * @param processor processor
-     * @return
+     * @param key parameter key used to select the branch
+     * @param processor writes the JSON response via {@link JsonBuilder}
+     * @return this instance for method chaining
      */
     public ReqestDispatcher onParam(@NotNull final HttpParameter key, @NotNull final IOConsumer<JsonBuilder> processor) throws IOException {
         Assert.notNull(key, () -> "Parameter %s is required".formatted("key"));
