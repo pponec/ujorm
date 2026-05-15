@@ -356,9 +356,9 @@ Join the conversation or report issues on GitHub:
 
 ## Related Links
 
-* [Ujorm Main Project](https://github.com/pponec/ujorm) is a reference on this page.
-* [Petstore Demo](https://github.com/pponec/ujorm-petstore). An open-source project for demonstrating the Ujorm3 library. It uses the ORM module for database queries and the Element class for building the GUI.
-* [ORM Benchmarks](https://github.com/pponec/ujorm/tree/ujorm3). A performance comparison of Ujorm3 from the perspective of several basic metrics. The tests are run on PostgreSQL (running in Docker) and H2 (running in in-memory mode) databases.
-* [Ujorm Element](README_ELEMENT.md). Basic information about the Element class designed for building HTML pages using Java code.
+* [Ujorm Main Project](https://github.com/pponec/ujorm) — the core library this project is built on.
+* [Petstore Demo](https://github.com/pponec/ujorm-petstore). An open-source project demonstrating the Ujorm3 library. It uses the ORM module for database queries and the Element class for building the GUI.
+* [ORM Benchmarks](https://github.com/pponec/ujorm/tree/ujorm3). A performance comparison of Ujorm3 across several key metrics. Tests are run on PostgreSQL (via Docker) and H2 (in in-memory mode) databases.
+* [Ujorm Element](README_ELEMENT.md). An overview of the Element class for building HTML pages using Java code.
 * [HTML Builder Benchmarks](https://github.com/pponec/html-benchmarks). A comparison of libraries for rendering HTML pages.
-* [TopMovies](https://topmovies.ujorm.org/). A prototype application for recommending the best movies based on the match between a user's ratings and a virtual movie group. It is a closed-source project, derived from the open-source project [PetStore Demo](https://github.com/pponec/ujorm-petstore?tab=readme-ov-file#ujorm-petstore). The application runs on Java 25 and uses only Ujorm3 and Vanilla JavaScript.
+* [TopMovies](https://topmovies.ujorm.org/). A prototype application for recommending movies based on the match between a user's ratings and a virtual movie group. It is a closed-source project derived from the open-source [PetStore Demo](https://github.com/pponec/ujorm-petstore?tab=readme-ov-file#ujorm-petstore). The application runs on Java 25 and uses only Ujorm3 and Vanilla JavaScript.
