@@ -286,7 +286,47 @@ Ujorm3 requires **Java 17 or higher**.
 </dependencies>
 ```
 
-To enable the meta processor, configure the `maven-compiler-plugin`.
+However, if you prefer a safer, strongly-typed coding style, you can optionally configure the `maven-compiler-plugin` to include the Ujorm3 Meta Processor.
+
+```xml
+<build>
+    <plugins>
+        <!-- 2. Compiler Plugin Setup -->
+        <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-compiler-plugin</artifactId>
+            <version>3.14.1</version>
+            <configuration>
+                <annotationProcessorPaths>
+                    <!-- Optional: APT configuration for Ujorm3 -->
+                    <path>
+                        <groupId>org.ujorm</groupId>
+                        <artifactId>ujorm-meta-processor</artifactId>
+                        <version>3.0.0-RC2</version>
+                    </path>
+                </annotationProcessorPaths>
+                <compilerArgs>
+                    <!-- Optional: attributes for APT Ujorm3 -->
+                    <arg>-Aujorm.prefix=Meta</arg>
+                    <arg>-Aujorm.suffix=</arg>
+                </compilerArgs>
+            </configuration>
+        </plugin>
+    </plugins>
+</build>
+```
+
+Currently, the library's codebase is fully covered by JUnit tests utilizing an in-memory H2 database.
+In addition, the project includes automated integration tests for basic CRUD operations across major relational databases using Testcontainers. Supported database engines are:
+
+* PostgreSQL
+* MySQL
+* MariaDB
+* Oracle Free
+* MS SQL Server
+
+**Note for contributors:** Integration tests require a running Docker daemon and up to **6 GB** of local disk space for the database images. You can execute these tests using the provided Bash script: `bin/docker-integration-test.sh`.
+To enable the Meta Processor, configure the `maven-compiler-plugin`.
 The library includes automated integration tests for PostgreSQL, MySQL, MariaDB, Oracle, and MS SQL Server via Testcontainers.
 
 ---
