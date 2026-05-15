@@ -70,6 +70,26 @@ class QuickStartTutorialTest extends AbstractDemo {
         }
     }
 
+    /**
+     * Test a database insert operation implemented as a single chained fluent API command,
+     * verifying that the generated primary key is correctly returned via a functional mapper.
+     */
+    @Test
+    @Order(102)
+    void insert_as_function() {
+        var pragueId = SqlQuery.run(connection(), query -> query
+                .sql("""
+                         INSERT INTO city
+                         ( name,  country_code) VALUES 
+                         (:name, :countryCode )
+                        """)
+                .bind("name", "Prague")
+                .bind("countryCode", "CZ")
+                .executeInsert(rs -> rs.getLong(FIRST_PARAM))
+                .findFirst().orElseThrow());
+        assertEquals(3L, pragueId);
+    }
+
     /** Selects cities using Meta-model templates and type-safe result mapping (by the label method).<br/>
      * NOTE: Methods {@code column} and {@code label} cannot be combined. */
     @Test
@@ -88,14 +108,14 @@ class QuickStartTutorialTest extends AbstractDemo {
                     .toStream(CITY_MAPPER.mapper())
                     .toList();
 
-            assertEquals(2, cities.size());
+            assertEquals(3, cities.size());
 
             // --- Reuse the query with the sophisticated ResultSetMapper ---
 
             var nextCities = query.bind("id", 2L)
                     .toStream(CITY_MAPPER.mapper())
                     .toList();
-            assertEquals(1, nextCities.size());
+            assertEquals(2, nextCities.size());
         }
     }
 
@@ -121,14 +141,14 @@ class QuickStartTutorialTest extends AbstractDemo {
                             rs.getString(MetaCity.countryCode.name())))
                     .toList();
 
-            assertEquals(2, cities.size());
+            assertEquals(3, cities.size());
 
             // --- Reuse the query with the sophisticated ResultSetMapper ---
 
             var nextCities = query.bind("id", 2L)
                     .toStream(CITY_MAPPER.mapper())
                     .toList();
-            assertEquals(1, nextCities.size());
+            assertEquals(2, nextCities.size());
         }
     }
 
