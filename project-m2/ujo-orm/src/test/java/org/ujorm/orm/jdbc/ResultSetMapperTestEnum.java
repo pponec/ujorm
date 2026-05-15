@@ -103,7 +103,7 @@ public class ResultSetMapperTestEnum {
 
         setupColumn(rs, metaData, 1, "id", "id", 40, Integer.class);
         setupColumn(rs, metaData, 2, "name", "name", "Lenka", String.class);
-        setupEnumColumn(rs, metaData, 3, "role", "role", 12.5d);
+        setupEnumColumn(rs, metaData, 3, "role", "role", new Object());
 
         var service = DomainHandlerProvider.provider();
         var mapper = ResultSetMapper.of(Employee.class, service);

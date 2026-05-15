@@ -153,15 +153,10 @@ public final class ResultSetMapper<D> {
             return null;
         } else if (rawValue instanceof String str) {
             return service.getEnumMapper().getByName(targetType, str);
-        } else if (rawValue instanceof java.math.BigDecimal bd) {
-            // Oracle JDBC maps NUMBER columns to BigDecimal.
-            return service.getEnumMapper().getByIndex(targetType, bd.intValue());
-        } else if (rawValue instanceof Integer
-                || rawValue instanceof Long
-                || rawValue instanceof Short
-                || rawValue instanceof Byte) {
-            return service.getEnumMapper().getByIndex(targetType, ((Number) rawValue).intValue());
-        } else {
+            } else if (rawValue instanceof Number num) {
+                // Covers integral JDBC types; Oracle NUMBER is typically BigDecimal.
+                return service.getEnumMapper().getByIndex(targetType, num.intValue());
+            } else {
             throw new IllegalArgumentException(String.format(
                     "Unsupported DB type '%s' for Enum mapping of column index %d.",
                     rawValue.getClass().getSimpleName(),
