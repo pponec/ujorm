@@ -27,7 +27,7 @@ import org.jetbrains.annotations.Nullable;
 /**
  * Assertion utils, where all methods can throw the {@code IllegalArgumentException} or {@code IllegalStateException}.
  * The error message is provided by a {@link Supplier<String>}, which allows lazy evaluation.
- * <h4>See the next correct asserts</h4>
+ * <h4>Examples</h4>
  * <pre class="pre">
  *   Assert.isTrue(true, () -> "Error message");
  *   Assert.isTrue(true, () -> format("TEST:%s%s".formatted("A", "B")));

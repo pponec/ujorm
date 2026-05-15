@@ -22,7 +22,7 @@ import org.jetbrains.annotations.Nullable;
 import java.io.IOException;
 
 /**
- * Print values to an output
+ * Prints values to an appendable output.
  * @author Pavel Ponec
  */
 public class ValuePrinter extends ValueFormatter {
@@ -65,7 +65,7 @@ public class ValuePrinter extends ValueFormatter {
         return this;
     }
 
-    /** Standarad writter */
+    /** Underlying appendable (writer) receiving output */
     public Appendable getWriter() {
         return out;
     }

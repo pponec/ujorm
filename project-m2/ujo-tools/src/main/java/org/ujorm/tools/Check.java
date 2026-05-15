@@ -22,7 +22,7 @@ import java.util.Objects;
 import org.jetbrains.annotations.Nullable;
 
 /**
- * Common checker. See the next positive tests:
+ * Common checker. Examples:
  * <pre class="pre">
  * Check.hasLength("ABC");
  * Check.hasLength(new char[]{'A', 'B', 'C'});

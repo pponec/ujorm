@@ -28,8 +28,8 @@ import java.util.Locale;
 import java.util.function.Supplier;
 
 /**
- * Formatter of log messages where argument is located by the {@code {} } characters.
- * See the next correct asserts:
+ * Formatter for log messages where placeholders are marked by {@code {}}.
+ * Examples:
  * <pre class="pre">
  *  assertEquals("TEST"    , MsgFormatter.format("TE{}T", "S"));
  *  assertEquals("TE, S, T", MsgFormatter.format("TE", "S", "T"));
@@ -163,7 +163,7 @@ public class ValueFormatter extends MsgFormatter {
         }
     }
 
-    /** Default lenhth is 32*/
+    /** Default length is 32 */
     protected int getSizeLimit() {
         return 32;
     }
@@ -171,15 +171,15 @@ public class ValueFormatter extends MsgFormatter {
     // --------------- STATIC METHODS ----------------------
 
     /**
-     * Format the message, see the next correct asserts:
+     * Format the message; see the examples in {@link MsgFormatter}.
      * <pre class="pre">
      *  assertEquals("TEST"    , MsgFormatter.format("TE{}T", "S"));
      *  assertEquals("TE, S, T", MsgFormatter.format("TE", "S", "T"));
      *  assertEquals("TES{}"   , MsgFormatter.format("TE{}{}", "S"));
      * </pre>
-     * @param messageTemplate Template where argument position is marked by the {@code {}} characters.
-     * @param arguments Optional arguments
-     * @return Formatted string
+     * @param messageTemplate template where each {@code {}} marks the next argument position
+     * @param arguments optional arguments
+     * @return formatted string
      */
     @NotNull
     public static <T> String format
@@ -193,7 +193,7 @@ public class ValueFormatter extends MsgFormatter {
     }
 
     /**
-     * Format the SQL where makup character is {@code '?'}.
+     * Format SQL text where the placeholder character is {@code '?'}.
      * <pre class="pre">
      *  assertEquals("TEST"    , MsgFormatter.format("TE?T", "S"));
      *  assertEquals("TE, S, T", MsgFormatter.format("TE", "S", "T"));

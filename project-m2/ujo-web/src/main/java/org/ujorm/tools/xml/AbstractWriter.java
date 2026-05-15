@@ -216,7 +216,7 @@ public abstract class AbstractWriter {
     /** Write escaped value to the output
      * @param value A value to write, where the {@code null} value is ignored silently.
      * @param element The element
-     * @param attributeName A name of the XML attribute of {@code null} value for a XML text.
+     * @param attributeName attribute name when writing an attribute value, or {@code null} to write the value as element text
      */
     public void writeValue(
             @Nullable final Object value,

@@ -33,7 +33,7 @@ import java.util.Objects;
  *    <li>the class is used to build 'SQL query' in the module <strong>ujo-orm</strong> (since 0.90)</li>
  * </ul>
  *
- * There is allowed to join two instances (based on the same BO) to a binary tree by a new Criterion.
+ * It is possible to join two instances (based on the same BO) into a binary tree using a new {@code Criterion}.
  * Some common operators (and, or, not) are implemented into a special join method of the Criterion class.
  *
  * <h3>Example of use</h3>
@@ -56,8 +56,8 @@ import java.util.Objects;
  * </pre>
  *
  * <h3>Using the parentheses</h3>
- * A Criterion instance composed from another criterions works as an expression separated by parentheses.
- * See the next two examples:
+ * A {@code Criterion} instance composed from other criteria behaves like an expression with explicit parentheses.
+ * Two examples:
  * <pre class="pre"><span class="comment">// Consider instances:</span>
  * Criterion&lt;Person&gt; a, b, c, result;
  * a = Criterion.where(CASH, Operator.GT, 10.0);
