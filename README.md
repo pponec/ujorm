@@ -294,8 +294,8 @@ The library includes automated integration tests for PostgreSQL, MySQL, MariaDB,
 ## Benchmarks
 
 Performance tests comparing Ujorm3 to Hibernate, Jdbi, Exposed, and MyBatis were executed using PostgreSQL on Java 25.
-To ensure an objective methodology, scenarios and implementations were designed by the **Gemini Pro AI** model.
-The complete source code for these benchmarks is entirely open-source and fully auditable on GitHub, ensuring maximum transparency.
+Benchmark scenarios and initial implementations were drafted with **Gemini Pro** assistance to iterate quickly on comparable workloads; all libraries run under the same harness and rules in the published code.
+The benchmark sources are open on GitHub so anyone can review, rerun, or suggest changes (for example via issues or pull requests).
 
 **Conclusions:**
 * **Execution Speed:** Ujorm3 consistently ranks among the top performers across the tested database operations.
