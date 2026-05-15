@@ -108,7 +108,7 @@ Add the following dependency to your `pom.xml`. The library requires **Java 17 o
 <dependency>
     <groupId>org.ujorm</groupId>
     <artifactId>ujo-web</artifactId>
-    <version>3.0.0-RC5</version>
+    <version>3.0.0</version>
 </dependency>
 ```
 
