@@ -114,29 +114,29 @@ public final class HtmlToJavaConverter {
         }
     }
 
-    /** Convert a HTML code to the Java code with Element classes. */
+    /** Converts HTML markup to Java code using {@link org.ujorm.tools.web.Element Element}-style API calls. */
     public String convertHtmlToJavaElements(String htmlContent) throws IOException {
         return convertHtmlToJavaElements(htmlContent, false);
     }
 
-    /** Convert a HTML code to the Java code with Element classes. */
+    /** Converts HTML markup to Java code using {@link org.ujorm.tools.web.Element Element}-style API calls. */
     public String convertHtmlToJavaElements(String htmlContent, boolean blockStyle) throws IOException {
         return convertHtmlToJavaElements(htmlContent, blockStyle, false);
     }
 
-    /** Convert a HTML code to the Java code with Element classes. */
+    /** Converts HTML markup to Java code using {@link org.ujorm.tools.web.Element Element}-style API calls. */
     public String convertHtmlToJavaElements(String htmlContent, boolean blockStyle, boolean separatedCssStyles) throws IOException {
         var result = new StringBuilder();
         convertHtmlToJavaElements(htmlContent, blockStyle, separatedCssStyles, result);
         return result.toString();
     }
 
-    /** Convert a HTML code to the Java code with Element classes. */
+    /** Converts HTML markup to Java code using {@link org.ujorm.tools.web.Element Element}-style API calls. */
     public void convertHtmlToJavaElements(String htmlContent, boolean blockStyle, Appendable writer) throws IOException {
         convertHtmlToJavaElements(htmlContent, blockStyle, false, writer);
     }
 
-    /** Convert a HTML code to the Java code with Element classes. */
+    /** Converts HTML markup to Java code using {@link org.ujorm.tools.web.Element Element}-style API calls. */
     public void convertHtmlToJavaElements(String htmlContent, boolean blockStyle, boolean separatedCssStyles, Appendable writer) throws IOException {
         var doc = Jsoup.parse(htmlContent);
         var docTitle = getAndRemoveTitle(doc);

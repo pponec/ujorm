@@ -255,7 +255,7 @@ public class ReportBuilder<D> {
         if (config instanceof ReportBuilderConfigImpl) {
             ((ReportBuilderConfigImpl)config).setEmbeddedIcons(embeddedIcons);
         } else {
-            throw new IllegalStateException("Configuration must be type of: " + ReportBuilderConfigImpl.class);
+            throw new IllegalStateException("Configuration must be of type: " + ReportBuilderConfigImpl.class);
         }
         return this;
     }
@@ -383,7 +383,7 @@ public class ReportBuilder<D> {
 
     /** URL constants */
     public static class Url {
-        /** Link to a Bootstrap URL of CDN */
+        /** Bootstrap CSS stylesheet URL on a CDN */
         protected static final String BOOTSTRAP_CSS = "https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css";
 
         final String bootstrapCss;

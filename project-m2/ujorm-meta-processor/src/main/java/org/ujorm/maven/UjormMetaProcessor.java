@@ -12,7 +12,7 @@ import java.util.HashSet;
 import java.util.Set;
 import static org.ujorm.maven.UjormMetaProcessor.Const.*;
 
-/** Generates metamodel from entities during the compilation phase using APT. */
+/** Generates static metamodel helper classes for JPA {@code @Entity} / {@code @Table} types during compilation (APT). */
 @SupportedAnnotationTypes({
         "javax.persistence.Entity",
         "javax.persistence.Table",

@@ -387,7 +387,7 @@ public class ReportBuilderConfigImpl<D> implements ReportBuilderConfig<D> {
 
     /** Config constants */
     public static class Constants {
-        /** Link to a Bootstrap URL of CDN */
+        /** Bootstrap CSS stylesheet URL on a CDN */
         public static final String BOOTSTRAP_CSS = "https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css";
         /** Form identifier */
         public static final String FORM_ID = "form";

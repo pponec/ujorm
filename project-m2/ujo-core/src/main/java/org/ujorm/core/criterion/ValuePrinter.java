@@ -70,7 +70,7 @@ public class ValuePrinter extends ValueFormatter {
         return out;
     }
 
-    /** Writer result */
+    /** String built from the underlying appendable (typically a {@link StringBuilder}). */
     @Override @NotNull
     public String toString() {
         return out.toString();

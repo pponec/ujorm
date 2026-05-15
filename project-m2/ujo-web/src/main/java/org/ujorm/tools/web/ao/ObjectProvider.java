@@ -27,7 +27,7 @@ import org.jetbrains.annotations.NotNull;
 @FunctionalInterface
 public interface ObjectProvider {
 
-    /** Write a HTML code to the element */
+    /** Writes HTML markup into the given element */
     void accept(@NotNull JsonBuilder element) throws IOException;
 
 }

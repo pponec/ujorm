@@ -302,7 +302,7 @@ public class Element extends XmlBuilder<Element> implements Html {
         return addElement(TABLE, cssClasses);
     }
 
-    /** Create a HTML table according to data */
+    /** Creates an HTML table from the supplied row data */
     @NotNull
     public Element addTable(
             @NotNull final Object[][] data,
@@ -310,7 +310,7 @@ public class Element extends XmlBuilder<Element> implements Html {
         return addTable(Arrays.asList(data), cssClass);
     }
 
-    /** Create a HTML table according to data */
+    /** Creates an HTML table from the supplied row data */
     @NotNull
     public Element addTable(
             @NotNull final Collection<Object[]> data,
@@ -327,7 +327,7 @@ public class Element extends XmlBuilder<Element> implements Html {
         return result;
     }
 
-    /** Create a HTML table according to data
+    /** Creates an HTML table from the supplied row stream and column extractors.
      *
      * <h4>Usage</h4>
      * <pre>

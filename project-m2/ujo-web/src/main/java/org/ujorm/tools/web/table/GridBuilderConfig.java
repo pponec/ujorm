@@ -87,7 +87,7 @@ public interface GridBuilderConfig<D> {
     /** Optional CSS injector: first argument is the target element, second is {@code true} when the grid is sortable */
     BiConsumer<Element, Boolean> getCssWriter();
 
-    /** Get a CSS direction style */
+    /** Returns the CSS class token for the given sort direction */
     @NotNull
     default CharSequence getSortableDirection(@NotNull final Direction direction) {
         switch (direction) {
@@ -108,7 +108,7 @@ public interface GridBuilderConfig<D> {
         return getClass().getResourceAsStream(getInnerSortableImage(direction));
     }
 
-    /** Get an embedded sortable image in a Data URI format. */
+    /** Returns an embedded sort icon for the direction as a {@code data:} URI, or {@code null} when unavailable. */
     @Nullable
     default String getInnerSortableImageDataUri(@NotNull final Direction direction) {
         final String path = getInnerSortableImage(direction);

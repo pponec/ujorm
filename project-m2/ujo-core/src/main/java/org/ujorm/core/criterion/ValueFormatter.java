@@ -44,7 +44,7 @@ public class ValueFormatter extends MsgFormatter {
     /** Three dots symbol */
     private static final char THREE_DOTS = '…';
 
-    /** Hexa characters */
+    /** Hexadecimal digit characters for byte rendering */
     private static final char[] HEX_ARRAY = {'0','1','2','3','4','5','6','7','8','9','A','B','C','D','E','F'};
 
     /** Border of the byte array */

@@ -84,7 +84,7 @@ public class SqlQuery extends AbstractSqlQuery<SqlQuery> {
      * to the generated database column labels (aliases) (i.e., the part after the {@code AS} keyword).
      * These quotes are not applied to the column names themselves or to defined SQL expressions,
      * as they may contain general SQL constructs (e.g., function calls or concatenations),
-     * where applying quotes globally would cause an SQL syntax error.
+     * where applying quotes globally would cause SQL syntax errors.
      *
      * @param dbConnection an active database connection
      * @param quoter       a pair of characters used to quote the generated label (e.g., {@code []} or {@code ""})
@@ -208,21 +208,19 @@ public class SqlQuery extends AbstractSqlQuery<SqlQuery> {
 
     // ------- LABELS -------
 
-    /** Add a column label to the placeholder in the format {@code ${placeholder} }.
-     * The provided metamodel attributes define a type-safe path to the specific property
-     * (e.g., entity -> relation -> property) and are concatenated to form the final SQL column label.
+    /** Adds a column label for keys merged into the template placeholder <code>${placeholder}</code>.
+     * Keys form a type-safe path to the property (e.g. {@code entity -> relation -> property}) and define the SQL column label.
      *
-     * @see Key#join(Key, Key) You can join the keys optimally by this method.
+     * @see Key#join(Key, Key)
      */
     public SqlQuery label(@NotNull String placeholder, @NotNull Key<?,?> attr) {
         return putColumnOrLabel(false, placeholder, attr);
     }
 
-    /** Add a column label to the placeholder in the format {@code ${placeholder} }.
-     * The provided metamodel attributes define a type-safe path to the specific property
-     * (e.g., entity -> relation -> property) and are concatenated to form the final SQL column label.
+    /** Adds a column label for keys merged into the template placeholder <code>${placeholder}</code>.
+     * Keys form a type-safe path to the property (e.g. {@code entity -> relation -> property}) and define the SQL column label.
      *
-     * @see Key#join(Key, Key) You can join the keys optimally by this method.
+     * @see Key#join(Key, Key)
      */
     public <V1> SqlQuery label(@NotNull String placeholder,
                                @NotNull Key<?,V1> attr1,
@@ -230,11 +228,10 @@ public class SqlQuery extends AbstractSqlQuery<SqlQuery> {
         return putColumnOrLabel(false, placeholder, attr1, attr2);
     }
 
-    /** Add a column label to the placeholder in the format {@code ${placeholder} }.
-     * The provided metamodel attributes define a type-safe path to the specific property
-     * (e.g., entity -> relation -> property) and are concatenated to form the final SQL column label.
+    /** Adds a column label for keys merged into the template placeholder <code>${placeholder}</code>.
+     * Keys form a type-safe path to the property (e.g. {@code entity -> relation -> property}) and define the SQL column label.
      *
-     * @see Key#join(Key, Key) You can join the keys optimally by this method.
+     * @see Key#join(Key, Key)
      */
     public <V1,V2> SqlQuery label(@NotNull String placeholder,
                                   @NotNull Key<?,V1> attr1,
@@ -245,21 +242,19 @@ public class SqlQuery extends AbstractSqlQuery<SqlQuery> {
 
     // ------- COLUMNS -------
 
-    /** Add a SQL column definition dynamically to replace the {@code ${COLUMNS} } placeholder.
-     * The provided metamodel attributes define a type-safe path to the specific property
-     * (e.g., entity -> relation -> property) and are concatenated to form the final SQL column label.
+    /** Adds a SQL column expression for keys merged into the <code>${COLUMNS}</code> template placeholder.
+     * Keys form a type-safe path to the property (e.g. {@code entity -> relation -> property}) and define the SQL column label.
      *
-     * @see Key#join(Key, Key) You can join the keys optimally by this method.
+     * @see Key#join(Key, Key)
      */
     public SqlQuery column(@NotNull String sqlExpression, @NotNull Key<?,?> attr) {
         return putColumnOrLabel(true, sqlExpression, attr);
     }
 
-    /** Add a SQL column definition dynamically to replace the {@code ${COLUMNS} } placeholder.
-     * The provided metamodel attributes define a type-safe path to the specific property
-     * (e.g., entity -> relation -> property) and are concatenated to form the final SQL column label.
+    /** Adds a SQL column expression for keys merged into the <code>${COLUMNS}</code> template placeholder.
+     * Keys form a type-safe path to the property (e.g. {@code entity -> relation -> property}) and define the SQL column label.
      *
-     * @see Key#join(Key, Key) You can join the keys optimally by this method.
+     * @see Key#join(Key, Key)
      */
     public <V1> SqlQuery column(@NotNull String sqlExpression,
                                 @NotNull Key<?,V1> attr1,
@@ -267,11 +262,10 @@ public class SqlQuery extends AbstractSqlQuery<SqlQuery> {
         return putColumnOrLabel(true, sqlExpression, attr1, attr2);
     }
 
-    /** Add a SQL column definition dynamically to replace the {@code ${COLUMNS} } placeholder.
-     * The provided metamodel attributes define a type-safe path to the specific property
-     * (e.g., entity -> relation -> property) and are concatenated to form the final SQL column label.
+    /** Adds a SQL column expression for keys merged into the <code>${COLUMNS}</code> template placeholder.
+     * Keys form a type-safe path to the property (e.g. {@code entity -> relation -> property}) and define the SQL column label.
      *
-     * @see Key#join(Key, Key) You can join the keys optimally by this method.
+     * @see Key#join(Key, Key)
      */
     public <V1,V2> SqlQuery column(@NotNull String sqlExpression,
                                    @NotNull Key<?,V1> attr1,
@@ -280,7 +274,7 @@ public class SqlQuery extends AbstractSqlQuery<SqlQuery> {
         return putColumnOrLabel(true, sqlExpression, attr1, attr2, attr3);
     }
 
-    /** Run a builder statement */
+    /** Runs the given function with a new {@link SqlQuery} on the supplied JDBC connection. */
     public static <R> R run(Connection connection, final SqlFunction<SqlQuery, R> fun) {
         try (var query = new SqlQuery(connection)) {
             return fun.applyFunction(query);

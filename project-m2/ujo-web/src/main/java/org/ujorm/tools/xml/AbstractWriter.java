@@ -37,7 +37,7 @@ public abstract class AbstractWriter {
     /** Default XML declaration */
     public static final String XML_HEADER = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
 
-    /** Default DOCTYPE of HTML-5 */
+    /** Default HTML5 {@code <!DOCTYPE html>} declaration */
     public static final String HTML_DOCTYPE = "<!DOCTYPE html>";
 
     /** A special XML character */
@@ -78,7 +78,7 @@ public abstract class AbstractWriter {
     @NotNull
     protected final XmlConfig config;
 
-    /** New line sequences */
+    /** Newline sequence between output lines */
     @NotNull
     protected final String newLine;
 
@@ -92,6 +92,7 @@ public abstract class AbstractWriter {
     @NotNull
     private final Formatter format;
 
+    /** Buffer that receives escaped markup before it is written to the main output */
     @NotNull
     private final Appendable writerEscaped = createAppendable();
 
@@ -256,7 +257,7 @@ public abstract class AbstractWriter {
         return out;
     }
 
-    /** Get Writer to escape HTML characters. */
+    /** Returns the appendable used to accumulate escaped HTML/XML before flushing to the document. */
     @NotNull
     public Appendable getWriterEscaped() {
         return writerEscaped;

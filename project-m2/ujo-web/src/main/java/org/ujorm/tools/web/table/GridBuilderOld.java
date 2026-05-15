@@ -29,7 +29,8 @@ import org.ujorm.tools.web.ao.WebUtils;
 import org.ujorm.tools.xml.config.HtmlConfig;
 
 /**
- * Build a content of a HTML page for a sortable data grid.
+ * Deprecated {@link GridBuilder} variant kept for compatibility.
+ * <p>Builds the content of an HTML page for a sortable data grid.
  *
  * @author Pavel Ponec
  */

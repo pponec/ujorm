@@ -166,10 +166,10 @@ public class SelectQuery<D> extends AbstractSqlQuery<SelectQuery<D>> {
     }
 
     /**
-     * Add a SQL column definition dynamically to replace the {@code ${COLUMNS} } placeholder.
-     * The provided metamodel attributes define a type-safe path to the specific property
-     * (e.g., entity -> relation -> property) and are concatenated to form the final SQL column label.
-     * @see Key#join(Key, Key) You can use also.
+     * Adds a SQL column expression for a key merged into the <code>${COLUMNS}</code> template placeholder.
+     * Keys form a type-safe path to the property (e.g. {@code entity -> relation -> property}) and define the SQL column label.
+     *
+     * @see Key#join(Key, Key)
      */
     public SelectQuery<D> column(@NotNull Key<?,?> attr) {
         this.builder.column(attr);
@@ -177,10 +177,10 @@ public class SelectQuery<D> extends AbstractSqlQuery<SelectQuery<D>> {
     }
 
     /**
-     * Add a SQL column definition dynamically to replace the {@code ${COLUMNS} } placeholder.
-     * The provided metamodel attributes define a type-safe path to the specific property
-     * (e.g., entity -> relation -> property) and are concatenated to form the final SQL column label.
-     * @see Key#join(Key, Key) You can use also.
+     * Adds a SQL column expression for keys merged into the <code>${COLUMNS}</code> template placeholder.
+     * Keys form a type-safe path to the property (e.g. {@code entity -> relation -> property}) and define the SQL column label.
+     *
+     * @see Key#join(Key, Key)
      */
     public <V1> SelectQuery<D> column(@NotNull Key<D,V1> attr1,
                                       @NotNull Key<V1,?> attr2) {
@@ -189,10 +189,10 @@ public class SelectQuery<D> extends AbstractSqlQuery<SelectQuery<D>> {
     }
 
     /**
-     * Add a SQL column definition dynamically to replace the {@code ${COLUMNS} } placeholder.
-     * The provided metamodel attributes define a type-safe path to the specific property
-     * (e.g., entity -> relation -> property) and are concatenated to form the final SQL column label.
-     * @see Key#join(Key, Key) You can use also.
+     * Adds a SQL column expression for keys merged into the <code>${COLUMNS}</code> template placeholder.
+     * Keys form a type-safe path to the property (e.g. {@code entity -> relation -> property}) and define the SQL column label.
+     *
+     * @see Key#join(Key, Key)
      */
     public <V1,V2> SelectQuery<D> column(@NotNull Key<D,V1> attr1,
                                          @NotNull Key<V1,V2> attr2,
@@ -223,7 +223,7 @@ public class SelectQuery<D> extends AbstractSqlQuery<SelectQuery<D>> {
         return super.buildSql(sqlValues, includingValues);
     }
 
-    /** Print plain texts, database table or columns */
+    /** Appends SQL fragments: raw text, {@link Key}-based column references, or {@link TableAlias} table clauses. */
     void writeSqlParts(CharSequence[] items) {
         if (items == null || items.length == 0) return;
         var writer = dslWriter.append("");

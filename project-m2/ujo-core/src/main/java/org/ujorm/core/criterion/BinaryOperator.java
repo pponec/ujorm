@@ -17,7 +17,7 @@
 package org.ujorm.core.criterion;
 
 /**
- * The criterion binary operator
+ * Binary operators used to combine {@link Criterion} instances (AND, OR, NOT, …).
  * @since 0.90
  * @author Pavel Ponec
  */
@@ -71,7 +71,7 @@ public enum BinaryOperator implements AbstractOperator {
     }
 
 
-    /** Returns Enum */
+    /** Returns this enum constant (satisfies the {@link AbstractOperator} bridge). */
     @Override
     public final Enum getEnum() {
         return this;

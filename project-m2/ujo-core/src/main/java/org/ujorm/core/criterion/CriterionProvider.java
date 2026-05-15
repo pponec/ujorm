@@ -24,11 +24,11 @@ import java.util.Collection;
 
 public interface CriterionProvider<DOMAIN, VALUE> {
 
-    /** Returns a current instance of the Key for the default Criterion implementations */
+    /** Returns the current metamodel key used by default criterion helpers. */
     @NotNull Key<DOMAIN, VALUE> self();
 
     /**
-     * Create a new Criterion where this key value is related to a parameter value along the {@link Operator}.
+     * Creates a new criterion relating this key's value to the given operand using the specified {@link Operator}.
      * @param operator Operator
      * <ul>
      * <li>VALUE - the parameter value</li>
@@ -41,7 +41,7 @@ public interface CriterionProvider<DOMAIN, VALUE> {
     }
 
     /**
-     * Create a new Criterion where this key value is related to a parameter value along the {@link Operator}.
+     * Creates a new criterion relating this key's value to a {@link ProxyValue} operand using the specified {@link Operator}.
      * @param operator Operator
      * <ul>
      * <li>VALUE - the parameter value</li>
@@ -55,7 +55,7 @@ public interface CriterionProvider<DOMAIN, VALUE> {
     }
 
     /**
-     * Create a new Criterion where this key is related to the value along the parameter {@link Operator}.
+     * Creates a new criterion relating this key to another key's value using the specified {@link Operator}.
      * @param operator Operator
      * <ul>
      * <li>VALUE - the parameter value</li>
@@ -69,7 +69,7 @@ public interface CriterionProvider<DOMAIN, VALUE> {
     }
 
     /**
-     * Create new Criterion where this key value is in the one of parameter values.
+     * Creates a new criterion where this key's value is one of the given values.
      * @param array A collection of the values. If the argument is EMPTY, the result is always FALSE.
      * @return The new immutable Criterion.
      */
@@ -78,7 +78,7 @@ public interface CriterionProvider<DOMAIN, VALUE> {
     }
 
     /**
-     * Create new Criterion where this key value is not in any of parameter values.
+     * Creates a new criterion where this key's value is not among the given values.
      * @param array A collection of the values. If the argument is EMPTY, the result is always TRUE.
      * @return The new immutable Criterion.
      */
@@ -87,7 +87,7 @@ public interface CriterionProvider<DOMAIN, VALUE> {
     }
 
     /**
-     * Create new Criterion where this key value is in one of parameter values.
+     * Creates a new criterion where this key's value is one of the given values.
      * @param values A collection of values. If the argument is EMPTY, the result is always FALSE.
      * @return The new immutable Criterion.
      */
@@ -96,7 +96,7 @@ public interface CriterionProvider<DOMAIN, VALUE> {
     }
 
     /**
-     * Create new Criterion where this key value is not in any of parameter values.
+     * Creates a new criterion where this key's value is not among the given values.
      * @param values A collection of values. If the argument is EMPTY, the result is always TRUE.
      * @return The new immutable Criterion.
      */
@@ -104,12 +104,12 @@ public interface CriterionProvider<DOMAIN, VALUE> {
         return Criterion.whereInCollection(false, self(), values);
     }
 
-    /** Create a new Criterion for all values. The method evaluate(ujo) always returns TRUE. */
+    /** Creates a new criterion satisfied by all values ({@code evaluate(entity)} always returns {@code true}). */
     @NotNull default Criterion whereTrue() {
         return Criterion.forConstant(self(), true);
     }
 
-    /** Create a new Criterion for no values. The method evaluate(method) always returns FALSE. */
+    /** Creates a new criterion satisfied by no values ({@code evaluate(entity)} always returns {@code false}). */
     @NotNull default Criterion whereFalse() {
         return  Criterion.forConstant(self(), false);
     }

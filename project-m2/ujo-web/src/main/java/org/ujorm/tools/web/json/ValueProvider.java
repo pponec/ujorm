@@ -27,7 +27,7 @@ import org.ujorm.tools.web.Element;
 @FunctionalInterface
 public interface ValueProvider {
 
-    /** Write a HTML code to the element */
+    /** Writes HTML markup into the given element */
     void accept(@NotNull Element element) throws IOException;
 
 }

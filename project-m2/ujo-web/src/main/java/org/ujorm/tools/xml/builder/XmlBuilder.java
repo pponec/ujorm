@@ -27,39 +27,38 @@ import org.ujorm.tools.xml.AbstractWriter;
 import org.ujorm.tools.xml.ApiElement;
 
 /**
- * A XML builder.
- * The main benefits are:
+ * An XML/HTML builder backed by {@link XmlPrinter}.
+ * Main benefits:
  * <ul>
- *     <li>secure building well-formed XML documents  by the Java code</li>
- *     <li>a simple API built on a single XmlElement class</li>
- *     <li>creating XML components by a subclass is possible</li>
- *     <li>great performance and small memory footprint</li>
+ *     <li>builds well-formed XML safely from Java code</li>
+ *     <li>simple API centered on a single {@code XmlBuilder} type</li>
+ *     <li>supports composition via subclasses</li>
+ *     <li>good performance and a small memory footprint</li>
  * </ul>
  * <h4>How to use the class:</h4>
  * <pre class="pre">
- *  XmlPriter writer = XmlPriter.forXml();
+ *  XmlPrinter writer = XmlPrinter.forXml();
  *  try (XmlBuilder html = new XmlBuilder(Html.HTML, writer)) {
  *      try (XmlBuilder head = html.addElement(Html.HEAD)) {
  *          head.addElement(Html.META, Html.A_CHARSET, UTF_8);
  *          head.addElement(Html.TITLE).addText("Test");
  *      }
- *      ry (XmlBuilder body = html.addElement(Html.BODY)) {
- *          body.addElement(Html.H1).addText("Hello word!");
+ *      try (XmlBuilder body = html.addElement(Html.BODY)) {
+ *          body.addElement(Html.H1).addText("Hello world!");
  *          body.addElement(Html.DIV).addText(null);
  *      }
  *  };
  *  String result = writer.toString();
  * </pre>
  *
- * The XmlElement class implements the {@link Closeable} implementation
- * for an optional highlighting the tree structure in the source code.
+ * <p>{@link Closeable} is implemented so you can use try-with-resources to mirror the element tree in source code.
  * @since 1.86
  * @author Pavel Ponec
  * @param <T> The exact type of the builder to allow fluent method chaining in subclasses.
  */
 public class XmlBuilder<T extends XmlBuilder<T>> implements ApiElement<T> {
 
-    /** A name of a hidden element must be a unique instance */
+    /** Sentinel element name for internal/hidden nodes; must compare by identity where used */
     @Nullable
     public static final String HIDDEN_NAME = "";
 

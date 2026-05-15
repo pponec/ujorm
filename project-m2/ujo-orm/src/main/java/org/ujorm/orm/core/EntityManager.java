@@ -372,7 +372,7 @@ public final class EntityManager<D, V> {
             return result;
         }
 
-        /** Builds an SQL INSERT statement for the specified columns. */
+        /** Builds the SQL {@code INSERT} statement for the specified columns. */
         public String buildInsertSql(@NotNull List<ColumnModel<D, ?>> columns) {
             if (columns.isEmpty()) {
                 return "INSERT INTO " + qualifiedTableName() + " DEFAULT VALUES";
@@ -389,7 +389,7 @@ public final class EntityManager<D, V> {
             return sql.toString();
         }
 
-        /** Builds an SQL UPDATE statement for the specified columns. */
+        /** Builds the SQL {@code UPDATE} statement for the specified columns. */
         public String buildUpdateSql(@NotNull List<ColumnModel<D, ?>> columns) {
             var q = getQuote();
             var sql = new StringBuilder(256)
@@ -404,7 +404,7 @@ public final class EntityManager<D, V> {
             return sql.toString();
         }
 
-        /** Builds an SQL UPDATE statement for the specified keys. */
+        /** Builds the SQL {@code UPDATE} statement for columns referenced by the given keys. */
         public String buildUpdateSql(Key<D, ?>[] keys) {
             var model = tableModel();
             var columns = new java.util.ArrayList<ColumnModel<D, ?>>(keys.length);

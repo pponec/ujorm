@@ -127,10 +127,10 @@ public class ValueCriterion<U> extends Criterion  {
     /** Test a value is an instance of clazz and */
     protected void checkType(Class<?> clazz, Key<?,?> key, Object value) throws IllegalArgumentException {
         if (!key.isTypeOf(clazz)) {
-            throw new IllegalArgumentException("The Key must be type of " + clazz.getSimpleName());
+            throw new IllegalArgumentException("The Key must be of type " + clazz.getSimpleName());
         }
         if (value != null && !key.isInstanceOf(value)) {
-            throw new IllegalArgumentException("The Value must be type of " + key.type().getSimpleName());
+            throw new IllegalArgumentException("The Value must be of type " + key.type().getSimpleName());
         }
     }
 
