@@ -31,6 +31,7 @@ class MySqlTutorialIT extends AbstractTutorialIT {
                     , name VARCHAR(50) NOT NULL
                     , boss_id BIGINT NULL
                     , city_id BIGINT NOT NULL
+                    , state SMALLINT NOT NULL DEFAULT 0
                     )
                     """).execute();
             query.sql("""

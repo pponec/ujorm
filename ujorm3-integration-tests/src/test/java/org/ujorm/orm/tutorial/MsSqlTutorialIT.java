@@ -34,6 +34,7 @@ class MsSqlTutorialIT extends AbstractTutorialIT {
                     , name NVARCHAR(50) NOT NULL
                     , boss_id INT NULL
                     , city_id INT NOT NULL
+                    , state SMALLINT NOT NULL DEFAULT 0
                     , CONSTRAINT fk_emp_city FOREIGN KEY (city_id) REFERENCES city(id) ON DELETE CASCADE
                     , CONSTRAINT fk_emp_boss FOREIGN KEY (boss_id) REFERENCES employee(id)
                     )

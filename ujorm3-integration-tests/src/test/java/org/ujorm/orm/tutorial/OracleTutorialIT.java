@@ -31,6 +31,7 @@ class OracleTutorialIT extends AbstractTutorialIT {
                     , name VARCHAR2(50) NOT NULL
                     , boss_id NUMBER NULL
                     , city_id NUMBER NOT NULL
+                    , state NUMBER(5,0) DEFAULT 0 NOT NULL
                     )
                     """).execute();
             query.sql("""
