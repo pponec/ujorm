@@ -2,7 +2,10 @@ The Ujorm release notes
 (Maven groupId: org.ujorm)
 *******************************
 
-release 3.0.0 (?)
+release 3.0.1-SNAPSHOT (?)
+
+release 3.0.0 (2026-05-15)
++ Code cleaning
 
 release 3.0.0-RC5 (2026-04-24)
 + Code cleaning
