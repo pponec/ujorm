@@ -362,5 +362,5 @@ Join the conversation or report issues on GitHub:
 * [Ujorm Element](README_ELEMENT.md). An overview of the Element class for building HTML pages using Java code.
 * [HTML Builder Benchmarks](https://github.com/pponec/html-benchmarks). A comparison of libraries for rendering HTML pages.
 * [TopMovies](https://topmovies.ujorm.org/). A prototype application for recommending movies based on the match between a user's ratings and a virtual movie group. It is a closed-source project derived from the open-source [PetStore Demo](https://github.com/pponec/ujorm-petstore?tab=readme-ov-file#ujorm-petstore). The application runs on Java 25 and uses only Ujorm3 and Vanilla JavaScript.
-* [Ujorm Release Notes](project-m2/ujo-core/src/main/java/org/ujorm/core/doc-files/changes.txt)
 * [JavaDoc](https://www.javadoc.io/doc/org.ujorm/ujo-orm/latest/org/ujorm/orm/package-summary.html) for class descriptions.
+* [Ujorm Release Notes](project-m2/ujo-core/src/main/java/org/ujorm/core/doc-files/changes.txt).
