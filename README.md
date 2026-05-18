@@ -102,7 +102,7 @@ List<Employee> findEmployees(Connection connection) {
             .label("e.name", MetaEmployee.name)
             .label("c.name", MetaEmployee.city, MetaCity.name) // Key Path mapping
             .bind("id", 1L)
-            .streamMap(EMPLOYEE_MAPPER.mapper()) // Generic mapping including relations
+            .toStream(EMPLOYEE_MAPPER.mapper()) // Generic mapping including relations
             .toList());
 }
 ```
