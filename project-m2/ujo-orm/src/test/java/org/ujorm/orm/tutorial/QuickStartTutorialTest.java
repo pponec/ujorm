@@ -43,14 +43,14 @@ class QuickStartTutorialTest extends AbstractDemo {
     private static final ResultSetMapper<City> CITY_MAPPER = ResultSetMapper.of(City.class);
     private static final int FIRST_PARAM = 1;
 
-    /** Demonstrate record insertion with PreparedStatement reuse. */
+    /** Demonstrate record insertion with SqlQuery reuse. */
     @Test
     @Order(100)
-    void insert() {
+    void insert_city() {
         try (var query = new SqlQuery(connection())) {
             var ottawaId = query.sql("""
                              INSERT INTO city
-                             ( name,  country_code) VALUES 
+                             ( name,  country_code) VALUES
                              (:name, :countryCode )
                             """)
                     .bind("name", "Ottawa")
@@ -70,24 +70,23 @@ class QuickStartTutorialTest extends AbstractDemo {
         }
     }
 
-    /**
-     * Test a database insert operation implemented as a single chained fluent API command,
-     * verifying that the generated primary key is correctly returned via a functional mapper.
-     */
+    /** Insert one imployee by a fluent API. */
     @Test
     @Order(102)
-    void insert_as_function() {
-        var pragueId = SqlQuery.run(connection(), query -> query
+    void insert_employee() {
+        var ottawaId = 1L;
+        var joeId = SqlQuery.run(connection(), query -> query
                 .sql("""
-                         INSERT INTO city
-                         ( name,  country_code) VALUES 
-                         (:name, :countryCode )
+                        INSERT INTO employee
+                        (  name,  city_id ) VALUES
+                        ( :name, :cityId  )
                         """)
-                .bind("name", "Prague")
-                .bind("countryCode", "CZ")
-                .executeInsert(rs -> rs.getLong(FIRST_PARAM))
+                .bind("name", "Joe")
+                .bind("cityId", ottawaId)
+                .executeInsert(rs -> rs.getLong(1))
                 .findFirst().orElseThrow());
-        assertEquals(3L, pragueId);
+
+        assertEquals(1L, joeId);
     }
 
     /** Selects cities using Meta-model templates and type-safe result mapping (by the label method).<br/>
@@ -152,18 +151,38 @@ class QuickStartTutorialTest extends AbstractDemo {
         }
     }
 
-    /** Initialize the database schema for the City entity. */
+    /** Configures the initial database schema using raw DDL statements. */
     @Override
     void init() {
         try (var query = new SqlQuery(connection())) {
             query.sql("""
-                            CREATE TABLE city
-                            ( id BIGINT AUTO_INCREMENT PRIMARY KEY
-                            , name VARCHAR(50) NOT NULL
-                            , country_code VARCHAR(2) NOT NULL
-                            )
-                            """)
-                    .execute();
+                    CREATE TABLE city
+                    ( id BIGINT AUTO_INCREMENT PRIMARY KEY
+                    , name VARCHAR(50) NOT NULL
+                    , country_code VARCHAR(2) NOT NULL
+                    )
+                    """).execute();
+            query.sql("""
+                    CREATE TABLE employee
+                    ( id BIGINT AUTO_INCREMENT PRIMARY KEY
+                    , name VARCHAR(50) NOT NULL
+                    , boss_id BIGINT NULL
+                    , city_id BIGINT NOT NULL
+                    , state SMALLINT NOT NULL DEFAULT 0
+                    )
+                    """).execute();
+            query.sql("""
+                    ALTER TABLE employee ADD CONSTRAINT fk_employee_boss_id__id
+                    FOREIGN KEY (boss_id)
+                    REFERENCES employee(id)
+                    ON DELETE RESTRICT ON UPDATE RESTRICT;
+                    """).execute();
+            query.sql("""
+                    ALTER TABLE employee ADD CONSTRAINT fk_employee_city_id__id
+                    FOREIGN KEY (city_id)
+                    REFERENCES city(id)
+                    ON DELETE CASCADE ON UPDATE RESTRICT;
+                    """).execute();
         }
     }
 }
