@@ -302,7 +302,7 @@ However, if you prefer a safer, strongly-typed coding style, you can optionally 
                     <path>
                         <groupId>org.ujorm</groupId>
                         <artifactId>ujorm-meta-processor</artifactId>
-                        <version>3.0.0-RC2</version>
+                        <version>3.0.0</version>
                     </path>
                 </annotationProcessorPaths>
                 <compilerArgs>
