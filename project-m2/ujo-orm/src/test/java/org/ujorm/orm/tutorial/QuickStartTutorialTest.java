@@ -7,6 +7,7 @@ import org.junit.jupiter.api.TestMethodOrder;
 import org.ujorm.orm.SqlQuery;
 import org.ujorm.orm.jdbc.ResultSetMapper;
 import org.ujorm.orm.tutorial.domains.City;
+import org.ujorm.orm.tutorial.domains.Employee;
 import org.ujorm.orm.tutorial.domains.MetaCity;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -41,6 +42,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class QuickStartTutorialTest extends AbstractDemo {
 
     private static final ResultSetMapper<City> CITY_MAPPER = ResultSetMapper.of(City.class);
+    private static final ResultSetMapper<Employee> EMPLOYEE_MAPPER = ResultSetMapper.of(Employee.class);
     private static final int FIRST_PARAM = 1;
 
     /** Demonstrate record insertion with SqlQuery reuse. */
@@ -107,14 +109,14 @@ class QuickStartTutorialTest extends AbstractDemo {
                     .toStream(CITY_MAPPER.mapper())
                     .toList();
 
-            assertEquals(3, cities.size());
+            assertEquals(2, cities.size());
 
             // --- Reuse the query with the sophisticated ResultSetMapper ---
 
             var nextCities = query.bind("id", 2L)
                     .toStream(CITY_MAPPER.mapper())
                     .toList();
-            assertEquals(2, nextCities.size());
+            assertEquals(1, nextCities.size());
         }
     }
 
@@ -140,15 +142,33 @@ class QuickStartTutorialTest extends AbstractDemo {
                             rs.getString(MetaCity.countryCode.name())))
                     .toList();
 
-            assertEquals(3, cities.size());
+            assertEquals(2, cities.size());
 
             // --- Reuse the query with the sophisticated ResultSetMapper ---
 
             var nextCities = query.bind("id", 2L)
                     .toStream(CITY_MAPPER.mapper())
                     .toList();
-            assertEquals(2, nextCities.size());
+            assertEquals(1, nextCities.size());
         }
+    }
+
+
+    /** Low-level access: Selects employees with a relation by the clean native SQL SELECT */    @Test
+    @Order(200)
+    void select_by_clean_native_query() {
+        var cities = SqlQuery.run(connection(), query -> query
+                .sql("""
+                        SELECT e.id, e.name, c.name AS "city.name"
+                        FROM employee e
+                        JOIN city c ON c.id = e.city_id
+                        WHERE e.id >= :id
+                        """)
+                .bind("id", 1L)
+                .toStream(EMPLOYEE_MAPPER.mapper())
+                .toList());
+
+        assertEquals(1, cities.size());
     }
 
     /** Configures the initial database schema using raw DDL statements. */
