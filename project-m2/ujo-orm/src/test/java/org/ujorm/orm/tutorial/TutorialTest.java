@@ -83,11 +83,27 @@ class TutorialTest extends AbstractDemo {
 
         var employees = SelectQuery.run(connection(), EMPLOYEE_EM, query -> query
                 .sql("SELECT")  // Optional call because SELECT is the default
-                .columns(true)
+                .columns(true)  // Include all direct foreign keys
                 .column(MetaEmployee.city, MetaCity.name)
                 .column(MetaEmployee.city, MetaCity.countryCode)
                 .column(MetaEmployee.boss, MetaEmployee.name)
                 .where(criterion)
+                .tail("ORDER BY", MetaEmployee.id)
+                .toList()
+        );
+
+        assertEquals(3, employees.size());
+        assertEquals("Dave", employees.get(1).getName());
+        assertEquals("Ingrid", employees.get(1).getBoss().getName());
+    }
+
+    @Test
+    @Order(212)
+    void select_by_criteron_simplified() {
+        var employees = SelectQuery.run(connection(), EMPLOYEE_EM, query -> query
+                .columns(false)         // No foreign keys
+                .column(MetaEmployee.city, MetaCity.name)
+                .where( MetaEmployee.id.whereGe(1L))
                 .tail("ORDER BY", MetaEmployee.id)
                 .toList()
         );
