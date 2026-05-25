@@ -930,7 +930,7 @@ public final class EntityManager<D, V> {
                     cols = tableModel().createInsertedColumns(emptyPk ? null : pkVal);
                     var sql = utilities.buildInsertSql(cols);
                     LOGGER.log(config.getLogSqlLevel(), sql);
-                    ps = !emptyPk
+                    ps = (!emptyPk || onInserted == null)
                             ? dbconnection.prepareStatement(sql)
                             : tableModel().jdbc().isOracleDb()
                             ? dbconnection.prepareStatement(sql, new String[]{pkColumn().name()})
