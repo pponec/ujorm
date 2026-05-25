@@ -154,7 +154,8 @@ class QuickStartTutorialTest extends AbstractDemo {
     }
 
 
-    /** Low-level access: Selects employees with a relation by the clean native SQL SELECT */    @Test
+    /** Low-level access: Selects employees with a relation by the clean native SQL SELECT */
+    @Test
     @Order(200)
     void select_by_clean_native_query() {
         var cities = SqlQuery.run(connection(), query -> query

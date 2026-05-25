@@ -103,6 +103,7 @@ class TutorialTest extends AbstractDemo {
         var employees = SelectQuery.run(connection(), EMPLOYEE_EM, query -> query
                 .columns(false)         // No foreign keys
                 .column(MetaEmployee.city, MetaCity.name)
+                .column(MetaEmployee.boss, MetaEmployee.name)
                 .where( MetaEmployee.id.whereGe(1L))
                 .tail("ORDER BY", MetaEmployee.id)
                 .toList()
@@ -146,7 +147,7 @@ class TutorialTest extends AbstractDemo {
 
     /** Performs SQL grouping and aggregation, mapping the output to a custom object array. */
     @Test
-    @Order(212)
+    @Order(215)
     void select_group_by() {
         var employees = SelectQuery.run(connection(), EMPLOYEE_EM, query -> query
                 .sql("SELECT COUNT(*),")

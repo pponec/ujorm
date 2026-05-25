@@ -7,3 +7,4 @@ a.sh
 **/*.iml
 .idea/
 _javadoc/
+/CLAUDE.md
