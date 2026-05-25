@@ -286,7 +286,7 @@ class TutorialTest extends AbstractDemo {
         var criterion = MetaEmployee.id.whereGe(1L);
 
         try (var query = new SelectQuery<>(connection(), EMPLOYEE_EM)) {
-            var employees = query.sql("SELECT")
+            var employees = query
                     .column(MetaEmployee.id)
                     .column(MetaEmployee.boss, qBossId) // Build the relation
                     .where(criterion)
