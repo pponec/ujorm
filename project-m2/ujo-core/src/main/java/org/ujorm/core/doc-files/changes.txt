@@ -2,7 +2,10 @@ The Ujorm release notes
 (Maven groupId: org.ujorm)
 *******************************
 
-release 3.0.1-SNAPSHOT (?)
+release 3.0.2-SNAPSHOT (?)
+
+release 3.0.1 (2026-05-25)
++ ORM: Fix BinaryOperator.NOT in SelectQuery SQL generation-
 
 release 3.0.0 (2026-05-15)
 + WEB: HtmlToJavaConverter generated API reordered (Appendable htmlGenerator(Appendable) as the primary entry; String htmlGenerator() convenience after); generated nested Css constants are package-private.
