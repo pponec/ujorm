@@ -87,7 +87,7 @@ List<Employee> findEmployees(Connection connection) {
 A universal approach for complex requirements. It allows writing raw SQL while maintaining safety via `bind()` and `label()`. Using the **generic mapper**, Ujorm3 can automatically populate even nested relations by matching SQL aliases to Key paths.
 
 ```java
-/** Universal native SQL with relations */
+/** Universal native SQL with relations — label() approach */
 List<Employee> findEmployees(Connection connection) {
     return SqlQuery.run(connection, query -> query
             .sql("""
@@ -107,6 +107,8 @@ List<Employee> findEmployees(Connection connection) {
 }
 ```
 
+As an alternative, the **`.column("table.col", Key...)`** mode uses the `${COLUMNS}` placeholder and lets Ujorm generate the column list — the two modes cannot be mixed within a single query. See [`QuickStartTutorialTest.select_by_column`](project-m2/ujo-orm/src/test/java/org/ujorm/orm/tutorial/QuickStartTutorialTest.java) for a full example, and `select_by_clean_native_query` in the same file for the plain dot-notation shortcut (`c.name AS "city.name"`) that the mapper resolves automatically without any registration.
+
 ---
 
 ## Detailed Operations & Relations
@@ -120,6 +122,12 @@ Building on the `SelectQuery` builder, Ujorm3 excels at querying hierarchical da
 * **LEFT JOIN:** Used for nullable attributes (default).
 
 For complex logic, use the binary-tree based **`Criterion`** for type-safe filtering. If you need to append specific SQL fragments (like `ORDER BY` or `GROUP BY`), use the **`tail()`** method.
+
+The **`.columns(boolean)`** parameter controls which entity fields are included in `SELECT`:
+* `true` — selects all fields, including FK reference IDs (required when you need to traverse or identify relations).
+* `false` — selects only non-FK primitive fields; combine with explicit `.column(Key, Key)` calls to load just the relation attributes you need.
+
+For non-entity results such as aggregations or custom projections, use `.toStream(rs -> ...)` with a lambda instead of `.toList()`.
 
 ```java
 final EntityContext CTX = EntityContext.ofDefault();
@@ -179,10 +187,10 @@ void delete(Connection connection) {
     var qBossId = MetaEmployee.as("b").key(MetaEmployee.id);
 
     try (var query = new SelectQuery<>(connection, EMPLOYEE_EM)) {
-        var employees = query.column(MetaEmployee.id)
-                .column(MetaEmployee.boss, qBossId)
-                .tail("ORDER BY", qBossId, "DESC NULLS LAST")
-                .streamMap(EMPLOYEE_MAPPER.mapper())
+        var employees = query
+                .column(MetaEmployee.id)
+                .column(MetaEmployee.boss, qBossId) // builds the self-relation
+                .tail("ORDER BY", qBossId, "DESC NULLS LAST") // subordinates first
                 .toList();
 
         employeeCrud.delete(employees.stream());
@@ -194,9 +202,13 @@ void delete(Connection connection) {
 
 These snippets are extracted from the JUnit tutorial tests demonstrating the full entity lifecycle.
 You can run and modify these tests locally:
+[QuickStartTutorialTest.java](project-m2/ujo-orm/src/test/java/org/ujorm/orm/tutorial/QuickStartTutorialTest.java)
+(low-level `SqlQuery` basics),
 [TutorialTest.java](project-m2/ujo-orm/src/test/java/org/ujorm/orm/tutorial/TutorialTest.java)
+(full lifecycle with `SelectQuery` DSL),
 and
-[AdvancedTutorialTest.java](project-m2/ujo-orm/src/test/java/org/ujorm/orm/tutorial/AdvancedTutorialTest.java),
+[AdvancedTutorialTest.java](project-m2/ujo-orm/src/test/java/org/ujorm/orm/tutorial/AdvancedTutorialTest.java)
+(transactions, locking, migrations, and failure scenarios),
 plus the
 [PATTERNS.md](project-m2/ujo-orm/src/test/java/org/ujorm/orm/tutorial/PATTERNS.md)
 index for quick pattern lookup.
@@ -359,6 +371,12 @@ The benchmark sources are open on GitHub so anyone can review, rerun, or suggest
 * **Are core components thread-safe?**<br/>
   Yes, `EntityManager` and `Meta` classes are stateless and thread-safe.
   `Crud` and `SqlQuery` are stateful and scoped to a single thread or request.
+
+* **How should I handle database transactions?**<br/>
+  Ujorm3 does not manage transactions — use the JDBC `Connection` directly.
+  Call `connection.commit()` to persist changes or `connection.rollback()` to discard them.
+  Every `Crud` and `SqlQuery` operation executes immediately on the given connection within the current transaction.
+  `AdvancedTutorialTest` covers explicit commit, rollback, atomicity, and isolation-level patterns in detail.
 
 * **Does Ujorm3 support native SQL queries?**<br/>
   Yes, for complex or database-specific queries you can use the `SqlQuery` class to execute native SQL.
