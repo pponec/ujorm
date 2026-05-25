@@ -22,6 +22,7 @@ import org.ujorm.core.DomainHandlerProvider;
 import org.ujorm.core.Key;
 import org.ujorm.core.criterion.AbstractOperator;
 import org.ujorm.core.criterion.BinaryCriterion;
+import org.ujorm.core.criterion.BinaryOperator;
 import org.ujorm.core.criterion.Criterion;
 import org.ujorm.core.criterion.ValueCriterion;
 import java.util.*;
@@ -251,14 +252,18 @@ public class SelectQueryBuilder implements AutoCloseable {
             var alias = findTableAlias(valCrn.getLeftNode());
             selectWriter.writeCondition(valCrn, alias);
         } else if (crn instanceof BinaryCriterion binCrn) {
-            if (!isRoot) {
-                selectWriter.append("(");
-            }
-            buildCriterionTree(binCrn.getLeftNode(), false);
-            selectWriter.append(SPACE).append(getSqlOperatorText(binCrn.getOperator())).append(SPACE);
-            buildCriterionTree(binCrn.getRightNode(), false);
-            if (!isRoot) {
-                selectWriter.append(")");
+            if (binCrn.getOperator() == BinaryOperator.NOT) {
+                // NOT is unary: BinaryCriterion stores the negated criterion in the right node
+                if (!isRoot) selectWriter.append("(");
+                selectWriter.append(getSqlOperatorText(BinaryOperator.NOT)).append(SPACE);
+                buildCriterionTree(binCrn.getRightNode(), false);
+                if (!isRoot) selectWriter.append(")");
+            } else {
+                if (!isRoot) selectWriter.append("(");
+                buildCriterionTree(binCrn.getLeftNode(), false);
+                selectWriter.append(SPACE).append(getSqlOperatorText(binCrn.getOperator())).append(SPACE);
+                buildCriterionTree(binCrn.getRightNode(), false);
+                if (!isRoot) selectWriter.append(")");
             }
         } else {
             throw new IllegalArgumentException("Unsupported criterion: " + crn);

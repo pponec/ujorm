@@ -169,6 +169,35 @@ class AdvancedTutorialTest extends AbstractDemo {
     }
 
     @Test
+    @Order(123)
+    void micro_not_criterion_in_select_query() {
+        var city = CITY_EM.crud(connection()).insert(new City(null, "Not-City", "CZ"));
+        EMPLOYEE_EM.crud(connection()).insert(Employee.of("Not-A", city, null));
+        EMPLOYEE_EM.crud(connection()).insert(Employee.of("Not-B", city, null));
+
+        // Simple NOT: exclude "Not-A"
+        var notA = MetaEmployee.name.whereEq("Not-A").not();
+        var result = SelectQuery.run(connection(), EMPLOYEE_EM, query -> query
+                .columns(true)
+                .where(notA.and(MetaEmployee.name.whereIn("Not-A", "Not-B")))
+                .toList());
+
+        assertEquals(1, result.size());
+        assertEquals("Not-B", result.get(0).getName());
+
+        // NOT combined with OR (negation of a composite criterion)
+        var notAorB = MetaEmployee.name.whereEq("Not-A")
+                .or(MetaEmployee.name.whereEq("Not-B"))
+                .not();
+        var empty = SelectQuery.run(connection(), EMPLOYEE_EM, query -> query
+                .columns(true)
+                .where(notAorB.and(MetaEmployee.name.whereIn("Not-A", "Not-B")))
+                .toList());
+
+        assertEquals(0, empty.size());
+    }
+
+    @Test
     @Order(124)
     void micro_enum_state_roundtrip() {
         var city = CITY_EM.crud(connection()).insert(new City(null, "Enum-City", "SK"));
