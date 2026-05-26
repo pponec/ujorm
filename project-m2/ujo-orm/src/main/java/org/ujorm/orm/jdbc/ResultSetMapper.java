@@ -33,6 +33,13 @@ import java.util.stream.Stream;
  * the flat column definitions into an internal {@code MappingNode} tree structure. This tree is
  * cached and reused for subsequent result sets that share the exact same column layout.
  * </p>
+ * <h3>Null-object Rule</h3>
+ * <p>
+ * A related object is instantiated only if at least one of its mapped columns contains a non-null value.
+ * When all columns of a joined table are {@code NULL} (e.g. due to a {@code LEFT JOIN} with no match),
+ * the relation field on the parent object is left {@code null} rather than being set to an empty instance.
+ * This rule applies recursively to the entire relation tree.
+ * </p>
  *
  * @param <D> the root domain type
  */
