@@ -142,6 +142,9 @@ public final class EntityManager<D, V> {
 
     /** Initializes TableModel if not already done; optionally switches model for multi-tenant config. */
     private void initModel(@NotNull Connection connection) {
+        if (_tableModel != null && !config.tenantPerDatabaseSchema()) {
+            return;
+        }
         final var expectedModel = tableModelService.getTableModel(getDomainClass(), connection);
         if (this._tableModel == null) {
             synchronized (utilities) {

@@ -2,7 +2,10 @@ The Ujorm release notes
 (Maven groupId: org.ujorm)
 *******************************
 
-release 3.0.2-SNAPSHOT (?)
+release 3.0.3-SNAPSHOT (?)
+
+release 3.0.2-SNAPSHOT(2026-05-26)
++ ORM: Performance optimization
 
 release 3.0.1 (2026-05-25)
 + ORM: Fix BinaryOperator.NOT in SelectQuery SQL generation-

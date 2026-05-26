@@ -127,23 +127,51 @@ public class Config {
 
 
     /**
-     * Enables multi-tenant routing for a shared {@link org.ujorm.orm.core.EntityManager}: one instance
-     * may be used with {@link java.sql.Connection}s that resolve to a different
-     * {@link org.ujorm.orm.model.TableModel} (e.g. another JDBC schema, catalog, or database product context).
-     * The ORM refreshes the cached model when the connection metadata implies a different tenant context.
+     * Controls whether the {@link org.ujorm.orm.core.EntityManager} validates and adapts to the
+     * database context (catalog, schema, database product) on every
+     * {@link org.ujorm.orm.core.EntityManager#crud(java.sql.Connection)} call.
+     *
+     * <h4>When to enable ({@code true})</h4>
      * <p>
-     * Typical deployments:
+     * <strong>Enable this parameter whenever more than one database or schema may be involved:</strong>
+     * </p>
      * <ul>
-     *   <li><b>Tenant per schema</b> — each tenant uses its own schema on the same server; connections differ by {@code schema}.</li>
-     *   <li><b>Tenant per database</b> — each tenant has its own database or catalog; connections differ by catalog/url.</li>
-     *   <li>Mixed usage is allowed; isolation is driven by how {@link org.ujorm.orm.core.TableModelService}
-     *       builds its cache key from connection metadata.</li>
+     *   <li><b>Multi-tenant applications</b> — each tenant has its own schema or database.
+     *       The ORM detects the change from connection metadata and refreshes the cached
+     *       {@link org.ujorm.orm.model.TableModel} automatically.
+     *       Typical variants: <em>tenant per schema</em> (connections differ by {@code schema})
+     *       or <em>tenant per database/catalog</em> (connections differ by catalog or JDBC URL).
+     *       Mixed deployments are supported; isolation is driven by the key that
+     *       {@link org.ujorm.orm.core.TableModelService} builds from the connection metadata.</li>
+     *   <li><b>Heterogeneous connection pools</b> — connections in the pool may resolve to
+     *       different schemas (e.g. during integration tests or dynamic routing).</li>
+     *   <li><b>Development and test environments</b> — validation catches programming mistakes
+     *       (wrong connection passed to {@code crud()}) early, with a clear
+     *       {@link IllegalStateException} instead of an obscure SQL failure.</li>
      * </ul>
-     * The default is {@code false}. When {@code false}, reusing one {@code EntityManager} with another
-     * resolved table model triggers {@link IllegalStateException}.
+     *
+     * <h4>Default: {@code false} — no validation, maximum performance</h4>
+     * <p>
+     * After the first {@code crud()} call initializes the internal
+     * {@link org.ujorm.orm.model.TableModel}, all subsequent calls skip the connection metadata
+     * inspection entirely. This eliminates per-call overhead (JDBC metadata reads, string
+     * allocation, cache lookup), which is measurable on fast in-memory databases such as H2.
+     * The trade-off is that passing a connection to a wrong database or schema produces a plain
+     * SQL error instead of a descriptive {@link IllegalStateException}.
+     * </p>
+     *
+     * <h4>Performance note</h4>
+     * <p>
+     * When {@code true}, each {@code crud()} call inspects JDBC connection metadata
+     * ({@code getCatalog()}, {@code getSchema()}, {@code getDatabaseProductName()},
+     * {@code getIdentifierQuoteString()}). These values are typically cached by the driver,
+     * so the overhead is small but non-zero. For single-context applications on fast databases
+     * the default {@code false} is the better choice.
+     * </p>
      *
      * @see #tenantPerDatabaseSchema()
      * @see org.ujorm.orm.core.EntityManager
+     * @see org.ujorm.orm.core.TableModelService
      */
     public static final Key<Boolean> tenantPerDatabaseSchema = meta.key("tenantPerDatabaseSchema", false);
 
