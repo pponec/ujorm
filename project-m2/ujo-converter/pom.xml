@@ -7,7 +7,7 @@
 
     <groupId>org.ujorm</groupId>
     <artifactId>ujo-converter</artifactId>
-    <version>3.0.2-SNAPSHOT</version>
+    <version>3.0.2</version>
     <packaging>jar</packaging>
     <name>ujo-converter</name>
     <description>Convert HTML code to Java Elements</description>
@@ -34,7 +34,7 @@
     </scm>
 
     <properties>
-        <revision>3.0.2-SNAPSHOT</revision>
+        <revision>3.0.2</revision>
         <java.version>17</java.version>
         <maven.compiler.target>${java.version}</maven.compiler.target>
         <maven.compiler.source>${java.version}</maven.compiler.source>
@@ -51,12 +51,12 @@
         <dependency>
             <groupId>org.ujorm</groupId>
             <artifactId>ujo-tools</artifactId>
-            <version>3.0.2-SNAPSHOT</version>
+            <version>3.0.2</version>
         </dependency>
         <dependency>
             <groupId>org.ujorm</groupId>
             <artifactId>ujo-web</artifactId>
-            <version>3.0.2-SNAPSHOT</version>
+            <version>3.0.2</version>
         </dependency>
 
         <!-- Html5 Parser -->
@@ -86,7 +86,7 @@
         <dependency>
             <groupId>org.ujorm</groupId>
             <artifactId>ujo-tools</artifactId>
-            <version>3.0.2-SNAPSHOT</version>
+            <version>3.0.2</version>
             <type>test-jar</type>
             <scope>test</scope>
         </dependency>
