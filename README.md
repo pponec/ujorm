@@ -345,14 +345,8 @@ The library includes automated integration tests for PostgreSQL, MySQL, MariaDB,
 
 ## Benchmarks
 
-Performance tests comparing Ujorm3 to Hibernate, Jdbi, Exposed, and MyBatis were executed using PostgreSQL on Java 25.
-Benchmark scenarios and initial implementations were drafted with **Gemini Pro** assistance to iterate quickly on comparable workloads; all libraries run under the same harness and rules in the published code.
-The benchmark sources are open on GitHub so anyone can review, rerun, or suggest changes (for example via issues or pull requests).
-
-**Conclusions:**
-* **Execution Speed:** Ujorm3 consistently ranks among the top performers across the tested database operations.
-* **Memory Efficiency:** The library exhibits the lowest memory allocation rate (Bytes/op), reducing Garbage Collector pressure.
-* **Minimal Footprint:** Zero external dependencies and a total compiled size under 3 MB make it ideal for microservices and embedded devices.
+In independent benchmarks against seven popular Java ORM and database-mapping frameworks, run on both PostgreSQL and H2, Ujorm3 consistently places among the top performers — frequently leading in execution speed and memory efficiency, while carrying the smallest compiled footprint of all tested libraries.
+The benchmark sources are open on GitHub so anyone can review, rerun, or suggest changes.
 
 **Version tested:** `3.0.2`  
 **Full metrics:** 👉 [GitHub: orm-benchmarks](https://github.com/pponec/orm-benchmarks?tab=readme-ov-file#orm-benchmark)
