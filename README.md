@@ -30,7 +30,7 @@ To maintain a high utility-to-code ratio and minimize bugs, Ujorm3 intentionally
 </div>
 
 In independent benchmarks against seven popular Java ORM and database-mapping frameworks, run on both PostgreSQL and H2, Ujorm3 consistently places among the top performers — frequently leading in execution speed and memory efficiency, while carrying the smallest compiled footprint of all tested libraries.
-Full metrics and methodology are available at 👉 [GitHub: orm-benchmarks](https://github.com/pponec/orm-benchmarks?tab=readme-ov-file#orm-benchmark) (version tested: `3.0.2`).
+Full metrics and methodology are available at 👉 [GitHub: orm-benchmarks](https://github.com/pponec/orm-benchmarks?tab=readme-ov-file#orm-benchmark).
 
 ---
 
