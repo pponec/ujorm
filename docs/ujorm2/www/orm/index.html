@@ -1,26 +1,85 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<!--
-Design by Free CSS Templates
-http://www.freecsstemplates.org
-Released for free under a Creative Commons Attribution 2.5 License
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="refresh" content="0; url=https://github.com/pponec/ujorm#-ujorm3-library">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Přesměrování…</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-Design Name: Firming
-Description: A two-column, fixed-width design suitable for small websites and blogs.
-Version    : 1.0
-Released   : 20080129
--->
-<html xmlns="http://www.w3.org/1999/xhtml">
-  <head>
-    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>The Ujorm</title>
-    <link rel="shortcut icon" href="images/favicon2.ico" type="image/x-icon" />
-    <meta name="keywords" content="ORM, UJO, Ujorm, Java, database, JDBC, open source, performance, benchmark, object relation mapping, type safe query, " />
-    <meta name="description" content="Object-relation mapping for the Java language" />
-    <link href="../images/style.css" rel="stylesheet" type="text/css" media="screen" />
-    <link href="../images/style2.css" rel="stylesheet" type="text/css" media="screen" />
-    <meta http-equiv="refresh" content="0;url=.." />
-  </head>
-  <body>
-      <p>&nbsp;</p>
-  </body>
+        :root {
+          --ink:       #1a1a18;
+          --ink-muted: #6b6b65;
+          --surface:   #faf9f6;
+          --accent:    #2d5fa6;
+          --accent-lt: #e8eef8;
+        }
+
+        body {
+          font-family: 'DM Sans', sans-serif;
+          font-weight: 400;
+          font-size: 15px;
+          line-height: 1.75;
+          color: var(--ink);
+          background: var(--surface);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          min-height: 100vh;
+        }
+
+        .box {
+          text-align: center;
+          padding: 3rem 2rem;
+          animation: fadeUp .45s ease both;
+        }
+
+        .label {
+          font-size: 11px;
+          letter-spacing: .15em;
+          text-transform: uppercase;
+          color: var(--accent);
+          font-weight: 500;
+          margin-bottom: .75rem;
+        }
+
+        h1 {
+          font-family: 'DM Serif Display', serif;
+          font-size: clamp(1.6rem, 4vw, 2.4rem);
+          font-weight: 400;
+          line-height: 1.2;
+          margin-bottom: 1rem;
+        }
+
+        p {
+          color: var(--ink-muted);
+          margin-bottom: 1.5rem;
+        }
+
+        a {
+          color: var(--accent);
+          text-decoration: none;
+          border-bottom: 1px solid var(--accent-lt);
+          transition: border-color .2s;
+        }
+        a:hover { border-color: var(--accent); }
+
+        @keyframes fadeUp {
+          from { opacity: 0; transform: translateY(12px); }
+          to   { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+<div class="box">
+    <div class="label">Přesměrování</div>
+    <h1>Přecházíte na novou adresu…</h1>
+    <p>Pokud se stránka nenačte automaticky, klikněte na odkaz níže.</p>
+    <a href="https://github.com/pponec/ujorm#-ujorm3-library">profi.ponec.net →</a>
+</div>
+<script>window.location.replace("https://github.com/pponec/ujorm#-ujorm3-library");</script>
+</body>
 </html>
