@@ -19,6 +19,7 @@ class ConfigTest {
         System.clearProperty("org.ujorm.maxCacheSize");
         System.clearProperty("org.ujorm.printSql");
         System.clearProperty("org.ujorm.batchSize");
+        System.clearProperty("org.ujorm.logSqlLevel");
         System.clearProperty("org.ujorm.testOnly");
     }
 
