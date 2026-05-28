@@ -359,7 +359,7 @@ public abstract class AbstractSqlQuery<T extends AbstractSqlQuery<T>> implements
     protected String buildSql(List<ParamValue> sqlValues, boolean includingValues) {
         final var sqlBuffer = getWriter(true);
         final var matcher = SQL_MARK.matcher(sqlTemplate);
-        final var missingKeys = new HashSet<String>();
+        List<String> missingKeys = null;
 
         while (matcher.find()) {
             final var key = matcher.group(1);
@@ -368,15 +368,20 @@ public abstract class AbstractSqlQuery<T extends AbstractSqlQuery<T>> implements
                 matcher.appendReplacement(sqlBuffer, "");
                 for (int i = 0, max = param.values().size(); i < max; i++) {
                     if (i > 0) sqlBuffer.append(',');
-                    sqlBuffer.append(includingValues ? "[" + param.getValue(i) + "]" : "?");
+                    if (includingValues) {
+                        sqlBuffer.append('[').append(param.getValue(i)).append(']');
+                    } else {
+                        sqlBuffer.append('?');
+                    }
                     sqlValues.add(i == 0 ? param : new ParamValue(param.jdbcType(), Array.of(param.getValue(i))));
                 }
             } else {
                 matcher.appendReplacement(sqlBuffer, Matcher.quoteReplacement(matcher.group()));
+                if (missingKeys == null) missingKeys = new ArrayList<>(4);
                 missingKeys.add(key);
             }
         }
-        if (!includingValues && !missingKeys.isEmpty()) {
+        if (!includingValues && missingKeys != null) {
             throw new SqlException(null, "Missing SQL parameter: " + missingKeys);
         }
         matcher.appendTail(sqlBuffer);

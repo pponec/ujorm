@@ -5,7 +5,6 @@ import org.jetbrains.annotations.Nullable;
 import org.ujorm.core.Key;
 import org.ujorm.core.KeyInfo;
 
-import java.util.Arrays;
 import java.util.Objects;
 
 /**
@@ -123,7 +122,7 @@ public final class ComposedKeyImpl<T, V> implements Key<T, V>, ComposedKey<T, V>
 
     @Override
     public int hashCode() {
-        return Objects.hash(Arrays.hashCode(keyPath), name);
+        return 31 * domainClass().hashCode() + name.hashCode();
     }
 
     // --- STATIC METHODS ---
