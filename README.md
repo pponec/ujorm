@@ -29,8 +29,8 @@ To maintain a high utility-to-code ratio and minimize bugs, Ujorm3 intentionally
 <img src="docs/images/benchmark-graph.svg" alt="Benchmark graph" width="500" />
 </div>
 
-Ujorm3 delivers highly competitive performance compared to popular ORM frameworks while consistently maintaining a minimal memory footprint.
-Detailed results and methodology are available in the [Benchmarks](#benchmarks) section.
+In independent benchmarks against seven popular Java ORM and database-mapping frameworks, run on both PostgreSQL and H2, Ujorm3 consistently places among the top performers — frequently leading in execution speed and memory efficiency, while carrying the smallest compiled footprint of all tested libraries.
+Full metrics and methodology are available at 👉 [GitHub: orm-benchmarks](https://github.com/pponec/orm-benchmarks?tab=readme-ov-file#orm-benchmark) (version tested: `3.0.2`).
 
 ---
 
@@ -46,7 +46,6 @@ Detailed results and methodology are available in the [Benchmarks](#benchmarks) 
 * [Generated Meta Models](#generated-meta-models)
 * [Configuration](#configuration)
 * [Maven Dependencies & Setup](#maven-dependencies--setup)
-* [Benchmarks](#benchmarks)
 * [FAQ](#faq)
 * [Feedback & Contributions](#feedback--contributions)
 * [Related Links](#related-links)
@@ -340,16 +339,6 @@ In addition, the project includes automated integration tests for basic CRUD ope
 **Note for contributors:** Integration tests require a running Docker daemon and up to **6 GB** of local disk space for the database images. You can execute these tests using the provided Bash script: `bin/docker-integration-test.sh`.
 To enable the Meta Processor, configure the `maven-compiler-plugin`.
 The library includes automated integration tests for PostgreSQL, MySQL, MariaDB, Oracle, and MS SQL Server via Testcontainers.
-
----
-
-## Benchmarks
-
-In independent benchmarks against seven popular Java ORM and database-mapping frameworks, run on both PostgreSQL and H2, Ujorm3 consistently places among the top performers — frequently leading in execution speed and memory efficiency, while carrying the smallest compiled footprint of all tested libraries.
-The benchmark sources are open on GitHub so anyone can review, rerun, or suggest changes.
-
-**Version tested:** `3.0.2`  
-**Full metrics:** 👉 [GitHub: orm-benchmarks](https://github.com/pponec/orm-benchmarks?tab=readme-ov-file#orm-benchmark)
 
 ---
 
