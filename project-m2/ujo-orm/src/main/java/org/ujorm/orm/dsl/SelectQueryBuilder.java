@@ -130,6 +130,7 @@ public class SelectQueryBuilder implements AutoCloseable {
     private String resolveJoinsAndGetAlias(@NotNull Key<?, ?> keyPath) {
         var currentAlias = this.baseTableAlias != null ? this.baseTableAlias : "";
         var keyNameCounts = new HashSet<String>();
+        var pathRequired = true;
 
         for (var i = 0; i < keyPath.pathSize() - 1; i++) {
             var relKey = keyPath.pathItem(i);
@@ -141,7 +142,7 @@ public class SelectQueryBuilder implements AutoCloseable {
 
             if (!joinMap.containsKey(subPath)) {
                 var targetClass = relKey.type();
-                var isReq = relKey.info().required();
+                var isReq = pathRequired && relKey.info().required();
                 var nextKey = keyPath.pathItem(i + 1);
 
                 var targetAlias = !nextKey.tableAlias().isEmpty()
@@ -160,7 +161,9 @@ public class SelectQueryBuilder implements AutoCloseable {
             }
 
             keyNameCounts.add(relKeyName);
-            currentAlias = joinMap.get(subPath).targetAlias();
+            var existingJoin = joinMap.get(subPath);
+            pathRequired = existingJoin.required();
+            currentAlias = existingJoin.targetAlias();
         }
 
         var finalKey= keyPath.pathItem(-1);
@@ -218,7 +221,7 @@ public class SelectQueryBuilder implements AutoCloseable {
         selectWriter.writeTableName(this.baseTableAlias, entityClass);
     }
 
-    /** Inner/outer joins according to isRequired method */
+    /** INNER JOIN if the entire path from root is required; LEFT JOIN if any ancestor was optional. */
     public void buildJoins() {
         for (var join : joins) {
             selectWriter.append(NEW_LINE).append(join.required() ? "JOIN " : "LEFT JOIN ");
@@ -361,7 +364,7 @@ public class SelectQueryBuilder implements AutoCloseable {
             String targetAlias,
             /** Gets the target class. */
             Class<?> targetClass,
-            /** Gets the required flag. */
+            /** True only if every FK in the path from root to this join is non-nullable. */
             boolean required
     ) {}
 

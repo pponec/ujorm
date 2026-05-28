@@ -327,7 +327,7 @@ class SelectQueryBuilderTest {
         assertEquals("FROM [Employee] e"                              , sql.next());
         assertEquals("JOIN [City] ec ON [ec.id] = [e.city]"           , sql.next());
         assertEquals("LEFT JOIN [Employee] b ON [b.id] = [e.boss]"    , sql.next());
-        assertEquals("JOIN [City] bc ON [bc.id] = [b.city]"           , sql.next());
+        assertEquals("LEFT JOIN [City] bc ON [bc.id] = [b.city]"      , sql.next());
         assertEquals("WHERE [ec.name] = 'Prague' AND [bc.name] = 'London'", sql.next());
     }
     // --- CLASS ---
