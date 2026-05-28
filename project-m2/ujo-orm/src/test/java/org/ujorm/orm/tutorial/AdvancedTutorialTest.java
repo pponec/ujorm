@@ -801,27 +801,28 @@ class AdvancedTutorialTest extends AbstractDemo {
     @Test
     @Order(540)
     void boundary_left_join_chain_does_not_drop_bossless_rows() {
-        var city = CITY_EM.crud(connection()).insert(new City(null, "Chain-City", "CZ"));
         var crud = EMPLOYEE_EM.crud(connection());
-        var boss = crud.insert(Employee.of("Chain-Boss", city, null));
-        crud.insert(Employee.of("Chain-Worker", city, boss));
-        crud.insert(Employee.of("Chain-NoBoss", city, null));
+
+        var city = CITY_EM.crud(connection()).insert(new City(null, "City", "CZ"));
+        var boss = crud.insert(Employee.of("Boss", city, null));
+        var worker = crud.insert(Employee.of("Worker", city, boss));
+        var noBoss = crud.insert(Employee.of("NoBoss", city, null));
 
         // employee → boss (LEFT JOIN) → boss.city (was wrongly INNER JOIN before the fix)
-        // Without the fix, Chain-NoBoss and Chain-Boss were silently dropped from the result.
+        // Without the fix, NoBoss and Boss were silently dropped from the result.
         var result = SelectQuery.run(connection(), EMPLOYEE_EM, query -> query
                 .columns(true)
                 .column(MetaEmployee.boss, MetaEmployee.city, MetaCity.name)
-                .where(MetaEmployee.name.whereIn("Chain-Boss", "Chain-Worker", "Chain-NoBoss"))
+                .where(MetaEmployee.id.whereIn(boss.getId(), worker.getId(), noBoss.getId()))
                 .tail("ORDER BY", MetaEmployee.name)
                 .toList());
 
         assertEquals(3, result.size(), "All employees must appear — bossless rows must not be dropped");
-        var noBoss = result.stream().filter(e -> "Chain-NoBoss".equals(e.getName())).findFirst().orElseThrow();
-        assertNull(noBoss.getBoss(), "Employee without a boss must map to null");
-        var worker = result.stream().filter(e -> "Chain-Worker".equals(e.getName())).findFirst().orElseThrow();
-        assertNotNull(worker.getBoss(), "Employee with a boss must have boss populated");
-        assertNotNull(worker.getBoss().getCity(), "Boss city must be populated via multi-level LEFT JOIN chain");
+        var noBoss2 = result.stream().filter(e -> noBoss.getName().equals(e.getName())).findFirst().orElseThrow();
+        assertNull(noBoss2.getBoss(), "Employee without a boss must map to null");
+        var worker2 = result.stream().filter(e -> worker.getName().equals(e.getName())).findFirst().orElseThrow();
+        assertNotNull(worker2.getBoss(), "Employee with a boss must have boss populated");
+        assertNotNull(worker2.getBoss().getCity(), "Boss city must be populated via multi-level LEFT JOIN chain");
     }
 
     private int employeeCount() {
