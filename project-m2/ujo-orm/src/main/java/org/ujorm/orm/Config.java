@@ -9,7 +9,9 @@ import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.function.Function;
+import java.util.logging.Handler;
 import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * ORM Configuration.
@@ -56,7 +58,14 @@ import java.util.logging.Level;
  * <p>
  * Even when the ORM emits a log record, it appears only if JUL accepts that severity: statements routed
  * through {@link org.ujorm.orm.core.EntityManager} or {@link org.ujorm.tools.jdbc.AbstractSqlQuery} require
- * matching logger and handler levels (for example in {@code logging.properties}) at or below {@link #logSqlLevel}.
+ * matching logger and handler levels at or below {@link #logSqlLevel}.
+ * </p>
+ * <p>
+ * <b>Zero-configuration logging for tests:</b> add JUL properties to {@value #CONFIG_FILE}
+ * in {@code src/test/resources/} and this class will apply them automatically on first use —
+ * no JVM argument or Maven Surefire setup required.
+ * To route SQL output to {@code System.out} (so that {@code ./mvnw test | tee log.txt} captures it),
+ * use {@link org.ujorm.tools.logging.UjormConsoleHandler} as the handler.
  * </p>
  */
 @Log
@@ -65,6 +74,10 @@ public class Config {
     private static final String PREFIX = "org.ujorm.";
     private static final String CONFIG_FILE = "ujorm-config.properties";
     private static final KeyProvider meta = new KeyProvider();
+
+    static {
+        JulConfig.init();
+    }
 
     // --- Start the public list of the configuration parameters ---
 
@@ -179,6 +192,7 @@ public class Config {
 
     /** A technical parameter for the jUnit test only. The default value is an empty string. */
     public static final Key<String> testOnly = meta.key("testOnly", "");
+
 
     /** Object state stored in an array */
     private final Object[] values = new Object[meta.keys.size()];
@@ -362,6 +376,68 @@ public class Config {
         }
     }
 
+    /**
+     * Reads {@value #CONFIG_FILE} from the classpath and applies any JUL logging properties it contains.
+     * Runs once at class load via the outer {@code static} block.
+     * Supported properties alongside the standard {@code org.ujorm.*} keys:
+     * <ul>
+     *   <li>{@code handlers} — comma-separated handler class names added to the root logger</li>
+     *   <li>{@code <logger-name>.level} — level for a specific logger</li>
+     *   <li>{@code java.util.logging.SimpleFormatter.format} — log line format</li>
+     * </ul>
+     * Handler classes are loaded via {@code Config.class.getClassLoader()}, which avoids
+     * the {@link java.util.logging.LogManager} lazy-loading path that uses the system
+     * classloader and fails in forked Maven Surefire JVMs.
+     *
+     * @see org.ujorm.tools.logging.UjormConsoleHandler
+     */
+    private static class JulConfig {
+
+        static void init() {
+            try (var stream = Config.class.getResourceAsStream("/" + CONFIG_FILE)) {
+                if (stream == null) return;
+                var props = new Properties();
+                props.load(stream);
+                apply(props);
+            } catch (Exception e) {
+                // Logging config is best-effort — never block startup
+            }
+        }
+
+        @SuppressWarnings("unchecked")
+        private static void apply(Properties props) throws Exception {
+            // SimpleFormatter reads this system property at construction time
+            var format = props.getProperty("java.util.logging.SimpleFormatter.format");
+            if (format != null) {
+                System.setProperty("java.util.logging.SimpleFormatter.format", format);
+            }
+
+            // Install handlers on root logger using Config's own classloader (not the system CL)
+            var handlersValue = props.getProperty("handlers", "").trim();
+            if (!handlersValue.isEmpty()) {
+                var root = Logger.getLogger("");
+                for (var h : root.getHandlers()) root.removeHandler(h);
+                var cl = Config.class.getClassLoader();
+                for (var name : handlersValue.split("[,\\s]+")) {
+                    name = name.trim();
+                    if (!name.isEmpty()) {
+                        var handlerClass = (Class<? extends Handler>) Class.forName(name, true, cl);
+                        root.addHandler(handlerClass.getDeclaredConstructor().newInstance());
+                    }
+                }
+            }
+
+            // Apply individual logger levels (e.g. org.ujorm.tools.jdbc.AbstractSqlQuery.level = INFO)
+            for (var entry : props.entrySet()) {
+                var key = ((String) entry.getKey()).trim();
+                if (key.endsWith(".level")) {
+                    var loggerName = key.substring(0, key.length() - ".level".length());
+                    Logger.getLogger(loggerName).setLevel(Level.parse(((String) entry.getValue()).trim()));
+                }
+            }
+        }
+    }
+
     /** Build an immutable object with default arguments */
     public static Config ofDefault() {
         return new Config().lock();
@@ -375,4 +451,5 @@ public class Config {
                 .setValue(Config.logConfigValues, true);
         return result.lock();
     }
+
 }

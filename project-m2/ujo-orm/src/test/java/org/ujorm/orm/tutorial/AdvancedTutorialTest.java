@@ -798,6 +798,33 @@ class AdvancedTutorialTest extends AbstractDemo {
         assertThrows(RuntimeException.class, () -> EMPLOYEE_EM.crud(connection()).findById(employee.getId()).orElseThrow());
     }
 
+    @Test
+    @Order(540)
+    void boundary_left_join_chain_does_not_drop_bossless_rows() {
+        var crud = EMPLOYEE_EM.crud(connection());
+
+        var city = CITY_EM.crud(connection()).insert(new City(null, "City", "CZ"));
+        var boss = crud.insert(Employee.of("Boss", city, null));
+        var worker = crud.insert(Employee.of("Worker", city, boss));
+        var noBoss = crud.insert(Employee.of("NoBoss", city, null));
+
+        // employee → boss (LEFT JOIN) → boss.city (was wrongly INNER JOIN before the fix)
+        // Without the fix, NoBoss and Boss were silently dropped from the result.
+        var result = SelectQuery.run(connection(), EMPLOYEE_EM, query -> query
+                .columns(true)
+                .column(MetaEmployee.boss, MetaEmployee.city, MetaCity.name)
+                .where(MetaEmployee.id.whereIn(boss.getId(), worker.getId(), noBoss.getId()))
+                .tail("ORDER BY", MetaEmployee.name)
+                .toList());
+
+        assertEquals(3, result.size(), "All employees must appear — bossless rows must not be dropped");
+        var noBoss2 = result.stream().filter(e -> noBoss.getName().equals(e.getName())).findFirst().orElseThrow();
+        assertNull(noBoss2.getBoss(), "Employee without a boss must map to null");
+        var worker2 = result.stream().filter(e -> worker.getName().equals(e.getName())).findFirst().orElseThrow();
+        assertNotNull(worker2.getBoss(), "Employee with a boss must have boss populated");
+        assertNotNull(worker2.getBoss().getCity(), "Boss city must be populated via multi-level LEFT JOIN chain");
+    }
+
     private int employeeCount() {
         return SqlQuery.run(connection(), query -> query
                 .sql("SELECT COUNT(*) FROM employee")
