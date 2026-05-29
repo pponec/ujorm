@@ -4,7 +4,14 @@ The Ujorm release notes
 
 release 3.0.3-SNAPSHOT (?)
 
-release 3.0.2-SNAPSHOT(2026-05-26)
+release 3.0.3 (2026-05-29)
++ ORM: Fix SelectQueryBuilder to propagate LEFT JOIN through multi-level relation chains; a NOT NULL FK hanging off a LEFT-joined table now correctly uses LEFT JOIN instead of INNER JOIN, preventing silent row drops.
++ ORM: Config auto-loads JUL handler and logger-level properties from ujorm-config.properties on the classpath at class load — no JVM argument or Maven Surefire setup required.
++ ORM: Performance optimization in AbstractSqlQuery and ComposedKeyImpl.
++ ORM: JavaDoc extended for ResultSetMapper.
++ TOOLS: New UjormConsoleHandler routes JUL output to System.out so that SQL statements are visible with ./mvnw test | tee log.txt.
+
+release 3.0.2(2026-05-26)
 + ORM: Performance optimization
 
 release 3.0.1 (2026-05-25)
