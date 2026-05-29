@@ -28,6 +28,8 @@ import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
@@ -102,7 +104,14 @@ class TableModelBuilderTest {
     void testGetDbVendorThrowsException() throws SQLException {
         when(mockConnection.getMetaData()).thenThrow(new SQLException("Mock DB Error"));
 
-        assertEquals(DatabaseVendor.DEFAULT, builder.getDbVendor(mockConnection));
+        var logger = Logger.getLogger(TableModelBuilder.class.getName());
+        var originalLevel = logger.getLevel();
+        logger.setLevel(Level.OFF);
+        try {
+            assertEquals(DatabaseVendor.DEFAULT, builder.getDbVendor(mockConnection));
+        } finally {
+            logger.setLevel(originalLevel);
+        }
     }
 
     @Test
