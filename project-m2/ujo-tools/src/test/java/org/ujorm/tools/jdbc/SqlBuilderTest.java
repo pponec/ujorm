@@ -258,7 +258,7 @@ class SqlBuilderTest extends AbstractJdbcConnector {
             var ex = assertThrows(org.ujorm.tools.jdbc.SQLException.class, () -> {
                 query.toStream(t -> t).count();
             });
-            assertEquals("Missing SQL parameter: [code, id]", ex.getMessage());
+            assertEquals("Missing SQL parameter: [id, code]", ex.getMessage());
 
             System.out.println("ASSIGNED PARAMS");
             query.bind("id", 10);
