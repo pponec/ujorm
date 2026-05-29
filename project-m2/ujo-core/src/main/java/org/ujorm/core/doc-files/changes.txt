@@ -2,7 +2,7 @@ The Ujorm release notes
 (Maven groupId: org.ujorm)
 *******************************
 
-release 3.0.3-SNAPSHOT (?)
+release 3.0.4-SNAPSHOT (?)
 
 release 3.0.3 (2026-05-29)
 + ORM: Fix SelectQueryBuilder to propagate LEFT JOIN through multi-level relation chains; a NOT NULL FK hanging off a LEFT-joined table now correctly uses LEFT JOIN instead of INNER JOIN, preventing silent row drops.
