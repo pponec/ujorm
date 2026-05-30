@@ -5,37 +5,27 @@
     <meta http-equiv="refresh" content="0; url=https://github.com/pponec/ujorm#-ujorm3-library">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Redirecting…</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
     <style>
-        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
         :root {
-          --ink:       #1a1a18;
-          --ink-muted: #6b6b65;
-          --surface:   #faf9f6;
-          --accent:    #2d5fa6;
-          --accent-lt: #e8eef8;
+          --ink:    #1a1a18;
+          --muted:  #6b6b65;
+          --accent: #2d5fa6;
         }
 
         body {
-          font-family: 'DM Sans', sans-serif;
-          font-weight: 400;
+          font-family: system-ui, sans-serif;
           font-size: 15px;
           line-height: 1.75;
           color: var(--ink);
-          background: var(--surface);
+          background: #faf9f6;
           display: flex;
           align-items: center;
           justify-content: center;
           min-height: 100vh;
+          margin: 0;
         }
 
-        .box {
-          text-align: center;
-          padding: 3rem 2rem;
-          animation: fadeUp .45s ease both;
-        }
+        .box { text-align: center; padding: 3rem 2rem; }
 
         .label {
           font-size: 11px;
@@ -46,31 +36,11 @@
           margin-bottom: .75rem;
         }
 
-        h1 {
-          font-family: 'DM Serif Display', serif;
-          font-size: clamp(1.6rem, 4vw, 2.4rem);
-          font-weight: 400;
-          line-height: 1.2;
-          margin-bottom: 1rem;
-        }
+        h1 { font-size: clamp(1.6rem, 4vw, 2.4rem); line-height: 1.2; margin: 0 0 1rem; }
+        p   { color: var(--muted); margin: 0 0 1.5rem; }
 
-        p {
-          color: var(--ink-muted);
-          margin-bottom: 1.5rem;
-        }
-
-        a {
-          color: var(--accent);
-          text-decoration: none;
-          border-bottom: 1px solid var(--accent-lt);
-          transition: border-color .2s;
-        }
+        a { color: var(--accent); text-decoration: none; border-bottom: 1px solid #e8eef8; transition: border-color .2s; }
         a:hover { border-color: var(--accent); }
-
-        @keyframes fadeUp {
-          from { opacity: 0; transform: translateY(12px); }
-          to   { opacity: 1; transform: translateY(0); }
-        }
     </style>
 </head>
 <body>
@@ -80,6 +50,9 @@
     <p>If the page does not load automatically, click
         <a href="https://github.com/pponec/ujorm#-ujorm3-library">the link →</a>.</p>
 </div>
-<script>window.location.replace("https://github.com/pponec/ujorm#-ujorm3-library");</script>
+<script>
+  const m = document.querySelector('meta[http-equiv="refresh"]');
+  if (m) window.location.replace(m.content.replace(/^[^;]*;\s*url=/i, '').trim());
+</script>
 </body>
 </html>
