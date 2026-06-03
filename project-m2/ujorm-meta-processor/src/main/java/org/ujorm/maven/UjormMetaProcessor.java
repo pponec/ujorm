@@ -12,12 +12,16 @@ import java.util.HashSet;
 import java.util.Set;
 import static org.ujorm.maven.UjormMetaProcessor.Const.*;
 
-/** Generates static metamodel helper classes for JPA {@code @Entity} / {@code @Table} types during compilation (APT). */
+/**
+ * Generates static metamodel helper classes during compilation (APT).
+ * Triggered by {@code @Entity} / {@code @Table} (JPA/Jakarta) and by {@code @Domain} (Ujorm).
+ */
 @SupportedAnnotationTypes({
         "javax.persistence.Entity",
         "javax.persistence.Table",
         "jakarta.persistence.Entity",
-        "jakarta.persistence.Table"
+        "jakarta.persistence.Table",
+        "org.ujorm.annotation.Domain"
 })
 @SupportedOptions({
         PARAM_PREFIX,
@@ -84,10 +88,10 @@ public class UjormMetaProcessor extends AbstractProcessor {
         return false;
     }
 
-    /** Recursively scans elements to find nested classes annotated with @Entity or @Table. */
+    /** Recursively scans elements to find nested classes annotated with a trigger annotation. */
     private void scanElementRecursive(Element element) {
         if (element.getKind() == ElementKind.CLASS || element.getKind() == ElementKind.RECORD) {
-            if (hasEntityOrTableAnnotation(element)) {
+            if (hasTriggerAnnotation(element)) {
                 processClassElement((TypeElement) element);
             }
             for (var enclosed : element.getEnclosedElements()) {
@@ -96,11 +100,11 @@ public class UjormMetaProcessor extends AbstractProcessor {
         }
     }
 
-    /** Manually checks if the element has @Entity or @Table. */
-    private boolean hasEntityOrTableAnnotation(Element element) {
+    /** Returns {@code true} if the element carries {@code @Entity}, {@code @Table}, or {@code @Domain}. */
+    private boolean hasTriggerAnnotation(Element element) {
         for (var mirror : element.getAnnotationMirrors()) {
             var annoName = mirror.getAnnotationType().asElement().getSimpleName().toString();
-            if (annoName.equals("Entity") || annoName.equals("Table")) {
+            if (annoName.equals("Entity") || annoName.equals("Table") || annoName.equals("Domain")) {
                 return true;
             }
         }
