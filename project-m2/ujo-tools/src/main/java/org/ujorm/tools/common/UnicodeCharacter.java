@@ -154,7 +154,7 @@ public final class UnicodeCharacter
      * @see #charCount(String) returns a limit of the index.
      */
     public static UnicodeCharacter charAt(final int index, final CharSequence text) {
-        Objects.requireNonNull(text == null, "text is required");
+        Objects.requireNonNull(text, "text is required");
         final var idx = index < 0 ? charCount(text.toString()) + index : index;
         final var offset = Character.offsetByCodePoints(text, 0, idx);
         final var codePoint = Character.codePointAt(text, offset);
