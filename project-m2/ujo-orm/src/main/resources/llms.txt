@@ -1,0 +1,296 @@
+# ujo-orm
+
+> Ujorm3 ORM engine for Java 17+. Maps database rows to JavaBeans or Records using clean SQL.
+> No lazy loading, M:1 relations only, no entity lifecycle management, no magic proxies.
+> Runtime bytecode compilation achieves performance comparable to hand-written JDBC.
+
+## Maven
+
+```xml
+<dependencies>
+    <dependency>
+        <groupId>org.ujorm</groupId>
+        <artifactId>ujo-core</artifactId>
+        <version>3.0.4-SNAPSHOT</version>
+    </dependency>
+    <dependency>
+        <groupId>org.ujorm</groupId>
+        <artifactId>ujo-orm</artifactId>
+        <version>3.0.4-SNAPSHOT</version>
+    </dependency>
+</dependencies>
+```
+
+For type-safe `Meta*` classes, also configure the APT (see `ujorm-meta-processor/llms.txt`).
+
+## Design Philosophy
+
+- **No lazy loading** — fetch relations explicitly via JOIN or separate query.
+- **M:1 relations only** — for 1:M, query from the "many" side.
+- **No transaction management** — use `Connection.commit()` / `rollback()` directly.
+- **No entity caching** — `EntityManager` and `Meta*` classes cache only metadata.
+- **Native SQL** for advanced queries via `SqlQuery`.
+
+---
+
+## Step 1: EntityContext — Bootstrap
+
+`org.ujorm.orm.EntityContext` is the application-scoped singleton container.
+Create once at startup and reuse:
+
+```java
+// Default setup — SQL logged at FINE level (invisible without config)
+EntityContext CTX = EntityContext.ofDefault();
+
+// Log SQL at INFO level to stdout (useful during development)
+EntityContext CTX = EntityContext.ofSqlInfoWithParams(false); // false = no param values
+EntityContext CTX = EntityContext.ofSqlInfoWithParams(true);  // true  = include param values
+
+// Custom config
+Config config = Config.ofDefault()
+    .setValue(Config.batchSize, 500)
+    .setValue(Config.logSqlLevel, Level.INFO)
+    .lock();  // immutable; recommended for thread safety
+EntityContext CTX = EntityContext.of(config);
+```
+
+Obtain an `EntityManager` per domain class:
+
+```java
+EntityManager<Employee, Long> EMPLOYEE_EM = CTX.entityManager(Employee.class);
+EntityManager<City, Long>     CITY_EM     = CTX.entityManager(City.class);
+```
+
+`EntityManager` instances are stateless and thread-safe — store as static fields.
+
+---
+
+## Step 2: Entity Definition
+
+Use standard JPA/Jakarta annotations. Ujorm3 reads them at startup:
+
+```java
+@Table(name = "employee")
+public class Employee {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(nullable = false)
+    private String name;
+
+    @JoinColumn(name = "city_id", nullable = false)  // nullable=false → INNER JOIN
+    private City city;
+
+    @JoinColumn(name = "boss_id")                    // nullable=true  → LEFT JOIN
+    private Employee boss;
+
+    // standard getters/setters or use Records
+}
+```
+
+Records are fully supported (Ujorm3 uses bytecode generation, not reflection setters).
+
+---
+
+## Step 3: Three Query APIs
+
+### API 1 — Crud (simple CRUD by primary key)
+
+```java
+Crud<Employee, Long> crud = EMPLOYEE_EM.crud(connection);
+
+// INSERT — always use the returned instance (it has the generated PK)
+Employee saved = crud.insert(new Employee(...));
+Employee[] savedMany = crud.insert(emp1, emp2, emp3); // use returned array
+
+// READ
+Optional<Employee> found = crud.findById(1L);
+Employee emp = crud.findByIdNullable(42L);  // null if not found
+
+// UPDATE — optionally restrict to specific columns
+crud.update(emp);                           // all columns
+crud.update(emp, MetaEmployee.name);        // only 'name' column
+
+// DELETE
+crud.delete(emp);
+crud.deleteById(99L);
+```
+
+### API 2 — SelectQuery (type-safe DSL with auto-JOIN)
+
+```java
+List<Employee> result = SelectQuery.run(connection, EMPLOYEE_EM, q -> q
+    .columns(true)                                   // include FK stub columns
+    .column(MetaEmployee.city, MetaCity.name)        // INNER JOIN on city_id
+    .column(MetaEmployee.boss, MetaEmployee.name)    // LEFT JOIN on boss_id
+    .where(MetaEmployee.name.whereEq("Alice")
+        .and(MetaCity.id.whereGe(1L)))
+    .tail("ORDER BY", MetaEmployee.id)
+    .toList()
+);
+
+// Single result
+Optional<Employee> one = SelectQuery.run(connection, EMPLOYEE_EM, q -> q
+    .columns(true)
+    .where(MetaEmployee.id.whereEq(42L))
+    .findFirst()
+);
+
+// DELETE via SelectQuery
+long deleted = SelectQuery.run(connection, EMPLOYEE_EM, q -> q
+    .sql("DELETE")
+    .where(MetaEmployee.name.whereIn("Alice", "Bob"))
+    .execute()
+);
+```
+
+**`.columns(boolean)` rules:**
+- `false` — only the entity's own primitive columns (no FK columns). Default.
+- `true`  — all columns including FK stubs. Required when using `.column(key, relatedKey)`.
+
+**JOIN type is inferred from `@JoinColumn(nullable=...)`:**
+- `nullable = false` → `INNER JOIN`
+- `nullable = true` (default) → `LEFT JOIN`
+
+### API 3 — SqlQuery (native SQL with named parameters)
+
+```java
+List<Employee> result = SqlQuery.run(connection, q -> q
+    .sql("""
+        SELECT e.id   AS ${e.id}
+             , e.name AS ${e.name}
+             , c.name AS ${c.name}
+        FROM employee e
+        JOIN city c ON c.id = e.city_id
+        WHERE e.id >= :minId
+        """)
+    .label("e.id",   MetaEmployee.id)
+    .label("e.name", MetaEmployee.name)
+    .label("c.name", MetaEmployee.city, MetaCity.name)  // nested path
+    .bind("minId", 1L)
+    .toStream(EMPLOYEE_EM.mapper())
+    .toList()
+);
+```
+
+Alternative — dot-notation without `label()` registration:
+```java
+.sql("SELECT e.id AS \"id\", c.name AS \"city.name\" FROM ...")
+// mapper resolves "city.name" automatically via dot path
+```
+
+**Bind type support:** `Boolean`, `Byte`, `Short`, `Integer`, `Long`, `BigDecimal`,
+`String`, `LocalDate`, `LocalDateTime`.
+Multiple values expand for IN: `.bind("ids", 1L, 2L, 3L)` → `?,?,?`.
+
+**INSERT with generated keys:**
+```java
+Long newId = SqlQuery.run(connection, q -> q
+    .sql("INSERT INTO city (name, code) VALUES (:name, :code)")
+    .bind("name", "Berlin")
+    .bind("code", "DE")
+    .executeInsert()
+    .getGeneratedLastKey(rs -> rs.getLong(1))
+);
+```
+
+---
+
+## ResultSetMapper — Hierarchical JDBC mapping
+
+Maps `ResultSet` rows to Records or JavaBeans, including nested M:1 relations:
+
+```java
+ResultSetMapper<Employee> EMPLOYEE_MAPPER = ResultSetMapper.of(Employee.class)
+    .label("e.id",   MetaEmployee.id)
+    .label("e.name", MetaEmployee.name)
+    .label("c.name", MetaEmployee.city, MetaCity.name);
+
+// Use with raw PreparedStatement:
+try (var rs = stmt.executeQuery()) {
+    List<Employee> list = EMPLOYEE_MAPPER.mapper().stream(rs).toList();
+}
+```
+
+The mapper caches column structures (up to 512 distinct queries). Reuse instances.
+
+**Null-object rule:** a relation object is created only if at least one of its mapped
+columns is non-null. If all mapped columns are NULL, the parent field stays `null`.
+
+---
+
+## Config — Key Parameters
+
+```java
+Config config = Config.ofDefault()
+    .setValue(Config.batchSize,          500)       // INSERT batch size (default: 512)
+    .setValue(Config.logSqlLevel,        Level.INFO) // SQL log level (default: FINE)
+    .setValue(Config.logSqlParams,       true)       // log bound params (default: false)
+    .setValue(Config.enableSqlQuoting,   true)       // quote identifiers (default: true)
+    .setValue(Config.maxCacheSize,       512)        // ResultSetMapper cache
+    .setValue(Config.tenantPerDatabaseSchema, false) // multi-tenant schema isolation
+    .lock();
+```
+
+Config sources in priority order:
+1. `setValue()` calls
+2. JVM `-Dorg.ujorm.*` system properties
+3. `ujorm-config.properties` on classpath
+4. Built-in defaults
+
+---
+
+## Self-joins and Table Aliases
+
+For self-referencing entities use `TableAlias`:
+
+```java
+var boss = MetaEmployee.as("b");                    // aliased table reference
+var bossId = boss.key(MetaEmployee.id);             // "b.id"
+
+var employees = SelectQuery.run(connection, EMPLOYEE_EM, q -> q
+    .column(MetaEmployee.id)
+    .column(MetaEmployee.boss, bossId)              // self-join
+    .tail("ORDER BY", bossId, "DESC NULLS LAST")
+    .toList()
+);
+```
+
+---
+
+## Common Patterns
+
+```java
+// Check existence
+boolean exists = SelectQuery.run(conn, EMPLOYEE_EM, q -> q
+    .where(MetaEmployee.name.whereEq("Alice"))
+    .findFirst()
+).isPresent();
+
+// Count rows
+long count = SqlQuery.run(conn, q -> q
+    .sql("SELECT COUNT(*) FROM employee WHERE name = :name")
+    .bind("name", "Alice")
+    .findFirst(rs -> rs.getLong(1))
+).orElse(0L);
+
+// Partial update (only changed fields via snapshot)
+Employee snapshot = employee.snapshot();  // requires SnapshotProvider
+employee.setName("Bob");
+crud.updateChanged(employee);             // only 'name' column sent to DB
+
+// Batch delete
+crud.delete(employees.stream());
+```
+
+---
+
+## Gotchas
+
+- **Never mix `.columns(false)` with `.column(key, relatedKey)`** — the join column is silently omitted.
+- **Always use the returned value from `insert()`** — it holds the generated PK.
+- **`Crud` and `SqlQuery` are stateful and NOT thread-safe** — create per request/thread.
+- **`EntityManager` and `Meta*` classes ARE thread-safe** — safe as static fields.
+- **No 1:M collections** — query from the "many" side or use a secondary query.
+- **Transactions are your responsibility** — call `connection.commit()` / `rollback()`.

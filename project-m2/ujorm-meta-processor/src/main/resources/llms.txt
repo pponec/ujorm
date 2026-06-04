@@ -1,0 +1,112 @@
+# ujorm-meta-processor
+
+> Compile-time annotation processor (APT) for Ujorm3.
+> Generates type-safe Meta* companion classes from JPA/Jakarta or @Domain-annotated entities.
+
+## Maven
+
+Declare as `provided` scope (compile-time only) and wire into `maven-compiler-plugin`:
+
+```xml
+<dependencies>
+    <dependency>
+        <groupId>org.ujorm</groupId>
+        <artifactId>ujorm-meta-processor</artifactId>
+        <version>3.0.4-SNAPSHOT</version>
+        <scope>provided</scope>
+    </dependency>
+</dependencies>
+
+<build>
+    <plugins>
+        <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-compiler-plugin</artifactId>
+            <version>3.14.1</version>
+            <configuration>
+                <annotationProcessorPaths>
+                    <path>
+                        <groupId>org.ujorm</groupId>
+                        <artifactId>ujorm-meta-processor</artifactId>
+                        <version>3.0.4-SNAPSHOT</version>
+                    </path>
+                </annotationProcessorPaths>
+                <compilerArgs>
+                    <arg>-Aujorm.prefix=Meta</arg>  <!-- generated class name prefix -->
+                    <arg>-Aujorm.suffix=</arg>       <!-- generated class name suffix -->
+                </compilerArgs>
+            </configuration>
+        </plugin>
+    </plugins>
+</build>
+```
+
+## What it generates
+
+For every class annotated with `@Entity`, `@Table` (JPA/Jakarta), or `@org.ujorm.annotation.Domain`,
+the processor generates a companion `Meta*` class with one static `Key<D, V>` field per domain property.
+
+### Input entity
+
+```java
+@Table(name = "employee")
+public class Employee {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(nullable = false)
+    private String name;
+
+    @JoinColumn(name = "city_id", nullable = false)
+    private City city;
+
+    @JoinColumn(name = "boss_id")
+    private Employee boss;
+}
+```
+
+### Generated output (`target/generated-sources/annotations/…/MetaEmployee.java`)
+
+```java
+public class MetaEmployee {
+    private static final DomainHandler<Employee> meta =
+        DomainHandlerProvider.getHandler(Employee.class);
+
+    public static final Key<Employee, Long>     id   = meta.getKey("id");
+    public static final Key<Employee, String>   name = meta.getKey("name");
+    public static final Key<Employee, City>     city = meta.getKey("city");
+    public static final Key<Employee, Employee> boss = meta.getKey("boss");
+}
+```
+
+## APT options
+
+| Option | Default | Description |
+|--------|---------|-------------|
+| `-Aujorm.prefix` | `Meta` | Prefix for generated class names |
+| `-Aujorm.suffix` | `` (empty) | Suffix for generated class names |
+| `-Aujorm.metaPackage` | `.meta` | Sub-package for generated classes (relative to entity package) |
+
+## Usage in queries
+
+```java
+import static com.example.domain.meta.MetaEmployee.*;
+
+// Type-safe filtering
+Criterion<Employee> crit = name.whereEq("Alice").and(id.whereGe(1L));
+
+// In SelectQuery
+SelectQuery.run(conn, EMPLOYEE_EM, q -> q
+    .column(city, MetaCity.name)     // AUTO-JOIN on city.id
+    .where(crit)
+    .toList()
+);
+```
+
+## Notes
+
+- Generated classes appear in `target/generated-sources/annotations/`; they are compiled automatically by Maven.
+- The processor is triggered on `./mvnw clean compile` — no extra steps needed.
+- The processor does not modify existing source files.
+- Records are supported as domain types.

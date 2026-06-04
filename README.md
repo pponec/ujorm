@@ -378,14 +378,28 @@ The library includes automated integration tests for PostgreSQL, MySQL, MariaDB,
   The library has an extremely compact codebase and is completely independent of third-party libraries.
 
 * **How can I teach an AI to use the Ujorm3 ORM library?**<br/>
-  For a quick understanding of the library, it is best to provide the AI directly with the source code of these tutorial files (e.g., by copying the text or uploading files) so they are immediately available in its active context:
-  [TutorialTest.java](project-m2/ujo-orm/src/test/java/org/ujorm/orm/tutorial/TutorialTest.java)
-  and
-  [QuickStartTutorialTest.java](project-m2/ujo-orm/src/test/java/org/ujorm/orm/tutorial/QuickStartTutorialTest.java),
-  and
-  [AdvancedTutorialTest.java](project-m2/ujo-orm/src/test/java/org/ujorm/orm/tutorial/AdvancedTutorialTest.java),
-  plus the pattern index:
-  [PATTERNS.md](project-m2/ujo-orm/src/test/java/org/ujorm/orm/tutorial/PATTERNS.md).
+  Ujorm3 ships AI guidance at three levels, depending on your setup:
+
+  1. **Library consumer (JAR on classpath):** Each published JAR contains an `llms.txt` file at its root
+     ([ujo-tools](project-m2/ujo-tools/src/main/resources/llms.txt),
+     [ujo-core](project-m2/ujo-core/src/main/resources/llms.txt),
+     [ujorm-meta-processor](project-m2/ujorm-meta-processor/src/main/resources/llms.txt),
+     [ujo-orm](project-m2/ujo-orm/src/main/resources/llms.txt)).
+     These files follow the [llms.txt](https://llmstxt.org/) convention and describe the public API,
+     usage patterns, and common gotchas — focused entirely on *using* the library, not building it.
+     AI tools that index your local Maven repository or classpath can pick them up automatically.
+     You can also paste the relevant file directly into your AI chat.
+
+  2. **Repository contributor (Claude Code):** The repository ships a [CLAUDE.md](CLAUDE.md) with
+     architecture overview, build commands, and project structure — loaded automatically by Claude Code.
+
+  3. **Other AI tools with full source access:** Provide the tutorial files directly
+     (copy text or upload):
+     [TutorialTest.java](project-m2/ujo-orm/src/test/java/org/ujorm/orm/tutorial/TutorialTest.java),
+     [QuickStartTutorialTest.java](project-m2/ujo-orm/src/test/java/org/ujorm/orm/tutorial/QuickStartTutorialTest.java),
+     [AdvancedTutorialTest.java](project-m2/ujo-orm/src/test/java/org/ujorm/orm/tutorial/AdvancedTutorialTest.java),
+     and the pattern index:
+     [PATTERNS.md](project-m2/ujo-orm/src/test/java/org/ujorm/orm/tutorial/PATTERNS.md).
 
 ---
 
