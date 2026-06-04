@@ -378,13 +378,15 @@ The library includes automated integration tests for PostgreSQL, MySQL, MariaDB,
   The library has an extremely compact codebase and is completely independent of third-party libraries.
 
 * **How can I teach an AI to use the Ujorm3 ORM library?**<br/>
-  For a quick understanding of the library, it is best to provide the AI directly with the source code of these tutorial files (e.g., by copying the text or uploading files) so they are immediately available in its active context:
-  [TutorialTest.java](project-m2/ujo-orm/src/test/java/org/ujorm/orm/tutorial/TutorialTest.java)
-  and
+  For AI coding assistants that support project-level instructions (such as Claude Code via [CLAUDE.md](CLAUDE.md)),
+  the repository already ships with a structured guidance file covering architecture, build commands, and common gotchas —
+  no extra setup is needed.
+  For other AI tools, it is best to provide the AI directly with the source code of the tutorial files
+  (e.g., by copying the text or uploading files) so they are immediately available in its active context:
+  [TutorialTest.java](project-m2/ujo-orm/src/test/java/org/ujorm/orm/tutorial/TutorialTest.java),
   [QuickStartTutorialTest.java](project-m2/ujo-orm/src/test/java/org/ujorm/orm/tutorial/QuickStartTutorialTest.java),
-  and
   [AdvancedTutorialTest.java](project-m2/ujo-orm/src/test/java/org/ujorm/orm/tutorial/AdvancedTutorialTest.java),
-  plus the pattern index:
+  and the pattern index:
   [PATTERNS.md](project-m2/ujo-orm/src/test/java/org/ujorm/orm/tutorial/PATTERNS.md).
 
 ---
