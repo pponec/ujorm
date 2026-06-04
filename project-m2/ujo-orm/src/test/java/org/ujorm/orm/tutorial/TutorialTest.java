@@ -277,6 +277,42 @@ class TutorialTest extends AbstractDemo {
         assertEquals(1, inactiveCount);
     }
 
+    /**
+     * Deletes rows directly via SQL DELETE with a type-safe Criterion as the WHERE filter.
+     * The {@code sql("DELETE")} call sets the SQL head; columns are left empty;
+     * {@link SelectQuery#where} translates the Criterion into a parameterised WHERE clause.
+     * See generated SQL statements from the log:
+     * <pre>
+     *   DELETE
+     *   FROM "EMPLOYEE" e
+     *   WHERE e."STATE" = ?
+     * </pre>
+     * <pre>
+     *   SELECT COUNT(*)
+     *   FROM "EMPLOYEE" e
+     *   WHERE e."STATE" = ?
+     * </pre>
+     */
+    @Test
+    @Order(390)
+    void delete_by_criterion() {
+        var inactiveCriterion = MetaEmployee.state.whereEq(EmployeeState.INACTIVE);
+
+        try (var query = new SelectQuery<>(connection(), EMPLOYEE_EM)) {
+            var deletedCount = query
+                    .sql("DELETE")
+                    .where(inactiveCriterion)
+                    .execute();
+            assertEquals(1, deletedCount);
+
+            var remainingCount = query.sql("SELECT COUNT(*)")
+                    .where(inactiveCriterion)
+                    .toStream(rs -> rs.getInt(1))
+                    .findFirst().orElseThrow();
+            assertEquals(0, remainingCount);
+        }
+    }
+
     /** Handles batch deletion with specialized filtering and ordering for related entities. */
     @Test
     @Order(400)
