@@ -45,17 +45,28 @@ import static org.ujorm.core.composed.ComposedKeyImpl.*;
  * of both statements and result sets.
  * This class has no dependencies other than its abstract parent, annotations, and {@link SQLException}.
  *
- * <h4>Sample of usage</h4>
+ * <h4>SELECT sample</h4>
  * <pre>
  * var employees = SelectQuery.run(connection(), EMPLOYEE_EM, query -> query
  *    .sql("SELECT")
- *    .columnsOfDomain(true)
+ *    .columns(true)
  *    .column(MetaEmployee.city, MetaCity.name)
  *    .column(MetaEmployee.city, MetaCity.countryCode)
  *    .where(MetaEmployee.id.whereGe(1L))
  *    .tail("ORDER BY", MetaEmployee.id)
  *    .toStream(EMPLOYEE_MAPPER.mapper())
  *    .toList()
+ * );
+ * </pre>
+ *
+ * <h4>DELETE sample</h4>
+ * Columns are omitted; the WHERE clause is built from the Criterion.
+ * The generated SQL is: {@code DELETE FROM "EMPLOYEE" e WHERE e."STATE" = ?}
+ * <pre>
+ * int deleted = SelectQuery.run(connection(), EMPLOYEE_EM, query -> query
+ *    .sql("DELETE")
+ *    .where(MetaEmployee.state.whereEq(EmployeeState.INACTIVE))
+ *    .execute()
  * );
  * </pre>
  * Licence: Apache License, Version 2.0
