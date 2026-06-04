@@ -665,7 +665,7 @@ public final class EntityManager<D, V> {
          *
          * @param includeAliases If true, column labels are appended using AS alias.
          * @param sql The StringBuilder to append the SQL to.
-         * @return Array of column keys if includeAliases is false, otherwise an empty array.
+         * @return Array of column keys if includeAliases is false, otherwise {@code null}.
          */
         @Nullable
         private Key[] buildSelectSql(boolean includeAliases, @NotNull StringBuilder sql) {

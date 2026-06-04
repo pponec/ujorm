@@ -11,14 +11,14 @@ import java.util.concurrent.ConcurrentHashMap;
 public class ResultSetMapperService {
     /** A mapping a domain class to the domain handler object.
      * <p>
-     * Note: This map is used with Double-Checked Locking in the {@code getHandler} method
+     * Note: This map is used with Double-Checked Locking in the {@code getMapper} method
      * instead of its {@code computeIfAbsent()} method to prevent severe issues during runtime:
      * <ul>
      *   <li><b>Long-running operation:</b> The handler creation generates and compiles
      *   Java source code dynamically. Using {@code computeIfAbsent()} would lock the map's bucket for a
      *   long time, blocking other unrelated threads.</li>
      *   <li><b>Recursive evaluation (Deadlock risk):</b> Domain models often reference other domain classes.
-     *   A recursive call to {@code getHandler} during handler creation inside {@code computeIfAbsent()} would
+     *   A recursive call to {@code getMapper} during handler creation inside {@code computeIfAbsent()} would
      *   likely lead to thread deadlocks or {@code IllegalStateException}.</li>
      * </ul>
      * The {@code ConcurrentHashMap} is still strictly required to guarantee memory visibility and safe,

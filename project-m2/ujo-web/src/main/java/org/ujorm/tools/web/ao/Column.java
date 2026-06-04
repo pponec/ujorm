@@ -29,7 +29,7 @@ public interface Column<T> extends Function<T, Object> {
 
     /**
      *  The method can be implemented for sortable columns
-     * @param t A domaim objject
+     * @param t A domain object
      * @return Returns a constatn {@code "?"}, for a Sortable columns must return a serializable object.
      */
     @Override

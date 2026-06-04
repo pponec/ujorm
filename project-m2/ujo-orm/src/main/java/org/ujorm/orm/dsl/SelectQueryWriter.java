@@ -22,10 +22,8 @@ import org.ujorm.core.criterion.ValueCriterion;
 import org.ujorm.tools.jdbc.SQLException;
 
 /**
- * A fluent wrapper over {@link java.sql.PreparedStatement}
- * that manages named parameters and ensures automatic resource cleanup
- * of both statements and result sets.
- * This class has no dependencies other than its abstract parent, annotations, and {@link SQLException}.
+ * Writer interface used by {@link SelectQueryBuilder} to render table names,
+ * column names, and WHERE-clause conditions into the SQL output buffer.
  *
  * @since 2.26
  */

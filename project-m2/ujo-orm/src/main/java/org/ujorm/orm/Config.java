@@ -214,7 +214,7 @@ public class Config {
      * Values set here have the highest priority over other sources.
      * @param key Key instance
      * @param value Required value
-     * @param <V> The value type (annotation breaks IntelliJ tests
+     * @param <V> The value type
      */
     public <V> Config setValue(@NotNull Key<V> key, @NotNull V value) {
         if (locked) {
