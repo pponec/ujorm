@@ -12,7 +12,7 @@ Declare as `provided` scope (compile-time only) and wire into `maven-compiler-pl
     <dependency>
         <groupId>org.ujorm</groupId>
         <artifactId>ujorm-meta-processor</artifactId>
-        <version>3.0.4-SNAPSHOT</version>
+        <version>${project.version}</version>
         <scope>provided</scope>
     </dependency>
 </dependencies>
@@ -28,7 +28,7 @@ Declare as `provided` scope (compile-time only) and wire into `maven-compiler-pl
                     <path>
                         <groupId>org.ujorm</groupId>
                         <artifactId>ujorm-meta-processor</artifactId>
-                        <version>3.0.4-SNAPSHOT</version>
+                        <version>${project.version}</version>
                     </path>
                 </annotationProcessorPaths>
                 <compilerArgs>

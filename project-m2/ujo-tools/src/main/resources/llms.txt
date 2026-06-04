@@ -9,7 +9,7 @@
 <dependency>
     <groupId>org.ujorm</groupId>
     <artifactId>ujo-tools</artifactId>
-    <version>3.0.4-SNAPSHOT</version>
+    <version>${project.version}</version>
 </dependency>
 ```
 
