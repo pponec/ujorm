@@ -1,0 +1,72 @@
+# ujo-tools
+
+> Utility library for Ujorm3: JDBC helpers, validation, SQL building, and type utilities.
+> This module has no external dependencies.
+
+## Maven
+
+```xml
+<dependency>
+    <groupId>org.ujorm</groupId>
+    <artifactId>ujo-tools</artifactId>
+    <version>3.0.4-SNAPSHOT</version>
+</dependency>
+```
+
+## Key Classes
+
+### Assert and Check — Validation
+
+`org.ujorm.tools.Assert` — throwing validation (use at method boundaries):
+```java
+Assert.isTrue(value > 0, "Value must be positive, got: {}", value);
+Assert.notNull(connection, "Connection is required");
+Assert.state(isReady, "Component is not ready");
+```
+
+`org.ujorm.tools.Check` — non-throwing boolean checks:
+```java
+boolean ok = Check.hasLength(str);       // false for null/empty
+boolean empty = Check.isEmpty(list);
+Object first = Check.firstItem(array);   // null if empty
+```
+
+### SqlBuilder — JDBC with named parameters
+
+`org.ujorm.tools.jdbc.SqlBuilder` wraps `PreparedStatement` and supports `:name` syntax:
+```java
+try (var q = new SqlBuilder(connection, "SELECT * FROM city WHERE code = :code")) {
+    q.bind("code", "CZ");
+    try (var rs = q.executeQuery()) {
+        while (rs.next()) { ... }
+    }
+}
+```
+
+Bind methods accept: `Boolean`, `Byte`, `Short`, `Integer`, `Long`, `BigDecimal`, `String`,
+`LocalDate`, `LocalDateTime`. Multiple values expand to `?,?,?` for IN clauses.
+
+### Array — Typed array wrapper
+
+`org.ujorm.tools.common.Array<T>`:
+```java
+Array<String> arr = Array.of("a", "b", "c");
+List<String> list = arr.toList();
+Stream<String> s = arr.stream();
+Array<String> copy = arr.copy();
+```
+
+### UjormConsoleHandler — JUL logging to stdout
+
+`org.ujorm.tools.logging.UjormConsoleHandler` redirects JUL output to `System.out`
+instead of the default `System.err`. Configure via `ujorm-config.properties`:
+```properties
+handlers=org.ujorm.tools.logging.UjormConsoleHandler
+org.ujorm.tools.logging.UjormConsoleHandler.level=ALL
+```
+
+## Notes
+
+- `Assert` throws `IllegalArgumentException` by default; `Assert.state()` throws `IllegalStateException`.
+- `SqlBuilder` is `AutoCloseable` — always use try-with-resources.
+- This module is a transitive dependency of `ujo-orm`; you rarely need to declare it directly.
