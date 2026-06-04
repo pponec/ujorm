@@ -113,7 +113,7 @@ public abstract class AbstractDomainHandler<D> implements DomainHandler<D> {
             throw new NoSuchElementException("Property not found: %s.%s"
                     .formatted(getDomainClass().getSimpleName(), name));
         }
-        if (genericType != null && genericType != Primitive.wrapPrimitive(result.type())) {
+        if (genericType != null && !Primitive.equalsIgnorePrimitive(genericType, result.type())) {
             var msg = "Property %s.%s has wrong type %s, expected is %s.".formatted(
                     getDomainClass().getSimpleName(),
                     name,
@@ -134,7 +134,7 @@ public abstract class AbstractDomainHandler<D> implements DomainHandler<D> {
             throw new NoSuchElementException("Column not found: %s.%s"
                     .formatted(getDomainClass().getSimpleName(), column));
         }
-        if (genericType != null && genericType != Primitive.wrapPrimitive(result.type())) {
+        if (result != null && genericType != null && !Primitive.equalsIgnorePrimitive(genericType, result.type())) {
             var msg = "Column %s.%s has wrong type %s, expected is %s.".formatted(
                     getDomainClass().getSimpleName(),
                     column,
