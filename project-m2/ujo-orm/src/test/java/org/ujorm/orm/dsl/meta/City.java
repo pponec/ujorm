@@ -9,7 +9,7 @@ import jakarta.persistence.Table;
  * Note that the {@link Entity} annotation is not required in this library. */
 @Table(name = "city")
 public record City(
-    @Column(name = "id") @Id
+    @Column(name = "CID") @Id
     Long id,
     @Column(name = "name", nullable = false)
     String name,

@@ -331,10 +331,10 @@ public class SelectQueryBuilder implements AutoCloseable {
         }
     }
 
-    /** Find a relation key */
+    /** Find the primary key of the entity referenced by a foreign-key key (e.g. {@code Employee.city} → {@code City.id}). */
     protected Key<?, ?> findRelatedPrimaryKey(Key<?, ?> foreignKey) {
         var acceptDefaultPk = true;
-        return DomainHandlerProvider.getHandler(foreignKey.domainClass()).findPrimaryKey(acceptDefaultPk);
+        return DomainHandlerProvider.getHandler(foreignKey.type()).findPrimaryKey(acceptDefaultPk);
     }
 
     /** Close the inner states */

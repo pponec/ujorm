@@ -46,7 +46,7 @@ class SelectQueryTest extends AbstractDatabaseTest {
             assertEquals(", c.'NAME' AS 'city.name'", sql.next());
             assertEquals(", b.'NAME' AS 'boss.name'", sql.next());
             assertEquals("FROM 'EMPLOYEE' e", sql.next());
-            assertEquals("JOIN 'CITY' c ON c.'ID' = e.'CITY_ID'", sql.next());
+            assertEquals("JOIN 'CITY' c ON c.'CID' = e.'CITY_ID'", sql.next());
             assertEquals("LEFT JOIN 'EMPLOYEE' b ON b.'ID' = e.'BOSS_ID'", sql.next());
             assertEquals("WHERE e.'ID' > :e_id_0", sql.next());
             assertEquals("WHERE e.'ID' > [1]", toQuotedLines(sqlValues).get(-2), "Check value");
@@ -197,7 +197,7 @@ class SelectQueryTest extends AbstractDatabaseTest {
         try (var query = new SqlQuery(connection)) {
             query.sql("""
                     CREATE TABLE city
-                    ( id BIGINT AUTO_INCREMENT PRIMARY KEY
+                    ( CID BIGINT AUTO_INCREMENT PRIMARY KEY
                     , name VARCHAR(50) NOT NULL
                     , country_code VARCHAR(2) NOT NULL
                     )
@@ -221,7 +221,7 @@ class SelectQueryTest extends AbstractDatabaseTest {
             query.sql("""
                     ALTER TABLE employee ADD CONSTRAINT fk_employee_city_id__id
                     FOREIGN KEY (city_id)
-                    REFERENCES city(id)
+                    REFERENCES city(CID)
                     ON DELETE CASCADE ON UPDATE RESTRICT;
                     """).execute();
         }
