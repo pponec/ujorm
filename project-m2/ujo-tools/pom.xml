@@ -7,7 +7,7 @@
 
     <groupId>org.ujorm</groupId>
     <artifactId>ujo-tools</artifactId>
-    <version>3.0.4-SNAPSHOT</version>
+    <version>3.0.4</version>
     <packaging>jar</packaging>
     <name>ujo-tools</name>
     <description>Ujorm-tools module is a basic library tools for common use</description>
@@ -34,7 +34,7 @@
     </scm>
 
     <properties>
-        <revision>3.0.4-SNAPSHOT</revision>
+        <revision>3.0.4</revision>
         <java.version>17</java.version>
         <maven.compiler.target>${java.version}</maven.compiler.target>
         <maven.compiler.source>${java.version}</maven.compiler.source>

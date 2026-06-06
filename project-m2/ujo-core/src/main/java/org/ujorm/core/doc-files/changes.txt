@@ -2,7 +2,10 @@ The Ujorm release notes
 (Maven groupId: org.ujorm)
 *******************************
 
-release 3.0.4-SNAPSHOT (?)
+release 3.0.5-SNAPSHOT (?)
+
+
+release 3.0.4 (?)
 + ORM: SelectQuery supports filtering a foreign key by its relation object; the related entity is translated to its primary key and bound to the foreign-key column, so the filter resolves to a direct FK comparison without a JOIN.
 + ORM: SelectQuery supports SQL DELETE driven by a type-safe Criterion (sql("DELETE") with a where clause).
 + ORM: Fix SelectQueryBuilder JOIN generation to resolve the primary key from the referenced entity instead of the source one; the ON clause previously used the wrong table's primary key and worked only by accident when both tables shared an "id" primary key column.
