@@ -98,9 +98,22 @@ class TutorialTest extends AbstractDemo {
     }
 
     /**
-     * Executes a complex DSL query with type-safe criteria and joined table columns.
-     * See generated SQL statement from the log:
+     * Filters a table directly by a foreign-key relation object: the related entity
+     * is translated to its primary key and bound to the foreign-key column, so no JOIN is needed.
+     * See generated SQL statements from the log:
      * <pre>
+     *   SELECT c."ID" AS "id"
+     *   FROM "CITY" c
+     *   WHERE c."NAME" = ?
+     * </pre>
+     * <pre>
+     *   SELECT e."ID" AS "id"
+     *   , e."NAME" AS "name"
+     *   , e."CITY_ID" AS "city"
+     *   , e."BOSS_ID" AS "boss"
+     *   , e."STATE" AS "state"
+     *   FROM "EMPLOYEE" e
+     *   WHERE e."CITY_ID" = ?
      * </pre>
      */
     @Test

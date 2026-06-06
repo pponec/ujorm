@@ -18,6 +18,7 @@ package org.ujorm.orm.dsl;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.ujorm.core.DomainHandlerProvider;
 import org.ujorm.core.Key;
 import org.ujorm.core.composed.ComposedKeyImpl;
 import org.ujorm.core.criterion.Criterion;
@@ -339,7 +340,9 @@ public class SelectQuery<D> extends AbstractSqlQuery<SelectQuery<D>> {
             var key = keyPath.pathItem(-1);
             var operator = criterion.getOperator();
             var value = criterion.getRightNode();
-            var jdbcType = JdbcUtils.findJdbcType(key);
+            // For a foreign-key filter, bind the related primary key (e.g. City.id) instead of the relation object.
+            var fkPrimaryKey = key.info().foreignKey() ? findRelatedPrimaryKey(key) : null;
+            var jdbcType = JdbcUtils.findJdbcType(fkPrimaryKey != null ? fkPrimaryKey : key);
 
             switch (operator) {
                 case ALWAYS_TRUE, ALWAYS_FALSE -> writer.append(operator.term());
@@ -352,21 +355,45 @@ public class SelectQuery<D> extends AbstractSqlQuery<SelectQuery<D>> {
                     var placeholder = nextPlaceholder(alias, key);
                     writeColumnName(alias, key, EMPTY_KEY);
                     writer.append(' ').append(operator.term()).append(" (:").append(placeholder).append(')');
-                    var values = Array.ofObject(value);
-                    bindObject(true, placeholder, jdbcType, key.type().isEnum()
-                            ? mapEnumArrayToDbValues(values, key)
-                            : values);
+                    bindObject(true, placeholder, jdbcType, mapCriterionValues(Array.ofObject(value), key, fkPrimaryKey));
                 }
                 default -> {
                     var placeholder = nextPlaceholder(alias, key);
                     writeColumnName(alias, key, EMPTY_KEY);
                     writer.append(' ').append(operator.term()).append(" :").append(placeholder);
-                    var values = Array.ofObject(value);
-                    bindObject(true, placeholder, jdbcType, key.type().isEnum()
-                            ? mapEnumArrayToDbValues(values, key)
-                            : values);
+                    bindObject(true, placeholder, jdbcType, mapCriterionValues(Array.ofObject(value), key, fkPrimaryKey));
                 }
             }
+        }
+
+        /** Resolve the primary key of the entity referenced by a foreign-key key (e.g. {@code Employee.city} → {@code City.id}). */
+        private Key<?, ?> findRelatedPrimaryKey(Key<?, ?> foreignKey) {
+            return DomainHandlerProvider.getHandler(foreignKey.type()).findPrimaryKey(true);
+        }
+
+        /** Converts criterion values to their DB representation: foreign-key relations to their primary key, enums to ordinal/name. */
+        private Array<Object> mapCriterionValues(Array<Object> values, Key<?, ?> key, @Nullable Key<?, ?> fkPrimaryKey) {
+            if (fkPrimaryKey != null) {
+                return mapFkArrayToPkValues(values, key, fkPrimaryKey);
+            }
+            return key.type().isEnum() ? mapEnumArrayToDbValues(values, key) : values;
+        }
+
+        /** Maps foreign-key criterion values (relation objects) to their primary key value. */
+        private Array<Object> mapFkArrayToPkValues(Array<?> values, Key<?, ?> fkKey, Key<?, ?> pkKey) {
+            final var converted = new Object[values.size()];
+            for (int i = 0; i < values.size(); i++) {
+                converted[i] = mapFkValueToPk(values.get(i), fkKey, pkKey);
+            }
+            return Array.of(converted);
+        }
+
+        /** Extracts the primary key from a relation object; a value that is not the relation type is used as-is (raw primary key). */
+        @SuppressWarnings("unchecked")
+        private Object mapFkValueToPk(Object value, Key<?, ?> fkKey, Key<?, ?> pkKey) {
+            return (value == null || !fkKey.type().isInstance(value))
+                    ? value
+                    : ((Key<Object, ?>) pkKey).getValue(value);
         }
 
         /** Maps enum criterion values to DB representation (ordinal/name). */
