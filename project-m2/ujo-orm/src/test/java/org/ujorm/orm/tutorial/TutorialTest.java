@@ -97,6 +97,28 @@ class TutorialTest extends AbstractDemo {
         assertEquals("Ingrid", employees.get(1).getBoss().getName());
     }
 
+    /**
+     * Executes a complex DSL query with type-safe criteria and joined table columns.
+     * See generated SQL statement from the log:
+     * <pre>
+     * </pre>
+     */
+    @Test
+    @Order(211)
+    void select_by_criteron_fk() {
+        var ottawa = SelectQuery.run(connection(), CITY_EM, query -> query
+                .column(MetaCity.id)
+                .where(MetaCity.name.whereEq("Ottawa"))
+                .findFirst().orElseThrow());
+        var emoloyee = SelectQuery.run(connection(), EMPLOYEE_EM, query -> query
+                .columns(true)
+                .where(MetaEmployee.city.whereEq(ottawa))
+                .findFirst().orElseThrow());
+
+        assertEquals(ottawa.id(), emoloyee.getCity().id());
+    }
+
+
     @Test
     @Order(212)
     void select_by_criteron_simplified() {
