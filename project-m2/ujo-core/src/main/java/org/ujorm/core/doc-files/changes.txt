@@ -3,6 +3,13 @@ The Ujorm release notes
 *******************************
 
 release 3.0.4-SNAPSHOT (?)
++ ORM: SelectQuery supports filtering a foreign key by its relation object; the related entity is translated to its primary key and bound to the foreign-key column, so the filter resolves to a direct FK comparison without a JOIN.
++ ORM: SelectQuery supports SQL DELETE driven by a type-safe Criterion (sql("DELETE") with a where clause).
++ ORM: Fix SelectQueryBuilder JOIN generation to resolve the primary key from the referenced entity instead of the source one; the ON clause previously used the wrong table's primary key and worked only by accident when both tables shared an "id" primary key column.
++ META: New @Domain annotation generates a metamodel for non-persistent classes.
++ CORE: AbstractDomainHandler uses a primitive-insensitive type comparison when matching keys.
++ TOOLS: Fix the requireNonNull argument order in UnicodeCharacter.charAt().
++ Documentation and build: AI guidance files (CLAUDE.md, llms.txt, PATTERNS.md), README FAQ updates, and Maven wrapper 3.3.4.
 
 release 3.0.3 (2026-05-29)
 + ORM: Fix SelectQueryBuilder to propagate LEFT JOIN through multi-level relation chains; a NOT NULL FK hanging off a LEFT-joined table now correctly uses LEFT JOIN instead of INNER JOIN, preventing silent row drops.
