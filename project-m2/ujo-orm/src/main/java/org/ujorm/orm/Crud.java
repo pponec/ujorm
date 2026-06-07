@@ -126,7 +126,8 @@ public interface Crud<D, V> {
      *
      * @param whereCondition The SQL WHERE clause (without the 'WHERE' keyword).
      *                       If undefined or empty, the query will target all records.
-     * @return A fluent query builder for fetching data.
+     * @param fun A function that receives the configured {@link SqlQuery} and returns the result.
+     * @return The value returned by {@code fun}.
      */
     @NotNull <R> R selectWhere(
             @Nullable String whereCondition,

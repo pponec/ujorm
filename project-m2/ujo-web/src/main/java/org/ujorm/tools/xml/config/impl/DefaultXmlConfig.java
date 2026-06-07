@@ -37,7 +37,7 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 public class DefaultXmlConfig implements XmlConfig {
 
     /** Default indentation per nesting level */
-    public static final String DEFAULT_INTENDATION = "\t";
+    public static final String DEFAULT_INDENTATION = "\t";
 
     /** Default string or the new line */
     public static final String DEFAULT_NEW_LINE = "\n";
@@ -78,7 +78,7 @@ public class DefaultXmlConfig implements XmlConfig {
     /** Is HTTP cache allowed */
     private boolean cacheAllowed;
 
-    /** A value formatter where a default implemnetation is:
+    /** A value formatter where a default implementation is:
      * <code>
      * {@code Formatter formatter -> value != null ? value.toString() : ""};
      * </code>
@@ -143,18 +143,18 @@ public class DefaultXmlConfig implements XmlConfig {
      */
     @SuppressWarnings("unchecked")
     public final <T extends DefaultXmlConfig> T setNiceFormat() {
-        setNiceFormat(DEFAULT_INTENDATION);
+        setNiceFormat(DEFAULT_INDENTATION);
         return (T) this;
     }
 
     /**
      * Assign parameters for a nice format of the HTML result
-     * @param indentation an empty string is replaced by the default indentation ({@link #DEFAULT_INTENDATION})
+     * @param indentation an empty string is replaced by the default indentation ({@link #DEFAULT_INDENTATION})
      */
     @SuppressWarnings("unchecked")
     public final <T extends DefaultXmlConfig> T setNiceFormat(@Nullable final CharSequence indentation) {
         this.firstLevel = 0;
-        this.indentation = Check.hasLength(indentation) ? indentation : DEFAULT_INTENDATION;
+        this.indentation = Check.hasLength(indentation) ? indentation : DEFAULT_INDENTATION;
         this.newLine = DEFAULT_NEW_LINE;
         return (T) this;
     }

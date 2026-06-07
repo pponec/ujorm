@@ -97,6 +97,41 @@ class TutorialTest extends AbstractDemo {
         assertEquals("Ingrid", employees.get(1).getBoss().getName());
     }
 
+    /**
+     * Filters a table directly by a foreign-key relation object: the related entity
+     * is translated to its primary key and bound to the foreign-key column, so no JOIN is needed.
+     * See generated SQL statements from the log:
+     * <pre>
+     *   SELECT c."ID" AS "id"
+     *   FROM "CITY" c
+     *   WHERE c."NAME" = ?
+     * </pre>
+     * <pre>
+     *   SELECT e."ID" AS "id"
+     *   , e."NAME" AS "name"
+     *   , e."CITY_ID" AS "city"
+     *   , e."BOSS_ID" AS "boss"
+     *   , e."STATE" AS "state"
+     *   FROM "EMPLOYEE" e
+     *   WHERE e."CITY_ID" = ?
+     * </pre>
+     */
+    @Test
+    @Order(211)
+    void select_by_criteron_fk() {
+        var ottawa = SelectQuery.run(connection(), CITY_EM, query -> query
+                .column(MetaCity.id)
+                .where(MetaCity.name.whereEq("Ottawa"))
+                .findFirst().orElseThrow());
+        var emoloyee = SelectQuery.run(connection(), EMPLOYEE_EM, query -> query
+                .columns(true)
+                .where(MetaEmployee.city.whereEq(ottawa))
+                .findFirst().orElseThrow());
+
+        assertEquals(ottawa.id(), emoloyee.getCity().id());
+    }
+
+
     @Test
     @Order(212)
     void select_by_criteron_simplified() {

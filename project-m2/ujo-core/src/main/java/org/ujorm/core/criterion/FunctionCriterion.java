@@ -54,7 +54,7 @@ public final class FunctionCriterion<U, T> extends ValueCriterion<U> {
         return ((Supplier<T>) super.value).get();
     }
 
-    /** Test a value is an instance of clazz and */
+    /** Checks that the supplied value is an instance of the expected class, delegating to the parent check. */
     @Override
     protected void checkType(Class<?> clazz, Key<?,?> key, Object valueSup) throws IllegalArgumentException {
         if (valueSup instanceof Supplier<?> supplier) {

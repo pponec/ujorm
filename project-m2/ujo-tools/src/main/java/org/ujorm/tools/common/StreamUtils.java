@@ -47,7 +47,7 @@ public final class StreamUtils {
     /** Returns a stream of lines from URL resource
      *
      * @param url An URL link to a resource
-     * @return The customer is responsible for closing the stream.
+     * @return The caller is responsible for closing the stream.
      * During closing, an IllegalStateException may occur due to an IOException.
      */
     public static Stream<String> rowsOfUrl(@NotNull final URL url) throws IOException {
@@ -85,7 +85,7 @@ public final class StreamUtils {
 
     /** Create a joinable function
      *
-     * <h4>Usage</h4>Assert.java:54
+     * <h4>Usage</h4>
      * <pre>
      *  Function&lt;Person, String&gt; nameProvider = Joinable
      *     .of (Person::getBoss)

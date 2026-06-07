@@ -27,11 +27,11 @@ import org.ujorm.tools.xml.ApiElement;
 public interface Formatter {
 
     /**
-     * Format an objet value to a string ouptut, special characters will be escaped later.
+     * Format an object value to a string output, special characters will be escaped later.
      * @param value A data value
      * @param element A related element
      * @param attributeName A name of the attribute, if any.
-     * @return A target non-nnul sequence is required.
+     * @return A target non-null sequence is required.
      */
     @NotNull
     CharSequence format(@Nullable Object value, @NotNull ApiElement element, @Nullable String attributeName);

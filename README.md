@@ -288,12 +288,12 @@ Ujorm3 requires **Java 17 or higher**.
     <dependency>
         <groupId>org.ujorm</groupId>
         <artifactId>ujo-core</artifactId>
-        <version>3.0.3</version>
+        <version>3.0.4</version>
     </dependency>
     <dependency>
         <groupId>org.ujorm</groupId>
         <artifactId>ujo-orm</artifactId>
-        <version>3.0.3</version>
+        <version>3.0.4</version>
     </dependency>
 </dependencies>
 ```
@@ -314,7 +314,7 @@ However, if you prefer a safer, strongly-typed coding style, you can optionally 
                     <path>
                         <groupId>org.ujorm</groupId>
                         <artifactId>ujorm-meta-processor</artifactId>
-                        <version>3.0.3</version>
+                        <version>3.0.4</version>
                     </path>
                 </annotationProcessorPaths>
                 <compilerArgs>

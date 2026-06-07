@@ -88,18 +88,31 @@ class AbstractDomainHandlerTest {
         var wrongType = BigDecimal.class;
         var cityId = (Key<City, Long>) null;
 
-        // Tests:
-        cityId = domainHandler.getKey("id", emptyType);
+        // Tests by column name (DB column label):
+        cityId = domainHandler.getKeyByColumn("db_id", true, emptyType);
         assertEquals(filledType, cityId.type());
-        cityId = domainHandler.getKey("id", filledType);
+        cityId = domainHandler.getKeyByColumn("db_id", true, filledType);
         assertEquals(filledType, cityId.type());
         // Wrong type:
-        var expectedMessage = "Property City.id has wrong type BigDecimal, expected is Long.";
+        var expectedMessage = "Column City.DB_ID has wrong type BigDecimal, expected is Long.";
         var ex = assertThrows(IllegalArgumentException.class, () -> {
-            var wrongId = domainHandler.getKey("id", wrongType);
+            var wrongId = domainHandler.getKeyByColumn("db_id", true, wrongType);
             System.out.println(wrongId.type());
         });
         assertEquals(expectedMessage, ex.getMessage());
+        // Non-required, missing column — returns null, no exception:
+        assertNull(domainHandler.getKeyByColumn("nonexistent", false, filledType));
+    }
+
+    @Test
+    void getKeyWithPrimitiveType() {
+        var domainHandler = createDomainHandler(false);
+        // City.latitude is declared as primitive double — wrapper Double.class must be accepted
+        var latKey = domainHandler.getKey("latitude", Double.class);
+        assertEquals(double.class, latKey.type());
+        // Wrong wrapper type must still throw:
+        assertThrows(IllegalArgumentException.class,
+                () -> domainHandler.getKey("latitude", Float.class));
     }
 
 

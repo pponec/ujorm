@@ -20,7 +20,7 @@ import org.jetbrains.annotations.Nullable;
 import org.ujorm.tools.Check;
 
 /**
- * An interface for bulding HTML parameters by an Enumerator.
+ * An interface for building HTML parameters by an Enumerator.
  * The implementation the method {@link Object#toString()} is required!
  *
  * <h4>Usage</h4>

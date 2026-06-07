@@ -24,7 +24,8 @@ GitHub source:
 | `TutorialTest.java` | [`select_by_labels`](TutorialTest.java#L182) | Native SQL with label mapping strategy |
 | `TutorialTest.java` | [`update`](TutorialTest.java#L215) | Batch update of selected attributes |
 | `TutorialTest.java` | [`update_state_enum`](TutorialTest.java#L235) | Enum persistence and verification |
-| `TutorialTest.java` | [`delete`](TutorialTest.java#L266) | FK-safe delete ordering |
+| `TutorialTest.java` | [`delete_by_criterion`](TutorialTest.java#L281) | Direct SQL DELETE with type-safe Criterion filter |
+| `TutorialTest.java` | [`delete`](TutorialTest.java#L311) | FK-safe delete ordering |
 | `TutorialTest.java` | [`init`](TutorialTest.java#L292) | Schema bootstrap for tutorial scenario |
 
 ## Advanced Scenarios

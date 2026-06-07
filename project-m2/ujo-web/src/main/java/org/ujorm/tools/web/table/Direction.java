@@ -26,7 +26,7 @@ public enum Direction {
 
     /** Ascending sort */
     ASC,
-    /** Desending sort */
+    /** Descending sort */
     DESC,
     /** No sorting */
     NONE;

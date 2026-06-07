@@ -20,7 +20,7 @@ import java.io.IOException;
 
 /**
  *
- * @author Pavel ponec
+ * @author Pavel Ponec
  */
 public interface IOConsumer<T> {
 

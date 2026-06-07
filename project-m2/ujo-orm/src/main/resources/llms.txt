@@ -11,12 +11,12 @@
     <dependency>
         <groupId>org.ujorm</groupId>
         <artifactId>ujo-core</artifactId>
-        <version>3.0.4-SNAPSHOT</version>
+        <version>${project.version}</version>
     </dependency>
     <dependency>
         <groupId>org.ujorm</groupId>
         <artifactId>ujo-orm</artifactId>
-        <version>3.0.4-SNAPSHOT</version>
+        <version>${project.version}</version>
     </dependency>
 </dependencies>
 ```

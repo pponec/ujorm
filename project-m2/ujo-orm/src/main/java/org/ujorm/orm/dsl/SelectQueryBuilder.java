@@ -29,9 +29,9 @@ import java.util.*;
 import static org.ujorm.core.composed.ComposedKeyImpl.*;
 
 /**
- * A fluent wrapper over {@link java.sql.PreparedStatement}
- * that manages named parameters and ensures automatic resource cleanup
- * of both statements and result sets.
+ * Internal SQL builder that resolves columns, JOINs, and WHERE clauses
+ * for {@link SelectQuery}. Accumulates column declarations and a Criterion
+ * tree, then writes the full SQL fragment into a {@link SelectQueryWriter}.
  *
  * @since 2.26
  */
@@ -331,10 +331,10 @@ public class SelectQueryBuilder implements AutoCloseable {
         }
     }
 
-    /** Find a relation key */
+    /** Find the primary key of the entity referenced by a foreign-key key (e.g. {@code Employee.city} → {@code City.id}). */
     protected Key<?, ?> findRelatedPrimaryKey(Key<?, ?> foreignKey) {
         var acceptDefaultPk = true;
-        return DomainHandlerProvider.getHandler(foreignKey.domainClass()).findPrimaryKey(acceptDefaultPk);
+        return DomainHandlerProvider.getHandler(foreignKey.type()).findPrimaryKey(acceptDefaultPk);
     }
 
     /** Close the inner states */
