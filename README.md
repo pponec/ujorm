@@ -7,7 +7,7 @@ Ujorm3 is a lightweight object-relational mapping (ORM) library designed for eff
 The library maps database rows to standard Java objects using clean SQL without unnecessary abstraction.
 It supports mapping to both mutable JavaBeans and immutable Records, including M:1 relations.
 
-A key part of that API is the **type-safe query DSL**: `SELECT` statements — including `JOIN` clauses and `WHERE` conditions — are assembled from the domain model through a **fluent API** (method chaining) instead of being written as raw strings. Conditions are expressed through `Criterion` objects, so the compiler verifies not only the referenced columns but also the *type* of every value placed into a condition. When native SQL is the better fit, the `SqlQuery` API remains available with safe parameter binding.
+One especially useful part of that API is the **type-safe query DSL**: `SELECT` statements — including `JOIN` clauses and `WHERE` conditions — are assembled from the domain model through a **fluent API** (method chaining) instead of being written as raw strings. Conditions are expressed through `Criterion` objects, so the compiler verifies not only the referenced columns but also the *type* of every value placed into a condition. When native SQL is the better fit, the `SqlQuery` API remains available with safe parameter binding.
 
 To achieve data manipulation speeds comparable to hand-written JDBC code, Ujorm3 compiles its own bytecode at runtime.
 At its core, the library is built around the **Typed Key Pattern**.
