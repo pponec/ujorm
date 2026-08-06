@@ -28,7 +28,7 @@ import static org.mockito.Mockito.when;
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class ResultSetMapperTestKey {
 
-    private final boolean printResult = true;
+    private final boolean printResult = false;
 
     @Test @Order(100)
     void codeGen() {
