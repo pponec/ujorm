@@ -161,17 +161,38 @@ public class JavaSourceGenerator {
                 : "throw unsupportedSetter(this)";
     }
 
+    /** Build a call of the canonical constructor.
+     * The arguments are taken from the record components rather than from the domain properties,
+     * because a component excluded from the model (a transient one) must keep its position. */
     private void buildRecordConstructorBuilder(DomainModel meta, Object domainClass, StringBuilder writer) {
         var offset1 = " ".repeat(4);
         var offset2 = " ".repeat(9);
+        var valueIndexes = new HashMap<String, Integer>(meta.properties().size());
+        for (int i = 0, max = meta.properties().size(); i < max; ++i) {
+            valueIndexes.put(meta.properties().get(i).name(), i);
+        }
+        var components = meta.domainClass().getRecordComponents();
         writer.append(offset1).append("values = normalizePrimitives(values);\n");
         writer.append(offset1).append("return new ").append(domainClass).append("\n");
-        for(int i = 0, max = meta.properties().size(); i < max; ++i) {
+        for (int i = 0; i < components.length; ++i) {
             var sep = (i == 0) ? "( " : ", ";
-            var type = meta.properties().get(i).propertyObjectType().getCanonicalName();
-            var row = "(%s) values[%s]\n".formatted(type, i);
+            var valueIndex = valueIndexes.get(components[i].getName());
+            var row = valueIndex != null
+                    ? "(%s) values[%s]\n".formatted(
+                            meta.properties().get(valueIndex).propertyObjectType().getCanonicalName(), valueIndex)
+                    : "%s // The component is out of the domain model\n".formatted(defaultValueCode(components[i].getType()));
             writer.append(offset2).append(sep).append(row);
         }
         writer.append(offset2).append(");\n");
+    }
+
+    /** Source code of a default value for a record component missing in the domain model. */
+    private String defaultValueCode(Class<?> componentType) {
+        if (!componentType.isPrimitive()) {
+            return "(%s) null".formatted(componentType.getCanonicalName());
+        }
+        return componentType == boolean.class
+                ? "false"
+                : "(%s) 0".formatted(componentType.getName());
     }
 }
