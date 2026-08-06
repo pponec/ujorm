@@ -199,7 +199,19 @@ public abstract class AbstractKey<D, V> implements Key<D, V>, KeyInfo<V> {
         return this;
     }
 
-    /** Creates a new exception for missing setters. */
+    /**
+     * A record has no setter, so none of its components is writable.
+     * A generated key overrides this method by the fact taken from the domain model.
+     * <p>Note that a hand-written key of a <strong>bean</strong>, whose {@code setValue()} method
+     * raises the {@link #unsupportedSetter(Key)} exception, must override this method too.
+     */
+    @Override
+    public boolean writable() {
+        return !domainClass().isRecord();
+    }
+
+    /** Creates a new exception for missing setters.
+     * A key raising this exception must report {@code false} by the {@link #writable()} method. */
     protected UnsupportedOperationException unsupportedSetter(@NotNull Key<?, ?> key) {
         final var msg = "Setter is missing for: " + key.fullName();
         return new UnsupportedOperationException(msg);
