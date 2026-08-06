@@ -85,7 +85,7 @@ public class JavaSourceGenerator {
                     return domainClass;
                 }
                 """;
-        var templateKey = """           
+        var templateKey = """
                 /** Key ${propName} */
                 static final class Key_${propName} extends ${baseKeyClass}<${domainClass}, ${propObjectType}> {
                     public Key_${propName}(final int order) {
@@ -100,13 +100,15 @@ public class JavaSourceGenerator {
                         return bean.${getter}();
                     }
                     @Override
+                    public boolean writable() {
+                        return ${writable};
+                    }
+                    @Override
                     public ${@NotNull} Class<${domainClass}> domainClass() {
                         return domainClass;
                     }
                 }
-                """.formatted(meta.isRecord()
-                ? "throw unsupportedSetter(this)"
-                : "bean.${setter}(value != null ? value : defaultValue)");
+                """;
         var templateEnd = "}";
 
         MessageService.formatMsg(templateBeg1, params, writer);
@@ -141,15 +143,22 @@ public class JavaSourceGenerator {
                 params.put("propType", prop.type().getCanonicalName());
                 params.put("propObjectType", prop.propertyObjectType().getCanonicalName());
                 params.put("getter", prop.getter());
-                params.put("setter", prop.setter());
                 params.put("primaryKey", prop.primaryKey());
                 params.put("foreignKey", prop.foreignKey());
                 params.put("required", prop.required());
+                params.put("writable", prop.isWritable());
                 params.put("column", prop.dbColumName());
                 params.put("mapEnumByOrdinal", prop.mapEnumByOrdinal());
             }
-            MessageService.formatMsg(template, params, writer);
+            MessageService.formatMsg(template.formatted(buildSetterBody(prop)), params, writer);
         }
+    }
+
+    /** Body of the {@code setValue()} method. A property without a setter is assigned by a constructor only. */
+    private String buildSetterBody(DomainPropertyModel prop) {
+        return prop.isWritable()
+                ? "bean.%s(value != null ? value : defaultValue)".formatted(prop.setter())
+                : "throw unsupportedSetter(this)";
     }
 
     private void buildRecordConstructorBuilder(DomainModel meta, Object domainClass, StringBuilder writer) {

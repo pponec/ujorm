@@ -3,6 +3,7 @@ The Ujorm release notes
 *******************************
 
 release 3.0.5-SNAPSHOT (?)
++ CORE: Fix the runtime metamodel generator, which emitted an invalid "bean.${setter}(…)" statement for a bean property having a getter but no setter; the setter body is decided per property now, so such a property gets a setter throwing UnsupportedOperationException, the same way as a record component. The new method KeyInfo.writable() reports the fact.
 
 
 release 3.0.4 (?)

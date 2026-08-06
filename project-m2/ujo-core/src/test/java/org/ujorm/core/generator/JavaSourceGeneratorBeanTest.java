@@ -2,9 +2,11 @@ package org.ujorm.core.generator;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.ujorm.core.DomainHandler;
+import org.ujorm.core.Key;
 import org.ujorm.core.demo.Employee;
 
-class JavaSourceGeneratorBeanTest {
+public class JavaSourceGeneratorBeanTest {
 
     private final boolean printResult = false;
 
@@ -36,11 +38,73 @@ class JavaSourceGeneratorBeanTest {
         Assertions.assertNotNull(clazz);
     }
 
+    /** A bean property with a getter but no setter must not break the generated source code. */
+    @Test
+    void getSourceCodeForPropertyWithoutSetter() {
+        var meta = DomainModel.of(BeanInner.class);
+        var className = ClassName.ofGenerated(meta);
+        var src = new JavaSourceGenerator().getSourceCode(meta, className);
+
+        if (printResult) System.out.println(src);
+        assertContains("bean.setName(value != null ? value : defaultValue);", src);
+        assertContains("throw unsupportedSetter(this);", src);
+        assertContains("return bean.isWebRelease();", src);
+        Assertions.assertFalse(src.contains("${"), "No template placeholder can survive");
+
+        var clazz = new ClassGenerator().createClass(src, className);
+        Assertions.assertNotNull(clazz);
+    }
+
+    /**
+     * The metamodel keeps a property without a setter, so a non-persistent domain object
+     * can read it. Assigning the value fails to keep an application error loud.
+     */
+    @Test
+    void keyOfPropertyWithoutSetterIsReadable() throws Exception {
+        var meta = DomainModel.of(BeanInner.class);
+        var className = ClassName.ofGenerated(meta);
+        var src = new JavaSourceGenerator().getSourceCode(meta, className);
+        var clazz = new ClassGenerator().createClass(src, className);
+        var handler = (DomainHandler<BeanInner>) clazz.getDeclaredConstructor().newInstance();
+
+        Key<BeanInner, String> nameKey = handler.getKey("name");
+        Key<BeanInner, Boolean> webReleaseKey = handler.getKey("webRelease");
+
+        Assertions.assertTrue(nameKey.info().writable(), "The name has a setter");
+        Assertions.assertFalse(webReleaseKey.info().writable(), "The webRelease has no setter");
+
+        var domain = new BeanInner();
+        nameKey.setValue(domain, "Ann");
+        Assertions.assertEquals("Ann", nameKey.getValue(domain), "A writable value is assigned");
+        Assertions.assertEquals(Boolean.FALSE, webReleaseKey.getValue(domain), "A read-only value is available");
+
+        Assertions.assertThrows(UnsupportedOperationException.class,
+                () -> webReleaseKey.setValue(domain, true), "The setter is missing");
+    }
+
     private void assertContains(String code, String src) {
         code = code
                 .replace("@NotNull", "")
                 .replace("@Nullable", "");
         Assertions.assertTrue(src.contains(code), "Expected: " + code);
+    }
+
+    public static class BeanInner {
+        private String name;
+        /** A property with a getter only */
+        private boolean webRelease;
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+
+        public boolean isWebRelease() {
+            return webRelease;
+        }
     }
 
 }

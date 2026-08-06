@@ -52,5 +52,15 @@ public interface KeyInfo<VALUE> {
     /** Determines whether to map the Enum by its ordinal (true) or name (false). */
     boolean mapEnumByOrdinal();
 
-
+    /**
+     * Indicates whether the value can be assigned to an existing domain object by the
+     * {@link Key#setValue(Object, Object)} method.
+     * A record component and a bean property with a getter only are not writable,
+     * so the setter raises an {@link UnsupportedOperationException}.
+     * <p>Note that the {@code ujo-orm} module maps writable properties only,
+     * because reading an entity from a database means assigning its values.
+     */
+    default boolean writable() {
+        return true;
+    }
 }
