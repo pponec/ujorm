@@ -249,6 +249,8 @@ A read-only property — a field with a getter and no setter — is a valid Java
 
 The check covers the **own properties** of the entity. An entity behind a relation keeps its own contract: a read-only property of the target reports itself on the first row mapping by an `UnsupportedOperationException` naming the property in full.
 
+An excluded **record component** keeps its position in the canonical constructor and gets a default value (`null`, `0`, or `false`) whenever the record is read from a database. A compact constructor validating such a component — `Objects.requireNonNull(note)` for example — therefore fails at that moment.
+
 ### Caching Strategy
 
 There is **no data caching** for user queries.
