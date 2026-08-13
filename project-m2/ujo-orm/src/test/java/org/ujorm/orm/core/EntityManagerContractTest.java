@@ -12,7 +12,12 @@ import org.ujorm.orm.utils.EntityContext;
 /**
  * The ORM maps a Java Record or a mutable JavaBean only.
  * See the {@link EntityManager} constructor.
+ * <p>A JUnit 5 test needs no {@code public} modifier, but this one hosts nested entities whose
+ * metamodel is generated into the {@code org.ujorm.gen_.*} package. A nested public class of
+ * a package-private outer class is unreachable from there, so the generated source code fails to
+ * compile. Hence the modifier and the suppression of the "no public test class" rule.
  */
+@SuppressWarnings("java:S5786")
 public class EntityManagerContractTest {
 
     private static final EntityContext CTX = EntityContext.ofDefault();

@@ -12,6 +12,7 @@ import org.ujorm.orm.utils.EntityContext;
  * A record component excluded by the @Transient annotation keeps its position in the canonical
  * constructor, so the ORM maps the remaining components to the database columns.
  */
+@SuppressWarnings("java:S5786") // Public for the nested TransientCity - see EntityManagerContractTest
 public class EntityManagerRecordTransientTest extends AbstractDaoTest {
 
     private static final EntityContext CTX = EntityContext.ofDefault();

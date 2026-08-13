@@ -6,6 +6,12 @@ import org.junit.jupiter.api.Test;
 import org.ujorm.core.DomainHandler;
 import org.ujorm.core.demo.City;
 
+/**
+ * A JUnit 5 test needs no {@code public} modifier, but this one hosts nested domain classes whose
+ * metamodel is generated into the {@code org.ujorm.gen_.*} package. A nested public class of
+ * a package-private outer class is unreachable from there, so the generated source code fails to
+ * compile. Hence the modifier and the suppression of the "no public test class" rule.
+ */
 @SuppressWarnings("java:S5786")
 public class JavaSourceGeneratorRecordTest {
 

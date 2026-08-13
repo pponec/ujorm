@@ -18,6 +18,7 @@ import org.ujorm.orm.utils.EntityContext;
  * target reports itself on the first row mapping instead of at the EntityManager creation.
  * <p>This test pins the trade-off documented in README.md and in the changes.txt file.
  */
+@SuppressWarnings("java:S5786") // Public for the nested entities - see EntityManagerContractTest
 public class EntityManagerRelationContractTest extends AbstractDaoTest {
 
     private static final EntityContext CTX = EntityContext.ofDefault();
