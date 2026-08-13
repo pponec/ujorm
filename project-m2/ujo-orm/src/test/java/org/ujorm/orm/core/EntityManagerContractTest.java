@@ -57,6 +57,19 @@ public class EntityManagerContractTest {
     }
 
     /**
+     * The domain model traverses the class hierarchy, so an inherited property belongs to the own
+     * properties of the entity and the check must reject it too.
+     */
+    @Test
+    void inheritedReadOnlyPropertyIsRejected() {
+        var result = Assertions.assertThrows(IllegalStateException.class,
+                () -> CTX.entityManager(InheritedReadOnlyEntity.class));
+
+        Assertions.assertTrue(result.getMessage().contains("InheritedReadOnlyEntity"), result.getMessage());
+        Assertions.assertTrue(result.getMessage().contains("webRelease"), result.getMessage());
+    }
+
+    /**
      * The check covers the own properties only. A read-only property of the relation target
      * reports itself on the first row mapping, not here, because the target keeps its own contract.
      */
@@ -149,6 +162,30 @@ public class EntityManagerContractTest {
 
         public void setReadOnly(ReadOnlyEntity readOnly) {
             this.readOnly = readOnly;
+        }
+    }
+
+    /** The read-only property comes from the parent class. */
+    public abstract static class ReadOnlyParent {
+        @Column(name = "web_release")
+        private boolean webRelease;
+
+        public boolean isWebRelease() {
+            return webRelease;
+        }
+    }
+
+    @Table(name = "inherited_read_only_entity")
+    public static class InheritedReadOnlyEntity extends ReadOnlyParent {
+        @Id
+        private Long id;
+
+        public Long getId() {
+            return id;
+        }
+
+        public void setId(Long id) {
+            this.id = id;
         }
     }
 
