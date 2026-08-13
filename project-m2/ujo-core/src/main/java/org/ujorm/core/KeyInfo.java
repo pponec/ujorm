@@ -59,6 +59,9 @@ public interface KeyInfo<VALUE> {
      * so the setter raises an {@link UnsupportedOperationException}.
      * <p>Note that the {@code ujo-orm} module maps writable properties only,
      * because reading an entity from a database means assigning its values.
+     * <p>The default value {@code true} suits a bean, because this interface knows no domain class.
+     * The {@link org.ujorm.core.impl.AbstractKey} implementation replaces the default by
+     * a record-safe one, so a key built on another base class must override this method itself.
      */
     default boolean writable() {
         return true;

@@ -15,6 +15,7 @@
  */
 package org.ujorm.core.generator;
 
+import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -135,6 +136,20 @@ public record TableIdentifier(
         if (table == null) return defaultValue;
         var value = extractor.apply(table);
         return value.isEmpty() ? defaultValue : value;
+    }
+
+    /**
+     * The class is mapped to a database table, so it can be a target of a relation.
+     * <p>Note that a foreign key is assigned by the {@code @JoinColumn} annotation too,
+     * hence the type of a foreign key needs not to be an entity at all - a raw value
+     * of a foreign key column is a common case.
+     *
+     * @param type A type of a domain property.
+     * @return The type is a database entity.
+     */
+    public static boolean isEntity(@NotNull Class<?> type) {
+        return type.isAnnotationPresent(Entity.class)
+                || type.isAnnotationPresent(Table.class);
     }
 
     /** Get data from annotation */

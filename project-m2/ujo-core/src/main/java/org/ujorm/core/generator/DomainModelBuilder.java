@@ -126,7 +126,7 @@ class DomainModelBuilder {
 
         // Check a foreign key:
         var hasManyToOne = element.isAnnotationPresent(ManyToOne.class);
-        var isTargetEntity = type.isAnnotationPresent(Entity.class) || type.isAnnotationPresent(Table.class);
+        var isTargetEntity = TableIdentifier.isEntity(type);
         var foreignKey = hasManyToOne || joinColumn != null || isTargetEntity;
 
         return new DomainPropertyModel(name, type, getter, setter, dbColName, required, primaryKey, foreignKey, enumMapType);
