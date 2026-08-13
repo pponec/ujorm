@@ -1,9 +1,17 @@
 package org.ujorm.core.generator;
 
+import jakarta.persistence.Transient;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.ujorm.core.DomainHandler;
 import org.ujorm.core.demo.City;
 
+/**
+ * A JUnit 5 test needs no {@code public} modifier, but this one hosts nested domain classes whose
+ * metamodel is generated into the {@code org.ujorm.gen_.*} package. A nested public class of
+ * a package-private outer class is unreachable from there, so the generated source code fails to
+ * compile. Hence the modifier and the suppression of the "no public test class" rule.
+ */
 @SuppressWarnings("java:S5786")
 public class JavaSourceGeneratorRecordTest {
 
@@ -49,13 +57,71 @@ public class JavaSourceGeneratorRecordTest {
     }
 
 
+    /** A transient component keeps its position in the canonical constructor. */
+    @Test
+    @SuppressWarnings("unchecked")
+    void getSourceCodeForTransientComponent() throws Exception {
+        var meta = DomainModel.of(CityTransient.class);
+        var className = ClassName.ofGenerated(meta);
+        var src = new JavaSourceGenerator().getSourceCode(meta, className);
+
+        if (printResult) System.out.println(src);
+        Assertions.assertEquals(2, meta.properties().size(), "The note is out of the model");
+        assertContains("( (java.lang.Long) values[0]", src);
+        assertContains(", (java.lang.String) null", src);
+        assertContains(", (java.lang.String) values[1]", src);
+        assertContains(", (int) 0", src);
+        assertNotContains(", (boolean) 0", src);
+
+        var clazz = new ClassGenerator().createClass(src, className);
+        var handler = (DomainHandler<CityTransient>) clazz.getDeclaredConstructor().newInstance();
+        var city = handler.newDomain(10L, "Prague");
+
+        Assertions.assertEquals(10L, city.id());
+        Assertions.assertEquals("Prague", city.name());
+        Assertions.assertNull(city.note(), "A transient component gets the default value");
+        Assertions.assertEquals(0, city.code());
+        Assertions.assertFalse(city.active());
+    }
+
+    /** A model with no property is reported by the domain class rather than by a compilation error. */
+    @Test
+    void getSourceCodeForAllTransientComponents() {
+        var meta = DomainModel.of(AllTransient.class);
+        var className = ClassName.ofGenerated(meta);
+
+        Assertions.assertTrue(meta.properties().isEmpty(), "No component is modelled");
+        var result = Assertions.assertThrows(IllegalArgumentException.class,
+                () -> new JavaSourceGenerator().getSourceCode(meta, className));
+
+        Assertions.assertTrue(result.getMessage().contains("AllTransient"), result.getMessage());
+        Assertions.assertTrue(result.getMessage().contains("@Transient"), result.getMessage());
+    }
+
     private void assertContains(String code, String src) {
-        code = code
+        Assertions.assertTrue(src.contains(normalize(code)), "Expected: " + code);
+    }
+
+    private void assertNotContains(String code, String src) {
+        Assertions.assertFalse(src.contains(normalize(code)), "Unexpected: " + code);
+    }
+
+    /** The generated source code has no Jetbrains annotations by default. */
+    private String normalize(String code) {
+        return code
                 .replace("@NotNull", "")
                 .replace("@Nullable", "");
-        Assertions.assertTrue(src.contains(code), "Expected: " + code);
     }
 
     public record CityInner(String name) {}
+
+    public record CityTransient(
+            Long id,
+            @Transient String note,
+            String name,
+            @Transient int code,
+            @Transient boolean active) {}
+
+    public record AllTransient(@Transient Long id, @Transient String name) {}
 
 }

@@ -52,5 +52,22 @@ public interface KeyInfo<VALUE> {
     /** Determines whether to map the Enum by its ordinal (true) or name (false). */
     boolean mapEnumByOrdinal();
 
-
+    /**
+     * Indicates whether the value can be assigned to an existing domain object by the
+     * {@link Key#setValue(Object, Object)} method.
+     * A record component and a bean property with a getter only are not writable,
+     * so the setter raises an {@link UnsupportedOperationException}.
+     * <p>Note that the {@code ujo-orm} module maps writable properties only,
+     * because reading an entity from a database means assigning its values.
+     * <p>The default value {@code true} suits a bean, because this interface knows no domain class.
+     * The {@link org.ujorm.core.impl.AbstractKey} implementation replaces the default by
+     * a record-safe one, so a key built on another base class must override this method itself.
+     * <p><strong>The default implementation is temporary.</strong> It keeps the binary compatibility
+     * of a patch release, but it answers {@code true} for every key that fails to override it -
+     * including a key whose {@code setValue()} raises an exception. The method becomes abstract
+     * in the release 3.1.0, so implement it explicitly.
+     */
+    default boolean writable() {
+        return true;
+    }
 }
