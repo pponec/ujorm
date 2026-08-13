@@ -35,6 +35,7 @@ public class JavaSourceGenerator {
     final boolean enableEnotations = false;
 
     public String getSourceCode(DomainModel meta, ClassName className) {
+        checkProperties(meta);
         final var writer = new StringBuilder(5_000);
         final var params = new HashMap<String, Object>(20);
         {
@@ -151,6 +152,21 @@ public class JavaSourceGenerator {
                 params.put("mapEnumByOrdinal", prop.mapEnumByOrdinal());
             }
             MessageService.formatMsg(template.formatted(buildSetterBody(prop)), params, writer);
+        }
+    }
+
+    /**
+     * An empty model would generate an uncompilable source code, whose failure names the generated
+     * class rather than the real cause, so the domain class is reported here instead.
+     *
+     * @throws IllegalArgumentException The domain class has no mapped property.
+     */
+    private void checkProperties(DomainModel meta) {
+        if (meta.properties().isEmpty()) {
+            throw new IllegalArgumentException(("The class %s has no mapped property."
+                    + " A domain object needs at least one field with a getter, which is excluded"
+                    + " neither by the @Transient annotation nor by the transient modifier.")
+                    .formatted(meta.domainClass().getSimpleName()));
         }
     }
 

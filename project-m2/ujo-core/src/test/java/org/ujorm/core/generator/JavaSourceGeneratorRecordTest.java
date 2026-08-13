@@ -78,6 +78,20 @@ public class JavaSourceGeneratorRecordTest {
         Assertions.assertFalse(city.active());
     }
 
+    /** A model with no property is reported by the domain class rather than by a compilation error. */
+    @Test
+    void getSourceCodeForAllTransientComponents() {
+        var meta = DomainModel.of(AllTransient.class);
+        var className = ClassName.ofGenerated(meta);
+
+        Assertions.assertTrue(meta.properties().isEmpty(), "No component is modelled");
+        var result = Assertions.assertThrows(IllegalArgumentException.class,
+                () -> new JavaSourceGenerator().getSourceCode(meta, className));
+
+        Assertions.assertTrue(result.getMessage().contains("AllTransient"), result.getMessage());
+        Assertions.assertTrue(result.getMessage().contains("@Transient"), result.getMessage());
+    }
+
     private void assertContains(String code, String src) {
         Assertions.assertTrue(src.contains(normalize(code)), "Expected: " + code);
     }
@@ -101,5 +115,7 @@ public class JavaSourceGeneratorRecordTest {
             String name,
             @Transient int code,
             @Transient boolean active) {}
+
+    public record AllTransient(@Transient Long id, @Transient String name) {}
 
 }
