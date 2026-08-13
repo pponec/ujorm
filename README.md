@@ -234,7 +234,7 @@ index for quick pattern lookup.
   It manages SQL logging configurations and defines rules for table and column quoting.
 
 Ujorm3 derives mapping from JPA/Jakarta annotations (`@Table`, `@Column`, `@Id`).
-M:1 relationships are recognized if an attribute's class has a `@Table` annotation.
+An attribute becomes an M:1 relation when its class carries a `@Table` or an `@Entity` annotation, or when the attribute itself is annotated by `@ManyToOne` or `@JoinColumn`. The last case also covers a foreign key kept as a raw value — a `Long cityId` field, for example — where the attribute type is no entity at all.
 
 ### Supported Entity Types
 
@@ -352,7 +352,7 @@ However, if you prefer a safer, strongly-typed coding style, you can optionally 
 </build>
 ```
 
-Currently, the library's codebase is fully covered by JUnit tests utilizing an in-memory H2 database.
+The library's codebase is covered by JUnit tests utilizing an in-memory H2 database.
 In addition, the project includes automated integration tests for basic CRUD operations across major relational databases using Testcontainers. Supported database engines are:
 
 * PostgreSQL
@@ -362,8 +362,6 @@ In addition, the project includes automated integration tests for basic CRUD ope
 * MS SQL Server
 
 **Note for contributors:** Integration tests require a running Docker daemon and up to **6 GB** of local disk space for the database images. You can execute these tests using the provided Bash script: `bin/docker-integration-test.sh`.
-To enable the Meta Processor, configure the `maven-compiler-plugin`.
-The library includes automated integration tests for PostgreSQL, MySQL, MariaDB, Oracle, and MS SQL Server via Testcontainers.
 
 ---
 
@@ -373,8 +371,8 @@ The library includes automated integration tests for PostgreSQL, MySQL, MariaDB,
   No, Ujorm3 works with stateless data structures and `Serializable` is not required.
 
 * **Is `@JoinColumn` required?**<br/>
-  No, it is optional.
-  Relations are recognized by the `@Table` annotation on the attribute type.
+  No, it is optional — a relation is recognized by the `@Table` or `@Entity` annotation on the attribute type.
+  Use `@JoinColumn` to name the foreign-key column explicitly, or to map a foreign key kept as a raw value.
 
 * **Are core components thread-safe?**<br/>
   Yes, `EntityManager` and `Meta` classes are stateless and thread-safe.
