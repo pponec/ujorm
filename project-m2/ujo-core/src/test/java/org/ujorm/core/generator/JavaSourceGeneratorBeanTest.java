@@ -6,6 +6,8 @@ import org.ujorm.core.DomainHandler;
 import org.ujorm.core.Key;
 import org.ujorm.core.demo.Employee;
 
+import java.util.List;
+
 public class JavaSourceGeneratorBeanTest {
 
     private final boolean printResult = false;
@@ -80,6 +82,34 @@ public class JavaSourceGeneratorBeanTest {
 
         Assertions.assertThrows(UnsupportedOperationException.class,
                 () -> webReleaseKey.setValue(domain, true), "The setter is missing");
+    }
+
+    /**
+     * The positional factory refuses a value belonging to a property without a setter, rather
+     * than dropping it in silence. The loop reaches the position only when the caller supplies
+     * it, so a shorter array is accepted.
+     */
+    @Test
+    @SuppressWarnings("unchecked")
+    void newDomainRefusesAValueOfThePropertyWithoutSetter() throws Exception {
+        var meta = DomainModel.of(BeanInner.class);
+        var className = ClassName.ofGenerated(meta);
+        var src = new JavaSourceGenerator().getSourceCode(meta, className);
+        var clazz = new ClassGenerator().createClass(src, className);
+        var handler = (DomainHandler<BeanInner>) clazz.getDeclaredConstructor().newInstance();
+
+        Assertions.assertEquals(List.of("name", "webRelease"),
+                handler.getKeyList().stream().map(Key::name).toList(),
+                "The read-only property is modelled, hence it occupies a position");
+
+        var result = Assertions.assertThrows(UnsupportedOperationException.class,
+                () -> handler.newDomain("Ann", Boolean.TRUE),
+                "A value of the read-only position is refused");
+        Assertions.assertTrue(result.getMessage().contains("BeanInner.webRelease"), result.getMessage());
+
+        var domain = handler.newDomain("Ann");
+        Assertions.assertEquals("Ann", domain.getName(), "A shorter array assigns the writable prefix");
+        Assertions.assertNotNull(handler.newDomain(), "An empty factory call is supported");
     }
 
     private void assertContains(String code, String src) {
