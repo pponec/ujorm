@@ -62,6 +62,10 @@ public interface KeyInfo<VALUE> {
      * <p>The default value {@code true} suits a bean, because this interface knows no domain class.
      * The {@link org.ujorm.core.impl.AbstractKey} implementation replaces the default by
      * a record-safe one, so a key built on another base class must override this method itself.
+     * <p><strong>The default implementation is temporary.</strong> It keeps the binary compatibility
+     * of a patch release, but it answers {@code true} for every key that fails to override it -
+     * including a key whose {@code setValue()} raises an exception. The method becomes abstract
+     * in the release 3.1.0, so implement it explicitly.
      */
     default boolean writable() {
         return true;
