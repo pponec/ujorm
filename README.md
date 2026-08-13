@@ -234,7 +234,30 @@ index for quick pattern lookup.
   It manages SQL logging configurations and defines rules for table and column quoting.
 
 Ujorm3 derives mapping from JPA/Jakarta annotations (`@Table`, `@Column`, `@Id`).
-M:1 relationships are recognized if an attribute's class has a `@Table` annotation.
+An attribute becomes an M:1 relation when its class carries a `@Table` or an `@Entity` annotation, or when the attribute itself is annotated by `@ManyToOne` or `@JoinColumn`. The last case also covers a foreign key kept as a raw value — a `Long cityId` field, for example — where the attribute type is no entity at all.
+
+### Supported Entity Types
+
+The `ujo-orm` module maps two kinds of classes:
+
+* **Java Record** — values are assigned by the canonical constructor.
+* **Mutable JavaBean** — a public no-argument constructor, and a getter **and a setter** for every mapped property.
+
+Properties are derived from the **declared fields** rather than from JavaBeans introspection, so a derived getter without a matching field is not mapped at all. A field is excluded from the mapping by the `@Transient` annotation or by the `transient` modifier.
+
+A read-only property — a field with a getter and no setter — is a valid JavaBeans construct and the `ujo-core` metamodel supports it, so a non-persistent class annotated by `@Domain` can read it. The `ujo-orm` module cannot map it as a column, because reading an entity from a database means assigning its values; such an entity is rejected when its `EntityManager` is created. Add the setter, or exclude the field by `@Transient`.
+
+The check covers the **own properties** of the entity. An entity behind a relation keeps its own contract: a read-only property of the target reports itself on the first row mapping by an `UnsupportedOperationException` naming the property in full.
+
+An excluded **record component** keeps its position in the canonical constructor and gets a default value (`null`, `0`, or `false`) whenever the ORM builds the record — not only on a database read. The entity returned by `crud.insert(entity)` is rebuilt to carry the generated primary key, so it comes back with the excluded component **reset to its default** while the object you passed in stays untouched:
+
+```java
+var input = new City(null, "a temporary note", "Prague");   // note is @Transient
+var saved = crud.insert(input);
+// saved.note() == null, input.note() == "a temporary note"
+```
+
+Keep the value in the original object, or model it as a regular property. A compact constructor validating such a component — `Objects.requireNonNull(note)` for example — fails whenever the ORM rebuilds the record.
 
 ### Caching Strategy
 
@@ -329,7 +352,7 @@ However, if you prefer a safer, strongly-typed coding style, you can optionally 
 </build>
 ```
 
-Currently, the library's codebase is fully covered by JUnit tests utilizing an in-memory H2 database.
+The library's codebase is covered by JUnit tests utilizing an in-memory H2 database.
 In addition, the project includes automated integration tests for basic CRUD operations across major relational databases using Testcontainers. Supported database engines are:
 
 * PostgreSQL
@@ -339,8 +362,6 @@ In addition, the project includes automated integration tests for basic CRUD ope
 * MS SQL Server
 
 **Note for contributors:** Integration tests require a running Docker daemon and up to **6 GB** of local disk space for the database images. You can execute these tests using the provided Bash script: `bin/docker-integration-test.sh`.
-To enable the Meta Processor, configure the `maven-compiler-plugin`.
-The library includes automated integration tests for PostgreSQL, MySQL, MariaDB, Oracle, and MS SQL Server via Testcontainers.
 
 ---
 
@@ -350,8 +371,8 @@ The library includes automated integration tests for PostgreSQL, MySQL, MariaDB,
   No, Ujorm3 works with stateless data structures and `Serializable` is not required.
 
 * **Is `@JoinColumn` required?**<br/>
-  No, it is optional.
-  Relations are recognized by the `@Table` annotation on the attribute type.
+  No, it is optional — a relation is recognized by the `@Table` or `@Entity` annotation on the attribute type.
+  Use `@JoinColumn` to name the foreign-key column explicitly, or to map a foreign key kept as a raw value.
 
 * **Are core components thread-safe?**<br/>
   Yes, `EntityManager` and `Meta` classes are stateless and thread-safe.

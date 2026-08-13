@@ -185,6 +185,7 @@ To see bound parameter values too, pass `true`.
 
 ## Common Gotchas
 
+- **Entity types:** `ujo-orm` maps a Java Record or a *mutable* JavaBean. Every mapped property needs a getter and a setter — a getter-only field makes `EntityManager` creation fail; exclude it by `@Transient`. The `ujo-core` metamodel keeps such a property (readable, `setValue()` throws), so `@Domain` classes are unaffected.
 - **No lazy loading:** relations must be explicitly fetched or JOINed in SelectQuery.
 - **M:1 only:** for 1:M, query from the "many" side or run a separate query.
 - **Transactions:** the ORM does not manage them; use `Connection.commit()` / `rollback()` directly.

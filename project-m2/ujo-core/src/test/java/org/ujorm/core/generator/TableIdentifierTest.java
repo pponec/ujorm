@@ -1,5 +1,6 @@
 package org.ujorm.core.generator;
 
+import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import org.junit.jupiter.api.Test;
 
@@ -86,8 +87,31 @@ class TableIdentifierTest {
         assertEquals("", result.catalog());
     }
 
+    /** The single rule to recognize a class mapped to a database table. */
+    @Test
+    void isEntityTest() {
+        assertTrue(TableIdentifier.isEntity(DummyEntity.class), "The @Table annotation");
+        assertTrue(TableIdentifier.isEntity(JpaEntity.class), "The @Entity annotation");
+        assertTrue(TableIdentifier.isEntity(EntityRecord.class), "A record is no exception");
+
+        assertFalse(TableIdentifier.isEntity(PlainClass.class), "No annotation");
+        assertFalse(TableIdentifier.isEntity(String.class), "A common value type");
+        assertFalse(TableIdentifier.isEntity(long.class), "A primitive type of a raw foreign key");
+    }
+
     @Table(name = "my_dummy_table", schema = "my_schema", catalog = "my_catalog")
     class DummyEntity {
+    }
+
+    @Entity
+    class JpaEntity {
+    }
+
+    @Table(name = "entity_record")
+    record EntityRecord(Long id) {
+    }
+
+    class PlainClass {
     }
 
     @Table

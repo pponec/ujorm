@@ -96,7 +96,19 @@ public interface DomainHandler<D> {
         return getKeyList().size();
     }
 
-    /** Create a new domain object and assign values from the argument array. */
+    /**
+     * Create a new domain object and assign values from the argument array.
+     * The values are positional: {@code values[i]} belongs to {@code getKeyList().get(i)}.
+     * A shorter array is allowed and leaves the remaining properties at their default,
+     * while a longer one is truncated.
+     * <p>A value cannot be passed for a property reporting {@code false} by the
+     * {@link KeyInfo#writable()} method - a bean property with a getter only - because such
+     * a property has no setter to assign it. Supplying it raises an
+     * {@link UnsupportedOperationException} naming the property rather than dropping the value
+     * in silence. Pass a shorter array, or read the property from the domain object directly.
+     *
+     * @throws UnsupportedOperationException A value is supplied for a non-writable property.
+     */
     D newDomain(Object... values);
 
     /** Create a new domain object and assign values from the argument array. */

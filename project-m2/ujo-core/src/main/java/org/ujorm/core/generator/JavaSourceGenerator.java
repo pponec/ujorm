@@ -35,6 +35,7 @@ public class JavaSourceGenerator {
     final boolean enableEnotations = false;
 
     public String getSourceCode(DomainModel meta, ClassName className) {
+        checkProperties(meta);
         final var writer = new StringBuilder(5_000);
         final var params = new HashMap<String, Object>(20);
         {
@@ -85,7 +86,7 @@ public class JavaSourceGenerator {
                     return domainClass;
                 }
                 """;
-        var templateKey = """           
+        var templateKey = """
                 /** Key ${propName} */
                 static final class Key_${propName} extends ${baseKeyClass}<${domainClass}, ${propObjectType}> {
                     public Key_${propName}(final int order) {
@@ -100,13 +101,15 @@ public class JavaSourceGenerator {
                         return bean.${getter}();
                     }
                     @Override
+                    public boolean writable() {
+                        return ${writable};
+                    }
+                    @Override
                     public ${@NotNull} Class<${domainClass}> domainClass() {
                         return domainClass;
                     }
                 }
-                """.formatted(meta.isRecord()
-                ? "throw unsupportedSetter(this)"
-                : "bean.${setter}(value != null ? value : defaultValue)");
+                """;
         var templateEnd = "}";
 
         MessageService.formatMsg(templateBeg1, params, writer);
@@ -141,28 +144,76 @@ public class JavaSourceGenerator {
                 params.put("propType", prop.type().getCanonicalName());
                 params.put("propObjectType", prop.propertyObjectType().getCanonicalName());
                 params.put("getter", prop.getter());
-                params.put("setter", prop.setter());
                 params.put("primaryKey", prop.primaryKey());
                 params.put("foreignKey", prop.foreignKey());
                 params.put("required", prop.required());
+                params.put("writable", prop.isWritable());
                 params.put("column", prop.dbColumName());
                 params.put("mapEnumByOrdinal", prop.mapEnumByOrdinal());
             }
-            MessageService.formatMsg(template, params, writer);
+            MessageService.formatMsg(template.formatted(buildSetterBody(prop)), params, writer);
         }
     }
 
+    /**
+     * An empty model would generate an uncompilable source code, whose failure names the generated
+     * class rather than the real cause, so the domain class is reported here instead.
+     *
+     * @throws IllegalArgumentException The domain class has no mapped property.
+     */
+    private void checkProperties(DomainModel meta) {
+        if (meta.properties().isEmpty()) {
+            throw new IllegalArgumentException(("The class %s has no mapped property."
+                    + " A domain object needs at least one field with a getter, which is excluded"
+                    + " neither by the @Transient annotation nor by the transient modifier.")
+                    .formatted(meta.domainClass().getSimpleName()));
+        }
+    }
+
+    /** Body of the {@code setValue()} method. A property without a setter is assigned by a constructor only. */
+    private String buildSetterBody(DomainPropertyModel prop) {
+        return prop.isWritable()
+                ? "bean.%s(value != null ? value : defaultValue)".formatted(prop.setter())
+                : "throw unsupportedSetter(this)";
+    }
+
+    /** Build a call of the canonical constructor.
+     * The arguments are taken from the record components rather than from the domain properties,
+     * because a component excluded from the model (a transient one) must keep its position.
+     * <p>The excluded component gets a hard-coded default, so its value is lost whenever the ORM
+     * builds the record - not only on a database read. The entity returned by {@code Crud.insert()}
+     * is rebuilt here to carry the generated primary key, hence it comes back with the excluded
+     * component reset, while the object passed by the caller stays untouched. Carrying the value
+     * through would require the source record as another argument of the factory method. */
     private void buildRecordConstructorBuilder(DomainModel meta, Object domainClass, StringBuilder writer) {
         var offset1 = " ".repeat(4);
         var offset2 = " ".repeat(9);
+        var valueIndexes = new HashMap<String, Integer>(meta.properties().size());
+        for (int i = 0, max = meta.properties().size(); i < max; ++i) {
+            valueIndexes.put(meta.properties().get(i).name(), i);
+        }
+        var components = meta.domainClass().getRecordComponents();
         writer.append(offset1).append("values = normalizePrimitives(values);\n");
         writer.append(offset1).append("return new ").append(domainClass).append("\n");
-        for(int i = 0, max = meta.properties().size(); i < max; ++i) {
+        for (int i = 0; i < components.length; ++i) {
             var sep = (i == 0) ? "( " : ", ";
-            var type = meta.properties().get(i).propertyObjectType().getCanonicalName();
-            var row = "(%s) values[%s]\n".formatted(type, i);
+            var valueIndex = valueIndexes.get(components[i].getName());
+            var row = valueIndex != null
+                    ? "(%s) values[%s]\n".formatted(
+                            meta.properties().get(valueIndex).propertyObjectType().getCanonicalName(), valueIndex)
+                    : "%s // The component is out of the domain model\n".formatted(defaultValueCode(components[i].getType()));
             writer.append(offset2).append(sep).append(row);
         }
         writer.append(offset2).append(");\n");
+    }
+
+    /** Source code of a default value for a record component missing in the domain model. */
+    private String defaultValueCode(Class<?> componentType) {
+        if (!componentType.isPrimitive()) {
+            return "(%s) null".formatted(componentType.getCanonicalName());
+        }
+        return componentType == boolean.class
+                ? "false"
+                : "(%s) 0".formatted(componentType.getName());
     }
 }

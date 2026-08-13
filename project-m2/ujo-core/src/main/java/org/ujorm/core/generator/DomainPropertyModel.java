@@ -51,6 +51,11 @@ public record DomainPropertyModel(
         return type.isPrimitive();
     }
 
+    /** The property has a setter, so its value can be assigned to an existing domain object.
+     * A record component and a bean property with a getter only are not writable. */
+    public boolean isWritable() {
+        return setter != null;
+    }
 
     /**
      * Creates a list of DomainPropertyModel for the given class (Bean or Record).
