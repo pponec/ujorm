@@ -179,7 +179,12 @@ public class JavaSourceGenerator {
 
     /** Build a call of the canonical constructor.
      * The arguments are taken from the record components rather than from the domain properties,
-     * because a component excluded from the model (a transient one) must keep its position. */
+     * because a component excluded from the model (a transient one) must keep its position.
+     * <p>The excluded component gets a hard-coded default, so its value is lost whenever the ORM
+     * builds the record - not only on a database read. The entity returned by {@code Crud.insert()}
+     * is rebuilt here to carry the generated primary key, hence it comes back with the excluded
+     * component reset, while the object passed by the caller stays untouched. Carrying the value
+     * through would require the source record as another argument of the factory method. */
     private void buildRecordConstructorBuilder(DomainModel meta, Object domainClass, StringBuilder writer) {
         var offset1 = " ".repeat(4);
         var offset2 = " ".repeat(9);

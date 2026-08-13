@@ -249,7 +249,15 @@ A read-only property — a field with a getter and no setter — is a valid Java
 
 The check covers the **own properties** of the entity. An entity behind a relation keeps its own contract: a read-only property of the target reports itself on the first row mapping by an `UnsupportedOperationException` naming the property in full.
 
-An excluded **record component** keeps its position in the canonical constructor and gets a default value (`null`, `0`, or `false`) whenever the record is read from a database. A compact constructor validating such a component — `Objects.requireNonNull(note)` for example — therefore fails at that moment.
+An excluded **record component** keeps its position in the canonical constructor and gets a default value (`null`, `0`, or `false`) whenever the ORM builds the record — not only on a database read. The entity returned by `crud.insert(entity)` is rebuilt to carry the generated primary key, so it comes back with the excluded component **reset to its default** while the object you passed in stays untouched:
+
+```java
+var input = new City(null, "a temporary note", "Prague");   // note is @Transient
+var saved = crud.insert(input);
+// saved.note() == null, input.note() == "a temporary note"
+```
+
+Keep the value in the original object, or model it as a regular property. A compact constructor validating such a component — `Objects.requireNonNull(note)` for example — fails whenever the ORM rebuilds the record.
 
 ### Caching Strategy
 

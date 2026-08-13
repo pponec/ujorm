@@ -43,6 +43,23 @@ public class EntityManagerRecordTransientTest extends AbstractDaoTest {
         Assertions.assertNull(reloaded.note(), "The transient component gets the default value");
     }
 
+    /**
+     * The entity returned by an INSERT is rebuilt to carry the generated primary key, so the
+     * excluded component comes back reset while the passed object stays untouched. Keep the value
+     * in the original object, or model it as a regular property.
+     */
+    @Test
+    void transientComponentIsResetByInsert() {
+        var crud = CTX.entityManager(TransientCity.class, Long.class).crud(dbConnection);
+        var input = new TransientCity(null, "A temporary note", "Prague");
+        var inserted = crud.insert(input);
+
+        Assertions.assertEquals("A temporary note", input.note(), "The passed object stays untouched");
+        Assertions.assertNull(inserted.note(), "The returned entity has the component reset");
+        Assertions.assertEquals("Prague", inserted.name(), "A mapped component survives the rebuild");
+        Assertions.assertNotNull(inserted.id(), "The primary key is assigned");
+    }
+
     /** The transient component is missing in the SQL statement of the entity. */
     @Test
     void transientComponentIsOutOfTheSql() {
