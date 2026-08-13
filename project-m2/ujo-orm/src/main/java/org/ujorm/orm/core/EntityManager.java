@@ -86,6 +86,35 @@ public final class EntityManager<D, V> {
         this.resultSetMapper = resultSetMapper;
         this.config = config;
         this.utilities = new Utilities();
+
+        checkWritableProperties(domainHandler);
+    }
+
+    /**
+     * The ORM maps a Java Record or a <strong>mutable</strong> JavaBean, because reading an entity
+     * from a database means assigning its values. A record is assigned by its canonical constructor,
+     * while a bean property requires a setter.
+     * <p>Only the own properties of the entity are checked. An entity behind a relation keeps its
+     * own contract: a read-only property of the target reports itself on the first row mapping,
+     * where the {@link org.ujorm.core.impl.AbstractKey#unsupportedSetter(Key)} exception names it
+     * by the full name. Building the whole entity graph here would move that failure to the start
+     * of the application, but the table model is built lazily anyway, so the check would still
+     * guarantee no more than a half of the mapping.
+     *
+     * @throws IllegalStateException A bean property has a getter only.
+     */
+    private void checkWritableProperties(@NotNull DomainHandler<D> domainHandler) {
+        final var domainClass = domainHandler.getDomainClass();
+        if (domainClass.isRecord()) {
+            return; // No record component has a setter by design.
+        }
+        for (var key : domainHandler.getKeyList()) {
+            if (!key.info().writable()) {
+                throw new IllegalStateException(("The entity %s has no setter for the property '%s'."
+                        + " Add the setter, or exclude the field by the @Transient annotation.")
+                        .formatted(domainClass.getSimpleName(), key.name()));
+            }
+        }
     }
 
     /**

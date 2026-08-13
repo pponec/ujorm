@@ -42,6 +42,11 @@ class DomainModelBuilder {
      * Creates a list of DomainPropertyModel for the given class (Bean or Record).
      * Parses JPA annotations to populate database column names, primary keys, and nullability.
      * Traverses the class hierarchy to include inherited properties.
+     * <p>
+     * A getter is sufficient for a bean property here, so this model is intentionally a superset
+     * of the compile-time model built by the {@code UjormMetaProcessor}, which requires a setter too.
+     * The difference is deliberate: a non-persistent class can read a property without a setter,
+     * while the {@code ujo-orm} module rejects such an entity - see the {@code EntityManager} constructor.
      *
      * @param beanOrRecord The class to inspect.
      * @return List of property models describing the class attributes.

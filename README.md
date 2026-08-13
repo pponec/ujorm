@@ -236,6 +236,19 @@ index for quick pattern lookup.
 Ujorm3 derives mapping from JPA/Jakarta annotations (`@Table`, `@Column`, `@Id`).
 M:1 relationships are recognized if an attribute's class has a `@Table` annotation.
 
+### Supported Entity Types
+
+The `ujo-orm` module maps two kinds of classes:
+
+* **Java Record** — values are assigned by the canonical constructor.
+* **Mutable JavaBean** — a public no-argument constructor, and a getter **and a setter** for every mapped property.
+
+Properties are derived from the **declared fields** rather than from JavaBeans introspection, so a derived getter without a matching field is not mapped at all. A field is excluded from the mapping by the `@Transient` annotation or by the `transient` modifier.
+
+A read-only property — a field with a getter and no setter — is a valid JavaBeans construct and the `ujo-core` metamodel supports it, so a non-persistent class annotated by `@Domain` can read it. The `ujo-orm` module cannot map it as a column, because reading an entity from a database means assigning its values; such an entity is rejected when its `EntityManager` is created. Add the setter, or exclude the field by `@Transient`.
+
+The check covers the **own properties** of the entity. An entity behind a relation keeps its own contract: a read-only property of the target reports itself on the first row mapping by an `UnsupportedOperationException` naming the property in full.
+
 ### Caching Strategy
 
 There is **no data caching** for user queries.
