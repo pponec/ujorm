@@ -8,9 +8,10 @@ release 3.0.5-SNAPSHOT (?)
 + CORE: Fix the runtime metamodel generator for a record having a transient component; the canonical constructor is built from the record components now, so an excluded component keeps its position and gets a default value. Note that the default is assigned whenever the ORM builds the record, not only on a database read - the entity returned by Crud.insert() is rebuilt to carry the generated primary key, hence it comes back with the excluded component reset, while the passed object stays untouched.
 + CORE: New method KeyInfo.writable() reports whether the value can be assigned to an existing domain object. The AbstractKey class returns false for a record by default, and a generated key overrides the method by the fact from the domain model. The default implementation returning true is a temporary compromise keeping the binary compatibility of a patch release; the method becomes abstract in the release 3.1.0.
 + CORE: New method TableIdentifier.isEntity() names a single rule to recognize a class mapped to a database table.
++ CORE: The metamodel generator reports a domain class having no mapped property; a class whose every field is excluded - a record with all components annotated by @Transient, for example - built an empty model and emitted an uncompilable source code, while the failure named the generated class instead of the real cause. The JavaSourceGenerator.getSourceCode() method checks the model upfront now and throws IllegalArgumentException naming the domain class along with the reason.
 
 
-release 3.0.4 (?)
+release 3.0.4 (2026-06-06)
 + ORM: SelectQuery supports filtering a foreign key by its relation object; the related entity is translated to its primary key and bound to the foreign-key column, so the filter resolves to a direct FK comparison without a JOIN.
 + ORM: SelectQuery supports SQL DELETE driven by a type-safe Criterion (sql("DELETE") with a where clause).
 + ORM: Fix SelectQueryBuilder JOIN generation to resolve the primary key from the referenced entity instead of the source one; the ON clause previously used the wrong table's primary key and worked only by accident when both tables shared an "id" primary key column.
