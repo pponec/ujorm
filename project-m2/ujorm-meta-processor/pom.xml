@@ -4,7 +4,7 @@
 
     <groupId>org.ujorm</groupId>
     <artifactId>ujorm-meta-processor</artifactId>
-    <version>3.0.5-SNAPSHOT</version>
+    <version>3.0.6-SNAPSHOT</version>
     <packaging>jar</packaging>
     <name>ujorm-meta-processor</name>
     <description>Generates metamodel from entities during the compilation phase using APT.</description>
@@ -31,7 +31,7 @@
     </scm>
 
     <properties>
-        <revision>3.0.5-SNAPSHOT</revision>
+        <revision>3.0.6-SNAPSHOT</revision>
         <java.version>17</java.version>
         <maven.compiler.target>${java.version}</maven.compiler.target>
         <maven.compiler.source>${java.version}</maven.compiler.source>

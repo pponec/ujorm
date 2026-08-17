@@ -10,7 +10,7 @@
 
     <groupId>org.ujorm</groupId>
     <artifactId>ujo-arangodb</artifactId>
-    <version>3.0.5-SNAPSHOT</version>
+    <version>3.0.6-SNAPSHOT</version>
     <packaging>jar</packaging>
     <url>http://ujorm.org</url>
     <name>ujo-arangodb</name>
@@ -24,7 +24,7 @@
     </contributors>
 
     <properties>
-        <revision>3.0.5-SNAPSHOT</revision>
+        <revision>3.0.6-SNAPSHOT</revision>
         <java.version>17</java.version>
         <maven.compiler.target>${java.version}</maven.compiler.target>
         <maven.compiler.source>${java.version}</maven.compiler.source>
