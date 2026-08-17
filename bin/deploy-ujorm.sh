@@ -1,7 +1,15 @@
 #!/bin/sh
-# URL Tutorial: hhttps://docs.sonatype.org/display/Repository/Sonatype+OSS+Maven+Repository+Usage+Guide#SonatypeOSSMavenRepositoryUsageGuide-7a.DeploySnapshotsandStageReleaseswithMaven
-# URL Nexus: https://oss.sonatype.org/index.html#view-repositories;snapshots~browsestorage
-# SNAPSHOT deploy: mvn clean deploy -Pproduction -Psign -DskipTests
+# Publishes the release to Maven Central through the Central Portal.
+# Tutorial: https://central.sonatype.org/publish/publish-portal-maven/
+# Artefacts: https://central.sonatype.com/namespace/org.ujorm
+#
+# The central-publishing-maven-plugin runs with autoPublish=true, hence the
+# artefacts go live at once and no version can be withdrawn afterwards.
+# Check out the release branch first, so that no SNAPSHOT gets published.
+#
+# Credentials: the <server> of the id "central" in the ~/.m2/settings.xml.
+# Signing: the maven-gpg-plugin, whose key is named by the "gpg" profile
+# of the same file; GnuPG asks for the passphrase interactively.
 ###################################################################
 
 set -e
@@ -13,9 +21,6 @@ cd "$PROJECT_ROOT"
 # Required Release (example: RELEASE=1.30):
 RELEASE=$( cd project-m2/ujo-tools; mvn help:evaluate -Dexpression=project.version | grep -v "\[" )
 echo RELEASE=${RELEASE}
-
-# Deploy URL:
-URL=https://oss.sonatype.org/service/local/staging/deploy/maven2/
 
 # Create the build:
 mvn clean install
