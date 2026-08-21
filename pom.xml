@@ -75,8 +75,9 @@
     </dependencyManagement>
 
     <scm>
-        <url>http://sourceforge.net/p/ujoframework/svn/HEAD/tree/trunk/</url>
-        <connection>scm:svn:https://ujoframework.svn.sourceforge.net/svnroot/ujoframework/trunk</connection>
+        <url>https://github.com/pponec/ujorm.git</url>
+        <connection>scm:git:git@github.com/pponec/ujorm.git</connection>
+        <developerConnection>scm:git:git@github.com/pponec/ujorm.git</developerConnection>
     </scm>
 
     <build>

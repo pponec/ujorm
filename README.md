@@ -434,7 +434,7 @@ Join the conversation or report issues on GitHub:
 
 ## Related Links
 
-* [Ujorm Main Project](https://github.com/pponec/ujorm) — the core library this project is built on.
+* [Ujorm3 on GitHub](https://github.com/pponec/ujorm) — the project home, in case you are reading this file outside GitHub.
 * [Petstore Demo](https://github.com/pponec/ujorm-petstore). An open-source project demonstrating the Ujorm3 library. It uses the ORM module for database queries and the Element class for building the GUI.
 * [ORM Benchmarks](https://github.com/pponec/orm-benchmarks). A performance comparison of Ujorm3 across several key metrics. Tests are run on PostgreSQL (via Docker) and H2 (in in-memory mode) databases.
 * [Ujorm Element](README_ELEMENT.md). An overview of the Element class for building HTML pages using Java code.
@@ -443,3 +443,9 @@ Join the conversation or report issues on GitHub:
 * [JavaDoc](https://www.javadoc.io/doc/org.ujorm/ujo-orm/latest/org/ujorm/orm/package-summary.html) for class descriptions.
 * [Ujorm Release Notes](project-m2/ujo-core/src/main/java/org/ujorm/core/doc-files/changes.txt).
 * Introduction to the Ujorm (blog): [Native SQL in Java without JDBC boilerplate — meet Ujorm3](https://dev.to/pponec/native-sql-in-java-without-jdbc-boilerplate-meet-ujorm3-3ab2)
+
+---
+
+## License
+
+Ujorm3 is released under the [Apache License 2.0](LICENSE).

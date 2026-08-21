@@ -10,7 +10,7 @@
     <version>3.0.6-SNAPSHOT</version>
     <packaging>jar</packaging>
     <name>ujo-core</name>
-    <description>Map JDBC ResultSet to POJO</description>
+    <description>Type-safe Key pattern and domain metamodel shared by the Ujorm modules.</description>
     <url>https://ujorm.org/</url> <!-- home page -->
 
     <licenses>

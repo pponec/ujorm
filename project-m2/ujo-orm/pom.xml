@@ -10,7 +10,7 @@
     <version>3.0.6-SNAPSHOT</version>
     <packaging>jar</packaging>
     <name>ujo-orm</name>
-    <description>Map JDBC ResultSet to Java</description>
+    <description>Lightweight ORM for Java 17+ that maps database rows to JavaBeans or records using compile-time generated typed keys, with a type-safe query DSL and native SQL support.</description>
     <url>https://ujorm.org/</url> <!-- home page -->
 
     <licenses>

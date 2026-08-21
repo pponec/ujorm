@@ -14,7 +14,7 @@
     <packaging>jar</packaging>
     <url>http://ujorm.org</url>
     <name>ujo-arangodb</name>
-    <description>Ujorm-web module for a common use</description>
+    <description>ArangoDB document database integration for Ujorm.</description>
     <contributors>
         <contributor>
             <name>Pavel Ponec</name>

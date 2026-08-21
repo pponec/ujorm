@@ -108,7 +108,7 @@ Add the following dependency to your `pom.xml`. The library requires **Java 17 o
 <dependency>
     <groupId>org.ujorm</groupId>
     <artifactId>ujo-web</artifactId>
-    <version>3.0.0</version>
+    <version>3.0.5</version>
 </dependency>
 ```
 
@@ -118,4 +118,8 @@ Add the following dependency to your `pom.xml`. The library requires **Java 17 o
 
 The complete implementation of the concepts described above, including the GET/POST flow and AJAX integration, can be found in the following file:
 
-👉 **[TutorialServlet.java](https://github.com/pponec/ujorm/blob/master/project-m2/ujo-web/src/test/java/org/ujorm/tools/tutorial/TutorialServlet.java)**
+👉 **[TutorialServlet.java](https://github.com/pponec/ujorm/blob/HEAD/project-m2/ujo-web/src/test/java/org/ujorm/tools/tutorial/TutorialServlet.java)**
+
+---
+
+*Project: https://github.com/pponec/ujorm*
