@@ -42,6 +42,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <junit.version>5.12.2</junit.version>
         <mockito.version>5.21.0</mockito.version>
+        <logback.version>1.5.38</logback.version>
     </properties>
 
     <dependencies>
@@ -101,7 +102,7 @@
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
-            <version>1.5.20</version>
+            <version>${logback.version}</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
