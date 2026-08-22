@@ -56,7 +56,7 @@ public class DomainHandlerService {
     @SuppressWarnings("unchecked")
     private <D> DomainHandler<D> createHandler(Class<D> domainClass) {
         var handlerClassName = ClassName.ofGenerated(domainClass);
-        var handlerClass = handlerClassName.classForName();
+        var handlerClass = handlerClassName.classForName(domainClass.getClassLoader());
         if (handlerClass == null) {
             try {
                 handlerClass = createClass(domainClass, handlerClassName);

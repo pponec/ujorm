@@ -61,12 +61,28 @@ public record ClassName(String packageName, String className) {
         return ofGenerated(meta.domainClass());
     }
 
-    /** Try to load a class for this name. */
+    /** Try to load a class for this name by the class loader of this library. */
     @Nullable
     public Class<?> classForName() {
+        return classForName(getClass().getClassLoader());
+    }
+
+    /**
+     * Try to load a class for this name by the required class loader.
+     * <p>The parameterless variant asks the class loader of this library, which does not see
+     * the application classes whenever Ujorm sits in a parent class loader - a servlet container
+     * {@code lib/} directory, OSGi or a plugin class loader. The class loader of the domain class
+     * is the one that knows a pre-generated handler, so a lookup by it prevents a silent fallback
+     * to the runtime compiler.
+     *
+     * @param classLoader The class loader to ask, the bootstrap one for the {@code null} value.
+     * @return The class or {@code null} if it is not available.
+     */
+    @Nullable
+    public Class<?> classForName(@Nullable ClassLoader classLoader) {
         try {
-            return Class.forName(toString());
-        } catch (ClassNotFoundException ex) {
+            return Class.forName(toString(), false, classLoader);
+        } catch (ClassNotFoundException | LinkageError ex) {
             return null;
         }
     }
