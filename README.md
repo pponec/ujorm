@@ -9,7 +9,7 @@ It supports mapping to both mutable JavaBeans and immutable Records, including M
 
 One especially useful part of that API is the **type-safe query DSL**: `SELECT` statements — including `JOIN` clauses and `WHERE` conditions — are assembled from the domain model through a **fluent API** (method chaining) instead of being written as raw strings. Conditions are expressed through `Criterion` objects, so the compiler verifies not only the referenced columns but also the *type* of every value placed into a condition. When native SQL is the better fit, the `SqlQuery` API remains available with safe parameter binding.
 
-To achieve data manipulation speeds comparable to hand-written JDBC code, Ujorm3 compiles its own bytecode at runtime.
+To achieve data manipulation speeds comparable to hand-written JDBC code, Ujorm3 compiles its own bytecode at runtime — it *generates* new mapping helper classes from your domain model; it never modifies, instruments, or rewrites your existing application bytecode.
 At its core, the library is built around the **Typed Key Pattern**.
 These keys act as typed descriptors, providing compile-time safety without casting and enabling fast bulk operations.
 They are also the building blocks of the query DSL described above, so the same metadata that drives mapping also drives type-checked queries.
@@ -393,10 +393,16 @@ In addition, the project includes automated integration tests for basic CRUD ope
   Yes. It relies purely on your project's domain classes with no external data input —
   the same approach used by established libraries such as HikariCP or Spring.
 
+* **Does Ujorm3 manipulate application bytecode?**<br/>
+  No. Ujorm3 does not use Java agents, and it does not modify, instrument, or rewrite the bytecode
+  of your existing application classes — that would be bytecode *manipulation* (the technique used
+  by tools like ASM, Javassist, or CGLIB). Ujorm3 only *generates* new, self-contained mapping
+  helper classes from your domain model and compiles them at runtime; your own classes are left
+  untouched.
+
 * **Is the library difficult to maintain?**<br/>
   Easy maintenance was one of the main goals of the project.
   The ORM library consists of a few well-defined components with clearly defined responsibilities.
-  It does not use Java agents or rewrite arbitrary application bytecode at runtime; mapping helpers are generated from your domain model.
   The library has an extremely compact codebase and is completely independent of third-party libraries.
 
 * **How can I teach an AI to use the Ujorm3 ORM library?**<br/>
