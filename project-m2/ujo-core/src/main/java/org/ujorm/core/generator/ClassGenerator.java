@@ -22,6 +22,8 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -30,6 +32,11 @@ import javax.tools.*;
 import org.jetbrains.annotations.NotNull;
 
 public class ClassGenerator {
+
+    /** Hint for the case the runtime provides no Java compiler, a JRE or a GraalVM native image. */
+    private static final String NO_COMPILER_MSG = "Java Compiler unavailable, so the class %s"
+            + " can not be built at runtime. Ensure you are running with a JDK, or pre-generate"
+            + " the handler classes at build time - see " + HandlerPrecompiler.class.getName() + ".";
 
     /**
      * Compiles the given source code in-memory and loads the resulting class.
@@ -43,8 +50,43 @@ public class ClassGenerator {
      * @throws RuntimeException if compilation fails (includes compiler error messages).
      */
     public Class<?> createClass(String sourceCode, ClassName canonicalClassName) {
+        try {
+            return loadClass(compileToBytes(sourceCode, canonicalClassName), canonicalClassName);
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException("Failed to create class: " + canonicalClassName, e);
+        }
+    }
+
+    /**
+     * Compiles the given source code and writes the result to the target directory.
+     * <p>
+     * Unlike {@link #createClass(String, ClassName)} the classes are not loaded here, so the method
+     * serves a build-time tool that generates the handlers ahead of time.
+     *
+     * @param sourceCode         The Java source code.
+     * @param canonicalClassName The fully qualified name of the top-level class.
+     * @param outputDir          The root directory of the class files, typically {@code target/classes}.
+     * @return Binary names of all written classes, the nested ones included.
+     * @throws RuntimeException if compilation or writing fails.
+     */
+    public List<String> compileToDirectory(String sourceCode, ClassName canonicalClassName, Path outputDir) {
+        var classBytes = compileToBytes(sourceCode, canonicalClassName);
+        try {
+            for (var entry : classBytes.entrySet()) {
+                var target = outputDir.resolve(entry.getKey().replace('.', '/') + ".class");
+                Files.createDirectories(target.getParent());
+                Files.write(target, entry.getValue());
+            }
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to write class files of: " + canonicalClassName, e);
+        }
+        return List.copyOf(classBytes.keySet());
+    }
+
+    /** Compiles the source code in-memory and returns the bytecode of each resulting class. */
+    private Map<String, byte[]> compileToBytes(String sourceCode, ClassName canonicalClassName) {
         var compiler = ToolProvider.getSystemJavaCompiler();
-        Objects.requireNonNull(compiler, "Java Compiler unavailable. Ensure you are running with a JDK.");
+        Objects.requireNonNull(compiler, () -> NO_COMPILER_MSG.formatted(canonicalClassName));
         var classBytes = new HashMap<String, byte[]>();
         var diagnostics = new DiagnosticCollector<JavaFileObject>();
 
@@ -52,9 +94,9 @@ public class ClassGenerator {
              var fileManager = createCapturingFileManager(standardManager, classBytes)) {
 
             compile(compiler, fileManager, diagnostics, sourceCode, canonicalClassName);
-            return loadClass(classBytes, canonicalClassName);
+            return classBytes;
 
-        } catch (IOException | ClassNotFoundException e) {
+        } catch (IOException e) {
             throw new RuntimeException("Failed to create class: " + canonicalClassName, e);
         }
     }
