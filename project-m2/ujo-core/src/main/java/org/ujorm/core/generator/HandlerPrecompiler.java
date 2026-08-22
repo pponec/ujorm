@@ -61,6 +61,15 @@ public class HandlerPrecompiler {
     /** Resource with the GraalVM reflection metadata of the generated handlers. */
     public static final String REFLECT_CONFIG = "META-INF/native-image/org.ujorm/ujo-core/reflect-config.json";
 
+    /** The minimal Java release supported by Ujorm. */
+    static final int MIN_JAVA_RELEASE = 17;
+
+    /** Bytes of the class file header up to the major version: magic, minor and major version. */
+    private static final int CLASS_HEADER_SIZE = 8;
+
+    /** Difference between the class file major version and the Java release, e.g. 61 - 44 = 17. */
+    private static final int CLASS_MAJOR_OFFSET = 44;
+
     /** A class loader that sees the compiled domain classes and their dependencies. */
     @NotNull
     private final ClassLoader classLoader;
@@ -101,7 +110,7 @@ public class HandlerPrecompiler {
                 var sourceCode = generator.getSourceCode(DomainModel.of(domainClass), handlerName);
 
                 writeSource(sourceCode, handlerName, javaOutputDir);
-                classGenerator.compileToDirectory(sourceCode, handlerName, classOutputDir);
+                classGenerator.compileToDirectory(sourceCode, handlerName, classOutputDir, javaRelease(domainClass));
                 handlerNames.add(handlerName.toString());
             }
         } finally {
@@ -109,6 +118,32 @@ public class HandlerPrecompiler {
         }
         writeReflectConfig(handlerNames, classOutputDir);
         return handlerNames;
+    }
+
+    /**
+     * Reads the target Java release from the class file of the domain class, so the handler
+     * gets the very same bytecode version as the entity it serves.
+     * <p>
+     * A build JDK is often newer than the runtime one, and the default bytecode version of the
+     * compiler would then be unreadable on the target JVM. The runtime compilation has no such
+     * problem, because it runs on the target JVM itself.
+     *
+     * @return The release between the minimal one supported by Ujorm and the running JDK.
+     */
+    private int javaRelease(@NotNull Class<?> domainClass) {
+        var resource = domainClass.getName().replace('.', '/') + ".class";
+        try (var input = classLoader.getResourceAsStream(resource)) {
+            if (input != null) {
+                var header = input.readNBytes(CLASS_HEADER_SIZE);
+                if (header.length == CLASS_HEADER_SIZE) {
+                    var major = ((header[6] & 0xFF) << 8) | (header[7] & 0xFF);
+                    return clampRelease(major - CLASS_MAJOR_OFFSET);
+                }
+            }
+        } catch (IOException e) {
+            throw new UncheckedIOException("Failed to read the class file: " + resource, e);
+        }
+        return clampRelease(MIN_JAVA_RELEASE);
     }
 
     /** Loads a domain class by the dedicated class loader. */
@@ -180,6 +215,11 @@ public class HandlerPrecompiler {
         } catch (IOException e) {
             throw new UncheckedIOException("Failed to read the entity index: " + source, e);
         }
+    }
+
+    /** Limits the release to the range supported by both Ujorm and the running JDK. */
+    static int clampRelease(int release) {
+        return Math.max(MIN_JAVA_RELEASE, Math.min(release, Runtime.version().feature()));
     }
 
     /** Creates a class loader that sees the compiled domain classes. */

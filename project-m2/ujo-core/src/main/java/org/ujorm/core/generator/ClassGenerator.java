@@ -30,6 +30,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import javax.tools.*;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class ClassGenerator {
 
@@ -51,7 +52,7 @@ public class ClassGenerator {
      */
     public Class<?> createClass(String sourceCode, ClassName canonicalClassName) {
         try {
-            return loadClass(compileToBytes(sourceCode, canonicalClassName), canonicalClassName);
+            return loadClass(compileToBytes(sourceCode, canonicalClassName, null), canonicalClassName);
         } catch (ClassNotFoundException e) {
             throw new RuntimeException("Failed to create class: " + canonicalClassName, e);
         }
@@ -66,11 +67,19 @@ public class ClassGenerator {
      * @param sourceCode         The Java source code.
      * @param canonicalClassName The fully qualified name of the top-level class.
      * @param outputDir          The root directory of the class files, typically {@code target/classes}.
+     * @param release            Target Java release of the bytecode, {@code null} for the compiler default.
+     *        A build JDK newer than the runtime would emit an unreadable class file otherwise,
+     *        which the runtime compilation can never do, for it runs on the target JVM itself.
      * @return Binary names of all written classes, the nested ones included.
      * @throws RuntimeException if compilation or writing fails.
      */
-    public List<String> compileToDirectory(String sourceCode, ClassName canonicalClassName, Path outputDir) {
-        var classBytes = compileToBytes(sourceCode, canonicalClassName);
+    public List<String> compileToDirectory(
+            String sourceCode,
+            ClassName canonicalClassName,
+            Path outputDir,
+            @Nullable Integer release) {
+
+        var classBytes = compileToBytes(sourceCode, canonicalClassName, release);
         try {
             for (var entry : classBytes.entrySet()) {
                 var target = outputDir.resolve(entry.getKey().replace('.', '/') + ".class");
@@ -84,7 +93,7 @@ public class ClassGenerator {
     }
 
     /** Compiles the source code in-memory and returns the bytecode of each resulting class. */
-    private Map<String, byte[]> compileToBytes(String sourceCode, ClassName canonicalClassName) {
+    private Map<String, byte[]> compileToBytes(String sourceCode, ClassName canonicalClassName, @Nullable Integer release) {
         var compiler = ToolProvider.getSystemJavaCompiler();
         Objects.requireNonNull(compiler, () -> NO_COMPILER_MSG.formatted(canonicalClassName));
         var classBytes = new HashMap<String, byte[]>();
@@ -93,7 +102,7 @@ public class ClassGenerator {
         try (var standardManager = compiler.getStandardFileManager(diagnostics, null, null);
              var fileManager = createCapturingFileManager(standardManager, classBytes)) {
 
-            compile(compiler, fileManager, diagnostics, sourceCode, canonicalClassName);
+            compile(compiler, fileManager, diagnostics, sourceCode, canonicalClassName, release);
             return classBytes;
 
         } catch (IOException e) {
@@ -127,7 +136,8 @@ public class ClassGenerator {
                          JavaFileManager fileManager,
                          DiagnosticCollector<JavaFileObject> diagnostics,
                          String sourceCode,
-                         ClassName canonicalClassName) {
+                         ClassName canonicalClassName,
+                         @Nullable Integer release) {
 
         var uri = URI.create("string:///"
                 + canonicalClassName.toString().replace('.', '/')
@@ -140,7 +150,7 @@ public class ClassGenerator {
             }
         };
 
-        var options = getCompilerOptions();
+        var options = getCompilerOptions(release);
         var task = compiler.getTask(null, fileManager, diagnostics, options, null, Collections.singletonList(sourceObject));
 
         if (!Boolean.TRUE.equals(task.call())) {
@@ -167,7 +177,12 @@ public class ClassGenerator {
     }
 
     /** Generates compiler options to explicitly define the classpath from the environment. */
-    private List<String> getCompilerOptions() {
+    private List<String> getCompilerOptions(@Nullable Integer release) {
+        var result = new ArrayList<String>(4);
+        if (release != null) {
+            result.add("--release");
+            result.add(release.toString());
+        }
         var paths = Stream.of(System.getProperty("java.class.path", ""));
         var contextClassLoader = Thread.currentThread().getContextClassLoader();
         var pathSeparator = System.getProperty("path.separator");
@@ -179,7 +194,11 @@ public class ClassGenerator {
         var classPath = Stream.concat(paths, classLoaders)
                 .filter(p -> !p.isEmpty())
                 .collect(Collectors.joining(pathSeparator));
-        return classPath.isEmpty() ? List.of() : List.of("-classpath", classPath);
+        if (!classPath.isEmpty()) {
+            result.add("-classpath");
+            result.add(classPath);
+        }
+        return result;
     }
 
     /** Converts URL to an absolute path safely using NIO. */

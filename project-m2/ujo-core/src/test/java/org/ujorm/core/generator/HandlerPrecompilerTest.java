@@ -80,6 +80,18 @@ class HandlerPrecompilerTest {
         assertTrue(content.contains("<init>"), content);
     }
 
+    /** A build JDK newer than the runtime one must not emit an unreadable class file. */
+    @Test
+    void generatedBytecodeTargetsTheReleaseOfTheDomainClass() throws Exception {
+        var handlers = new HandlerPrecompiler(getClass().getClassLoader())
+                .generate(List.of(City.class.getName()), null, outputDir);
+        var handlerFile = outputDir.resolve(handlers.get(0).replace('.', '/') + ".class");
+        var expected = HandlerPrecompiler.clampRelease(majorVersionOf(City.class) - 44) + 44;
+
+        assertEquals(expected, majorVersionOf(Files.readAllBytes(handlerFile)),
+                "The handler must share the class file version of its domain class");
+    }
+
     /** The generated source code is available for an inspection. */
     @Test
     void writesTheGeneratedSourceCode() throws Exception {
@@ -108,6 +120,19 @@ class HandlerPrecompilerTest {
                 HandlerPrecompiler.readEntityIndex(outputDir));
         assertEquals(List.of(), HandlerPrecompiler.readEntityIndex(outputDir.resolve("missing")),
                 "A missing index is not an error");
+    }
+
+    /** Reads the class file major version of a compiled class. */
+    private int majorVersionOf(Class<?> type) throws Exception {
+        var resource = type.getName().replace('.', '/') + ".class";
+        try (var input = getClass().getClassLoader().getResourceAsStream(resource)) {
+            return majorVersionOf(input.readNBytes(8));
+        }
+    }
+
+    /** Reads the class file major version from the header bytes. */
+    private int majorVersionOf(byte[] classFile) {
+        return ((classFile[6] & 0xFF) << 8) | (classFile[7] & 0xFF);
     }
 
     /** Generates the handler of the domain class and loads it from the output directory. */
