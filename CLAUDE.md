@@ -6,7 +6,10 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ProjectUjorm is a lightweight Java 17+ ORM library. It maps database rows to JavaBeans or Records using clean SQL without unnecessary abstraction. Core philosophy: no lazy loading, M:1 relations only, no entity lifecycle management, no magic proxies.
 
-Runtime bytecode compilation achieves performance comparable to hand-written JDBC (<3 MB, zero external dependencies).
+Ujorm3 reaches a performance comparable to hand-written JDBC by generating mapping helper classes
+from the domain model and compiling them — it never modifies or instruments the bytecode of your own
+classes. The ORM runtime is about 270 kB (`ujo-tools` 60 kB + `ujo-core` 102 kB + `ujo-orm` 116 kB,
+measured on 3.0.6) with zero external dependencies.
 
 ## Project Structure
 
