@@ -1,6 +1,7 @@
 package org.ujorm.orm.dsl;
 
 import org.junit.jupiter.api.Test;
+import org.ujorm.core.criterion.Criterion;
 import org.ujorm.orm.AbstractDatabaseTest;
 import org.ujorm.orm.SqlQuery;
 import org.ujorm.orm.core.EntityManager;
@@ -125,6 +126,51 @@ class SelectQueryTest extends AbstractDatabaseTest {
             assertEquals(1, employees.size());
             assertTrue(sqlWithValues.contains("[1]"), sqlWithValues);
             assertTrue(sqlWithValues.contains("[INACTIVE]"), sqlWithValues);
+        }
+    }
+
+    /** A comparison with NULL is rendered by the IS NULL operator, because {@code column = NULL} is never true. */
+    @Test
+    void testWhereNullOfRelation() {
+        var city = cityManager.crud(connection()).insert(new City(null, "Vienna", "AT"));
+        var boss = entityManager.crud(connection()).insert(Employee.of("Boss", city, null));
+        entityManager.crud(connection()).insert(Employee.of("Worker", city, boss));
+
+        assertEquals("[Boss]", findNames(QEmployee.boss.whereNull()));
+        assertEquals("[Boss]", findNames(QEmployee.boss.whereEq((Employee) null)));
+        assertEquals("[Worker]", findNames(QEmployee.boss.whereNotNull()));
+        assertEquals("[Worker]", findNames(QEmployee.boss.whereNeq((Employee) null)));
+    }
+
+    @Test
+    void testWhereNullOfColumn() {
+        var city = cityManager.crud(connection()).insert(new City(null, "Bern", "CH"));
+        entityManager.crud(connection()).insert(Employee.of("Joe", city, null));
+
+        try (var query = new SelectQuery<>(connection(), entityManager)) {
+            query.sql("SELECT")
+                    .column(QEmployee.name)
+                    .where(QEmployee.name.whereNull());
+            query.toString(); // Build the query.
+            var sql = query.sqlTemplate();
+            assertTrue(sql.contains("\"NAME\" IS NULL"), sql);
+            assertEquals(0, query.toList().size());
+        }
+        assertEquals("[Joe]", findNames(QEmployee.name.whereNotNull()));
+    }
+
+    private String findNames(Criterion criterion) {
+        try (var query = new SelectQuery<>(connection(), entityManager)) {
+            return query.sql("SELECT")
+                    .column(QEmployee.id)
+                    .column(QEmployee.name)
+                    .where(criterion)
+                    .tail("ORDER BY", QEmployee.id)
+                    .toList()
+                    .stream()
+                    .map(Employee::getName)
+                    .toList()
+                    .toString();
         }
     }
 
