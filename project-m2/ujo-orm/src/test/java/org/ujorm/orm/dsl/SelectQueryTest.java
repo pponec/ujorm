@@ -1,6 +1,8 @@
 package org.ujorm.orm.dsl;
 
 import org.junit.jupiter.api.Test;
+import org.ujorm.core.criterion.Criterion;
+import org.ujorm.core.criterion.Operator;
 import org.ujorm.orm.AbstractDatabaseTest;
 import org.ujorm.orm.SqlQuery;
 import org.ujorm.orm.core.EntityManager;
@@ -11,6 +13,7 @@ import java.sql.Connection;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /** DslQuery test class with shared connection */
@@ -128,6 +131,104 @@ class SelectQueryTest extends AbstractDatabaseTest {
         }
     }
 
+    /** A comparison with NULL is rendered by the IS NULL operator, because {@code column = NULL} is never true. */
+    @Test
+    void testWhereNullOfRelation() {
+        var city = cityManager.crud(connection()).insert(new City(null, "Vienna", "AT"));
+        var boss = entityManager.crud(connection()).insert(Employee.of("Boss", city, null));
+        entityManager.crud(connection()).insert(Employee.of("Worker", city, boss));
+
+        assertEquals("[Boss]", findNames(QEmployee.boss.whereNull()));
+        assertEquals("[Boss]", findNames(QEmployee.boss.whereEq((Employee) null)));
+        assertEquals("[Worker]", findNames(QEmployee.boss.whereNotNull()));
+        assertEquals("[Worker]", findNames(QEmployee.boss.whereNeq((Employee) null)));
+    }
+
+    @Test
+    void testWhereNullOfColumn() {
+        var city = cityManager.crud(connection()).insert(new City(null, "Bern", "CH"));
+        entityManager.crud(connection()).insert(Employee.of("Joe", city, null));
+
+        try (var query = new SelectQuery<>(connection(), entityManager)) {
+            query.sql("SELECT")
+                    .column(QEmployee.name)
+                    .where(QEmployee.name.whereNull());
+            query.toString(); // Build the query.
+            var sql = query.sqlTemplate();
+            assertTrue(sql.contains("\"NAME\" IS NULL"), sql);
+            assertEquals(0, query.toList().size());
+        }
+        assertEquals("[Joe]", findNames(QEmployee.name.whereNotNull()));
+    }
+
+    /** The value of a criterion is converted by the last key of a relation path, an aliased key and a proxy too. */
+    @Test
+    void testEnumConversionOfPathAliasAndProxy() {
+        var city = cityManager.crud(connection()).insert(new City(null, "Paris", "FR"));
+        var boss = Employee.of("Boss", city, null);
+        boss.setStateOrdinal(EmployeeState.INACTIVE);
+        boss.setStateString(EmployeeState.INACTIVE);
+        boss = entityManager.crud(connection()).insert(boss);
+        entityManager.crud(connection()).insert(Employee.of("Worker", city, boss));
+
+        assertEquals("[Worker]", findNames(QEmployee.boss.join(QEmployee.stateOrdinal).whereEq(EmployeeState.INACTIVE)));
+        assertEquals("[Worker]", findNames(QEmployee.boss.join(QEmployee.stateString).whereEq(EmployeeState.INACTIVE)));
+        assertEquals("[Boss]", findNames(QEmployee.stateOrdinal.whereEq(() -> EmployeeState.INACTIVE)));
+        assertEquals("[Boss]", findNames(QEmployee.stateString.whereEq(() -> EmployeeState.INACTIVE)));
+
+        var bossState = TableAlias.aliasedKey("bossAlias", QEmployee.stateOrdinal);
+        var workers = SelectQuery.run(connection(), entityManager, query -> query
+                .columns(true)
+                .column(QEmployee.boss, bossState)
+                .where(bossState.whereEq(EmployeeState.INACTIVE))
+                .toList());
+        assertEquals(1, workers.size());
+        assertEquals("Worker", workers.get(0).getName());
+        assertEquals(EmployeeState.INACTIVE, workers.get(0).getBoss().getStateOrdinal());
+    }
+
+    /** A criterion can compare two columns, a column of a relation including. */
+    @Test
+    void testColumnComparison() {
+        var city = cityManager.crud(connection()).insert(new City(null, "Madrid", "ES"));
+        var boss = entityManager.crud(connection()).insert(Employee.of("Joe", city, null));
+        var namesake = Employee.of("Joe", city, boss);
+        namesake.setStateOrdinal(EmployeeState.INACTIVE);
+        entityManager.crud(connection()).insert(namesake);
+        entityManager.crud(connection()).insert(Employee.of("Tom", city, boss));
+
+        var bossName = QEmployee.boss.join(QEmployee.name);
+        var bossState = QEmployee.boss.join(QEmployee.stateOrdinal);
+        assertEquals("[Joe]", findNames(QEmployee.name.whereEq(bossName)));
+        assertEquals("[Tom]", findNames(QEmployee.name.where(Operator.NOT_EQ, bossName)));
+        assertEquals("[Tom]", findNames(QEmployee.name.where(Operator.GT, bossName)));
+        assertEquals("[Tom]", findNames(QEmployee.stateOrdinal.whereEq(bossState)));
+        assertEquals("[Joe, Tom]", findNames(QEmployee.stateString.whereEq(QEmployee.boss.join(QEmployee.stateString))));
+
+        var e1 = assertThrows(IllegalArgumentException.class, () ->
+                findNames(QEmployee.stateString.whereEq(QEmployee.stateOrdinal)));
+        assertTrue(e1.getMessage().contains("have different converters"), e1.getMessage());
+
+        var e2 = assertThrows(IllegalArgumentException.class, () ->
+                findNames(QEmployee.name.where(Operator.REGEXP, bossName)));
+        assertTrue(e2.getMessage().contains("can't compare the columns"), e2.getMessage());
+    }
+
+    private String findNames(Criterion criterion) {
+        try (var query = new SelectQuery<>(connection(), entityManager)) {
+            return query.sql("SELECT")
+                    .column(QEmployee.id)
+                    .column(QEmployee.name)
+                    .where(criterion)
+                    .tail("ORDER BY", QEmployee.id)
+                    .toList()
+                    .stream()
+                    .map(Employee::getName)
+                    .toList()
+                    .toString();
+        }
+    }
+
     @Test
     void testEnumWhereInForBothMappings() {
         var city = cityManager.crud(connection()).insert(new City(null, "London", "UK"));
@@ -150,6 +251,37 @@ class SelectQueryTest extends AbstractDatabaseTest {
             assertTrue(sqlWithValues.contains("[1]"), sqlWithValues);
             assertTrue(sqlWithValues.contains("[ACTIVE]"), sqlWithValues);
             assertTrue(sqlWithValues.contains("[INACTIVE]"), sqlWithValues);
+        }
+    }
+
+    @Test
+    void testEnumReadForBothMappings() {
+        var city = cityManager.crud(connection()).insert(new City(null, "Oslo", "NO"));
+        var employee = Employee.of("Ann", city, null);
+        employee.setStateOrdinal(EmployeeState.INACTIVE);
+        employee.setStateString(EmployeeState.INACTIVE);
+        var id = entityManager.crud(connection()).insert(employee).getId();
+
+        var result = entityManager.crud(connection()).findById(id).orElseThrow();
+        assertEquals(EmployeeState.INACTIVE, result.getStateOrdinal());
+        assertEquals(EmployeeState.INACTIVE, result.getStateString());
+    }
+
+    /** The column is read by the type of the mapping, so a name can't be read as an ordinal. */
+    @Test
+    void testEnumReadByMappingTypeOnly() {
+        var city = cityManager.crud(connection()).insert(new City(null, "Rome", "IT"));
+        entityManager.crud(connection()).insert(Employee.of("Tom", city, null));
+
+        try (var query = new SqlQuery(connection())) {
+            query.sql("SELECT e.id AS \"id\", e.state_string AS \"stateOrdinal\" FROM employee e");
+            var e = assertThrows(Exception.class, () -> query.toStream(employeeMapper.mapper()).toList());
+            var messages = new StringBuilder();
+            for (Throwable t = e; t != null; t = t.getCause()) {
+                messages.append(t.getMessage()).append('\n');
+            }
+            assertTrue(messages.toString().contains("stateOrdinal"), messages.toString());
+            assertTrue(messages.toString().contains("Integer"), messages.toString());
         }
     }
 

@@ -164,11 +164,11 @@ q.sql("DELETE FROM log WHERE created_at < :since").bind("since", cutoff).execute
 // IN clause
 q.sql("SELECT * FROM t WHERE id IN (:ids)").bind("ids", 1L, 2L, 3L).toStream(mapper).toList();
 
-// Enum binding — honors @Enumerated(ORDINAL/STRING) ORM metadata
+// Converted binding — honors @Enumerated and the JPA converters of the key
 q.bind("status", QEmployee.status, EmployeeState.ACTIVE, EmployeeState.PENDING)
 ```
 
-**`bind` supports:** `Boolean`, `Byte`, `Short`, `Integer`, `Long`, `BigDecimal`, `String`, `LocalDate`, `LocalDateTime`. For other types: `bindObject(name, JDBCType, values...)`.
+**`bind` supports:** `Boolean`, `Byte`, `Short`, `Integer`, `Long`, `BigDecimal`, `String`, `LocalDate`, `LocalDateTime`, and a value of any attribute by `bind(name, key, values...)` (converted by the key). For other types: `bindObject(name, JDBCType, values...)`.
 
 #### ${COLUMNS} placeholder — dynamic column list
 
@@ -235,7 +235,7 @@ void    setValue(D bean, VALUE value)
 String  name()                   // "fieldName"
 String  fullName()               // "DomainClass.fieldName"
 Class<VALUE> type()
-KeyInfo info()                   // ORM metadata: foreignKey(), mapEnumByOrdinal()
+KeyInfo info()                   // ORM metadata: foreignKey(), converter()
 short   index()                  // position in domain class
 ```
 

@@ -19,6 +19,7 @@ package org.ujorm.orm;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.ujorm.core.Key;
+import org.ujorm.core.converter.DbConverter;
 import org.ujorm.orm.model.QuotePair;
 import org.ujorm.orm.utils.JdbcUtils;
 import org.ujorm.tools.Check;
@@ -180,30 +181,27 @@ public class SqlQuery extends AbstractSqlQuery<SqlQuery> {
     }
 
     /**
-     * Bind enum values using ORM metadata of the given attribute.
-     * Mapping honors {@code @Enumerated(EnumType.ORDINAL)} and JDBC type.
+     * Bind values of the attribute converted to their database representation,
+     * for example an Enum by its {@code @Enumerated} mapping or a value by its JPA converter.
      */
-    public SqlQuery bind(@NotNull String key, @NotNull Key<?, ?> attr, @NotNull Enum<?>... values) {
+    @SafeVarargs
+    public final <V> SqlQuery bind(@NotNull String key, @NotNull Key<?, V> attr, @NotNull V... values) {
         return bind(true, key, attr, values);
     }
 
     /**
-     * Bind enum values using ORM metadata of the given attribute.
-     * Mapping honors {@code @Enumerated(EnumType.ORDINAL)} and JDBC type.
+     * Bind values of the attribute converted to their database representation,
+     * for example an Enum by its {@code @Enumerated} mapping or a value by its JPA converter.
      */
-    public SqlQuery bind(boolean enabled, @NotNull String key, @NotNull Key<?, ?> attr, @NotNull Enum<?>... values) {
+    @SafeVarargs
+    public final <V> SqlQuery bind(boolean enabled, @NotNull String key, @NotNull Key<?, V> attr, @NotNull V... values) {
         var jdbcType = JdbcUtils.findJdbcType(attr);
-        var mapByOrdinal = attr.info().mapEnumByOrdinal();
+        var converter = attr.info().converter();
         var mappedValues = new Object[values.length];
         for (int i = 0; i < values.length; i++) {
-            mappedValues[i] = toDbEnumValue(values[i], mapByOrdinal);
+            mappedValues[i] = DbConverter.toDb(converter, values[i]);
         }
         return bindObject(enabled, key, jdbcType, mappedValues);
-    }
-
-    /** Converts Enum to a DB value according to ORM mapping metadata. */
-    private Object toDbEnumValue(@NotNull Enum<?> value, boolean mapByOrdinal) {
-        return mapByOrdinal ? value.ordinal() : value.name();
     }
 
     // ------- LABELS -------

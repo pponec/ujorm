@@ -2,6 +2,7 @@ package org.ujorm.core;
 
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.BeforeEach;
+import org.ujorm.core.converter.DbConverter;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -152,8 +153,8 @@ class KeyTest {
                 }
 
                 @Override
-                public boolean mapEnumByOrdinal() {
-                    return false;
+                public DbConverter converter() {
+                    return null;
                 }
 
                 @Override

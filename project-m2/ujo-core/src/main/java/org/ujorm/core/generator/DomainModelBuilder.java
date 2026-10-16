@@ -20,11 +20,14 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.ujorm.tools.Check;
 
-import java.lang.reflect.AnnotatedElement;
+import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.*;
 
 class DomainModelBuilder {
+
+    /** Resolver of the value converters */
+    private final ConverterResolver converterResolver = new ConverterResolver();
 
     /**
      * Factory method to create a BeanModel instance.
@@ -102,14 +105,13 @@ class DomainModelBuilder {
      * @param type Type of the property.
      * @param getter Name of the getter method.
      * @param setter Name of the setter method.
-     * @param element Annotated element (Field or RecordComponent) to inspect.
+     * @param element Field to inspect; a record component is described by its field.
      * @return A populated DomainPropertyModel instance.
      */
-    private DomainPropertyModel createModel(String name, Class<?> type, String getter, String setter, AnnotatedElement element) {
+    private DomainPropertyModel createModel(String name, Class<?> type, String getter, String setter, Field element) {
         var primaryKey = element.isAnnotationPresent(Id.class);
         var column = element.getAnnotation(Column.class);
         var joinColumn = element.getAnnotation(JoinColumn.class);
-        var enumMapType = mapEnumByOrdinal(element, type);
         var required = type.isPrimitive() || primaryKey;
         var dbColName = "";
 
@@ -128,17 +130,9 @@ class DomainModelBuilder {
         var hasManyToOne = element.isAnnotationPresent(ManyToOne.class);
         var isTargetEntity = TableIdentifier.isEntity(type);
         var foreignKey = hasManyToOne || joinColumn != null || isTargetEntity;
+        var converter = converterResolver.resolve(element, type, primaryKey, foreignKey);
 
-        return new DomainPropertyModel(name, type, getter, setter, dbColName, required, primaryKey, foreignKey, enumMapType);
-    }
-
-    /** Determines whether to map the Enum by its ordinal (true) or name (false). */
-    @NotNull
-    private boolean mapEnumByOrdinal(@NotNull AnnotatedElement element, @NotNull Class<?> type) {
-        if (!type.isEnum()) return false;
-        var enumerated = element.getAnnotation(Enumerated.class);
-        var enumType = enumerated != null ? enumerated.value() : null;
-        return EnumType.ORDINAL.equals(enumType);
+        return new DomainPropertyModel(name, type, getter, setter, dbColName, required, primaryKey, foreignKey, converter);
     }
 
     /** Converts a Java Bean property name to a snake_case database column name. */

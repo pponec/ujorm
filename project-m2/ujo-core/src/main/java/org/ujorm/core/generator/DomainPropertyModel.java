@@ -39,8 +39,9 @@ public record DomainPropertyModel(
         boolean primaryKey,
         /** Database foreign key */
         boolean foreignKey,
-        /** Determines whether to map the Enum by its ordinal (true) or name (false). */
-        boolean mapEnumByOrdinal
+        /** Java expression creating the value converter, or {@code null} for a value without conversion. */
+        @Nullable
+        String converter
 ) {
 
     public Class<?> propertyObjectType() {
