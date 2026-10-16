@@ -122,6 +122,8 @@ Generated files appear in `/target/generated-sources/`. APT is triggered automat
 
 The APT also writes `META-INF/ujorm/entities.lst`, an index of the discovered entities consumed by
 the handler pre-compiler below. Disable it by `-Aujorm.entityIndex=false`.
+The APT writes `META-INF/ujorm/converters.lst` too, an index of the auto-applied converters
+(see Attribute Converters below); this index can't be disabled.
 
 ### Pre-compiled Domain Handlers (GraalVM / JRE without a compiler)
 
@@ -162,6 +164,34 @@ Notes:
   outdated pre-compiled handler — e.g. left in `target/classes` after an incremental build — is generated again
   with a warning, or fails without a compiler. The check is skipped in a native image.
 
+### Attribute Converters
+
+Ujorm supports the JPA `AttributeConverter`; there is no proprietary converter API.
+
+```java
+public class EmailConverter implements AttributeConverter<Email, String> { ... }
+
+@Convert(converter = EmailConverter.class)   // explicit
+private Email email;
+
+@Converter(autoApply = true)                 // every attribute of the Phone type
+public class PhoneConverter implements AttributeConverter<Phone, String> { ... }
+```
+
+- The converter is resolved once by `DomainModelBuilder` (`ConverterResolver`) and stored in `KeyInfo.converter()`
+  as an internal `DbConverter`; an enum gets a built-in one (`EnumNameConverter`, or `EnumOrdinalConverter`
+  for `@Enumerated(ORDINAL)`). The hot paths only check `converter != null`.
+- The generated handler creates the converter by `new`, so a converter must be a public (static nested) class
+  with a public no-arg constructor. No dependency injection.
+- A `null` value is never passed to a converter: `null` always means the SQL `NULL`.
+- A column is read strictly by the database type of its converter (`rs.getObject(i, dbType)`).
+- Rules checked when the domain model is built: no `@Convert` on `@Id` or a relation, no combination with
+  `@Enumerated`, the converter type must equal the (wrapped) attribute type exactly, the type arguments must be
+  resolvable (a subclass of a generic converter is fine).
+- `autoApply` is allowed for an application type only (not `java.*`, `javax.*`, an enum, a primitive or an array):
+  the index may be incomplete after an incremental build, and a missing converter of an application type fails
+  on its unsupported JDBC type instead of storing a different value silently.
+
 ### ResultSetMapper
 
 Maps JDBC `ResultSet` rows to Records or JavaBeans with automatic type conversion. Caches column mappings (limit: 512 distinct queries).
@@ -193,6 +223,7 @@ Priority: manual settings > JVM `-Dorg.ujorm.*` > `ujorm-config.properties` on c
 | `project-m2/ujo-orm/src/main/java/org/ujorm/orm/SqlQuery.java` | Native SQL query runner |
 | `project-m2/ujo-orm/src/main/java/org/ujorm/orm/Config.java` | ORM configuration |
 | `project-m2/ujo-core/src/main/java/org/ujorm/core/generator/HandlerPrecompiler.java` | Build-time handler generator (GraalVM / JRE) |
+| `project-m2/ujo-core/src/main/java/org/ujorm/core/generator/ConverterResolver.java` | Resolves `@Convert` / auto-applied / enum converters |
 | `project-m2/ujo-orm/src/test/java/org/ujorm/orm/tutorial/TutorialTest.java` | Primary tutorial / examples |
 | `project-m2/ujo-orm/src/test/java/org/ujorm/orm/tutorial/QuickStartTutorialTest.java` | SqlQuery basics |
 | `project-m2/ujo-orm/src/test/java/org/ujorm/orm/tutorial/AdvancedTutorialTest.java` | 20+ micro-pattern tests |
@@ -232,6 +263,8 @@ To see bound parameter values too, pass `true`.
 ## Common Gotchas
 
 - **Entity types:** `ujo-orm` maps a Java Record or a *mutable* JavaBean. Every mapped property needs a getter and a setter — a getter-only field makes `EntityManager` creation fail; exclude it by `@Transient`. The `ujo-core` metamodel keeps such a property (readable, `setValue()` throws), so `@Domain` classes are unaffected.
+- **Converters:** a type without JDBC support needs `@Convert` or an auto-applied converter; after an
+  incremental build an auto-applied converter can be missing in the index, so build cleanly.
 - **No lazy loading:** relations must be explicitly fetched or JOINed in SelectQuery.
 - **M:1 only:** for 1:M, query from the "many" side or run a separate query.
 - **Transactions:** the ORM does not manage them; use `Connection.commit()` / `rollback()` directly.
