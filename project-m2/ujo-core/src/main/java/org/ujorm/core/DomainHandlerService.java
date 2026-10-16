@@ -34,16 +34,8 @@ public class DomainHandlerService {
      */
     private final ConcurrentHashMap<Class<?>, DomainHandler<?>> domainMap = new ConcurrentHashMap<>();
 
-    /** Enum converter */
-    private final EnumMapper enumMapper = new EnumMapper();
-
     /** Protected constructor */
     protected DomainHandlerService() {}
-
-    /** Get Enum Converter */
-    public EnumMapper getEnumMapper() {
-        return enumMapper;
-    }
 
     @NotNull
     @SuppressWarnings("unchecked")

@@ -108,6 +108,14 @@ class AttributeConverterTest extends AbstractDatabaseTest {
                 .toStream(rs -> rs.getString(1))
                 .toList());
         assertEquals("[Ann]", names.toString());
+
+        var emailNames = SqlQuery.run(connection(), query -> query
+                .sql("SELECT name FROM customer WHERE email IN (:emails) AND active = :active ORDER BY id")
+                .bind("emails", MetaCustomer.email, new Email("ANN@example.com"), new Email("joe@example.com"))
+                .bind("active", MetaCustomer.active, false)
+                .toStream(rs -> rs.getString(1))
+                .toList());
+        assertEquals("[Ann]", emailNames.toString());
     }
 
     private String findNames(org.ujorm.core.criterion.Criterion criterion) {
