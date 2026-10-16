@@ -29,8 +29,18 @@ public record ColumnModel<D,V>(
         JDBCType jdbcType,
         /** Optional foreign key to the relation */
         @Nullable
-        Key<V,?> foreignKey
+        Key<V,?> foreignKey,
+        /**
+         * Converter of the column value, or {@code null}.
+         * A foreign-key column holds the primary key of the relation, so it takes the converter of that key.
+         */
+        @Nullable
+        DbConverter<?, ?> converter
 ) {
+
+    public ColumnModel(Key<D,V> key, String name, JDBCType jdbcType, @Nullable Key<V,?> foreignKey) {
+        this(key, name, jdbcType, foreignKey, (foreignKey != null ? foreignKey : key).info().converter());
+    }
 
     /**
      * Reading values from a JDBC ResultSet requires using object types
@@ -55,17 +65,6 @@ public record ColumnModel<D,V>(
     @SuppressWarnings("unchecked")
     public <T> T valueOf(D domain) {
         return (T) key.getValue(domain);
-    }
-
-    /**
-     * Converter of the column value, or {@code null}.
-     * A foreign-key column holds the primary key of the relation, so it takes the converter of that key.
-     */
-    @Nullable
-    @SuppressWarnings("unchecked")
-    public DbConverter<Object, ?> converter() {
-        var result = (foreignKey != null ? foreignKey : key).info().converter();
-        return (DbConverter<Object, ?>) result;
     }
 
     /** Is it a Primary Key? */

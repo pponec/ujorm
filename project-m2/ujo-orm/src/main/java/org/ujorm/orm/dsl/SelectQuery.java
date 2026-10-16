@@ -405,14 +405,13 @@ public class SelectQuery<D> extends AbstractSqlQuery<SelectQuery<D>> {
         /** Converts criterion values by the converter of the key, if any. */
         @SuppressWarnings("unchecked")
         private Array<Object> toDbValues(Array<?> values, Key<?, ?> key) {
-            final var converter = (DbConverter<Object, ?>) key.info().converter();
+            final var converter = key.info().converter();
             if (converter == null) {
                 return (Array<Object>) values;
             }
             final var converted = new Object[values.size()];
             for (int i = 0; i < values.size(); i++) {
-                final var value = values.get(i);
-                converted[i] = value != null ? converter.toDb(value) : null;
+                converted[i] = DbConverter.toDb(converter, values.get(i));
             }
             return Array.of(converted);
         }

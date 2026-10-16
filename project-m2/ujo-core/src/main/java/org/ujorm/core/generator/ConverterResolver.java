@@ -109,6 +109,9 @@ final class ConverterResolver {
             throw error(field, problem);
         }
         var types = resolveTypes(converterClass);
+        if (types == null) {
+            throw error(field, unresolvedTypes(converterClass));
+        }
         if (types[0] != Primitive.wrapPrimitive(type)) {
             throw error(field, "the converter %s converts the type %s rather than %s".formatted(
                     converterClass.getName(), types[0].getName(), type.getName()));
@@ -145,17 +148,20 @@ final class ConverterResolver {
             return ("the converter %s must be a public top-level or static nested class"
                     + " with a public constructor without arguments").formatted(converterClass.getName());
         }
-        var typeArguments = findTypeArguments(converterClass, AttributeConverter.class, Map.of());
-        if (typeArguments == null || toClass(typeArguments[0]) == null || toClass(typeArguments[1]) == null) {
-            return "the type arguments of the converter %s can't be resolved".formatted(converterClass.getName());
-        }
         return null;
     }
 
-    /** Returns the value type and the database type of a valid converter. */
+    private String unresolvedTypes(Class<?> converterClass) {
+        return "the type arguments of the converter %s can't be resolved".formatted(converterClass.getName());
+    }
+
+    /** Returns the value type and the database type of the converter, or {@code null} for unresolved types. */
+    @Nullable
     private Class<?>[] resolveTypes(Class<?> converterClass) {
         var typeArguments = findTypeArguments(converterClass, AttributeConverter.class, Map.of());
-        return new Class<?>[] {toClass(typeArguments[0]), toClass(typeArguments[1])};
+        var valueType = typeArguments != null ? toClass(typeArguments[0]) : null;
+        var dbType = typeArguments != null ? toClass(typeArguments[1]) : null;
+        return valueType != null && dbType != null ? new Class<?>[] {valueType, dbType} : null;
     }
 
     /** Returns the auto-applied converters visible to the class loader of the domain class. */
@@ -207,7 +213,11 @@ final class ConverterResolver {
         if (problem != null) {
             throw autoApplyError(converterClass, problem);
         }
-        var valueType = resolveTypes(converterClass)[0];
+        var types = resolveTypes(converterClass);
+        if (types == null) {
+            throw autoApplyError(converterClass, unresolvedTypes(converterClass));
+        }
+        var valueType = types[0];
         if (!isAutoApplicable(valueType)) {
             throw autoApplyError(converterClass, ("the auto-apply feature is not allowed for the type %s,"
                     + " use the @Convert annotation on the attribute").formatted(valueType.getName()));
