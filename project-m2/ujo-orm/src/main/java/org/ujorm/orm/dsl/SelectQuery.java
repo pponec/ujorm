@@ -21,6 +21,7 @@ import org.jetbrains.annotations.Nullable;
 import org.ujorm.core.DomainHandlerProvider;
 import org.ujorm.core.Key;
 import org.ujorm.core.composed.ComposedKeyImpl;
+import org.ujorm.core.converter.DbConverter;
 import org.ujorm.core.criterion.Criterion;
 import org.ujorm.core.criterion.TemplateValue;
 import org.ujorm.core.criterion.ValueCriterion;
@@ -371,12 +372,11 @@ public class SelectQuery<D> extends AbstractSqlQuery<SelectQuery<D>> {
             return DomainHandlerProvider.getHandler(foreignKey.type()).findPrimaryKey(true);
         }
 
-        /** Converts criterion values to their DB representation: foreign-key relations to their primary key, enums to ordinal/name. */
+        /** Converts criterion values to their DB representation: foreign-key relations to their primary key, then by the key converter. */
         private Array<Object> mapCriterionValues(Array<Object> values, Key<?, ?> key, @Nullable Key<?, ?> fkPrimaryKey) {
-            if (fkPrimaryKey != null) {
-                return mapFkArrayToPkValues(values, key, fkPrimaryKey);
-            }
-            return key.type().isEnum() ? mapEnumArrayToDbValues(values, key) : values;
+            return fkPrimaryKey != null
+                    ? toDbValues(mapFkArrayToPkValues(values, key, fkPrimaryKey), fkPrimaryKey)
+                    : toDbValues(values, key);
         }
 
         /** Maps foreign-key criterion values (relation objects) to their primary key value. */
@@ -396,23 +396,19 @@ public class SelectQuery<D> extends AbstractSqlQuery<SelectQuery<D>> {
                     : ((Key<Object, ?>) pkKey).getValue(value);
         }
 
-        /** Maps enum criterion values to DB representation (ordinal/name). */
-        private Array<Object> mapEnumArrayToDbValues(Array<?> values, Key<?, ?> key) {
+        /** Converts criterion values by the converter of the key, if any. */
+        @SuppressWarnings("unchecked")
+        private Array<Object> toDbValues(Array<?> values, Key<?, ?> key) {
+            final var converter = (DbConverter<Object, ?>) key.info().converter();
+            if (converter == null) {
+                return (Array<Object>) values;
+            }
             final var converted = new Object[values.size()];
-            final var mapByOrdinal = key.info().mapEnumByOrdinal();
             for (int i = 0; i < values.size(); i++) {
-                converted[i] = mapEnumValueToDb(values.get(i), mapByOrdinal);
+                final var value = values.get(i);
+                converted[i] = value != null ? converter.toDb(value) : null;
             }
             return Array.of(converted);
-        }
-
-        /** Maps a single enum value to DB representation according to enum mapping. */
-        private Object mapEnumValueToDb(Object value, boolean mapByOrdinal) {
-            if (value == null) {
-                return value;
-            }
-            final var enumValue = (Enum<?>) value;
-            return mapByOrdinal ? enumValue.ordinal() : enumValue.name();
         }
 
         /** Format custom SQL templates with named parameters */
@@ -431,9 +427,7 @@ public class SelectQuery<D> extends AbstractSqlQuery<SelectQuery<D>> {
                             var placeholder = nextPlaceholder(alias, key);
                             writer.append(':').append(placeholder);
                             var values = templateValue.valuesNonNull();
-                            bindObject(true, placeholder, jdbcType, key.type().isEnum()
-                                    ? mapEnumArrayToDbValues(values, key)
-                                    : values);
+                            bindObject(true, placeholder, jdbcType, toDbValues(values, key));
                         }
                         i += 3;
                         last = i;

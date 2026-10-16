@@ -19,6 +19,7 @@ package org.ujorm.orm;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.ujorm.core.Key;
+import org.ujorm.core.converter.DbConverter;
 import org.ujorm.orm.model.QuotePair;
 import org.ujorm.orm.utils.JdbcUtils;
 import org.ujorm.tools.Check;
@@ -191,19 +192,16 @@ public class SqlQuery extends AbstractSqlQuery<SqlQuery> {
      * Bind enum values using ORM metadata of the given attribute.
      * Mapping honors {@code @Enumerated(EnumType.ORDINAL)} and JDBC type.
      */
+    @SuppressWarnings("unchecked")
     public SqlQuery bind(boolean enabled, @NotNull String key, @NotNull Key<?, ?> attr, @NotNull Enum<?>... values) {
         var jdbcType = JdbcUtils.findJdbcType(attr);
-        var mapByOrdinal = attr.info().mapEnumByOrdinal();
+        var converter = (DbConverter<Object, ?>) attr.info().converter();
         var mappedValues = new Object[values.length];
         for (int i = 0; i < values.length; i++) {
-            mappedValues[i] = toDbEnumValue(values[i], mapByOrdinal);
+            var value = values[i];
+            mappedValues[i] = value != null && converter != null ? converter.toDb(value) : value;
         }
         return bindObject(enabled, key, jdbcType, mappedValues);
-    }
-
-    /** Converts Enum to a DB value according to ORM mapping metadata. */
-    private Object toDbEnumValue(@NotNull Enum<?> value, boolean mapByOrdinal) {
-        return mapByOrdinal ? value.ordinal() : value.name();
     }
 
     // ------- LABELS -------

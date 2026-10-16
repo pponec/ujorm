@@ -17,6 +17,7 @@ package org.ujorm.orm.model;
 
 import org.jetbrains.annotations.Nullable;
 import org.ujorm.core.Key;
+import org.ujorm.core.converter.DbConverter;
 import org.ujorm.tools.common.Primitive;
 
 import java.sql.JDBCType;
@@ -54,6 +55,17 @@ public record ColumnModel<D,V>(
     @SuppressWarnings("unchecked")
     public <T> T valueOf(D domain) {
         return (T) key.getValue(domain);
+    }
+
+    /**
+     * Converter of the column value, or {@code null}.
+     * A foreign-key column holds the primary key of the relation, so it takes the converter of that key.
+     */
+    @Nullable
+    @SuppressWarnings("unchecked")
+    public DbConverter<Object, ?> converter() {
+        var result = (foreignKey != null ? foreignKey : key).info().converter();
+        return (DbConverter<Object, ?>) result;
     }
 
     /** Is it a Primary Key? */

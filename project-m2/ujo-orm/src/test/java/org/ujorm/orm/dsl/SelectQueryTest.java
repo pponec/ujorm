@@ -11,6 +11,7 @@ import java.sql.Connection;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /** DslQuery test class with shared connection */
@@ -150,6 +151,37 @@ class SelectQueryTest extends AbstractDatabaseTest {
             assertTrue(sqlWithValues.contains("[1]"), sqlWithValues);
             assertTrue(sqlWithValues.contains("[ACTIVE]"), sqlWithValues);
             assertTrue(sqlWithValues.contains("[INACTIVE]"), sqlWithValues);
+        }
+    }
+
+    @Test
+    void testEnumReadForBothMappings() {
+        var city = cityManager.crud(connection()).insert(new City(null, "Oslo", "NO"));
+        var employee = Employee.of("Ann", city, null);
+        employee.setStateOrdinal(EmployeeState.INACTIVE);
+        employee.setStateString(EmployeeState.INACTIVE);
+        var id = entityManager.crud(connection()).insert(employee).getId();
+
+        var result = entityManager.crud(connection()).findById(id).orElseThrow();
+        assertEquals(EmployeeState.INACTIVE, result.getStateOrdinal());
+        assertEquals(EmployeeState.INACTIVE, result.getStateString());
+    }
+
+    /** The column is read by the type of the mapping, so a name can't be read as an ordinal. */
+    @Test
+    void testEnumReadByMappingTypeOnly() {
+        var city = cityManager.crud(connection()).insert(new City(null, "Rome", "IT"));
+        entityManager.crud(connection()).insert(Employee.of("Tom", city, null));
+
+        try (var query = new SqlQuery(connection())) {
+            query.sql("SELECT e.id AS \"id\", e.state_string AS \"stateOrdinal\" FROM employee e");
+            var e = assertThrows(Exception.class, () -> query.toStream(employeeMapper.mapper()).toList());
+            var messages = new StringBuilder();
+            for (Throwable t = e; t != null; t = t.getCause()) {
+                messages.append(t.getMessage()).append('\n');
+            }
+            assertTrue(messages.toString().contains("stateOrdinal"), messages.toString());
+            assertTrue(messages.toString().contains("Integer"), messages.toString());
         }
     }
 
