@@ -55,6 +55,19 @@ public final class JpaConverter<V, D> implements DbConverter<V, D> {
         return converter.convertToEntityAttribute(value);
     }
 
+    /** Converters of the same class store equal values, because a converter is stateless. */
+    @Override
+    public boolean equals(Object obj) {
+        return obj instanceof JpaConverter<?, ?> other
+                && converter.getClass() == other.converter.getClass()
+                && dbType == other.dbType;
+    }
+
+    @Override
+    public int hashCode() {
+        return converter.getClass().hashCode();
+    }
+
     @Override
     public String toString() {
         return converter.getClass().getSimpleName();

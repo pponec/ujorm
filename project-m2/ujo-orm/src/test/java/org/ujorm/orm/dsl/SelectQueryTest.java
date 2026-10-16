@@ -2,6 +2,7 @@ package org.ujorm.orm.dsl;
 
 import org.junit.jupiter.api.Test;
 import org.ujorm.core.criterion.Criterion;
+import org.ujorm.core.criterion.Operator;
 import org.ujorm.orm.AbstractDatabaseTest;
 import org.ujorm.orm.SqlQuery;
 import org.ujorm.orm.core.EntityManager;
@@ -184,6 +185,33 @@ class SelectQueryTest extends AbstractDatabaseTest {
         assertEquals(1, workers.size());
         assertEquals("Worker", workers.get(0).getName());
         assertEquals(EmployeeState.INACTIVE, workers.get(0).getBoss().getStateOrdinal());
+    }
+
+    /** A criterion can compare two columns, a column of a relation including. */
+    @Test
+    void testColumnComparison() {
+        var city = cityManager.crud(connection()).insert(new City(null, "Madrid", "ES"));
+        var boss = entityManager.crud(connection()).insert(Employee.of("Joe", city, null));
+        var namesake = Employee.of("Joe", city, boss);
+        namesake.setStateOrdinal(EmployeeState.INACTIVE);
+        entityManager.crud(connection()).insert(namesake);
+        entityManager.crud(connection()).insert(Employee.of("Tom", city, boss));
+
+        var bossName = QEmployee.boss.join(QEmployee.name);
+        var bossState = QEmployee.boss.join(QEmployee.stateOrdinal);
+        assertEquals("[Joe]", findNames(QEmployee.name.whereEq(bossName)));
+        assertEquals("[Tom]", findNames(QEmployee.name.where(Operator.NOT_EQ, bossName)));
+        assertEquals("[Tom]", findNames(QEmployee.name.where(Operator.GT, bossName)));
+        assertEquals("[Tom]", findNames(QEmployee.stateOrdinal.whereEq(bossState)));
+        assertEquals("[Joe, Tom]", findNames(QEmployee.stateString.whereEq(QEmployee.boss.join(QEmployee.stateString))));
+
+        var e1 = assertThrows(IllegalArgumentException.class, () ->
+                findNames(QEmployee.stateString.whereEq(QEmployee.stateOrdinal)));
+        assertTrue(e1.getMessage().contains("have different converters"), e1.getMessage());
+
+        var e2 = assertThrows(IllegalArgumentException.class, () ->
+                findNames(QEmployee.name.where(Operator.REGEXP, bossName)));
+        assertTrue(e2.getMessage().contains("can't compare the columns"), e2.getMessage());
     }
 
     private String findNames(Criterion criterion) {

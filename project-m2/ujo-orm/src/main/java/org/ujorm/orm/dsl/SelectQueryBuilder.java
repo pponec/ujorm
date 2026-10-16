@@ -181,6 +181,9 @@ public class SelectQueryBuilder implements AutoCloseable {
     private void collectKeysFromCriterion(Criterion crn, List<Key<?, ?>> keys) {
         if (crn instanceof ValueCriterion<?> valCrn) {
             keys.add(valCrn.getLeftNode());
+            if (valCrn.getRightNode() instanceof Key<?, ?> rightKey) {
+                keys.add(rightKey);
+            }
         } else if (crn instanceof BinaryCriterion binCrn) {
             collectKeysFromCriterion(binCrn.getLeftNode(), keys);
             collectKeysFromCriterion(binCrn.getRightNode(), keys);
@@ -253,7 +256,11 @@ public class SelectQueryBuilder implements AutoCloseable {
     private void buildCriterionTree(Criterion crn, boolean isRoot) {
         if (crn instanceof ValueCriterion<?> valCrn) {
             var alias = findTableAlias(valCrn.getLeftNode());
-            selectWriter.writeCondition(valCrn, alias);
+            if (valCrn.getRightNode() instanceof Key<?, ?> rightKey) {
+                writeColumnComparison(valCrn, alias, rightKey);
+            } else {
+                selectWriter.writeCondition(valCrn, alias);
+            }
         } else if (crn instanceof BinaryCriterion binCrn) {
             if (binCrn.getOperator() == BinaryOperator.NOT) {
                 // NOT is unary: BinaryCriterion stores the negated criterion in the right node
@@ -271,6 +278,28 @@ public class SelectQueryBuilder implements AutoCloseable {
         } else {
             throw new IllegalArgumentException("Unsupported criterion: " + crn);
         }
+    }
+
+    /**
+     * Writes a comparison of two columns, for example {@code e.name = b.name}.
+     * Database values are compared, so both columns must have the same converter (or none).
+     */
+    private void writeColumnComparison(ValueCriterion<?> criterion, String alias, Key<?, ?> rightKeyPath) {
+        var leftKey = criterion.getLeftNode().pathItem(-1);
+        var rightKey = rightKeyPath.pathItem(-1);
+        var operator = criterion.getOperator();
+        switch (operator) {
+            case EQ, NOT_EQ, GT, GE, LT, LE -> {}
+            default -> throw new IllegalArgumentException("The operator %s can't compare the columns %s and %s"
+                    .formatted(operator, leftKey.fullName(), rightKey.fullName()));
+        }
+        if (!Objects.equals(leftKey.info().converter(), rightKey.info().converter())) {
+            throw new IllegalArgumentException("The columns %s and %s have different converters, so they can't be compared"
+                    .formatted(leftKey.fullName(), rightKey.fullName()));
+        }
+        selectWriter.writeColumnName(alias, leftKey, EMPTY_KEY);
+        selectWriter.append(SPACE).append(operator.term()).append(SPACE);
+        selectWriter.writeColumnName(findTableAlias(rightKeyPath), rightKey, EMPTY_KEY);
     }
 
     /** Resolve table alias from a Key */
