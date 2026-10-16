@@ -23,6 +23,7 @@ import org.ujorm.core.Key;
 import org.ujorm.core.composed.ComposedKeyImpl;
 import org.ujorm.core.converter.DbConverter;
 import org.ujorm.core.criterion.Criterion;
+import org.ujorm.core.criterion.Operator;
 import org.ujorm.core.criterion.TemplateValue;
 import org.ujorm.core.criterion.ValueCriterion;
 import org.ujorm.orm.core.EntityManager;
@@ -359,10 +360,15 @@ public class SelectQuery<D> extends AbstractSqlQuery<SelectQuery<D>> {
                     bindObject(true, placeholder, jdbcType, mapCriterionValues(Array.ofObject(value), key, fkPrimaryKey));
                 }
                 default -> {
-                    var placeholder = nextPlaceholder(alias, key);
                     writeColumnName(alias, key, EMPTY_KEY);
-                    writer.append(' ').append(operator.term()).append(" :").append(placeholder);
-                    bindObject(true, placeholder, jdbcType, mapCriterionValues(Array.ofObject(value), key, fkPrimaryKey));
+                    if (value == null && (operator == Operator.EQ || operator == Operator.NOT_EQ)) {
+                        // A comparison with NULL is never true in SQL:
+                        writer.append(operator == Operator.EQ ? " IS NULL" : " IS NOT NULL");
+                    } else {
+                        var placeholder = nextPlaceholder(alias, key);
+                        writer.append(' ').append(operator.term()).append(" :").append(placeholder);
+                        bindObject(true, placeholder, jdbcType, mapCriterionValues(Array.ofObject(value), key, fkPrimaryKey));
+                    }
                 }
             }
         }
