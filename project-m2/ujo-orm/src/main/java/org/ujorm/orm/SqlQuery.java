@@ -181,21 +181,23 @@ public class SqlQuery extends AbstractSqlQuery<SqlQuery> {
     }
 
     /**
-     * Bind enum values using ORM metadata of the given attribute.
-     * Mapping honors {@code @Enumerated(EnumType.ORDINAL)} and JDBC type.
+     * Bind values of the attribute converted to their database representation,
+     * for example an Enum by its {@code @Enumerated} mapping or a value by its JPA converter.
      */
-    public SqlQuery bind(@NotNull String key, @NotNull Key<?, ?> attr, @NotNull Enum<?>... values) {
+    @SafeVarargs
+    public final <V> SqlQuery bind(@NotNull String key, @NotNull Key<?, V> attr, @NotNull V... values) {
         return bind(true, key, attr, values);
     }
 
     /**
-     * Bind enum values using ORM metadata of the given attribute.
-     * Mapping honors {@code @Enumerated(EnumType.ORDINAL)} and JDBC type.
+     * Bind values of the attribute converted to their database representation,
+     * for example an Enum by its {@code @Enumerated} mapping or a value by its JPA converter.
      */
+    @SafeVarargs
     @SuppressWarnings("unchecked")
-    public SqlQuery bind(boolean enabled, @NotNull String key, @NotNull Key<?, ?> attr, @NotNull Enum<?>... values) {
+    public final <V> SqlQuery bind(boolean enabled, @NotNull String key, @NotNull Key<?, V> attr, @NotNull V... values) {
         var jdbcType = JdbcUtils.findJdbcType(attr);
-        var converter = (DbConverter<Object, ?>) attr.info().converter();
+        var converter = (DbConverter<V, ?>) attr.info().converter();
         var mappedValues = new Object[values.length];
         for (int i = 0; i < values.length; i++) {
             var value = values[i];
