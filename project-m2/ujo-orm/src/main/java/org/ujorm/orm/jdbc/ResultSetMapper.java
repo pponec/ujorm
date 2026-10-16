@@ -3,6 +3,7 @@ package org.ujorm.orm.jdbc;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.ujorm.core.*;
+import org.ujorm.core.converter.DbConverter;
 import org.ujorm.core.csv.CsvLineSplitter;
 import org.ujorm.core.impl.AbstractUjo;
 import org.ujorm.orm.Config;
@@ -120,10 +121,10 @@ public final class ResultSetMapper<D> {
     ) throws SQLException {
         var hasData = false;
         for (var mapping : node.directMappings()) {
-            var targetType = mapping.key().type();
-            var value = targetType.isEnum()
-                    ? getEnumValue(rs, mapping, (Class) targetType)
-                    : rs.getObject(mapping.columnIndex(), Primitive.wrapPrimitive(targetType));
+            var converter = mapping.converter();
+            var value = converter != null
+                    ? readConverted(rs, mapping, converter)
+                    : rs.getObject(mapping.columnIndex(), Primitive.wrapPrimitive(mapping.key().type()));
             if (value != null) {
                 target.setValue(mapping.key(), value);
                 hasData = true;
@@ -151,24 +152,24 @@ public final class ResultSetMapper<D> {
         return hasData;
     }
 
-    private <D2> @Nullable Object getEnumValue(
+    /** Reads the column by the database type of the converter; an error message names the attribute. */
+    private <D2> @Nullable Object readConverted(
             @NotNull ResultSet rs,
             @NotNull DirectMapping<D2, Object> mapping,
-            @NotNull Class targetType) throws SQLException {
-        var rawValue = rs.getObject(mapping.columnIndex());
-        if (rawValue == null) {
-            return null;
-        } else if (rawValue instanceof String str) {
-            return service.getEnumMapper().getByName(targetType, str);
-            } else if (rawValue instanceof Number num) {
-                // Covers integral JDBC types; Oracle NUMBER is typically BigDecimal.
-                return service.getEnumMapper().getByIndex(targetType, num.intValue());
-            } else {
-            throw new IllegalArgumentException(String.format(
-                    "Unsupported DB type '%s' for Enum mapping of column index %d.",
-                    rawValue.getClass().getSimpleName(),
-                    mapping.columnIndex()
-            ));
+            @NotNull DbConverter<Object, Object> converter) throws SQLException {
+        try {
+            var dbValue = rs.getObject(mapping.columnIndex(), converter.dbType());
+            return dbValue != null ? converter.fromDb(dbValue) : null;
+        } catch (SQLException | RuntimeException e) {
+            var msg = "The column #%d of the attribute %s can't be read as %s: %s".formatted(
+                    mapping.columnIndex(),
+                    mapping.key().fullName(),
+                    converter.dbType().getSimpleName(),
+                    e.getMessage());
+            if (e instanceof SQLException sqlException) {
+                throw new SQLException(msg, sqlException.getSQLState(), sqlException.getErrorCode(), sqlException);
+            }
+            throw new IllegalArgumentException(msg, e);
         }
     }
 
@@ -271,8 +272,10 @@ public final class ResultSetMapper<D> {
             this(new ArrayList<>(), new ArrayList<>());
         }
 
+        @SuppressWarnings("unchecked")
         public void addMapping(Key<D2, Object> key, int columnIndex) {
-            directMappings.add(new DirectMapping<>(key, columnIndex));
+            var converter = (DbConverter<Object, Object>) key.info().converter();
+            directMappings.add(new DirectMapping<>(key, columnIndex, converter));
         }
 
         @SuppressWarnings({"unchecked", "rawtypes"})
@@ -298,7 +301,9 @@ public final class ResultSetMapper<D> {
             /** Gets the property key. */
             Key<D2, V> key,
             /** Gets the column index. */
-            int columnIndex
+            int columnIndex,
+            /** Gets the value converter, or {@code null}. */
+            @Nullable DbConverter<V, Object> converter
     ) {}
 
     /**

@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 import org.ujorm.core.DomainHandler;
 import org.ujorm.core.DomainHandlerProvider;
+import org.ujorm.core.Key;
 import org.ujorm.core.demo.City;
 import org.ujorm.core.demo.Employee;
 
@@ -172,7 +173,13 @@ class HandlerPrecompilerTest {
             assertEquals(e.info().foreignKey(), a.info().foreignKey(), msg);
             assertEquals(e.info().required(), a.info().required(), msg);
             assertEquals(e.info().writable(), a.info().writable(), msg);
-            assertEquals(e.info().mapEnumByOrdinal(), a.info().mapEnumByOrdinal(), msg);
+            assertEquals(converterClass(e), converterClass(a), msg);
         }
+    }
+
+    /** The converter has no equality, so its class is compared. */
+    private Class<?> converterClass(Key<?, ?> key) {
+        var converter = key.info().converter();
+        return converter != null ? converter.getClass() : null;
     }
 }

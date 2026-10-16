@@ -99,12 +99,8 @@ public final class JdbcTypeProvider {
     /** Try to find JDBC type for the key or throw an exception */
     @NotNull
     public JDBCType findJdbcType(@NotNull Key<?, ?> key) {
-        var valueType = key.type();
-        if (valueType.isEnum()) {
-            valueType = key.info().mapEnumByOrdinal()
-                    ? Integer.class
-                    : String.class;
-        }
+        var converter = key.info().converter();
+        var valueType = converter != null ? converter.dbType() : key.type();
         var result = findJdbcType(valueType);
         if (result == null) {
             var msg = "The attribute %s has an unsupported JDBC type: %s"

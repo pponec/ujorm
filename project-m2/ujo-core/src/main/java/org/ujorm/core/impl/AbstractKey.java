@@ -5,6 +5,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.ujorm.core.Key;
 import org.ujorm.core.KeyInfo;
+import org.ujorm.core.converter.DbConverter;
 import org.ujorm.tools.common.Primitive;
 
 import java.util.Map;
@@ -42,8 +43,9 @@ public abstract class AbstractKey<D, V> implements Key<D, V>, KeyInfo<V> {
     final boolean required;
     /** Default value of the key. */
     protected final V defaultValue;
-    /** Determines whether to map the Enum by its ordinal (true) or name (false). */
-    final boolean mapEnumByOrdinal;
+    /** Converter of the value to its database representation, or {@code null}. */
+    @Nullable
+    final DbConverter<V, ?> converter;
 
     public AbstractKey(
             final int index,
@@ -53,7 +55,7 @@ public abstract class AbstractKey<D, V> implements Key<D, V>, KeyInfo<V> {
             final boolean primaryKey,
             final boolean foreignKey,
             final boolean required,
-            final boolean mapEnumByOrdinal) {
+            @Nullable final DbConverter<V, ?> converter) {
         this.index = toShortIndex(index, name);
         this.name = name.intern();
         this.type = type;
@@ -62,7 +64,7 @@ public abstract class AbstractKey<D, V> implements Key<D, V>, KeyInfo<V> {
         this.foreignKey = foreignKey;
         this.required = required;
         this.defaultValue = getDefaultValue(type);
-        this.mapEnumByOrdinal = mapEnumByOrdinal;
+        this.converter = converter;
     }
 
     /** Convert int to short index. */
@@ -152,9 +154,9 @@ public abstract class AbstractKey<D, V> implements Key<D, V>, KeyInfo<V> {
         return defaultValue;
     }
 
-    @NotNull
-    public @Nullable boolean mapEnumByOrdinal() {
-        return mapEnumByOrdinal;
+    @Override
+    public final @Nullable DbConverter<V, ?> converter() {
+        return converter;
     }
 
     /**

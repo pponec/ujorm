@@ -389,7 +389,7 @@ public abstract class Criterion {
     }
 
     private static @NotNull AbstractKey<Object, Object> createDummyKey() {
-        return new AbstractKey<>(0, "", Object.class, "", false, false, false, false) {
+        return new AbstractKey<>(0, "", Object.class, "", false, false, false, null) {
             @Override
             public @NotNull Class<Object> domainClass() {
                 return Object.class;

@@ -338,13 +338,8 @@ public final class EntityManager<D, V> {
 
         /** Converts a domain value (like Enum) to its database representation. */
         public Object toDbValue(@Nullable Object value, @NotNull ColumnModel<?, ?> column) {
-            if (value instanceof Enum<?> e) {
-                return switch (column.jdbcType().getVendorTypeNumber()) {
-                    case Types.INTEGER, Types.SMALLINT, Types.TINYINT, Types.BIGINT, Types.NUMERIC -> e.ordinal();
-                    default -> e.name();
-                };
-            }
-            return value;
+            var converter = column.converter();
+            return value != null && converter != null ? converter.toDb(value) : value;
         }
 
         /** Reads the generated key from ResultSet and assigns it to the domain object. */
