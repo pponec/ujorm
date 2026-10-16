@@ -37,4 +37,16 @@ public interface DbConverter<V, D> {
 
     /** Converts a database value to the domain one. */
     @Nullable V fromDb(@NotNull D value);
+
+    /**
+     * Converts a nullable domain value by an optional converter.
+     * The unchecked cast is limited to this place, because the converter type comes from a key.
+     */
+    @Nullable
+    @SuppressWarnings("unchecked")
+    static Object toDb(@Nullable DbConverter<?, ?> converter, @Nullable Object value) {
+        return converter != null && value != null
+                ? ((DbConverter<Object, ?>) converter).toDb(value)
+                : value;
+    }
 }

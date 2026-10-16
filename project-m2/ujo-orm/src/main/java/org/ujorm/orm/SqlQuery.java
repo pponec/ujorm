@@ -194,14 +194,12 @@ public class SqlQuery extends AbstractSqlQuery<SqlQuery> {
      * for example an Enum by its {@code @Enumerated} mapping or a value by its JPA converter.
      */
     @SafeVarargs
-    @SuppressWarnings("unchecked")
     public final <V> SqlQuery bind(boolean enabled, @NotNull String key, @NotNull Key<?, V> attr, @NotNull V... values) {
         var jdbcType = JdbcUtils.findJdbcType(attr);
-        var converter = (DbConverter<V, ?>) attr.info().converter();
+        var converter = attr.info().converter();
         var mappedValues = new Object[values.length];
         for (int i = 0; i < values.length; i++) {
-            var value = values[i];
-            mappedValues[i] = value != null && converter != null ? converter.toDb(value) : value;
+            mappedValues[i] = DbConverter.toDb(converter, values[i]);
         }
         return bindObject(enabled, key, jdbcType, mappedValues);
     }

@@ -160,6 +160,32 @@ class SelectQueryTest extends AbstractDatabaseTest {
         assertEquals("[Joe]", findNames(QEmployee.name.whereNotNull()));
     }
 
+    /** The value of a criterion is converted by the last key of a relation path, an aliased key and a proxy too. */
+    @Test
+    void testEnumConversionOfPathAliasAndProxy() {
+        var city = cityManager.crud(connection()).insert(new City(null, "Paris", "FR"));
+        var boss = Employee.of("Boss", city, null);
+        boss.setStateOrdinal(EmployeeState.INACTIVE);
+        boss.setStateString(EmployeeState.INACTIVE);
+        boss = entityManager.crud(connection()).insert(boss);
+        entityManager.crud(connection()).insert(Employee.of("Worker", city, boss));
+
+        assertEquals("[Worker]", findNames(QEmployee.boss.join(QEmployee.stateOrdinal).whereEq(EmployeeState.INACTIVE)));
+        assertEquals("[Worker]", findNames(QEmployee.boss.join(QEmployee.stateString).whereEq(EmployeeState.INACTIVE)));
+        assertEquals("[Boss]", findNames(QEmployee.stateOrdinal.whereEq(() -> EmployeeState.INACTIVE)));
+        assertEquals("[Boss]", findNames(QEmployee.stateString.whereEq(() -> EmployeeState.INACTIVE)));
+
+        var bossState = TableAlias.aliasedKey("bossAlias", QEmployee.stateOrdinal);
+        var workers = SelectQuery.run(connection(), entityManager, query -> query
+                .columns(true)
+                .column(QEmployee.boss, bossState)
+                .where(bossState.whereEq(EmployeeState.INACTIVE))
+                .toList());
+        assertEquals(1, workers.size());
+        assertEquals("Worker", workers.get(0).getName());
+        assertEquals(EmployeeState.INACTIVE, workers.get(0).getBoss().getStateOrdinal());
+    }
+
     private String findNames(Criterion criterion) {
         try (var query = new SelectQuery<>(connection(), entityManager)) {
             return query.sql("SELECT")
