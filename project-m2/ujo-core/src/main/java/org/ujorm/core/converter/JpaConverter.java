@@ -24,6 +24,12 @@ import java.util.Objects;
 /** Adapter of the JPA {@link AttributeConverter} declared by the {@code @Convert} annotation. */
 public final class JpaConverter<V, D> implements DbConverter<V, D> {
 
+    /**
+     * Index of the converters with the {@code @Converter(autoApply = true)} annotation, written by the Ujorm APT processor.
+     * Keep in sync with {@code org.ujorm.maven.UjormMetaProcessor.Const.CONVERTER_INDEX}.
+     */
+    public static final String CONVERTER_INDEX = "META-INF/ujorm/converters.lst";
+
     /** Converter of the application */
     private final AttributeConverter<V, D> converter;
     /** Database type resolved from the type arguments of the converter */

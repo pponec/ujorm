@@ -27,6 +27,10 @@ public class Customer {
     @Column(name = "active", nullable = false)
     private boolean active;
 
+    /** An auto-applied converter */
+    @Nullable
+    private Phone phone;
+
     /** Native boolean without a converter */
     private Boolean newsletter;
 

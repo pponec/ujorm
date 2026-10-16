@@ -86,6 +86,17 @@ class AttributeConverterTest extends AbstractDatabaseTest {
     }
 
     @Test
+    void autoApply() {
+        var customer = Customer.of("Joe", null, true, CustomerState.ACTIVE);
+        customer.setPhone(new Phone("+420 123 456"));
+        var crud = customerEm.crud(connection());
+        var id = crud.insert(customer).getId();
+
+        assertEquals(new Phone("+420123456"), crud.findById(id).orElseThrow().getPhone());
+        assertEquals("Joe", findNames(MetaCustomer.phone.whereEq(new Phone("+420 123 456"))));
+    }
+
+    @Test
     void sqlQueryBind() {
         var crud = customerEm.crud(connection());
         crud.insert(Customer.of("Joe", "joe@example.com", true, CustomerState.ACTIVE));
@@ -122,6 +133,7 @@ class AttributeConverterTest extends AbstractDatabaseTest {
                     , name VARCHAR(50) NOT NULL
                     , email VARCHAR(100) NULL
                     , active CHAR(1) NOT NULL
+                    , phone VARCHAR(20) NULL
                     , newsletter BOOLEAN NULL
                     , state CHAR(1) NOT NULL
                     )

@@ -17,6 +17,7 @@ package org.ujorm.core.generator;
 
 import jakarta.persistence.AttributeConverter;
 import jakarta.persistence.Convert;
+import jakarta.persistence.Converter;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import org.jetbrains.annotations.NotNull;
@@ -26,12 +27,17 @@ import org.ujorm.core.converter.EnumOrdinalConverter;
 import org.ujorm.core.converter.JpaConverter;
 import org.ujorm.tools.common.Primitive;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.lang.reflect.TypeVariable;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -43,16 +49,29 @@ import java.util.Map;
  */
 final class ConverterResolver {
 
+    /** Auto-applied converters by their value types, loaded lazily from the index */
+    @Nullable
+    private Map<Class<?>, Class<?>> autoApplied;
+
     /**
      * Returns a Java expression creating the value converter, or {@code null} for a value without conversion.
+     * An auto-applied converter is not applied to a primary key or to a relation, like in JPA.
      *
      * @throws IllegalArgumentException An invalid converter declaration.
      */
     @Nullable
     String resolve(@NotNull Field field, @NotNull Class<?> type, boolean primaryKey, boolean foreignKey) {
         var convert = field.getAnnotation(Convert.class);
-        if (convert != null && !convert.disableConversion()) {
-            return createJpaConverter(field, type, convert, primaryKey, foreignKey);
+        if (convert != null) {
+            if (!convert.disableConversion()) {
+                checkConvert(field, convert, primaryKey, foreignKey);
+                return createJpaConverter(field, type, convert.converter());
+            }
+        } else if (!primaryKey && !foreignKey) {
+            var converterClass = autoApplied(field).get(Primitive.wrapPrimitive(type));
+            if (converterClass != null) {
+                return createJpaConverter(field, type, converterClass);
+            }
         }
         return type.isEnum() ? createEnumConverter(field, type) : null;
     }
@@ -65,12 +84,12 @@ final class ConverterResolver {
         return "%s.of(%s.class)".formatted(converterClass.getName(), type.getCanonicalName());
     }
 
-    private String createJpaConverter(Field field, Class<?> type, Convert convert, boolean primaryKey, boolean foreignKey) {
-        var converterClass = convert.converter();
+    /** Checks the {@code @Convert} annotation of the field. */
+    private void checkConvert(Field field, Convert convert, boolean primaryKey, boolean foreignKey) {
         if (!convert.attributeName().isEmpty()) {
             throw error(field, "the attribute name of the @Convert annotation is not supported");
         }
-        if (converterClass == void.class) {
+        if (convert.converter() == void.class) {
             throw error(field, "the @Convert annotation requires a converter class");
         }
         if (primaryKey) {
@@ -82,31 +101,34 @@ final class ConverterResolver {
         if (field.isAnnotationPresent(Enumerated.class)) {
             throw error(field, "the @Convert and @Enumerated annotations can't be combined");
         }
-        if (!AttributeConverter.class.isAssignableFrom(converterClass)) {
-            throw error(field, "the class %s doesn't implement the %s".formatted(
-                    converterClass.getName(), AttributeConverter.class.getSimpleName()));
-        }
-        checkInstantiable(field, converterClass);
+    }
 
-        var typeArguments = findTypeArguments(converterClass, AttributeConverter.class, Map.of());
-        var valueType = typeArguments != null ? toClass(typeArguments[0]) : null;
-        var dbType = typeArguments != null ? toClass(typeArguments[1]) : null;
-        if (valueType == null || dbType == null) {
-            throw error(field, "the type arguments of the converter %s can't be resolved"
-                    .formatted(converterClass.getName()));
+    private String createJpaConverter(Field field, Class<?> type, Class<?> converterClass) {
+        var problem = findProblem(converterClass);
+        if (problem != null) {
+            throw error(field, problem);
         }
-        if (valueType != Primitive.wrapPrimitive(type)) {
+        var types = resolveTypes(converterClass);
+        if (types[0] != Primitive.wrapPrimitive(type)) {
             throw error(field, "the converter %s converts the type %s rather than %s".formatted(
-                    converterClass.getName(), valueType.getName(), type.getName()));
+                    converterClass.getName(), types[0].getName(), type.getName()));
         }
         return "%s.of(new %s(), %s.class)".formatted(
                 JpaConverter.class.getName(),
                 converterClass.getCanonicalName(),
-                dbType.getCanonicalName());
+                types[1].getCanonicalName());
     }
 
-    /** The generated handler creates the converter by its public constructor without arguments. */
-    private void checkInstantiable(Field field, Class<?> converterClass) {
+    /**
+     * Returns a reason why the class can't be a converter of the generated handler, or {@code null} for a valid one.
+     * The generated handler creates the converter by its public constructor without arguments.
+     */
+    @Nullable
+    private String findProblem(Class<?> converterClass) {
+        if (!AttributeConverter.class.isAssignableFrom(converterClass)) {
+            return "the class %s doesn't implement the %s".formatted(
+                    converterClass.getName(), AttributeConverter.class.getSimpleName());
+        }
         var valid = !converterClass.isInterface()
                 && !Modifier.isAbstract(converterClass.getModifiers())
                 && converterClass.getCanonicalName() != null;
@@ -120,9 +142,95 @@ final class ConverterResolver {
             valid = false;
         }
         if (!valid) {
-            throw error(field, ("the converter %s must be a public top-level or static nested class"
-                    + " with a public constructor without arguments").formatted(converterClass.getName()));
+            return ("the converter %s must be a public top-level or static nested class"
+                    + " with a public constructor without arguments").formatted(converterClass.getName());
         }
+        var typeArguments = findTypeArguments(converterClass, AttributeConverter.class, Map.of());
+        if (typeArguments == null || toClass(typeArguments[0]) == null || toClass(typeArguments[1]) == null) {
+            return "the type arguments of the converter %s can't be resolved".formatted(converterClass.getName());
+        }
+        return null;
+    }
+
+    /** Returns the value type and the database type of a valid converter. */
+    private Class<?>[] resolveTypes(Class<?> converterClass) {
+        var typeArguments = findTypeArguments(converterClass, AttributeConverter.class, Map.of());
+        return new Class<?>[] {toClass(typeArguments[0]), toClass(typeArguments[1])};
+    }
+
+    /** Returns the auto-applied converters visible to the class loader of the domain class. */
+    private Map<Class<?>, Class<?>> autoApplied(Field field) {
+        if (autoApplied == null) {
+            var loader = field.getDeclaringClass().getClassLoader();
+            autoApplied = loader != null ? loadAutoApplied(loader) : Map.of();
+        }
+        return autoApplied;
+    }
+
+    /**
+     * Loads the auto-applied converters from the index written by the Ujorm APT processor.
+     * An entry whose class is missing or no longer auto-applied comes from an incremental build, so it is skipped.
+     *
+     * @throws IllegalArgumentException An invalid auto-applied converter.
+     */
+    Map<Class<?>, Class<?>> loadAutoApplied(ClassLoader loader) {
+        var result = new HashMap<Class<?>, Class<?>>();
+        try {
+            for (var url : Collections.list(loader.getResources(JpaConverter.CONVERTER_INDEX))) {
+                try (var reader = new BufferedReader(new InputStreamReader(url.openStream(), StandardCharsets.UTF_8))) {
+                    for (var line = reader.readLine(); line != null; line = reader.readLine()) {
+                        var className = line.trim();
+                        if (!className.isEmpty() && !className.startsWith("#")) {
+                            registerAutoApplied(className, loader, result);
+                        }
+                    }
+                }
+            }
+        } catch (IOException e) {
+            throw new IllegalStateException("Failed to read the index " + JpaConverter.CONVERTER_INDEX, e);
+        }
+        return Map.copyOf(result);
+    }
+
+    private void registerAutoApplied(String className, ClassLoader loader, Map<Class<?>, Class<?>> result) {
+        final Class<?> converterClass;
+        try {
+            converterClass = Class.forName(className, false, loader);
+        } catch (ClassNotFoundException e) {
+            return;
+        }
+        var converter = converterClass.getAnnotation(Converter.class);
+        if (converter == null || !converter.autoApply()) {
+            return;
+        }
+        var problem = findProblem(converterClass);
+        if (problem != null) {
+            throw autoApplyError(converterClass, problem);
+        }
+        var valueType = resolveTypes(converterClass)[0];
+        if (!isAutoApplicable(valueType)) {
+            throw autoApplyError(converterClass, ("the auto-apply feature is not allowed for the type %s,"
+                    + " use the @Convert annotation on the attribute").formatted(valueType.getName()));
+        }
+        var previous = result.putIfAbsent(valueType, converterClass);
+        if (previous != null && previous != converterClass) {
+            throw autoApplyError(converterClass, "the converter %s is auto-applied to the type %s too"
+                    .formatted(previous.getName(), valueType.getName()));
+        }
+    }
+
+    /**
+     * An auto-applied converter is allowed for an application type only. A JDK type or an Enum has a mapping
+     * of its own, so a converter missing in the index (after an incremental build) would change
+     * the stored value silently. A missing converter of an application type fails on its unsupported type instead.
+     */
+    private boolean isAutoApplicable(Class<?> type) {
+        var name = type.getName();
+        return !type.isEnum()
+                && !type.isArray()
+                && !type.isPrimitive()
+                && !name.startsWith("java.")
+                && !name.startsWith("javax.");
     }
 
     /**
@@ -184,6 +292,11 @@ final class ConverterResolver {
             return (Class<?>) parameterized.getRawType();
         }
         return null;
+    }
+
+    private IllegalArgumentException autoApplyError(Class<?> converterClass, String reason) {
+        var msg = "Invalid auto-applied converter %s: %s.".formatted(converterClass.getName(), reason);
+        return new IllegalArgumentException(msg);
     }
 
     private IllegalArgumentException error(Field field, String reason) {
