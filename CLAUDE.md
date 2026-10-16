@@ -185,6 +185,8 @@ public class PhoneConverter implements AttributeConverter<Phone, String> { ... }
   with a public no-arg constructor. No dependency injection.
 - A `null` value is never passed to a converter: `null` always means the SQL `NULL`.
 - A column is read strictly by the database type of its converter (`rs.getObject(i, dbType)`).
+- Two columns can be compared (`whereEq(otherKey)`, `where(Operator.GT, otherKey)`) only if they have
+  the same converter or none, because the database values are compared.
 - Rules checked when the domain model is built: no `@Convert` on `@Id` or a relation, no combination with
   `@Enumerated`, the converter type must equal the (wrapped) attribute type exactly, the type arguments must be
   resolvable (a subclass of a generic converter is fine).

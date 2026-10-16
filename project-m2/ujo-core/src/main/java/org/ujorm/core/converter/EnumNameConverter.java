@@ -59,6 +59,17 @@ public final class EnumNameConverter<E extends Enum<E>> implements DbConverter<E
         return result;
     }
 
+    /** Converters of the same Enum type store equal values. */
+    @Override
+    public boolean equals(Object obj) {
+        return obj instanceof EnumNameConverter<?> other && type == other.type;
+    }
+
+    @Override
+    public int hashCode() {
+        return type.hashCode();
+    }
+
     @Override
     public String toString() {
         return getClass().getSimpleName() + '<' + type.getSimpleName() + '>';
