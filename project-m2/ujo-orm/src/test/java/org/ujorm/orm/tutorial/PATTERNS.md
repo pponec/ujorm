@@ -64,3 +64,17 @@ GitHub source:
 | Null relation mapping | [`boundary_mapper_null_relation_mapping`](AdvancedTutorialTest.java#L710) | Verify LEFT JOIN null relation handling |
 | Missing label/column mapping | [`boundary_mapper_missing_label_maps_partial_record`](AdvancedTutorialTest.java#L739) | Show partial mapping risk when labels are incomplete |
 | Unknown enum value | [`boundary_enum_unknown_value_fails`](AdvancedTutorialTest.java#L761) | Detect incompatible persisted enum values |
+
+## Value Converters
+
+JPA `AttributeConverter` support: explicit `@Convert`, auto-applied `@Converter(autoApply = true)` and enums.
+See [AttributeConverterTest.java](../converter/AttributeConverterTest.java) and its domain [Customer.java](../converter/Customer.java).
+
+| Pattern | Test Method | When To Use |
+|---|---|---|
+| Explicit converter | [`insertAndRead`](../converter/AttributeConverterTest.java#L21) | Store a value object, a `boolean` as `'Y'/'N'` or an enum by its code |
+| Null handling | [`nullIsNeverConverted`](../converter/AttributeConverterTest.java#L42) | A `null` value is always the SQL `NULL`, the converter never gets it |
+| Converted update | [`update`](../converter/AttributeConverterTest.java#L59) | Update the converted attributes |
+| Converted criteria | [`criteria`](../converter/AttributeConverterTest.java#L74) | Filter by a domain value: `whereEq`, `whereIn`, `whereSql` |
+| Auto-applied converter | [`autoApply`](../converter/AttributeConverterTest.java#L89) | Convert every attribute of an application value type without an annotation |
+| Native SQL binding | [`sqlQueryBind`](../converter/AttributeConverterTest.java#L100) | Bind converted values by `SqlQuery.bind(name, key, values...)` |
