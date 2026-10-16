@@ -5,9 +5,18 @@ import org.ujorm.core.generator.*;
 import org.ujorm.core.impl.AbstractUjo;
 import java.util.Arrays;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.logging.Logger;
 
 /** Service provides meta models of domain objects */
 public class DomainHandlerService {
+
+    /** Logger */
+    private static final Logger LOGGER = Logger.getLogger(DomainHandlerService.class.getName());
+    /**
+     * A GraalVM native image provides neither the reflection of a domain class nor a compiler,
+     * and it is built from one build, so the check of an outdated handler is skipped there.
+     */
+    private static final boolean NATIVE_IMAGE = System.getProperty("org.graalvm.nativeimage.imagecode") != null;
     /** A mapping a domain class to the domain handler object.
      * <p>
      * Note: This map is used with Double-Checked Locking in the {@code getHandler} method
@@ -57,6 +66,15 @@ public class DomainHandlerService {
     private <D> DomainHandler<D> createHandler(Class<D> domainClass) {
         var handlerClassName = ClassName.ofGenerated(domainClass);
         var handlerClass = handlerClassName.classForName(domainClass.getClassLoader());
+        if (handlerClass != null && !NATIVE_IMAGE && isOutdated(domainClass, handlerClass, handlerClassName)) {
+            var msg = ("The pre-compiled handler %s doesn't match the domain class, so build the project cleanly"
+                    + " or run the %s again.").formatted(handlerClassName, HandlerPrecompiler.class.getSimpleName());
+            if (!ClassGenerator.isCompilerAvailable()) {
+                throw new IllegalStateException(msg);
+            }
+            LOGGER.warning(msg + " The handler is generated at runtime now.");
+            handlerClass = null;
+        }
         if (handlerClass == null) {
             try {
                 handlerClass = createClass(domainClass, handlerClassName);
@@ -79,6 +97,20 @@ public class DomainHandlerService {
         var src = new JavaSourceGenerator().getSourceCode(meta, targetClassName);
         var result = new ClassGenerator().createClass(src, targetClassName);
         return (Class<D>) result;
+    }
+
+    /**
+     * Compares the model hash of the pre-compiled handler with the current domain class.
+     * A handler without the hash comes from an older release, so it is outdated too.
+     * The check costs a reflection of the domain class and a generation of its source code, without a compilation.
+     */
+    boolean isOutdated(Class<?> domainClass, Class<?> handlerClass, ClassName handlerClassName) {
+        var expected = new JavaSourceGenerator().getModelHash(DomainModel.of(domainClass), handlerClassName);
+        try {
+            return !expected.equals(handlerClass.getField(JavaSourceGenerator.MODEL_HASH_FIELD).get(null));
+        } catch (ReflectiveOperationException | RuntimeException e) {
+            return true;
+        }
     }
 
     /** Verify the class is a record or has a non-argument constructor */

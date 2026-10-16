@@ -92,6 +92,11 @@ public class ClassGenerator {
         return List.copyOf(classBytes.keySet());
     }
 
+    /** Returns true if the runtime provides a Java compiler. */
+    public static boolean isCompilerAvailable() {
+        return ToolProvider.getSystemJavaCompiler() != null;
+    }
+
     /** Compiles the source code in-memory and returns the bytecode of each resulting class. */
     private Map<String, byte[]> compileToBytes(String sourceCode, ClassName canonicalClassName, @Nullable Integer release) {
         var compiler = ToolProvider.getSystemJavaCompiler();
@@ -161,16 +166,29 @@ public class ClassGenerator {
         }
     }
 
-    /** Loads the class from the bytecode map using a dedicated ephemeral ClassLoader. */
+    /**
+     * Loads the class from the bytecode map using a dedicated ephemeral ClassLoader.
+     * The compiled classes take precedence over the parent, which may hold an outdated
+     * pre-compiled class of the same name.
+     */
     private Class<?> loadClass(Map<String, byte[]> classBytes, ClassName canonicalClassName) throws ClassNotFoundException {
         var loader = new ClassLoader(Thread.currentThread().getContextClassLoader()) {
             @Override
-            protected Class<?> findClass(String name) throws ClassNotFoundException {
-                var bytes = classBytes.get(name);
-                if (bytes == null) {
-                    return super.findClass(name);
+            protected Class<?> loadClass(String name, boolean resolve) throws ClassNotFoundException {
+                synchronized (getClassLoadingLock(name)) {
+                    var bytes = classBytes.get(name);
+                    if (bytes == null) {
+                        return super.loadClass(name, resolve);
+                    }
+                    var result = findLoadedClass(name);
+                    if (result == null) {
+                        result = defineClass(name, bytes, 0, bytes.length);
+                    }
+                    if (resolve) {
+                        resolveClass(result);
+                    }
+                    return result;
                 }
-                return defineClass(name, bytes, 0, bytes.length);
             }
         };
         return loader.loadClass(canonicalClassName.toString());

@@ -158,6 +158,9 @@ Notes:
 - An incremental compilation processes changed classes only, so the entity index is complete after a
   clean build.
 - Entities from a third-party jar are not covered; outside a native image the runtime fallback handles them.
+- A handler carries the `MODEL_HASH` of its domain model (a SHA-256 of the generated source). On the JVM an
+  outdated pre-compiled handler — e.g. left in `target/classes` after an incremental build — is generated again
+  with a warning, or fails without a compiler. The check is skipped in a native image.
 
 ### ResultSetMapper
 
