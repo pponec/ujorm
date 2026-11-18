@@ -41,21 +41,24 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.WeakHashMap;
 
 /**
- * Resolves the value converter of a domain property and renders it as a Java expression
- * of the generated handler. A converter is created by its constructor there, so no reflection
- * is needed at runtime.
+ * Resolves the converter of a domain property and renders it as a Java expression for the generated handler.
+ * The handler creates the converter by its constructor, so no reflection is needed at runtime.
  */
 final class ConverterResolver {
 
-    /** Auto-applied converters by their value types, loaded lazily from the index */
-    @Nullable
-    private Map<Class<?>, Class<?>> autoApplied;
+    /**
+     * Auto-applied converters per class loader: value type name to converter name.
+     * Names, unlike classes, don't hold the class loader, so it can be released.
+     */
+    private static final Map<ClassLoader, Map<String, String>> AUTO_APPLIED
+            = Collections.synchronizedMap(new WeakHashMap<>());
 
     /**
-     * Returns a Java expression creating the value converter, or {@code null} for a value without conversion.
-     * An auto-applied converter is not applied to a primary key or to a relation, like in JPA.
+     * Returns a Java expression creating the converter, or {@code null} for no conversion.
+     * Like in JPA, an auto-applied converter skips a primary key and a relation.
      *
      * @throws IllegalArgumentException An invalid converter declaration.
      */
@@ -68,7 +71,7 @@ final class ConverterResolver {
                 return createJpaConverter(field, type, convert.converter());
             }
         } else if (!primaryKey && !foreignKey) {
-            var converterClass = autoApplied(field).get(Primitive.wrapPrimitive(type));
+            var converterClass = findAutoApplied(field, type);
             if (converterClass != null) {
                 return createJpaConverter(field, type, converterClass);
             }
@@ -123,8 +126,8 @@ final class ConverterResolver {
     }
 
     /**
-     * Returns a reason why the class can't be a converter of the generated handler, or {@code null} for a valid one.
-     * The generated handler creates the converter by its public constructor without arguments.
+     * Returns why the class can't be a converter of the generated handler, or {@code null} for a valid one.
+     * The handler calls its public no-argument constructor.
      */
     @Nullable
     private String findProblem(Class<?> converterClass) {
@@ -164,18 +167,33 @@ final class ConverterResolver {
         return valueType != null && dbType != null ? new Class<?>[] {valueType, dbType} : null;
     }
 
-    /** Returns the auto-applied converters visible to the class loader of the domain class. */
-    private Map<Class<?>, Class<?>> autoApplied(Field field) {
-        if (autoApplied == null) {
-            var loader = field.getDeclaringClass().getClassLoader();
-            autoApplied = loader != null ? loadAutoApplied(loader) : Map.of();
+    /** Returns the auto-applied converter of the type, or {@code null}. */
+    @Nullable
+    private Class<?> findAutoApplied(Field field, Class<?> type) {
+        var loader = field.getDeclaringClass().getClassLoader();
+        if (loader == null) {
+            return null;
         }
-        return autoApplied;
+        var converterName = AUTO_APPLIED
+                .computeIfAbsent(loader, this::loadAutoAppliedNames)
+                .get(Primitive.wrapPrimitive(type).getName());
+        try {
+            return converterName != null ? Class.forName(converterName, false, loader) : null;
+        } catch (ClassNotFoundException e) {
+            throw new IllegalStateException("The auto-applied converter is not available: " + converterName, e);
+        }
+    }
+
+    /** Loads the auto-applied converters as names. */
+    private Map<String, String> loadAutoAppliedNames(ClassLoader loader) {
+        var result = new HashMap<String, String>();
+        loadAutoApplied(loader).forEach((type, converter) -> result.put(type.getName(), converter.getName()));
+        return Map.copyOf(result);
     }
 
     /**
      * Loads the auto-applied converters from the index written by the Ujorm APT processor.
-     * An entry whose class is missing or no longer auto-applied comes from an incremental build, so it is skipped.
+     * A missing class, or one no longer auto-applied, comes from an incremental build, so it is skipped.
      *
      * @throws IllegalArgumentException An invalid auto-applied converter.
      */
@@ -230,9 +248,9 @@ final class ConverterResolver {
     }
 
     /**
-     * An auto-applied converter is allowed for an application type only. A JDK type or an Enum has a mapping
-     * of its own, so a converter missing in the index (after an incremental build) would change
-     * the stored value silently. A missing converter of an application type fails on its unsupported type instead.
+     * Auto-apply is allowed for an application type only. A JDK type or an Enum has its own mapping,
+     * so a converter missing in the index after an incremental build would change the stored value silently.
+     * A missing converter of an application type fails on its unsupported type instead.
      */
     private boolean isAutoApplicable(Class<?> type) {
         var name = type.getName();
