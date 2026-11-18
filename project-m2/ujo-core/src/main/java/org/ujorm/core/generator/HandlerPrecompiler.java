@@ -121,13 +121,14 @@ public class HandlerPrecompiler {
     }
 
     /**
-     * Reads the target Java release from the class file of the domain class, so the handler
-     * gets the very same bytecode version as the entity it serves.
+     * Reads the Java release from the class file of the domain class, so the handler
+     * gets the same bytecode version as the rest of the project.
      * <p>
-     * A build JDK is often newer than the runtime one, and the default bytecode version of the
-     * compiler would then be unreadable on the target JVM. The runtime compilation has no such
-     * problem, because it runs on the target JVM itself.
+     * The build JDK can be newer than the JDK that runs the project. Without this release
+     * the handler would get the bytecode of the build JDK, and an older JVM can't load it.
+     * The Maven settings of the project are not visible here, so the class file is the source.
      *
+     * @param domainClass The compiled domain class of the handler.
      * @return The release between the minimal one supported by Ujorm and the running JDK.
      */
     private int javaRelease(@NotNull Class<?> domainClass) {
@@ -217,7 +218,11 @@ public class HandlerPrecompiler {
         }
     }
 
-    /** Limits the release to the range supported by both Ujorm and the running JDK. */
+    /**
+     * Limits the release to the range supported by both Ujorm and the running JDK.
+     * A lower release is raised to the minimum of Ujorm, a higher one is lowered
+     * to the running JDK, because its compiler can't build for a newer Java.
+     */
     static int clampRelease(int release) {
         return Math.max(MIN_JAVA_RELEASE, Math.min(release, Runtime.version().feature()));
     }

@@ -45,6 +45,7 @@ public class ClassGenerator {
      * <p>
      * The method uses the current thread's context class loader as the parent,
      * ensuring the dynamic class can see interfaces and classes from the main application.
+     * The bytecode has the version of the running JDK, because the same JVM loads the class.
      *
      * @param sourceCode         The Java source code.
      * @param canonicalClassName The fully qualified name of the class (e.g., "com.example.MyClass").
@@ -68,9 +69,10 @@ public class ClassGenerator {
      * @param sourceCode         The Java source code.
      * @param canonicalClassName The fully qualified name of the top-level class.
      * @param outputDir          The root directory of the class files, typically {@code target/classes}.
-     * @param release            Target Java release of the bytecode, {@code null} for the compiler default.
-     *        A build JDK newer than the runtime would emit an unreadable class file otherwise,
-     *        which the runtime compilation can never do, for it runs on the target JVM itself.
+     * @param release            The Java release of the bytecode, {@code null} for the release of the running JDK.
+     *        Use the release of the project: the build JDK can be newer than the JDK that runs
+     *        the project, and an older JVM can't load a class built for a newer Java
+     *        ({@link UnsupportedClassVersionError}).
      * @return Binary names of all written classes, the nested ones included.
      * @throws RuntimeException if compilation or writing fails.
      */
@@ -98,7 +100,19 @@ public class ClassGenerator {
         return ToolProvider.getSystemJavaCompiler() != null;
     }
 
-    /** Compiles the source code in-memory and returns the bytecode of each resulting class. */
+    /**
+     * Compiles the source code in-memory and returns the bytecode of each resulting class.
+     *
+     * @param sourceCode         The Java source code.
+     * @param canonicalClassName The fully qualified name of the top-level class.
+     * @param release            The Java release of the bytecode, passed to the compiler as {@code --release}.
+     *        Use {@code null} at runtime: the same JVM compiles and loads the class, so the release
+     *        of the running JDK is right. Use the release of the project at build time:
+     *        the build JDK can be newer, and an older JVM can't load a class built for a newer Java.
+     * @return The bytecode of each compiled class by its binary name, the nested classes included.
+     * @throws NullPointerException if the runtime provides no Java compiler.
+     * @throws RuntimeException if the compilation fails.
+     */
     private Map<String, byte[]> compileToBytes(String sourceCode, ClassName canonicalClassName, @Nullable Integer release) {
         var compiler = ToolProvider.getSystemJavaCompiler();
         Objects.requireNonNull(compiler, () -> NO_COMPILER_MSG.formatted(canonicalClassName));
@@ -195,7 +209,10 @@ public class ClassGenerator {
         return loader.loadClass(canonicalClassName.toString());
     }
 
-    /** Generates compiler options to explicitly define the classpath from the environment. */
+    /**
+     * Generates the compiler options: the classpath from the environment,
+     * and the {@code --release} option if the release is not {@code null}.
+     */
     private List<String> getCompilerOptions(@Nullable Integer release) {
         var result = new ArrayList<String>(4);
         if (release != null) {
