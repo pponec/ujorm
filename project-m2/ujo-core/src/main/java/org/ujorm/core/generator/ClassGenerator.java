@@ -35,9 +35,10 @@ import org.jetbrains.annotations.Nullable;
 public class ClassGenerator {
 
     /** Hint for the case the runtime provides no Java compiler, a JRE or a GraalVM native image. */
-    private static final String NO_COMPILER_MSG = "Java Compiler unavailable, so the class %s"
-            + " can not be built at runtime. Ensure you are running with a JDK, or pre-generate"
-            + " the handler classes at build time - see " + HandlerPrecompiler.class.getName() + ".";
+    private static final String NO_COMPILER_MSG = """
+            No Java compiler to build the class %%s at runtime: \
+            use a JDK or pre-generate the handlers by %s."""
+            .formatted(HandlerPrecompiler.class.getName());
 
     /**
      * Compiles the given source code in-memory and loads the resulting class.
