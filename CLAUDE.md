@@ -6,7 +6,10 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ProjectUjorm is a lightweight Java 17+ ORM library. It maps database rows to JavaBeans or Records using clean SQL without unnecessary abstraction. Core philosophy: no lazy loading, M:1 relations only, no entity lifecycle management, no magic proxies.
 
-Runtime bytecode compilation achieves performance comparable to hand-written JDBC (<3 MB, zero external dependencies).
+Ujorm3 reaches a performance comparable to hand-written JDBC by generating mapping helper classes
+from the domain model and compiling them — it never modifies or instruments the bytecode of your own
+classes. The ORM runtime is about 270 kB (`ujo-tools` 60 kB + `ujo-core` 102 kB + `ujo-orm` 116 kB,
+measured on 3.0.6) with zero external dependencies.
 
 ## Project Structure
 
@@ -17,7 +20,7 @@ ProjectUjorm (root pom.xml, version 3.0.6-SNAPSHOT)
 ├── project-m2/
 │   ├── ujo-tools/              — SQL builders, JDBC helpers, type system
 │   ├── ujo-core/               — Type-safe Key pattern, DomainHandler
-│   ├── ujorm-meta-processor/   — APT: generates Meta* classes at compile time
+│   ├── ujorm-meta-processor/   — APT: generates Meta* classes and the entity index
 │   ├── ujo-orm/                — ORM engine: EntityManager, SelectQuery, Crud, ResultSetMapper
 │   ├── ujo-converter/          — HTML-to-Java element converter
 │   ├── ujo-web/                — Web utilities (Spring integration)
@@ -117,6 +120,48 @@ public class Employee {
 
 Generated files appear in `/target/generated-sources/`. APT is triggered automatically by `./mvnw clean compile`.
 
+The APT also writes `META-INF/ujorm/entities.lst`, an index of the discovered entities consumed by
+the handler pre-compiler below. Disable it by `-Aujorm.entityIndex=false`.
+
+### Pre-compiled Domain Handlers (GraalVM / JRE without a compiler)
+
+`DomainHandler` implementations are normally generated **at runtime**: `DomainHandlerService` looks
+the class up first and only compiles it via `ToolProvider.getSystemJavaCompiler()` when missing.
+A GraalVM native image provides no compiler and cannot define classes at runtime; a plain JRE has no
+compiler either.
+
+`HandlerPrecompiler` builds the same classes **at build time**, right after the `compile` phase. It
+inspects the already compiled domain classes by reflection, so it reuses the exact runtime code path
+— `DomainModel.of(Class)` → `JavaSourceGenerator` → `ClassGenerator` — and there is no second entity
+model to keep in sync.
+
+```bash
+# Verify against the full ujo-orm suite with every handler pre-generated
+./mvnw test -P precompiled-handlers -pl project-m2/ujo-orm
+```
+
+For a user project, run the tool after `compile` (see the `precompiled-handlers` profile in
+`project-m2/ujo-orm/pom.xml` for a working `exec-maven-plugin` block):
+
+```bash
+java -cp <projectClasspath> org.ujorm.core.generator.HandlerPrecompiler \
+     target/classes target/generated-sources/ujorm-handlers
+```
+
+Notes:
+- The handler targets the **class file version of its domain class**, so a build JDK newer than the
+  runtime one is safe.
+- GraalVM reflection metadata is written to `META-INF/native-image/org.ujorm/ujo-core/reflect-config.json`;
+  the runtime resolves a handler by a calculated class name, which the image analysis cannot see.
+- The generated `.java` output directory must **not** be registered as a source root — the classes are
+  written directly to `target/classes` and would be compiled twice.
+- An incremental compilation processes changed classes only, so the entity index is complete after a
+  clean build.
+- Entities from a third-party jar are not covered; outside a native image the runtime fallback handles them.
+- A handler carries the `MODEL_HASH` of its domain model (a SHA-256 of the generated source). On the JVM an
+  outdated pre-compiled handler — e.g. left in `target/classes` after an incremental build — is generated again
+  with a warning, or fails without a compiler. The check is skipped in a native image.
+
 ### ResultSetMapper
 
 Maps JDBC `ResultSet` rows to Records or JavaBeans with automatic type conversion. Caches column mappings (limit: 512 distinct queries).
@@ -147,6 +192,7 @@ Priority: manual settings > JVM `-Dorg.ujorm.*` > `ujorm-config.properties` on c
 | `project-m2/ujo-orm/src/main/java/org/ujorm/orm/dsl/SelectQuery.java` | Type-safe DSL query builder |
 | `project-m2/ujo-orm/src/main/java/org/ujorm/orm/SqlQuery.java` | Native SQL query runner |
 | `project-m2/ujo-orm/src/main/java/org/ujorm/orm/Config.java` | ORM configuration |
+| `project-m2/ujo-core/src/main/java/org/ujorm/core/generator/HandlerPrecompiler.java` | Build-time handler generator (GraalVM / JRE) |
 | `project-m2/ujo-orm/src/test/java/org/ujorm/orm/tutorial/TutorialTest.java` | Primary tutorial / examples |
 | `project-m2/ujo-orm/src/test/java/org/ujorm/orm/tutorial/QuickStartTutorialTest.java` | SqlQuery basics |
 | `project-m2/ujo-orm/src/test/java/org/ujorm/orm/tutorial/AdvancedTutorialTest.java` | 20+ micro-pattern tests |

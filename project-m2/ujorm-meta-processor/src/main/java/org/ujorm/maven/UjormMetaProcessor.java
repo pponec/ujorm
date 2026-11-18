@@ -6,9 +6,11 @@ import javax.lang.model.element.*;
 import javax.lang.model.type.*;
 import javax.lang.model.util.ElementFilter;
 import javax.tools.Diagnostic;
+import javax.tools.StandardLocation;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
 import static org.ujorm.maven.UjormMetaProcessor.Const.*;
 
@@ -26,7 +28,8 @@ import static org.ujorm.maven.UjormMetaProcessor.Const.*;
 @SupportedOptions({
         PARAM_PREFIX,
         PARAM_SUFFIX,
-        PARAM_META_PACKAGE
+        PARAM_META_PACKAGE,
+        PARAM_ENTITY_INDEX
 })
 public class UjormMetaProcessor extends AbstractProcessor {
     private static final boolean ENABLE_TABLE_ALIAS = false;
@@ -36,8 +39,12 @@ public class UjormMetaProcessor extends AbstractProcessor {
     private String suffix = "";
     /** Relative package of the generated domain classes */
     private String metaPackage = "";
+    /** Write the index of the entities for the build-time handler pre-compiler */
+    private boolean entityIndex = true;
     /** Set of processed classes to prevent duplicates */
     private final Set<String> processedClasses = new HashSet<>();
+    /** Binary names of the processed entities, in the order of the discovery */
+    private final Set<String> entityClasses = new LinkedHashSet<>();
 
     @Override
     public synchronized void init(ProcessingEnvironment processingEnv) {
@@ -55,6 +62,9 @@ public class UjormMetaProcessor extends AbstractProcessor {
         if (options.containsKey(PARAM_META_PACKAGE)) {
             var p = options.get(PARAM_META_PACKAGE);
             if (p != null) metaPackage = p;
+        }
+        if (options.containsKey(PARAM_ENTITY_INDEX)) {
+            entityIndex = !"false".equalsIgnoreCase(options.get(PARAM_ENTITY_INDEX));
         }
 
         // Safety fallback against null values injected by Maven
@@ -77,7 +87,7 @@ public class UjormMetaProcessor extends AbstractProcessor {
      */
     @Override
     public Set<String> getSupportedOptions() {
-        return Set.of(PARAM_PREFIX, PARAM_SUFFIX, PARAM_META_PACKAGE);
+        return Set.of(PARAM_PREFIX, PARAM_SUFFIX, PARAM_META_PACKAGE, PARAM_ENTITY_INDEX);
     }
 
     @Override
@@ -85,7 +95,42 @@ public class UjormMetaProcessor extends AbstractProcessor {
         for (var element : roundEnv.getRootElements()) {
             scanElementRecursive(element);
         }
+        if (roundEnv.processingOver()) {
+            writeEntityIndex();
+        }
         return false;
+    }
+
+    /**
+     * Writes the index of the discovered entities for the build-time handler pre-compiler.
+     * <p>
+     * A resource is written rather than a source file on purpose: the pre-compiler targets
+     * the {@code org.ujorm.gen_.*} package, which this module does not own, so a source file
+     * would be rejected by a modular build.
+     * <p>
+     * Note that an incremental compilation processes the changed classes only, hence the index
+     * is complete after a clean build.
+     */
+    private void writeEntityIndex() {
+        if (!entityIndex || entityClasses.isEmpty()) {
+            return;
+        }
+        try {
+            var resource = processingEnv.getFiler()
+                    .createResource(StandardLocation.CLASS_OUTPUT, "", ENTITY_INDEX);
+            try (var writer = resource.openWriter()) {
+                writer.write("# Entities discovered by the Ujorm3 APT processor.\n");
+                for (var entityClass : entityClasses) {
+                    writer.write(entityClass);
+                    writer.write('\n');
+                }
+            }
+            processingEnv.getMessager().printMessage(Diagnostic.Kind.NOTE,
+                    "Ujorm3: Indexed %s entity(-ies) -> %s".formatted(entityClasses.size(), ENTITY_INDEX));
+        } catch (IOException e) {
+            processingEnv.getMessager().printMessage(Diagnostic.Kind.WARNING,
+                    "Ujorm3: Failed to write " + ENTITY_INDEX + ": " + e.getMessage());
+        }
     }
 
     /** Recursively scans elements to find nested classes annotated with a trigger annotation. */
@@ -129,6 +174,9 @@ public class UjormMetaProcessor extends AbstractProcessor {
         if (!processedClasses.add(fullClassName)) {
             return;
         }
+
+        // The binary name is required, because the pre-compiler loads the entity by Class.forName()
+        entityClasses.add(processingEnv.getElementUtils().getBinaryName(classElement).toString());
 
         processingEnv.getMessager().printMessage(Diagnostic.Kind.NOTE, "Ujorm3: Generating metamodel -> " + fullClassName);
 
@@ -342,5 +390,8 @@ public class UjormMetaProcessor extends AbstractProcessor {
         static final String PARAM_PREFIX = "ujorm.prefix";
         static final String PARAM_SUFFIX = "ujorm.suffix";
         static final String PARAM_META_PACKAGE = "ujorm.metaPackage";
+        static final String PARAM_ENTITY_INDEX = "ujorm.entityIndex";
+        /** Keep in sync with {@code org.ujorm.core.generator.HandlerPrecompiler.ENTITY_INDEX} */
+        static final String ENTITY_INDEX = "META-INF/ujorm/entities.lst";
     }
 }

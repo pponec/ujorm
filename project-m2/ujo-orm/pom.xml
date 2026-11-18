@@ -256,5 +256,47 @@
         </plugins>
     </build>
 
+    <profiles>
+        <!--
+            Pre-compiles the domain handlers of the test entities, so no Java compiler is needed
+            at runtime. The default build leaves the handlers out on purpose, because the runtime
+            compilation stays the fallback for the entities no build step has covered.
+
+            Usage: ./mvnw test -P precompiled-handlers
+        -->
+        <profile>
+            <id>precompiled-handlers</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>exec-maven-plugin</artifactId>
+                        <version>3.5.0</version>
+                        <executions>
+                            <execution>
+                                <id>ujorm-precompile-handlers</id>
+                                <phase>process-test-classes</phase>
+                                <goals>
+                                    <goal>exec</goal>
+                                </goals>
+                                <configuration>
+                                    <executable>${java.home}/bin/java</executable>
+                                    <classpathScope>test</classpathScope>
+                                    <arguments>
+                                        <argument>-classpath</argument>
+                                        <classpath/>
+                                        <argument>org.ujorm.core.generator.HandlerPrecompiler</argument>
+                                        <argument>${project.build.testOutputDirectory}</argument>
+                                        <argument>${project.build.directory}/generated-sources/ujorm-handlers</argument>
+                                    </arguments>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+
 </project>
 

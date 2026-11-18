@@ -22,20 +22,30 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import javax.tools.*;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class ClassGenerator {
+
+    /** Hint for the case the runtime provides no Java compiler, a JRE or a GraalVM native image. */
+    private static final String NO_COMPILER_MSG = """
+            No Java compiler to build the class %%s at runtime: \
+            use a JDK or pre-generate the handlers by %s."""
+            .formatted(HandlerPrecompiler.class.getName());
 
     /**
      * Compiles the given source code in-memory and loads the resulting class.
      * <p>
      * The method uses the current thread's context class loader as the parent,
      * ensuring the dynamic class can see interfaces and classes from the main application.
+     * The bytecode has the version of the running JDK, because the same JVM loads the class.
      *
      * @param sourceCode         The Java source code.
      * @param canonicalClassName The fully qualified name of the class (e.g., "com.example.MyClass").
@@ -43,18 +53,79 @@ public class ClassGenerator {
      * @throws RuntimeException if compilation fails (includes compiler error messages).
      */
     public Class<?> createClass(String sourceCode, ClassName canonicalClassName) {
+        try {
+            return loadClass(compileToBytes(sourceCode, canonicalClassName, null), canonicalClassName);
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException("Failed to create class: " + canonicalClassName, e);
+        }
+    }
+
+    /**
+     * Compiles the given source code and writes the result to the target directory.
+     * <p>
+     * Unlike {@link #createClass(String, ClassName)} the classes are not loaded here, so the method
+     * serves a build-time tool that generates the handlers ahead of time.
+     *
+     * @param sourceCode         The Java source code.
+     * @param canonicalClassName The fully qualified name of the top-level class.
+     * @param outputDir          The root directory of the class files, typically {@code target/classes}.
+     * @param release            The Java release of the bytecode, {@code null} for the release of the running JDK.
+     *        Use the release of the project: the build JDK can be newer than the JDK that runs
+     *        the project, and an older JVM can't load a class built for a newer Java
+     *        ({@link UnsupportedClassVersionError}).
+     * @return Binary names of all written classes, the nested ones included.
+     * @throws RuntimeException if compilation or writing fails.
+     */
+    public List<String> compileToDirectory(
+            String sourceCode,
+            ClassName canonicalClassName,
+            Path outputDir,
+            @Nullable Integer release) {
+
+        var classBytes = compileToBytes(sourceCode, canonicalClassName, release);
+        try {
+            for (var entry : classBytes.entrySet()) {
+                var target = outputDir.resolve(entry.getKey().replace('.', '/') + ".class");
+                Files.createDirectories(target.getParent());
+                Files.write(target, entry.getValue());
+            }
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to write class files of: " + canonicalClassName, e);
+        }
+        return List.copyOf(classBytes.keySet());
+    }
+
+    /** Returns true if the runtime provides a Java compiler. */
+    public static boolean isCompilerAvailable() {
+        return ToolProvider.getSystemJavaCompiler() != null;
+    }
+
+    /**
+     * Compiles the source code in-memory and returns the bytecode of each resulting class.
+     *
+     * @param sourceCode         The Java source code.
+     * @param canonicalClassName The fully qualified name of the top-level class.
+     * @param release            The Java release of the bytecode, passed to the compiler as {@code --release}.
+     *        Use {@code null} at runtime: the same JVM compiles and loads the class, so the release
+     *        of the running JDK is right. Use the release of the project at build time:
+     *        the build JDK can be newer, and an older JVM can't load a class built for a newer Java.
+     * @return The bytecode of each compiled class by its binary name, the nested classes included.
+     * @throws NullPointerException if the runtime provides no Java compiler.
+     * @throws RuntimeException if the compilation fails.
+     */
+    private Map<String, byte[]> compileToBytes(String sourceCode, ClassName canonicalClassName, @Nullable Integer release) {
         var compiler = ToolProvider.getSystemJavaCompiler();
-        Objects.requireNonNull(compiler, "Java Compiler unavailable. Ensure you are running with a JDK.");
+        Objects.requireNonNull(compiler, () -> NO_COMPILER_MSG.formatted(canonicalClassName));
         var classBytes = new HashMap<String, byte[]>();
         var diagnostics = new DiagnosticCollector<JavaFileObject>();
 
         try (var standardManager = compiler.getStandardFileManager(diagnostics, null, null);
              var fileManager = createCapturingFileManager(standardManager, classBytes)) {
 
-            compile(compiler, fileManager, diagnostics, sourceCode, canonicalClassName);
-            return loadClass(classBytes, canonicalClassName);
+            compile(compiler, fileManager, diagnostics, sourceCode, canonicalClassName, release);
+            return classBytes;
 
-        } catch (IOException | ClassNotFoundException e) {
+        } catch (IOException e) {
             throw new RuntimeException("Failed to create class: " + canonicalClassName, e);
         }
     }
@@ -85,7 +156,8 @@ public class ClassGenerator {
                          JavaFileManager fileManager,
                          DiagnosticCollector<JavaFileObject> diagnostics,
                          String sourceCode,
-                         ClassName canonicalClassName) {
+                         ClassName canonicalClassName,
+                         @Nullable Integer release) {
 
         var uri = URI.create("string:///"
                 + canonicalClassName.toString().replace('.', '/')
@@ -98,7 +170,7 @@ public class ClassGenerator {
             }
         };
 
-        var options = getCompilerOptions();
+        var options = getCompilerOptions(release);
         var task = compiler.getTask(null, fileManager, diagnostics, options, null, Collections.singletonList(sourceObject));
 
         if (!Boolean.TRUE.equals(task.call())) {
@@ -109,23 +181,44 @@ public class ClassGenerator {
         }
     }
 
-    /** Loads the class from the bytecode map using a dedicated ephemeral ClassLoader. */
+    /**
+     * Loads the class from the bytecode map using a dedicated ephemeral ClassLoader.
+     * The compiled classes take precedence over the parent, which may hold an outdated
+     * pre-compiled class of the same name.
+     */
     private Class<?> loadClass(Map<String, byte[]> classBytes, ClassName canonicalClassName) throws ClassNotFoundException {
         var loader = new ClassLoader(Thread.currentThread().getContextClassLoader()) {
             @Override
-            protected Class<?> findClass(String name) throws ClassNotFoundException {
-                var bytes = classBytes.get(name);
-                if (bytes == null) {
-                    return super.findClass(name);
+            protected Class<?> loadClass(String name, boolean resolve) throws ClassNotFoundException {
+                synchronized (getClassLoadingLock(name)) {
+                    var bytes = classBytes.get(name);
+                    if (bytes == null) {
+                        return super.loadClass(name, resolve);
+                    }
+                    var result = findLoadedClass(name);
+                    if (result == null) {
+                        result = defineClass(name, bytes, 0, bytes.length);
+                    }
+                    if (resolve) {
+                        resolveClass(result);
+                    }
+                    return result;
                 }
-                return defineClass(name, bytes, 0, bytes.length);
             }
         };
         return loader.loadClass(canonicalClassName.toString());
     }
 
-    /** Generates compiler options to explicitly define the classpath from the environment. */
-    private List<String> getCompilerOptions() {
+    /**
+     * Generates the compiler options: the classpath from the environment,
+     * and the {@code --release} option if the release is not {@code null}.
+     */
+    private List<String> getCompilerOptions(@Nullable Integer release) {
+        var result = new ArrayList<String>(4);
+        if (release != null) {
+            result.add("--release");
+            result.add(release.toString());
+        }
         var paths = Stream.of(System.getProperty("java.class.path", ""));
         var contextClassLoader = Thread.currentThread().getContextClassLoader();
         var pathSeparator = System.getProperty("path.separator");
@@ -137,7 +230,11 @@ public class ClassGenerator {
         var classPath = Stream.concat(paths, classLoaders)
                 .filter(p -> !p.isEmpty())
                 .collect(Collectors.joining(pathSeparator));
-        return classPath.isEmpty() ? List.of() : List.of("-classpath", classPath);
+        if (!classPath.isEmpty()) {
+            result.add("-classpath");
+            result.add(classPath);
+        }
+        return result;
     }
 
     /** Converts URL to an absolute path safely using NIO. */
