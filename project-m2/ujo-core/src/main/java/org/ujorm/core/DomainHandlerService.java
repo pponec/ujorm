@@ -34,16 +34,8 @@ public class DomainHandlerService {
      */
     private final ConcurrentHashMap<Class<?>, DomainHandler<?>> domainMap = new ConcurrentHashMap<>();
 
-    /** Enum converter */
-    private final EnumMapper enumMapper = new EnumMapper();
-
     /** Protected constructor */
     protected DomainHandlerService() {}
-
-    /** Get Enum Converter */
-    public EnumMapper getEnumMapper() {
-        return enumMapper;
-    }
 
     @NotNull
     @SuppressWarnings("unchecked")
@@ -108,8 +100,8 @@ public class DomainHandlerService {
         var expected = new JavaSourceGenerator().getModelHash(DomainModel.of(domainClass), handlerClassName);
         try {
             return !expected.equals(handlerClass.getField(JavaSourceGenerator.MODEL_HASH_FIELD).get(null));
-        } catch (ReflectiveOperationException | RuntimeException e) {
-            return true;
+        } catch (ReflectiveOperationException | RuntimeException | LinkageError e) {
+            return true; // An incompatible handler of an older release fails on its initialization
         }
     }
 

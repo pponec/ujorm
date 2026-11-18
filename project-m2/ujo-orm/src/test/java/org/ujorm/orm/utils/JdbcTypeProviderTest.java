@@ -72,13 +72,13 @@ class JdbcTypeProviderTest {
         var exSuperior = assertThrows(IllegalArgumentException.class, () ->
                 provider.findJdbcType(handler.getKey("superior")));
         assertTrue(exSuperior.getMessage().contains("Employee.superior"));
-        assertEquals("The attribute Employee.superior has an unsupported JDBC type: %s"
-                        .formatted(UserSnapshotable.class.getName()), exSuperior.getMessage());
+        assertTrue(exSuperior.getMessage().startsWith("The attribute Employee.superior has an unsupported JDBC type: %s."
+                        .formatted(UserSnapshotable.class.getName())), exSuperior.getMessage());
 
         var exCity = assertThrows(IllegalArgumentException.class, () ->
                 provider.findJdbcType(handler.getKey("city")));
         assertTrue(exCity.getMessage().contains("Employee.city"));
-        assertEquals("The attribute Employee.superior has an unsupported JDBC type: %s"
-                        .formatted(UserSnapshotable.class.getName()), exSuperior.getMessage());
+        assertTrue(exSuperior.getMessage().startsWith("The attribute Employee.superior has an unsupported JDBC type: %s."
+                        .formatted(UserSnapshotable.class.getName())), exSuperior.getMessage());
     }
 }

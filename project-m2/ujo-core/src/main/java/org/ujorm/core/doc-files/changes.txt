@@ -3,6 +3,17 @@ The Ujorm release notes
 *******************************
 
 release 3.0.6-SNAPSHOT (?)
++ ORM: Support for JPA attribute converters: @Convert for one attribute, @Converter(autoApply = true) for every attribute of an application type. A null value never reaches a converter. An invalid declaration fails when the domain model is built.
++ META: The APT processor writes the index META-INF/ujorm/converters.lst of the auto-applied converters. Build the project cleanly after adding one.
++ ORM: Enums use the same converters (by name, or by ordinal for @Enumerated(ORDINAL)). A column is read strictly by its database type, so a name is no longer read as an ordinal.
++ ORM: SqlQuery.bind(String, Key, V...) binds any attribute value converted by its key, not only an Enum.
++ ORM: SelectQuery compares two columns, e.g. MetaEmployee.name.whereEq(otherKey). Both columns need the same converter or none.
++ ORM: Fix a comparison with NULL in SelectQuery; it is rendered as IS NULL / IS NOT NULL now.
++ CORE: New HandlerPrecompiler builds the domain handlers at build time, for a GraalVM native image or a JRE without a compiler. It reads the entity index META-INF/ujorm/entities.lst written by the APT processor (disable by -Aujorm.entityIndex=false).
++ CORE: A pre-compiled handler carries the MODEL_HASH of its domain model. On the JVM an outdated handler is generated again with a warning, or it fails without a compiler.
++ CORE: Fix the handler lookup; it uses the class loader of the domain class now.
++ API: Removed EnumMapper and DomainHandlerService.getEnumMapper(). KeyInfo.mapEnumByOrdinal() is deprecated, use KeyInfo.converter(). The AbstractKey constructor takes a converter instead of the mapEnumByOrdinal flag.
++ Documentation: README sections Attribute Converters and Pre-compiled Handlers (GraalVM).
 
 
 release 3.0.5 (2026-08-17)

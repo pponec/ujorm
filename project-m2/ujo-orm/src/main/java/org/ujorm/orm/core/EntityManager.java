@@ -19,6 +19,7 @@ import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.ujorm.core.*;
+import org.ujorm.core.converter.DbConverter;
 import org.ujorm.core.impl.AbstractUjo;
 import org.ujorm.orm.Config;
 import org.ujorm.orm.Crud;
@@ -338,13 +339,7 @@ public final class EntityManager<D, V> {
 
         /** Converts a domain value (like Enum) to its database representation. */
         public Object toDbValue(@Nullable Object value, @NotNull ColumnModel<?, ?> column) {
-            if (value instanceof Enum<?> e) {
-                return switch (column.jdbcType().getVendorTypeNumber()) {
-                    case Types.INTEGER, Types.SMALLINT, Types.TINYINT, Types.BIGINT, Types.NUMERIC -> e.ordinal();
-                    default -> e.name();
-                };
-            }
-            return value;
+            return DbConverter.toDb(column.converter(), value);
         }
 
         /** Reads the generated key from ResultSet and assigns it to the domain object. */

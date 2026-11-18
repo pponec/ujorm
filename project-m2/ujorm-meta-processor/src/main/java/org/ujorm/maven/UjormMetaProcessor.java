@@ -17,12 +17,14 @@ import static org.ujorm.maven.UjormMetaProcessor.Const.*;
 /**
  * Generates static metamodel helper classes during compilation (APT).
  * Triggered by {@code @Entity} / {@code @Table} (JPA/Jakarta) and by {@code @Domain} (Ujorm).
+ * An auto-applied JPA converter is written to an index for the runtime.
  */
 @SupportedAnnotationTypes({
         "javax.persistence.Entity",
         "javax.persistence.Table",
         "jakarta.persistence.Entity",
         "jakarta.persistence.Table",
+        "jakarta.persistence.Converter",
         "org.ujorm.annotation.Domain"
 })
 @SupportedOptions({
@@ -43,8 +45,10 @@ public class UjormMetaProcessor extends AbstractProcessor {
     private boolean entityIndex = true;
     /** Set of processed classes to prevent duplicates */
     private final Set<String> processedClasses = new HashSet<>();
-    /** Binary names of the processed entities, in the order of the discovery */
+    /** Binary names of the processed entities, in the found order */
     private final Set<String> entityClasses = new LinkedHashSet<>();
+    /** Binary names of the auto-applied converters, in the found order */
+    private final Set<String> converterClasses = new LinkedHashSet<>();
 
     @Override
     public synchronized void init(ProcessingEnvironment processingEnv) {
@@ -96,40 +100,42 @@ public class UjormMetaProcessor extends AbstractProcessor {
             scanElementRecursive(element);
         }
         if (roundEnv.processingOver()) {
-            writeEntityIndex();
+            if (entityIndex) {
+                writeIndex(entityClasses, ENTITY_INDEX, "Entities");
+            }
+            writeIndex(converterClasses, CONVERTER_INDEX, "Auto-applied converters");
         }
         return false;
     }
 
     /**
-     * Writes the index of the discovered entities for the build-time handler pre-compiler.
+     * Writes an index of the found classes: the entities for the handler pre-compiler,
+     * or the auto-applied converters for the runtime.
      * <p>
-     * A resource is written rather than a source file on purpose: the pre-compiler targets
-     * the {@code org.ujorm.gen_.*} package, which this module does not own, so a source file
-     * would be rejected by a modular build.
+     * A resource is written, not a source file: the pre-compiler targets the {@code org.ujorm.gen_.*}
+     * package, which this module doesn't own, so a modular build would reject a source file.
      * <p>
-     * Note that an incremental compilation processes the changed classes only, hence the index
-     * is complete after a clean build.
+     * An incremental build processes the changed classes only, so the index is complete after a clean build.
      */
-    private void writeEntityIndex() {
-        if (!entityIndex || entityClasses.isEmpty()) {
+    private void writeIndex(Set<String> classes, String index, String title) {
+        if (classes.isEmpty()) {
             return;
         }
         try {
             var resource = processingEnv.getFiler()
-                    .createResource(StandardLocation.CLASS_OUTPUT, "", ENTITY_INDEX);
+                    .createResource(StandardLocation.CLASS_OUTPUT, "", index);
             try (var writer = resource.openWriter()) {
-                writer.write("# Entities discovered by the Ujorm3 APT processor.\n");
-                for (var entityClass : entityClasses) {
-                    writer.write(entityClass);
+                writer.write("# " + title + " discovered by the Ujorm3 APT processor.\n");
+                for (var className : classes) {
+                    writer.write(className);
                     writer.write('\n');
                 }
             }
             processingEnv.getMessager().printMessage(Diagnostic.Kind.NOTE,
-                    "Ujorm3: Indexed %s entity(-ies) -> %s".formatted(entityClasses.size(), ENTITY_INDEX));
+                    "Ujorm3: Indexed %s class(es) -> %s".formatted(classes.size(), index));
         } catch (IOException e) {
             processingEnv.getMessager().printMessage(Diagnostic.Kind.WARNING,
-                    "Ujorm3: Failed to write " + ENTITY_INDEX + ": " + e.getMessage());
+                    "Ujorm3: Failed to write " + index + ": " + e.getMessage());
         }
     }
 
@@ -138,6 +144,9 @@ public class UjormMetaProcessor extends AbstractProcessor {
         if (element.getKind() == ElementKind.CLASS || element.getKind() == ElementKind.RECORD) {
             if (hasTriggerAnnotation(element)) {
                 processClassElement((TypeElement) element);
+            }
+            if (isAutoAppliedConverter(element)) {
+                converterClasses.add(processingEnv.getElementUtils().getBinaryName((TypeElement) element).toString());
             }
             for (var enclosed : element.getEnclosedElements()) {
                 scanElementRecursive(enclosed);
@@ -151,6 +160,22 @@ public class UjormMetaProcessor extends AbstractProcessor {
             var annoName = mirror.getAnnotationType().asElement().getSimpleName().toString();
             if (annoName.equals("Entity") || annoName.equals("Table") || annoName.equals("Domain")) {
                 return true;
+            }
+        }
+        return false;
+    }
+
+    /** Returns {@code true} if the element carries the {@code @Converter(autoApply = true)} annotation. */
+    private boolean isAutoAppliedConverter(Element element) {
+        for (var mirror : element.getAnnotationMirrors()) {
+            var annoType = (TypeElement) mirror.getAnnotationType().asElement();
+            if (annoType.getQualifiedName().contentEquals(CONVERTER_ANNOTATION)) {
+                var values = processingEnv.getElementUtils().getElementValuesWithDefaults(mirror);
+                for (var entry : values.entrySet()) {
+                    if (entry.getKey().getSimpleName().contentEquals("autoApply")) {
+                        return Boolean.TRUE.equals(entry.getValue().getValue());
+                    }
+                }
             }
         }
         return false;
@@ -393,5 +418,9 @@ public class UjormMetaProcessor extends AbstractProcessor {
         static final String PARAM_ENTITY_INDEX = "ujorm.entityIndex";
         /** Keep in sync with {@code org.ujorm.core.generator.HandlerPrecompiler.ENTITY_INDEX} */
         static final String ENTITY_INDEX = "META-INF/ujorm/entities.lst";
+        /** Keep in sync with {@code org.ujorm.core.converter.JpaConverter.CONVERTER_INDEX} */
+        static final String CONVERTER_INDEX = "META-INF/ujorm/converters.lst";
+        /** The JPA annotation of a converter */
+        static final String CONVERTER_ANNOTATION = "jakarta.persistence.Converter";
     }
 }

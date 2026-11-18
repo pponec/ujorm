@@ -99,15 +99,13 @@ public final class JdbcTypeProvider {
     /** Try to find JDBC type for the key or throw an exception */
     @NotNull
     public JDBCType findJdbcType(@NotNull Key<?, ?> key) {
-        var valueType = key.type();
-        if (valueType.isEnum()) {
-            valueType = key.info().mapEnumByOrdinal()
-                    ? Integer.class
-                    : String.class;
-        }
+        var converter = key.info().converter();
+        var valueType = converter != null ? converter.dbType() : key.type();
         var result = findJdbcType(valueType);
         if (result == null) {
-            var msg = "The attribute %s has an unsupported JDBC type: %s"
+            var msg = ("The attribute %s has an unsupported JDBC type: %s."
+                    + " Declare a converter by the @Convert annotation; an auto-applied converter"
+                    + " may be missing in the index after an incremental build, so build the project cleanly.")
                     .formatted(key.fullName(), key.type().getName());
             throw new IllegalArgumentException(msg);
         }

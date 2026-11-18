@@ -19,6 +19,8 @@ package org.ujorm.core;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Unmodifiable;
+import org.ujorm.core.converter.DbConverter;
+import org.ujorm.core.converter.EnumOrdinalConverter;
 
 /**
  * This interface is a descriptor of the {@link Ujo} attribute. The Key contains only meta-data;
@@ -49,8 +51,21 @@ public interface KeyInfo<VALUE> {
     /** Indicates whether the column is a foreign key. */
     boolean foreignKey();
 
-    /** Determines whether to map the Enum by its ordinal (true) or name (false). */
-    boolean mapEnumByOrdinal();
+    /**
+     * Returns the converter of the value to its database form,
+     * or {@code null} if the value goes to the JDBC driver as it is.
+     * An Enum always has a converter.
+     */
+    @Nullable DbConverter<VALUE, ?> converter();
+
+    /**
+     * Determines whether to map the Enum by its ordinal (true) or name (false).
+     * @deprecated Use the {@link #converter()} method instead.
+     */
+    @Deprecated
+    default boolean mapEnumByOrdinal() {
+        return converter() instanceof EnumOrdinalConverter;
+    }
 
     /**
      * Indicates whether the value can be assigned to an existing domain object by the

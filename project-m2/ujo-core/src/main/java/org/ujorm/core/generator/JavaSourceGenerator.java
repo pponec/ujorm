@@ -127,7 +127,7 @@ public class JavaSourceGenerator {
                 /** Key ${propName} */
                 static final class Key_${propName} extends ${baseKeyClass}<${domainClass}, ${propObjectType}> {
                     public Key_${propName}(final int order) {
-                        super(order, "${propName}", ${propType}.class, "${column}", ${primaryKey}, ${foreignKey}, ${required}, ${mapEnumByOrdinal});
+                        super(order, "${propName}", ${propType}.class, "${column}", ${primaryKey}, ${foreignKey}, ${required}, ${converter});
                     }
                     @Override
                     public void setValue(${@NotNull} final ${domainClass} bean, ${@Nullable} final ${propObjectType} value) {
@@ -186,7 +186,7 @@ public class JavaSourceGenerator {
                 params.put("required", prop.required());
                 params.put("writable", prop.isWritable());
                 params.put("column", prop.dbColumName());
-                params.put("mapEnumByOrdinal", prop.mapEnumByOrdinal());
+                params.put("converter", prop.converter() != null ? prop.converter() : "null");
             }
             MessageService.formatMsg(template.formatted(buildSetterBody(prop)), params, writer);
         }
