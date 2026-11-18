@@ -52,9 +52,9 @@ public interface KeyInfo<VALUE> {
     boolean foreignKey();
 
     /**
-     * Returns a converter of the value to its database representation,
-     * or {@code null} if the value is passed to the JDBC driver as it is.
-     * An Enum value has a converter always.
+     * Returns the converter of the value to its database form,
+     * or {@code null} if the value goes to the JDBC driver as it is.
+     * An Enum always has a converter.
      */
     @Nullable DbConverter<VALUE, ?> converter();
 

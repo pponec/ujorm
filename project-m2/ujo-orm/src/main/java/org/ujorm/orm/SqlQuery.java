@@ -181,8 +181,8 @@ public class SqlQuery extends AbstractSqlQuery<SqlQuery> {
     }
 
     /**
-     * Bind values of the attribute converted to their database representation,
-     * for example an Enum by its {@code @Enumerated} mapping or a value by its JPA converter.
+     * Binds values of the attribute converted to their database form,
+     * e.g. an Enum by {@code @Enumerated} or a value by its JPA converter.
      */
     @SafeVarargs
     public final <V> SqlQuery bind(@NotNull String key, @NotNull Key<?, V> attr, @NotNull V... values) {
@@ -190,8 +190,8 @@ public class SqlQuery extends AbstractSqlQuery<SqlQuery> {
     }
 
     /**
-     * Bind values of the attribute converted to their database representation,
-     * for example an Enum by its {@code @Enumerated} mapping or a value by its JPA converter.
+     * Binds values of the attribute converted to their database form,
+     * e.g. an Enum by {@code @Enumerated} or a value by its JPA converter.
      */
     @SafeVarargs
     public final <V> SqlQuery bind(boolean enabled, @NotNull String key, @NotNull Key<?, V> attr, @NotNull V... values) {

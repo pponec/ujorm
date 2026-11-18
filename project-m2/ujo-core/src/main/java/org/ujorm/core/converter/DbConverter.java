@@ -20,8 +20,8 @@ import org.jetbrains.annotations.Nullable;
 
 /**
  * Converts a domain value to its JDBC representation and back.
- * <p>The interface is internal: an application provides a JPA {@code AttributeConverter} instead.
- * A {@code null} value is never passed to the converter, because it always means the SQL {@code NULL}.
+ * <p>Internal API: an application provides a JPA {@code AttributeConverter} instead.
+ * A {@code null} value never reaches the converter; it means the SQL {@code NULL}.
  * An implementation must be stateless and thread-safe.
  *
  * @param <V> Type of the domain value
@@ -40,7 +40,7 @@ public interface DbConverter<V, D> {
 
     /**
      * Converts a nullable domain value by an optional converter.
-     * The unchecked cast is limited to this place, because the converter type comes from a key.
+     * The unchecked cast lives here only, because the converter type comes from a key.
      */
     @Nullable
     @SuppressWarnings("unchecked")

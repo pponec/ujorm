@@ -21,7 +21,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
-/** Maps an Enum to its name, the default mapping of the Enum type. */
+/** Maps an Enum to its name, the default Enum mapping. */
 public final class EnumNameConverter<E extends Enum<E>> implements DbConverter<E, String> {
 
     /** Enum type */
@@ -59,7 +59,7 @@ public final class EnumNameConverter<E extends Enum<E>> implements DbConverter<E
         return result;
     }
 
-    /** Converters of the same Enum type store equal values. */
+    /** Converters of the same Enum type are equal. */
     @Override
     public boolean equals(Object obj) {
         return obj instanceof EnumNameConverter<?> other && type == other.type;

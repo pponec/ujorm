@@ -19,7 +19,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
 
-/** Maps an Enum to its ordinal by the annotation {@code @Enumerated(EnumType.ORDINAL)}. */
+/** Maps an Enum to its ordinal, used for {@code @Enumerated(EnumType.ORDINAL)}. */
 public final class EnumOrdinalConverter<E extends Enum<E>> implements DbConverter<E, Integer> {
 
     /** Enum type */
@@ -51,7 +51,7 @@ public final class EnumOrdinalConverter<E extends Enum<E>> implements DbConverte
         return items[value];
     }
 
-    /** Converters of the same Enum type store equal values. */
+    /** Converters of the same Enum type are equal. */
     @Override
     public boolean equals(Object obj) {
         return obj instanceof EnumOrdinalConverter<?> other && type == other.type;

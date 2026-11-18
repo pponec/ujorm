@@ -17,7 +17,7 @@ import static org.ujorm.maven.UjormMetaProcessor.Const.*;
 /**
  * Generates static metamodel helper classes during compilation (APT).
  * Triggered by {@code @Entity} / {@code @Table} (JPA/Jakarta) and by {@code @Domain} (Ujorm).
- * A JPA converter with the {@code autoApply} feature is written to an index for the runtime.
+ * An auto-applied JPA converter is written to an index for the runtime.
  */
 @SupportedAnnotationTypes({
         "javax.persistence.Entity",
@@ -45,9 +45,9 @@ public class UjormMetaProcessor extends AbstractProcessor {
     private boolean entityIndex = true;
     /** Set of processed classes to prevent duplicates */
     private final Set<String> processedClasses = new HashSet<>();
-    /** Binary names of the processed entities, in the order of the discovery */
+    /** Binary names of the processed entities, in the found order */
     private final Set<String> entityClasses = new LinkedHashSet<>();
-    /** Binary names of the auto-applied converters, in the order of the discovery */
+    /** Binary names of the auto-applied converters, in the found order */
     private final Set<String> converterClasses = new LinkedHashSet<>();
 
     @Override
@@ -109,15 +109,13 @@ public class UjormMetaProcessor extends AbstractProcessor {
     }
 
     /**
-     * Writes an index of the discovered classes: the entities for the build-time handler pre-compiler,
+     * Writes an index of the found classes: the entities for the handler pre-compiler,
      * or the auto-applied converters for the runtime.
      * <p>
-     * A resource is written rather than a source file on purpose: the pre-compiler targets
-     * the {@code org.ujorm.gen_.*} package, which this module does not own, so a source file
-     * would be rejected by a modular build.
+     * A resource is written, not a source file: the pre-compiler targets the {@code org.ujorm.gen_.*}
+     * package, which this module doesn't own, so a modular build would reject a source file.
      * <p>
-     * Note that an incremental compilation processes the changed classes only, hence the index
-     * is complete after a clean build.
+     * An incremental build processes the changed classes only, so the index is complete after a clean build.
      */
     private void writeIndex(Set<String> classes, String index, String title) {
         if (classes.isEmpty()) {

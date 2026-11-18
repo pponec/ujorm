@@ -32,7 +32,7 @@ public record ColumnModel<D,V>(
         Key<V,?> foreignKey,
         /**
          * Converter of the column value, or {@code null}.
-         * A foreign-key column holds the primary key of the relation, so it takes the converter of that key.
+         * A foreign-key column holds the primary key of the relation, so it uses the converter of that key.
          */
         @Nullable
         DbConverter<?, ?> converter

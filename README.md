@@ -45,7 +45,9 @@ Full metrics and methodology are available at 👉 [GitHub: orm-benchmarks](http
     * [DELETE](#delete-integrity-and-ordering)
     * [All Examples](#all-examples)
 * [Class Diagram](#class-diagram)
+* [Attribute Converters](#attribute-converters)
 * [Generated Meta Models](#generated-meta-models)
+* [Pre-compiled Handlers (GraalVM)](#pre-compiled-handlers-graalvm)
 * [Configuration](#configuration)
 * [Maven Dependencies & Setup](#maven-dependencies--setup)
 * [FAQ](#faq)
@@ -267,6 +269,28 @@ Metadata is cached to maximize speed:
 * **EntityManager:** Retains the database table metamodel for each entity.
   Use `EntityManagerService` for shared singleton instances.
 
+## Attribute Converters
+
+A type without JDBC support is mapped by the standard JPA `AttributeConverter`.
+
+```java
+@Convert(converter = EmailConverter.class)   // one attribute
+private Email email;
+
+@Converter(autoApply = true)                 // every attribute of the Phone type
+public class PhoneConverter implements AttributeConverter<Phone, String> { ... }
+```
+
+* An Enum is stored by its name, or by its ordinal with `@Enumerated(EnumType.ORDINAL)`.
+* The converter works for reads, writes, `SelectQuery` conditions, and `SqlQuery.bind(name, key, values...)`.
+* A `null` value never reaches a converter; it means SQL `NULL`.
+* A converter needs a public class and a public no-argument constructor.
+* `autoApply` works for application types only, not for JDK types or enums.
+  Build the project cleanly after adding such a converter: the annotation processor lists it in an index.
+* A wrong declaration, such as a converter on a primary key or a relation, fails when the domain model is built.
+
+See [AttributeConverterTest.java](project-m2/ujo-orm/src/test/java/org/ujorm/orm/converter/AttributeConverterTest.java) for examples.
+
 ## Generated Meta Models
 
 The Ujorm3 annotation processor generates `Meta` classes at compile time for type safety without string literals.
@@ -286,6 +310,26 @@ public class MetaEmployee {
 Metamodel keys are singletons.
 Chaining them allows for strictly type-safe paths (e.g., `MetaEmployee.city, MetaCity.name`).
 They implement `CharSequence`, meaning they can be used interchangeably with Strings in many parts of the API.
+
+## Pre-compiled Handlers (GraalVM)
+
+By default, Ujorm3 compiles its mapping classes (domain handlers) on the first use of an entity, so it needs a JDK.
+A GraalVM native image or a plain JRE has no compiler: run `HandlerPrecompiler` after the `compile` phase instead.
+
+```bash
+java -cp <projectClasspath> org.ujorm.core.generator.HandlerPrecompiler \
+     target/classes target/generated-sources/ujorm-handlers
+```
+
+* The tool needs the entity index written by the annotation processor.
+* The handlers go straight to `target/classes`. The second directory holds the source code for review only,
+  so don't register it as a source root.
+* A handler gets the Java release of its entity, so a newer build JDK is safe.
+* The GraalVM reflection metadata is written too.
+* On the JVM, an outdated handler is generated again with a warning, or it fails without a compiler.
+  Build the project cleanly before a release.
+
+See the `precompiled-handlers` profile in [ujo-orm/pom.xml](project-m2/ujo-orm/pom.xml) for a working `exec-maven-plugin` setup.
 
 ## Configuration
 
@@ -392,6 +436,10 @@ In addition, the project includes automated integration tests for basic CRUD ope
 * **Is runtime bytecode generation secure?**<br/>
   Yes. It relies purely on your project's domain classes with no external data input —
   the same approach used by established libraries such as HikariCP or Spring.
+
+* **Does Ujorm3 need a JDK at runtime?**<br/>
+  By default, yes: the mapping classes are compiled at runtime.
+  For a JRE or a GraalVM native image, build them ahead of time — see [Pre-compiled Handlers](#pre-compiled-handlers-graalvm).
 
 * **Does Ujorm3 manipulate application bytecode?**<br/>
   No. Ujorm3 does not use Java agents, and it does not modify, instrument, or rewrite the bytecode

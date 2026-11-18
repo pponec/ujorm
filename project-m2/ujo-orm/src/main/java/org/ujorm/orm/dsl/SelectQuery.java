@@ -378,7 +378,7 @@ public class SelectQuery<D> extends AbstractSqlQuery<SelectQuery<D>> {
             return DomainHandlerProvider.getHandler(foreignKey.type()).findPrimaryKey(true);
         }
 
-        /** Converts criterion values to their DB representation: foreign-key relations to their primary key, then by the key converter. */
+        /** Converts criterion values to their DB form: a relation to its primary key, then by the key converter. */
         private Array<Object> mapCriterionValues(Array<Object> values, Key<?, ?> key, @Nullable Key<?, ?> fkPrimaryKey) {
             return fkPrimaryKey != null
                     ? toDbValues(mapFkArrayToPkValues(values, key, fkPrimaryKey), fkPrimaryKey)

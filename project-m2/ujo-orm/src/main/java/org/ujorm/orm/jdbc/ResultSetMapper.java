@@ -152,7 +152,7 @@ public final class ResultSetMapper<D> {
         return hasData;
     }
 
-    /** Reads the column by the database type of the converter; an error message names the attribute. */
+    /** Reads the column by the database type of the converter; an error names the attribute. */
     private <D2> @Nullable Object readConverted(
             @NotNull ResultSet rs,
             @NotNull DirectMapping<D2, Object> mapping,

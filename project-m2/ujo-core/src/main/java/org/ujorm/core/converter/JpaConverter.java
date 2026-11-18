@@ -25,7 +25,7 @@ import java.util.Objects;
 public final class JpaConverter<V, D> implements DbConverter<V, D> {
 
     /**
-     * Index of the converters with the {@code @Converter(autoApply = true)} annotation, written by the Ujorm APT processor.
+     * Index of the auto-applied converters ({@code @Converter(autoApply = true)}), written by the Ujorm APT processor.
      * Keep in sync with {@code org.ujorm.maven.UjormMetaProcessor.Const.CONVERTER_INDEX}.
      */
     public static final String CONVERTER_INDEX = "META-INF/ujorm/converters.lst";
@@ -55,7 +55,7 @@ public final class JpaConverter<V, D> implements DbConverter<V, D> {
         return converter.convertToEntityAttribute(value);
     }
 
-    /** Converters of the same class store equal values, because a converter is stateless. */
+    /** Converters of the same class are equal, because a converter is stateless. */
     @Override
     public boolean equals(Object obj) {
         return obj instanceof JpaConverter<?, ?> other
@@ -74,8 +74,8 @@ public final class JpaConverter<V, D> implements DbConverter<V, D> {
     }
 
     /**
-     * Creates the adapter. The value type is inferred from the target,
-     * because the generated code assigns a converter whose types are verified by the domain model.
+     * Creates the adapter. The value type comes from the target,
+     * because the domain model has already checked the converter types.
      */
     @NotNull
     @SuppressWarnings({"unchecked", "rawtypes"})
