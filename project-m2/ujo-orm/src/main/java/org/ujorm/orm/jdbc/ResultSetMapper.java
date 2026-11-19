@@ -124,7 +124,7 @@ public final class ResultSetMapper<D> {
             var converter = mapping.converter();
             var value = converter != null
                     ? readConverted(rs, mapping, converter)
-                    : rs.getObject(mapping.columnIndex(), Primitive.wrapPrimitive(mapping.key().type()));
+                    : rs.getObject(mapping.columnIndex(), mapping.javaType());
             if (value != null) {
                 target.setValue(mapping.key(), value);
                 hasData = true;
@@ -158,7 +158,7 @@ public final class ResultSetMapper<D> {
             @NotNull DirectMapping<D2, Object> mapping,
             @NotNull DbConverter<Object, Object> converter) throws SQLException {
         try {
-            var dbValue = rs.getObject(mapping.columnIndex(), converter.dbType());
+            var dbValue = rs.getObject(mapping.columnIndex(), mapping.javaType());
             return dbValue != null ? converter.fromDb(dbValue) : null;
         } catch (SQLException | RuntimeException e) {
             var msg = "The column #%d of the attribute %s can't be read as %s: %s".formatted(
@@ -275,7 +275,8 @@ public final class ResultSetMapper<D> {
         @SuppressWarnings("unchecked")
         public void addMapping(Key<D2, Object> key, int columnIndex) {
             var converter = (DbConverter<Object, Object>) key.info().converter();
-            directMappings.add(new DirectMapping<>(key, columnIndex, converter));
+            var javaType = converter != null ? converter.dbType() : Primitive.wrapPrimitive(key.type());
+            directMappings.add(new DirectMapping<>(key, columnIndex, converter, javaType));
         }
 
         @SuppressWarnings({"unchecked", "rawtypes"})
@@ -303,7 +304,9 @@ public final class ResultSetMapper<D> {
             /** Gets the column index. */
             int columnIndex,
             /** Gets the value converter, or {@code null}. */
-            @Nullable DbConverter<V, Object> converter
+            @Nullable DbConverter<V, Object> converter,
+            /** Java type requested from the JDBC driver, calculated once for all rows. */
+            Class<?> javaType
     ) {}
 
     /**
