@@ -2,7 +2,9 @@ The Ujorm release notes
 (Maven groupId: org.ujorm)
 *******************************
 
-release 3.0.6-SNAPSHOT (?)
+release 3.0.7-SNAPSHOT (?)
+
+release 3.0.6 (2026-11-20)
 + ORM: Support for JPA attribute converters: @Convert for one attribute, @Converter(autoApply = true) for every attribute of an application type. A null value never reaches a converter. An invalid declaration fails when the domain model is built.
 + META: The APT processor writes the index META-INF/ujorm/converters.lst of the auto-applied converters. Build the project cleanly after adding one.
 + ORM: Enums use the same converters (by name, or by ordinal for @Enumerated(ORDINAL)). A column is read strictly by its database type, so a name is no longer read as an ordinal.
