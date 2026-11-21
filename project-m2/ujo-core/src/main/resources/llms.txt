@@ -50,6 +50,18 @@ String table = handler.getDatabaseTable();
 Employee empty = handler.newDomain();
 ```
 
+### All keys of a domain class
+
+`DomainHandlerProvider.getHandler(X.class).getKeyList()` is the way to get ALL keys of a domain class.
+Do not list the `Meta*` constants by hand and do not scan fields by reflection.
+
+- The handler is cached per class, so the call is cheap and can be repeated or stored in a `static final` field.
+- The order of the keys follows the order of the fields; `newDomain(values...)` is positional in the same order.
+- The generated `Meta<X>` class uses the same call: `private static final DomainHandler<X> meta =
+  DomainHandlerProvider.getHandler(X.class);` and then `meta.getKey("field")` for each public constant.
+- For a raw `Class<?>` the result needs an unchecked cast, e.g. `(List) handler.getKeyList()`.
+- A hand-written `List.of(A, B, C)` is appropriate only for a subset of the keys, the handler cannot filter.
+
 ## Criterion — Type-Safe WHERE Conditions
 
 `org.ujorm.core.criterion.Criterion<D>` is an immutable, composable WHERE predicate.
