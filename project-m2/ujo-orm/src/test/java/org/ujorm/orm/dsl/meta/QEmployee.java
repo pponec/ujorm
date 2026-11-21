@@ -8,16 +8,16 @@ import javax.annotation.processing.Generated;
 
 /** Auto-generated metamodel for DEmployee */
 @Generated("org.ujorm.maven.UjormMetaProcessor.SourceGenerator")
-public abstract class QEmployee {
+public interface QEmployee {
 
-    private static final DomainHandler<Employee> meta = DomainHandlerProvider.getHandler(Employee.class);
+    Key<Employee, Long> id = meta().getKey("id");
+    Key<Employee, String> name = meta().getKey("name");
+    Key<Employee, City> city = meta().getKey("city");
+    Key<Employee, Employee> boss = meta().getKey("boss");
+    Key<Employee, EmployeeState> stateOrdinal = meta().getKey("stateOrdinal");
+    Key<Employee, EmployeeState> stateString = meta().getKey("stateString");
 
-    public static final Key<Employee, Long> id = meta.getKey("id");
-    public static final Key<Employee, String> name = meta.getKey("name");
-    public static final Key<Employee, City> city = meta.getKey("city");
-    public static final Key<Employee, Employee> boss = meta.getKey("boss");
-    public static final Key<Employee, EmployeeState> stateOrdinal = meta.getKey("stateOrdinal");
-    public static final Key<Employee, EmployeeState> stateString = meta.getKey("stateString");
-
+    private static DomainHandler<Employee> meta() {
+        return DomainHandlerProvider.getHandler(Employee.class);
+    }
 }
-

@@ -334,17 +334,19 @@ See [AttributeConverterTest.java](project-m2/ujo-orm/src/test/java/org/ujorm/orm
 
 ## Generated Meta Models
 
-The Ujorm3 annotation processor generates `Meta` classes at compile time for type safety without string literals.
+The Ujorm3 annotation processor generates `Meta` interfaces at compile time for type safety without string literals.
 
 ```java
 /** Auto-generated metamodel for Employee */
-public class MetaEmployee {
-    private static final DomainHandler<Employee> meta = DomainHandlerProvider.getHandler(Employee.class);
+public interface MetaEmployee {
+    Key<Employee, Long> id = meta().getKey("id");
+    Key<Employee, String> name = meta().getKey("name");
+    Key<Employee, City> city = meta().getKey("city");
+    Key<Employee, Employee> boss = meta().getKey("boss");
 
-    public static final Key<Employee, Long> id = meta.getKey("id");
-    public static final Key<Employee, String> name = meta.getKey("name");
-    public static final Key<Employee, City> city = meta.getKey("city");
-    public static final Key<Employee, Employee> boss = meta.getKey("boss");
+    private static DomainHandler<Employee> meta() {
+        return DomainHandlerProvider.getHandler(Employee.class);
+    }
 }
 ```
 

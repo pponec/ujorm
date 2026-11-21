@@ -358,10 +358,7 @@ public class UjormMetaProcessor extends AbstractProcessor {
 
             result.append("/** Auto-generated metamodel for the {@code ").append(originalName).append("} domain class. */\n");
             result.append("@Generated(\"").append(getClass().getCanonicalName()).append("\")\n");
-            result.append("public abstract class ").append(newClassName).append(" {\n\n");
-
-            result.append("    private static final DomainHandler<").append(originalName)
-                    .append("> meta = DomainHandlerProvider.getHandler(").append(originalName).append(".class);\n\n");
+            result.append("public interface ").append(newClassName).append(" {\n\n");
 
             var validFields = new ArrayList<VariableElement>();
             var currentClass = classElement;
@@ -403,9 +400,13 @@ public class UjormMetaProcessor extends AbstractProcessor {
                     result.append("    /** The {@code ").append(fieldName).append("} property descriptor */\n");
                 }
 
-                result.append("    public static final Key<").append(originalName).append(", ").append(typeName).append("> ")
-                        .append(fieldName).append(" = meta.getKey(\"").append(fieldName).append("\");\n");
+                result.append("    Key<").append(originalName).append(", ").append(typeName).append("> ")
+                        .append(fieldName).append(" = meta().getKey(\"").append(fieldName).append("\");\n");
             }
+
+            result.append("\n    private static DomainHandler<").append(originalName).append("> meta() {\n");
+            result.append("        return DomainHandlerProvider.getHandler(").append(originalName).append(".class);\n");
+            result.append("    }\n");
 
             if (ENABLE_TABLE_ALIAS) {
                 result.append("\n");

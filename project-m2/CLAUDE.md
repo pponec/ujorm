@@ -10,7 +10,7 @@ Guidance for AI assistants working with this codebase.
 | `ujo-orm` | `EntityManager`, `Crud`, `SelectQuery`, `SqlQuery`, `EntityContext` |
 | `ujo-web` | `HtmlElement`, `Element` (HTML builder), `HttpContext`, `HttpParameter` |
 | `ujo-tools` | `SqlBuilder`, `AbstractSqlQuery`, `Check`, `Assert` |
-| `ujorm-meta-processor` | Annotation processor that generates `QXxx` metamodel classes |
+| `ujorm-meta-processor` | Annotation processor that generates `QXxx` metamodel interfaces |
 
 ---
 
@@ -194,7 +194,7 @@ q.sql("SELECT * FROM t WHERE ${filter}")
 ## ujo-core — Key and CriterionProvider
 
 `Key<DOMAIN, VALUE>` is a property descriptor — static, immutable, contains only metadata.
-Generated into `QXxx` metamodel classes by `ujorm-meta-processor`.
+Generated into `QXxx` metamodel interfaces by `ujorm-meta-processor`.
 
 ### Criterion factory methods (via `QXxx.field.whereXxx(value)`)
 
@@ -239,7 +239,7 @@ KeyInfo info()                   // ORM metadata: foreignKey(), converter()
 short   index()                  // position in domain class
 ```
 
-### ujorm-meta-processor — Q-class generation
+### ujorm-meta-processor — Q-interface generation
 
 Add to Maven `pom.xml`:
 ```xml
@@ -250,8 +250,8 @@ Add to Maven `pom.xml`:
 </dependency>
 ```
 
-Q-classes are generated at compile time into `target/generated-sources/annotations/…/meta/`.
-Each domain field becomes a `public static final Key<D,V> fieldName` constant.
+Q-interfaces are generated at compile time into `target/generated-sources/annotations/…/meta/`.
+Each domain field becomes a `Key<D,V> fieldName` constant (implicitly `public static final`).
 Import from the generated `.meta` package, not from the domain class directly.
 
 ---
