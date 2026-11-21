@@ -194,7 +194,7 @@ public final class ResultSetMapper<D> {
             var isLast = (i == parts.length - 1);
             var key = findKey(clazz, parts[i], byColumn);
 
-            if (isLast && !key.info().foreignKey()) {
+            if (isLast && !JdbcUtils.isRelation(key)) {
                 currentNode.addMapping(key, colIdx);
             } else {
                 currentNode = currentNode.getOrCreateRelation(key);

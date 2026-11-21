@@ -262,7 +262,7 @@ public class TableModelBuilder<D> {
     protected <V> ColumnModel<D,V> column(Key<D,V> key) {
         var jdbcType = (JDBCType) null;
         var foreignKey = (Key<V,?>) null;
-        if (key.info().foreignKey()) {
+        if (JdbcUtils.isRelation(key)) {
             var foreignHandler = DomainHandlerProvider.getHandler(key.type());
             var acceptDefaultPk = config.acceptDefaultPk();
             foreignKey = foreignHandler.findPrimaryKey(acceptDefaultPk);

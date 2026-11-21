@@ -1,5 +1,5 @@
 /*
- *  Copyright 2020-2026 Pavel Ponec
+ *  Copyright 2026-2026 Pavel Ponec
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -13,26 +13,16 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-
-package org.ujorm.orm.annot;
-
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+package org.ujorm.annotation;
 
 /**
- * Use the annotation to comment a database name or column.<br>
- * @deprecated Annotation is not implemented now.
+ * Database representation of an Enum value for the {@link UEnumerated} annotation.
+ *
+ * @since 3.0.7
  */
-@Deprecated
-@Retention(value=RetentionPolicy.RUNTIME)
-@Target({ElementType.FIELD, ElementType.TYPE})
-public @interface UComment {
-
-    /** A String for the NULL value. */
-    String NULL = "";
-
-    String value() default NULL;
-
+public enum UEnumType {
+    /** The ordinal number of the Enum item. */
+    ORDINAL,
+    /** The name of the Enum item. */
+    STRING
 }

@@ -16,16 +16,21 @@ import static org.ujorm.maven.UjormMetaProcessor.Const.*;
 
 /**
  * Generates static metamodel helper classes during compilation (APT).
- * Triggered by {@code @Entity} / {@code @Table} (JPA/Jakarta) and by {@code @Domain} (Ujorm).
+ * Triggered by {@code @UEntity} / {@code @UTable} / {@code @Domain} (Ujorm)
+ * and by {@code @Entity} / {@code @Table} (JPA/Jakarta).
  * An auto-applied JPA converter is written to an index for the runtime.
+ * <p>The order of the annotation types has no effect: the processor handles the class once,
+ * whichever of them it carries.
  */
 @SupportedAnnotationTypes({
-        "javax.persistence.Entity",
-        "javax.persistence.Table",
+        "org.ujorm.annotation.UEntity",
+        "org.ujorm.annotation.UTable",
+        "org.ujorm.annotation.Domain",
         "jakarta.persistence.Entity",
         "jakarta.persistence.Table",
         "jakarta.persistence.Converter",
-        "org.ujorm.annotation.Domain"
+        "javax.persistence.Entity",
+        "javax.persistence.Table"
 })
 @SupportedOptions({
         PARAM_PREFIX,
@@ -154,11 +159,14 @@ public class UjormMetaProcessor extends AbstractProcessor {
         }
     }
 
-    /** Returns {@code true} if the element carries {@code @Entity}, {@code @Table}, or {@code @Domain}. */
+    /**
+     * Returns {@code true} if the element carries {@code @Entity}, {@code @Table},
+     * {@code @UEntity}, {@code @UTable}, or {@code @Domain}. The annotations are compared by the simple name.
+     */
     private boolean hasTriggerAnnotation(Element element) {
         for (var mirror : element.getAnnotationMirrors()) {
             var annoName = mirror.getAnnotationType().asElement().getSimpleName().toString();
-            if (annoName.equals("Entity") || annoName.equals("Table") || annoName.equals("Domain")) {
+            if (TRIGGER_ANNOTATIONS.contains(annoName)) {
                 return true;
             }
         }
@@ -228,7 +236,8 @@ public class UjormMetaProcessor extends AbstractProcessor {
         /** Checks if the element has a @Transient annotation. */
         private boolean hasTransientAnnotation(Element element) {
             for (var mirror : element.getAnnotationMirrors()) {
-                if (mirror.getAnnotationType().asElement().getSimpleName().toString().equals("Transient")) {
+                var annoName = mirror.getAnnotationType().asElement().getSimpleName().toString();
+                if (annoName.equals("Transient") || annoName.equals("UTransient")) {
                     return true;
                 }
             }
@@ -422,5 +431,7 @@ public class UjormMetaProcessor extends AbstractProcessor {
         static final String CONVERTER_INDEX = "META-INF/ujorm/converters.lst";
         /** The JPA annotation of a converter */
         static final String CONVERTER_ANNOTATION = "jakarta.persistence.Converter";
+        /** Simple names of the annotations triggering the generation of a metamodel class */
+        static final Set<String> TRIGGER_ANNOTATIONS = Set.of("UEntity", "UTable", "Domain", "Entity", "Table");
     }
 }

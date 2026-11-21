@@ -43,7 +43,7 @@ Declare as `provided` scope (compile-time only) and wire into `maven-compiler-pl
 
 ## What it generates
 
-For every class annotated with `@Entity`, `@Table` (JPA/Jakarta), or `@org.ujorm.annotation.Domain`,
+For every class annotated with `@Entity`, `@Table` (JPA/Jakarta), `@UEntity`, `@UTable` or `@Domain` (Ujorm),
 the processor generates a companion `Meta*` class with one static `Key<D, V>` field per domain property.
 
 ### Input entity

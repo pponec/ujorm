@@ -45,6 +45,7 @@ Full metrics and methodology are available at 👉 [GitHub: orm-benchmarks](http
     * [DELETE](#delete-integrity-and-ordering)
     * [All Examples](#all-examples)
 * [Class Diagram](#class-diagram)
+* [Ujorm Annotations (without Jakarta)](#ujorm-annotations-without-jakarta)
 * [Attribute Converters](#attribute-converters)
 * [Generated Meta Models](#generated-meta-models)
 * [Pre-compiled Handlers (GraalVM)](#pre-compiled-handlers-graalvm)
@@ -235,8 +236,8 @@ index for quick pattern lookup.
   It serves as a factory for creating `Crud` objects used for standard database operations.
   It manages SQL logging configurations and defines rules for table and column quoting.
 
-Ujorm3 derives mapping from JPA/Jakarta annotations (`@Table`, `@Column`, `@Id`).
-An attribute becomes an M:1 relation when its class carries a `@Table` or an `@Entity` annotation, or when the attribute itself is annotated by `@ManyToOne` or `@JoinColumn`. The last case also covers a foreign key kept as a raw value — a `Long cityId` field, for example — where the attribute type is no entity at all.
+Ujorm3 derives mapping from JPA/Jakarta annotations (`@Table`, `@Column`, `@Id`), or from their Ujorm alternatives (`@UTable`, `@UColumn`, `@UId`) described [below](#ujorm-annotations-without-jakarta).
+An attribute becomes an M:1 relation when its class carries a `@Table` or an `@Entity` annotation, or when the attribute itself is annotated by `@ManyToOne` or `@JoinColumn`. A foreign key kept as a raw value — `@JoinColumn(name = "city_id") Long cityId`, for example — is no relation: the ORM reads, writes and compares it as a common column, without a JOIN.
 
 ### Supported Entity Types
 
@@ -268,6 +269,46 @@ Metadata is cached to maximize speed:
 * **ResultSetMapper:** Caches column mapping structures (limit: 512 distinct queries).
 * **EntityManager:** Retains the database table metamodel for each entity.
   Use `EntityManagerService` for shared singleton instances.
+
+## Ujorm Annotations (without Jakarta)
+
+The `jakarta.persistence` API is optional at runtime. An application which doesn't want it — a desktop application
+using `@Domain` classes only, for example — can annotate its classes by the Ujorm annotations of the `ujo-core`
+module (package `org.ujorm.annotation`). They carry only the attributes Ujorm really reads:
+
+| Ujorm | Jakarta Persistence | Attributes |
+|---|---|---|
+| `@UEntity` | `@Entity` | |
+| `@UTable` | `@Table` | `name`, `schema`, `catalog` |
+| `@UId` | `@Id` | |
+| `@UColumn` | `@Column` | `name`, `nullable` |
+| `@UManyToOne` | `@ManyToOne` | |
+| `@UJoinColumn` | `@JoinColumn` | `name`, `nullable` |
+| `@UTransient` | `@Transient` | |
+| `@UEnumerated` | `@Enumerated` | `value` (`UEnumType.ORDINAL` by default, or `STRING`) |
+| `@UConvert` | `@Convert` | `converter`, `disableConversion` |
+
+```java
+@UTable(name = "employee")
+public class Employee {
+    @UId                                          private Long id;
+    @UColumn(nullable = false)                    private String name;
+    @UManyToOne @UJoinColumn(name = "city_id")    private City city;
+    @UConvert(converter = YesNoConverter.class)   private Boolean active;
+}
+```
+
+* Both annotation sets are fully supported and can be mixed in one project. An element carrying both variants
+  of an annotation must declare the same values, otherwise building the domain model fails with an error.
+* The Jakarta annotations are read only when `jakarta.persistence` is on the classpath of Ujorm.
+* `@UConvert` accepts a Ujorm `DbConverter`, which needs no Jakarta, or a JPA `AttributeConverter`.
+  A `DbConverter` must be stateless, and two instances of its class should be equal (`equals()`, `hashCode()`)
+  so that two columns with the converter can be compared in a query.
+* The auto-applied converters (`@Converter(autoApply = true)`) are a JPA feature only.
+* The annotation processor generates the `Meta*` class for `@UEntity` and `@UTable` too.
+* The generated handler, and so its `MODEL_HASH`, is the same for both annotation sets.
+
+See [UAnnotationOrmTest.java](project-m2/ujo-orm/src/test/java/org/ujorm/orm/uannotation/UAnnotationOrmTest.java) for an example.
 
 ## Attribute Converters
 

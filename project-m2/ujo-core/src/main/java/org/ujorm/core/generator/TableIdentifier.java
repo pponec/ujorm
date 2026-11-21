@@ -15,13 +15,10 @@
  */
 package org.ujorm.core.generator;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.ujorm.tools.Check;
 
-import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -124,17 +121,8 @@ public record TableIdentifier(
         return text.replaceAll("(?<!^)(?=[A-Z])", "_").toLowerCase();
     }
 
-    /**
-     * Extracts a value from the Table annotation using the provided extractor.
-     *
-     * @param table     The Table annotation (can be null).
-     * @param extractor The function to extract the string value (e.g., Table::name).
-     * @param defaultValue The value to return if the annotation is null or the extracted value is empty.
-     * @return result - The resolved string value.
-     */
-    static String getFromTable(Table table, Function<Table, String> extractor, String defaultValue) {
-        if (table == null) return defaultValue;
-        var value = extractor.apply(table);
+    /** Returns the value, or the default one for an empty value. */
+    private static String valueOf(String value, String defaultValue) {
         return value.isEmpty() ? defaultValue : value;
     }
 
@@ -145,20 +133,23 @@ public record TableIdentifier(
      * of a foreign key column is a common case.
      *
      * @param type A type of a domain property.
-     * @return The type is a database entity.
+     * @return The type carries the {@code @UEntity}, {@code @UTable}, {@code @Entity} or {@code @Table} annotation.
      */
     public static boolean isEntity(@NotNull Class<?> type) {
-        return type.isAnnotationPresent(Entity.class)
-                || type.isAnnotationPresent(Table.class);
+        return MappingAnnotations.of().isEntity(type);
     }
 
-    /** Get data from annotation */
+    /** Get data from the {@code @UTable} or {@code @Table} annotation */
     public static <D> TableIdentifier of(Class<D> beanClass) {
-        var tableAnnotation = beanClass.getAnnotation(Table.class);
-        var table = getFromTable(tableAnnotation, Table::name,
-                toSnakeCase(beanClass.getSimpleName()));
-        var schema = getFromTable(tableAnnotation, Table::schema, "");
-        var catalog = getFromTable(tableAnnotation, Table::catalog, "");
-        return new TableIdentifier(table, schema, catalog);
+        return of(beanClass, MappingAnnotations.of());
+    }
+
+    /** Get data from the {@code @UTable} or {@code @Table} annotation */
+    static <D> TableIdentifier of(Class<D> beanClass, MappingAnnotations annotations) {
+        var defaultName = toSnakeCase(beanClass.getSimpleName());
+        var table = annotations.table(beanClass);
+        return table == null
+                ? new TableIdentifier(defaultName, "", "")
+                : new TableIdentifier(valueOf(table.name(), defaultName), table.schema(), table.catalog());
     }
 }

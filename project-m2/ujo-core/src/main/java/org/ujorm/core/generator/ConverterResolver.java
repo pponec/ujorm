@@ -15,16 +15,13 @@
  */
 package org.ujorm.core.generator;
 
-import jakarta.persistence.AttributeConverter;
-import jakarta.persistence.Convert;
-import jakarta.persistence.Converter;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.ujorm.core.converter.DbConverter;
 import org.ujorm.core.converter.EnumNameConverter;
 import org.ujorm.core.converter.EnumOrdinalConverter;
 import org.ujorm.core.converter.JpaConverter;
+import org.ujorm.core.generator.MappingSource.ConvertInfo;
 import org.ujorm.tools.common.Primitive;
 
 import java.io.BufferedReader;
@@ -46,6 +43,9 @@ import java.util.WeakHashMap;
 /**
  * Resolves the converter of a domain property and renders it as a Java expression for the generated handler.
  * The handler creates the converter by its constructor, so no reflection is needed at runtime.
+ * <p>A converter of the {@code @UConvert} or {@code @Convert} annotation implements the Ujorm {@link DbConverter},
+ * or the JPA {@code AttributeConverter}. The auto-applied converters are supported for the JPA only,
+ * and they are ignored without the Jakarta Persistence API.
  */
 final class ConverterResolver {
 
@@ -56,6 +56,17 @@ final class ConverterResolver {
     private static final Map<ClassLoader, Map<String, String>> AUTO_APPLIED
             = Collections.synchronizedMap(new WeakHashMap<>());
 
+    /** Reader of the mapping annotations */
+    private final MappingAnnotations annotations;
+
+    ConverterResolver() {
+        this(MappingAnnotations.of());
+    }
+
+    ConverterResolver(@NotNull MappingAnnotations annotations) {
+        this.annotations = annotations;
+    }
+
     /**
      * Returns a Java expression creating the converter, or {@code null} for no conversion.
      * Like in JPA, an auto-applied converter skips a primary key and a relation.
@@ -64,31 +75,30 @@ final class ConverterResolver {
      */
     @Nullable
     String resolve(@NotNull Field field, @NotNull Class<?> type, boolean primaryKey, boolean foreignKey) {
-        var convert = field.getAnnotation(Convert.class);
+        var convert = annotations.convert(field);
         if (convert != null) {
             if (!convert.disableConversion()) {
                 checkConvert(field, convert, primaryKey, foreignKey);
-                return createJpaConverter(field, type, convert.converter());
+                return createConverter(field, type, convert.converter());
             }
         } else if (!primaryKey && !foreignKey) {
             var converterClass = findAutoApplied(field, type);
             if (converterClass != null) {
-                return createJpaConverter(field, type, converterClass);
+                return createConverter(field, type, converterClass);
             }
         }
         return type.isEnum() ? createEnumConverter(field, type) : null;
     }
 
     private String createEnumConverter(Field field, Class<?> type) {
-        var enumerated = field.getAnnotation(Enumerated.class);
-        var converterClass = enumerated != null && enumerated.value() == EnumType.ORDINAL
+        var converterClass = Boolean.TRUE.equals(annotations.enumOrdinal(field))
                 ? EnumOrdinalConverter.class
                 : EnumNameConverter.class;
         return "%s.of(%s.class)".formatted(converterClass.getName(), type.getCanonicalName());
     }
 
     /** Checks the {@code @Convert} annotation of the field. */
-    private void checkConvert(Field field, Convert convert, boolean primaryKey, boolean foreignKey) {
+    private void checkConvert(Field field, ConvertInfo convert, boolean primaryKey, boolean foreignKey) {
         if (!convert.attributeName().isEmpty()) {
             throw error(field, "the attribute name of the @Convert annotation is not supported");
         }
@@ -101,16 +111,17 @@ final class ConverterResolver {
         if (foreignKey) {
             throw error(field, "a relation can't have a converter");
         }
-        if (field.isAnnotationPresent(Enumerated.class)) {
+        if (annotations.enumOrdinal(field) != null) {
             throw error(field, "the @Convert and @Enumerated annotations can't be combined");
         }
     }
 
-    private String createJpaConverter(Field field, Class<?> type, Class<?> converterClass) {
+    private String createConverter(Field field, Class<?> type, Class<?> converterClass) {
         var problem = findProblem(converterClass);
         if (problem != null) {
             throw error(field, problem);
         }
+        var ujormConverter = DbConverter.class.isAssignableFrom(converterClass);
         var types = resolveTypes(converterClass);
         if (types == null) {
             throw error(field, unresolvedTypes(converterClass));
@@ -118,6 +129,9 @@ final class ConverterResolver {
         if (types[0] != Primitive.wrapPrimitive(type)) {
             throw error(field, "the converter %s converts the type %s rather than %s".formatted(
                     converterClass.getName(), types[0].getName(), type.getName()));
+        }
+        if (ujormConverter) {
+            return "new %s()".formatted(converterClass.getCanonicalName());
         }
         return "%s.of(new %s(), %s.class)".formatted(
                 JpaConverter.class.getName(),
@@ -131,9 +145,10 @@ final class ConverterResolver {
      */
     @Nullable
     private String findProblem(Class<?> converterClass) {
-        if (!AttributeConverter.class.isAssignableFrom(converterClass)) {
-            return "the class %s doesn't implement the %s".formatted(
-                    converterClass.getName(), AttributeConverter.class.getSimpleName());
+        if (!DbConverter.class.isAssignableFrom(converterClass) && !annotations.isAttributeConverter(converterClass)) {
+            return "the class %s implements neither the %s nor the AttributeConverter%s".formatted(
+                    converterClass.getName(), DbConverter.class.getSimpleName(),
+                    annotations.isJakartaEnabled() ? "" : " (the Jakarta Persistence API is not available)");
         }
         var valid = !converterClass.isInterface()
                 && !Modifier.isAbstract(converterClass.getModifiers())
@@ -161,7 +176,10 @@ final class ConverterResolver {
     /** Returns the value type and the database type of the converter, or {@code null} for unresolved types. */
     @Nullable
     private Class<?>[] resolveTypes(Class<?> converterClass) {
-        var typeArguments = findTypeArguments(converterClass, AttributeConverter.class, Map.of());
+        var target = DbConverter.class.isAssignableFrom(converterClass)
+                ? DbConverter.class
+                : JakartaMappingSource.attributeConverterType();
+        var typeArguments = findTypeArguments(converterClass, target, Map.of());
         var valueType = typeArguments != null ? toClass(typeArguments[0]) : null;
         var dbType = typeArguments != null ? toClass(typeArguments[1]) : null;
         return valueType != null && dbType != null ? new Class<?>[] {valueType, dbType} : null;
@@ -171,7 +189,7 @@ final class ConverterResolver {
     @Nullable
     private Class<?> findAutoApplied(Field field, Class<?> type) {
         var loader = field.getDeclaringClass().getClassLoader();
-        if (loader == null) {
+        if (loader == null || !annotations.isJakartaEnabled()) {
             return null;
         }
         var converterName = AUTO_APPLIED
@@ -194,11 +212,15 @@ final class ConverterResolver {
     /**
      * Loads the auto-applied converters from the index written by the Ujorm APT processor.
      * A missing class, or one no longer auto-applied, comes from an incremental build, so it is skipped.
+     * Without the Jakarta Persistence API the result is empty, because an auto-applied converter is a JPA one.
      *
      * @throws IllegalArgumentException An invalid auto-applied converter.
      */
     Map<Class<?>, Class<?>> loadAutoApplied(ClassLoader loader) {
         var result = new HashMap<Class<?>, Class<?>>();
+        if (!annotations.isJakartaEnabled()) {
+            return Map.of();
+        }
         try {
             for (var url : Collections.list(loader.getResources(JpaConverter.CONVERTER_INDEX))) {
                 try (var reader = new BufferedReader(new InputStreamReader(url.openStream(), StandardCharsets.UTF_8))) {
@@ -223,8 +245,7 @@ final class ConverterResolver {
         } catch (ClassNotFoundException e) {
             return;
         }
-        var converter = converterClass.getAnnotation(Converter.class);
-        if (converter == null || !converter.autoApply()) {
+        if (!JakartaMappingSource.isAutoApplied(converterClass)) {
             return;
         }
         var problem = findProblem(converterClass);

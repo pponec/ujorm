@@ -3,6 +3,14 @@ The Ujorm release notes
 *******************************
 
 release 3.0.7-SNAPSHOT (?)
++ CORE: New mapping annotations of the package org.ujorm.annotation, an alternative of the Jakarta Persistence ones: @UEntity, @UTable, @UId, @UColumn, @UManyToOne, @UJoinColumn, @UTransient, @UEnumerated (with UEnumType) and @UConvert. They carry only the attributes Ujorm reads.
++ CORE: The jakarta.persistence API is optional at runtime; its annotations are read only when the API is available. Both annotation sets stay fully supported; an element carrying both variants of an annotation with different values is rejected when the domain model is built.
++ CORE: @UConvert accepts a Ujorm DbConverter (no Jakarta needed) or a JPA AttributeConverter. The auto-applied converters stay a JPA feature, they are skipped without the API.
++ CORE: The generated handler and its MODEL_HASH don't depend on the annotation set.
++ META: The APT processor generates the Meta* class for @UEntity and @UTable, and it skips a field annotated by @UTransient.
++ ORM: Fix a foreign key kept as a raw value (e.g. @JoinColumn Long cityId), which failed when its EntityManager was created; it is mapped as a common column now.
++ API: Removed the deprecated annotations of the package org.ujorm.orm.annot (UColumn, UTable, UComment).
++ Documentation: README section Ujorm Annotations (without Jakarta).
 
 release 3.0.6 (2026-11-20)
 + ORM: Support for JPA attribute converters: @Convert for one attribute, @Converter(autoApply = true) for every attribute of an application type. A null value never reaches a converter. An invalid declaration fails when the domain model is built.

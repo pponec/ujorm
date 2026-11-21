@@ -118,6 +118,10 @@ public class Employee {
 }
 ```
 
+The Ujorm alternatives `@UEntity`, `@UTable`, `@UId`, `@UColumn`, `@UManyToOne`, `@UJoinColumn`, `@UTransient`,
+`@UEnumerated` and `@UConvert` (package `org.ujorm.annotation` in `ujo-core`) make `jakarta.persistence` optional at runtime;
+the Jakarta annotations are read only through `JakartaMappingSource`, which is loaded only when the API is available.
+
 Generated files appear in `/target/generated-sources/`. APT is triggered automatically by `./mvnw clean compile`.
 
 The APT also writes `META-INF/ujorm/entities.lst`, an index of the discovered entities consumed by

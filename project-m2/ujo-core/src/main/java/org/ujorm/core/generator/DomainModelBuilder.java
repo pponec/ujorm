@@ -15,7 +15,6 @@
  */
 package org.ujorm.core.generator;
 
-import jakarta.persistence.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.ujorm.tools.Check;
@@ -26,8 +25,19 @@ import java.util.*;
 
 class DomainModelBuilder {
 
+    /** Reader of the mapping annotations */
+    private final MappingAnnotations annotations;
     /** Resolver of the value converters */
-    private final ConverterResolver converterResolver = new ConverterResolver();
+    private final ConverterResolver converterResolver;
+
+    DomainModelBuilder() {
+        this(MappingAnnotations.of());
+    }
+
+    DomainModelBuilder(@NotNull MappingAnnotations annotations) {
+        this.annotations = annotations;
+        this.converterResolver = new ConverterResolver(annotations);
+    }
 
     /**
      * Factory method to create a BeanModel instance.
@@ -37,13 +47,13 @@ class DomainModelBuilder {
      */
     public DomainModel build(Class<?> domainClass) {
         var properties = createPropertyModel(domainClass);
-        var database = TableIdentifier.of(domainClass);
+        var database = TableIdentifier.of(domainClass, annotations);
         return new DomainModel(domainClass, database, properties);
     }
 
     /**
      * Creates a list of DomainPropertyModel for the given class (Bean or Record).
-     * Parses JPA annotations to populate database column names, primary keys, and nullability.
+     * Parses the mapping annotations (Ujorm or JPA) to populate database column names, primary keys, and nullability.
      * Traverses the class hierarchy to include inherited properties.
      * <p>
      * A getter is sufficient for a bean property here, so this model is intentionally a superset
@@ -60,7 +70,7 @@ class DomainModelBuilder {
             return Arrays.stream(beanOrRecord.getRecordComponents())
                     .map(c -> {
                         var field = findField(beanOrRecord, c.getName());
-                        if (field == null || field.isAnnotationPresent(Transient.class)) return null;
+                        if (field == null || annotations.isTransient(field)) return null;
                         return createModel(c.getName(), c.getType(), c.getName(), null, field);
                     })
                     .filter(Objects::nonNull)
@@ -76,7 +86,7 @@ class DomainModelBuilder {
                 if (Modifier.isStatic(mods)
                         || field.isSynthetic()
                         || Modifier.isTransient(mods)
-                        || field.isAnnotationPresent(Transient.class)) {
+                        || annotations.isTransient(field)) {
                     continue;
                 }
                 var suffix = capitalize(field.getName());
@@ -99,7 +109,7 @@ class DomainModelBuilder {
     }
 
     /**
-     * Helper to create the model and extract values from JPA annotations.
+     * Helper to create the model and extract values from the mapping annotations.
      *
      * @param name Name of the property.
      * @param type Type of the property.
@@ -109,9 +119,9 @@ class DomainModelBuilder {
      * @return A populated DomainPropertyModel instance.
      */
     private DomainPropertyModel createModel(String name, Class<?> type, String getter, String setter, Field element) {
-        var primaryKey = element.isAnnotationPresent(Id.class);
-        var column = element.getAnnotation(Column.class);
-        var joinColumn = element.getAnnotation(JoinColumn.class);
+        var primaryKey = annotations.isId(element);
+        var column = annotations.column(element);
+        var joinColumn = annotations.joinColumn(element);
         var required = type.isPrimitive() || primaryKey;
         var dbColName = "";
 
@@ -127,8 +137,8 @@ class DomainModelBuilder {
         }
 
         // Check a foreign key:
-        var hasManyToOne = element.isAnnotationPresent(ManyToOne.class);
-        var isTargetEntity = TableIdentifier.isEntity(type);
+        var hasManyToOne = annotations.isManyToOne(element);
+        var isTargetEntity = annotations.isEntity(type);
         var foreignKey = hasManyToOne || joinColumn != null || isTargetEntity;
         var converter = converterResolver.resolve(element, type, primaryKey, foreignKey);
 

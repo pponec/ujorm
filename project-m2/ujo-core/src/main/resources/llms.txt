@@ -96,6 +96,14 @@ public record Point(int x, int y) {}
 // APT generates MetaPoint with Key<Point, Integer> x and y
 ```
 
+## Ujorm Mapping Annotations
+
+The package `org.ujorm.annotation` provides `@UEntity`, `@UTable`, `@UId`, `@UColumn`, `@UManyToOne`,
+`@UJoinColumn`, `@UTransient`, `@UEnumerated` and `@UConvert` - an alternative of the Jakarta Persistence
+annotations, so the `jakarta.persistence` API is not needed at runtime. Both sets are supported;
+an element with both variants of an annotation must declare the same values.
+`@UConvert` accepts a `DbConverter` or a JPA `AttributeConverter`.
+
 ## Notes
 
 - Keys are singletons — compare with `==`, not `.equals()`.
