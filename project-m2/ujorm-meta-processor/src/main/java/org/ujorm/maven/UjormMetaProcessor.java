@@ -16,16 +16,21 @@ import static org.ujorm.maven.UjormMetaProcessor.Const.*;
 
 /**
  * Generates static metamodel helper classes during compilation (APT).
- * Triggered by {@code @Entity} / {@code @Table} (JPA/Jakarta) and by {@code @Domain} (Ujorm).
+ * Triggered by {@code @UEntity} / {@code @UTable} / {@code @Domain} (Ujorm)
+ * and by {@code @Entity} / {@code @Table} (JPA/Jakarta).
  * An auto-applied JPA converter is written to an index for the runtime.
+ * <p>The order of the annotation types has no effect: the processor handles the class once,
+ * whichever of them it carries.
  */
 @SupportedAnnotationTypes({
-        "javax.persistence.Entity",
-        "javax.persistence.Table",
+        "org.ujorm.annotation.UEntity",
+        "org.ujorm.annotation.UTable",
+        "org.ujorm.annotation.Domain",
         "jakarta.persistence.Entity",
         "jakarta.persistence.Table",
         "jakarta.persistence.Converter",
-        "org.ujorm.annotation.Domain"
+        "javax.persistence.Entity",
+        "javax.persistence.Table"
 })
 @SupportedOptions({
         PARAM_PREFIX,
@@ -154,11 +159,14 @@ public class UjormMetaProcessor extends AbstractProcessor {
         }
     }
 
-    /** Returns {@code true} if the element carries {@code @Entity}, {@code @Table}, or {@code @Domain}. */
+    /**
+     * Returns {@code true} if the element carries {@code @Entity}, {@code @Table},
+     * {@code @UEntity}, {@code @UTable}, or {@code @Domain}. The annotations are compared by the simple name.
+     */
     private boolean hasTriggerAnnotation(Element element) {
         for (var mirror : element.getAnnotationMirrors()) {
             var annoName = mirror.getAnnotationType().asElement().getSimpleName().toString();
-            if (annoName.equals("Entity") || annoName.equals("Table") || annoName.equals("Domain")) {
+            if (TRIGGER_ANNOTATIONS.contains(annoName)) {
                 return true;
             }
         }
@@ -228,7 +236,8 @@ public class UjormMetaProcessor extends AbstractProcessor {
         /** Checks if the element has a @Transient annotation. */
         private boolean hasTransientAnnotation(Element element) {
             for (var mirror : element.getAnnotationMirrors()) {
-                if (mirror.getAnnotationType().asElement().getSimpleName().toString().equals("Transient")) {
+                var annoName = mirror.getAnnotationType().asElement().getSimpleName().toString();
+                if (annoName.equals("Transient") || annoName.equals("UTransient")) {
                     return true;
                 }
             }
@@ -349,10 +358,7 @@ public class UjormMetaProcessor extends AbstractProcessor {
 
             result.append("/** Auto-generated metamodel for the {@code ").append(originalName).append("} domain class. */\n");
             result.append("@Generated(\"").append(getClass().getCanonicalName()).append("\")\n");
-            result.append("public abstract class ").append(newClassName).append(" {\n\n");
-
-            result.append("    private static final DomainHandler<").append(originalName)
-                    .append("> meta = DomainHandlerProvider.getHandler(").append(originalName).append(".class);\n\n");
+            result.append("public interface ").append(newClassName).append(" {\n\n");
 
             var validFields = new ArrayList<VariableElement>();
             var currentClass = classElement;
@@ -394,9 +400,13 @@ public class UjormMetaProcessor extends AbstractProcessor {
                     result.append("    /** The {@code ").append(fieldName).append("} property descriptor */\n");
                 }
 
-                result.append("    public static final Key<").append(originalName).append(", ").append(typeName).append("> ")
-                        .append(fieldName).append(" = meta.getKey(\"").append(fieldName).append("\");\n");
+                result.append("    Key<").append(originalName).append(", ").append(typeName).append("> ")
+                        .append(fieldName).append(" = meta().getKey(\"").append(fieldName).append("\");\n");
             }
+
+            result.append("\n    private static DomainHandler<").append(originalName).append("> meta() {\n");
+            result.append("        return DomainHandlerProvider.getHandler(").append(originalName).append(".class);\n");
+            result.append("    }\n");
 
             if (ENABLE_TABLE_ALIAS) {
                 result.append("\n");
@@ -422,5 +432,7 @@ public class UjormMetaProcessor extends AbstractProcessor {
         static final String CONVERTER_INDEX = "META-INF/ujorm/converters.lst";
         /** The JPA annotation of a converter */
         static final String CONVERTER_ANNOTATION = "jakarta.persistence.Converter";
+        /** Simple names of the annotations triggering the generation of a metamodel class */
+        static final Set<String> TRIGGER_ANNOTATIONS = Set.of("UEntity", "UTable", "Domain", "Entity", "Table");
     }
 }

@@ -86,7 +86,7 @@ public class ConverterResolverTest {
         assertError(WithEnumerated.class, "the @Convert and @Enumerated annotations can't be combined");
         assertError(TypeMismatch.class, "converts the type java.lang.Boolean rather than java.lang.String");
         assertError(Unresolved.class, "the type arguments of the converter");
-        assertError(NotConverter.class, "doesn't implement the AttributeConverter");
+        assertError(NotConverter.class, "implements neither the DbConverter nor the AttributeConverter");
         assertError(Hidden.class, "must be a public top-level or static nested class");
         assertError(NoConstructor.class, "with a public constructor without arguments");
         assertError(AttributeName.class, "the attribute name of the @Convert annotation is not supported");

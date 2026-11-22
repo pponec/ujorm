@@ -172,7 +172,7 @@ public class SelectQuery<D> extends AbstractSqlQuery<SelectQuery<D>> {
     /** Add all properties of the main domain objects */
     public SelectQuery<D> columns(boolean includingForeignKeys) {
         for (Key<D,?> key : entityManager.getDomainHandler().getKeyList()) {
-            if (includingForeignKeys || !key.info().foreignKey()) {
+            if (includingForeignKeys || !JdbcUtils.isRelation(key)) {
                 this.builder.column(key);
             }
         }
@@ -343,7 +343,7 @@ public class SelectQuery<D> extends AbstractSqlQuery<SelectQuery<D>> {
             var operator = criterion.getOperator();
             var value = criterion.getRightNode();
             // For a foreign-key filter, bind the related primary key (e.g. City.id) instead of the relation object.
-            var fkPrimaryKey = key.info().foreignKey() ? findRelatedPrimaryKey(key) : null;
+            var fkPrimaryKey = JdbcUtils.isRelation(key) ? findRelatedPrimaryKey(key) : null;
             var jdbcType = JdbcUtils.findJdbcType(fkPrimaryKey != null ? fkPrimaryKey : key);
 
             switch (operator) {

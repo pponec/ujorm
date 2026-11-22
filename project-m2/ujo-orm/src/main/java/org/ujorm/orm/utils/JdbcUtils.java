@@ -63,6 +63,24 @@ public final class JdbcUtils {
         return JDBC.findJdbcType(key);
     }
 
+    /**
+     * The key is a relation to another entity (M:1), which is mapped by the primary key of the entity.
+     * A foreign key kept as a raw value (e.g. {@code @JoinColumn Long cityId}) is a common column instead.
+     */
+    public static boolean isRelation(@NotNull Key<?,?> key) {
+        return key.info().foreignKey() && !isRawValue(key.type());
+    }
+
+    /** A primitive, JDK, Enum or array type can't be an entity, so it is a raw value of a foreign key. */
+    private static boolean isRawValue(@NotNull Class<?> type) {
+        var name = type.getName();
+        return type.isPrimitive()
+                || type.isEnum()
+                || type.isArray()
+                || name.startsWith("java.")
+                || name.startsWith("javax.");
+    }
+
     /** Build a property change set */
     @NotNull
     public static <D> BitSet findChanges(@NotNull D domain, @NotNull D snapshot, @NotNull DomainHandler<D> handler) {

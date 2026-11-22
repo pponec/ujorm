@@ -1,7 +1,7 @@
 # ujorm-meta-processor
 
 > Compile-time annotation processor (APT) for Ujorm3.
-> Generates type-safe Meta* companion classes from JPA/Jakarta or @Domain-annotated entities.
+> Generates type-safe Meta* companion interfaces from JPA/Jakarta or @Domain-annotated entities.
 
 ## Maven
 
@@ -43,8 +43,8 @@ Declare as `provided` scope (compile-time only) and wire into `maven-compiler-pl
 
 ## What it generates
 
-For every class annotated with `@Entity`, `@Table` (JPA/Jakarta), or `@org.ujorm.annotation.Domain`,
-the processor generates a companion `Meta*` class with one static `Key<D, V>` field per domain property.
+For every class annotated with `@Entity`, `@Table` (JPA/Jakarta), `@UEntity`, `@UTable` or `@Domain` (Ujorm),
+the processor generates a companion `Meta*` interface with one static `Key<D, V>` field per domain property.
 
 ### Input entity
 
@@ -69,14 +69,15 @@ public class Employee {
 ### Generated output (`target/generated-sources/annotations/…/MetaEmployee.java`)
 
 ```java
-public class MetaEmployee {
-    private static final DomainHandler<Employee> meta =
-        DomainHandlerProvider.getHandler(Employee.class);
+public interface MetaEmployee {
+    Key<Employee, Long>     id   = meta().getKey("id");
+    Key<Employee, String>   name = meta().getKey("name");
+    Key<Employee, City>     city = meta().getKey("city");
+    Key<Employee, Employee> boss = meta().getKey("boss");
 
-    public static final Key<Employee, Long>     id   = meta.getKey("id");
-    public static final Key<Employee, String>   name = meta.getKey("name");
-    public static final Key<Employee, City>     city = meta.getKey("city");
-    public static final Key<Employee, Employee> boss = meta.getKey("boss");
+    private static DomainHandler<Employee> meta() {
+        return DomainHandlerProvider.getHandler(Employee.class);
+    }
 }
 ```
 

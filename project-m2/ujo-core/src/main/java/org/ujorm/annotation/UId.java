@@ -1,5 +1,5 @@
 /*
- *  Copyright 2020-2026 Pavel Ponec
+ *  Copyright 2026-2026 Pavel Ponec
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -13,31 +13,25 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
+package org.ujorm.annotation;
 
-package org.ujorm.orm.annot;
-
-
+import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Use the annotation to mark a Key static field like XML Attribute.
- * @deprecated Annotation is not implemented yet.
+ * Marks an attribute holding the database identifier of a row, known as the primary key.
+ * <p>An Ujorm alternative of the Jakarta Persistence {@code @Id}: a domain class can use it
+ * without the {@code jakarta.persistence} API on the classpath. Both variants are supported;
+ * an element carrying both of them must declare the same values.
+ * <p>It has no attributes, like the {@code @Id}.
+ *
+ * @since 3.0.7
  */
-@Deprecated
-@Retention(value=RetentionPolicy.RUNTIME)
-@Target({ElementType.FIELD, ElementType.TYPE})
-public @interface UTable {
-
-    /** A String for the NULL value. */
-    String NULL = "";
-
-    /** A named parameter for the database name. Default value is taken from a related key name. */
-    String name() default NULL;
-
-    /** Name of schema. If the value is empty than a default database schema is used.
-     */
-    String schema() default NULL;
+@Documented
+@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.FIELD)
+public @interface UId {
 }

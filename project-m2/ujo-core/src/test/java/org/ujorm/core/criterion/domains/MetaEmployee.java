@@ -5,12 +5,14 @@ import org.ujorm.core.DomainHandlerProvider;
 import org.ujorm.core.Key;
 
 /** Auto-generated metamodel for Employee */
-public abstract class MetaEmployee {
+public interface MetaEmployee {
 
-    private static final DomainHandler<Employee> meta = DomainHandlerProvider.getHandler(Employee.class);
+    Key<Employee, Long> id = meta().getKey("id");
+    Key<Employee, String> name = meta().getKey("name");
+    Key<Employee, City> city = meta().getKey("city");
+    Key<Employee, Employee> boss = meta().getKey("boss");
 
-    public static final Key<Employee, Long> id = meta.getKey("id");
-    public static final Key<Employee, String> name = meta.getKey("name");
-    public static final Key<Employee, City> city = meta.getKey("city");
-    public static final Key<Employee, Employee> boss = meta.getKey("boss");
+    private static DomainHandler<Employee> meta() {
+        return DomainHandlerProvider.getHandler(Employee.class);
+    }
 }

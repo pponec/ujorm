@@ -20,9 +20,11 @@ import org.jetbrains.annotations.Nullable;
 
 /**
  * Converts a domain value to its JDBC representation and back.
- * <p>Internal API: an application provides a JPA {@code AttributeConverter} instead.
+ * <p>An application can assign an implementation by the {@code @UConvert} annotation,
+ * which needs no Jakarta Persistence API, or provide a JPA {@code AttributeConverter} instead.
  * A {@code null} value never reaches the converter; it means the SQL {@code NULL}.
- * An implementation must be stateless and thread-safe.
+ * An implementation must be stateless and thread-safe, it requires a public no-argument constructor,
+ * and two instances of the same class should be equal, so that two columns with the converter can be compared.
  *
  * @param <V> Type of the domain value
  * @param <D> Type of the database value passed to the JDBC driver
