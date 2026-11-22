@@ -11,7 +11,8 @@ release 3.0.7-SNAPSHOT (?)
 + META: The APT processor generates the Meta* class for @UEntity and @UTable, and it skips a field annotated by @UTransient.
 + ORM: Fix a foreign key kept as a raw value (e.g. @JoinColumn Long cityId), which failed when its EntityManager was created; it is mapped as a common column now.
 + API: Removed the deprecated annotations of the package org.ujorm.orm.annot (UColumn, UTable, UComment).
-+ Documentation: README section Ujorm Annotations (without Jakarta).
++ Documentation: README section Ujorm Annotations (without Jakarta), a migration note for the Meta interfaces (extends -> implements), the optional jakarta.persistence-api dependency (scope provided) and the Ujorm alternatives next to the Jakarta annotations.
++ Documentation: llms.txt describes how to get all keys of a domain class.
 
 release 3.0.6 (2026-11-20)
 + ORM: Support for JPA attribute converters: @Convert for one attribute, @Converter(autoApply = true) for every attribute of an application type. A null value never reaches a converter. An invalid declaration fails when the domain model is built.
