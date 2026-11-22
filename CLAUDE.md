@@ -16,7 +16,7 @@ measured on 3.0.6) with zero external dependencies.
 Multi-module Maven project (Java 17, Maven 3.8+):
 
 ```
-ProjectUjorm (root pom.xml, version 3.0.6)
+ProjectUjorm (root pom.xml, version 3.0.8-SNAPSHOT)
 ├── project-m2/
 │   ├── ujo-tools/              — SQL builders, JDBC helpers, type system
 │   ├── ujo-core/               — Type-safe Key pattern, DomainHandler
