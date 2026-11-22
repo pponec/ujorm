@@ -2,7 +2,7 @@ The Ujorm release notes
 (Maven groupId: org.ujorm)
 *******************************
 
-release 3.0.7-SNAPSHOT (?)
+release 3.0.7 (2026-11-22)
 + META: The APT processor generates the Meta* type as an interface (was an abstract class); the keys are its constants and the handler comes from a private static method meta(). Usage like MetaEmployee.name is unchanged, only an 'extends MetaXxx' must become 'implements'.
 + CORE: New mapping annotations of the package org.ujorm.annotation, an alternative of the Jakarta Persistence ones: @UEntity, @UTable, @UId, @UColumn, @UManyToOne, @UJoinColumn, @UTransient, @UEnumerated (with UEnumType) and @UConvert. They carry only the attributes Ujorm reads.
 + CORE: The jakarta.persistence API is optional at runtime; its annotations are read only when the API is available. Both annotation sets stay fully supported; an element carrying both variants of an annotation with different values is rejected when the domain model is built.
