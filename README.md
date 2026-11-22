@@ -62,7 +62,7 @@ Full metrics and methodology are available at 👉 [GitHub: orm-benchmarks](http
 Ujorm3 provides a specialized toolset for different levels of complexity. Choose the one that best fits your current task:
 
 ### 1. EntityManager (Simple CRUD by ID)
-The fastest way to handle single-table operations by primary key. It requires no SQL writing and supports standard Jakarta annotations.
+The fastest way to handle single-table operations by primary key. It requires no SQL writing and supports standard Jakarta annotations, or their [Ujorm alternatives](#ujorm-annotations-without-jakarta).
 
 ```java
 /** Simple CRUD operations for Entities */
@@ -246,9 +246,9 @@ The `ujo-orm` module maps two kinds of classes:
 * **Java Record** — values are assigned by the canonical constructor.
 * **Mutable JavaBean** — a public no-argument constructor, and a getter **and a setter** for every mapped property.
 
-Properties are derived from the **declared fields** rather than from JavaBeans introspection, so a derived getter without a matching field is not mapped at all. A field is excluded from the mapping by the `@Transient` annotation or by the `transient` modifier.
+Properties are derived from the **declared fields** rather than from JavaBeans introspection, so a derived getter without a matching field is not mapped at all. A field is excluded from the mapping by the `@Transient` (or `@UTransient`) annotation or by the `transient` modifier.
 
-A read-only property — a field with a getter and no setter — is a valid JavaBeans construct and the `ujo-core` metamodel supports it, so a non-persistent class annotated by `@Domain` can read it. The `ujo-orm` module cannot map it as a column, because reading an entity from a database means assigning its values; such an entity is rejected when its `EntityManager` is created. Add the setter, or exclude the field by `@Transient`.
+A read-only property — a field with a getter and no setter — is a valid JavaBeans construct and the `ujo-core` metamodel supports it, so a non-persistent class annotated by `@Domain` can read it. The `ujo-orm` module cannot map it as a column, because reading an entity from a database means assigning its values; such an entity is rejected when its `EntityManager` is created. Add the setter, or exclude the field by `@Transient` (or `@UTransient`).
 
 The check covers the **own properties** of the entity. An entity behind a relation keeps its own contract: a read-only property of the target reports itself on the first row mapping by an `UnsupportedOperationException` naming the property in full.
 
@@ -301,11 +301,13 @@ public class Employee {
 * Both annotation sets are fully supported and can be mixed in one project. An element carrying both variants
   of an annotation must declare the same values, otherwise building the domain model fails with an error.
 * The Jakarta annotations are read only when `jakarta.persistence` is on the classpath of Ujorm.
+  Ujorm declares the `jakarta.persistence-api` dependency in the `provided` scope, so an application
+  using the Jakarta annotations adds the API to its own dependencies.
 * `@UConvert` accepts a Ujorm `DbConverter`, which needs no Jakarta, or a JPA `AttributeConverter`.
   A `DbConverter` must be stateless, and two instances of its class should be equal (`equals()`, `hashCode()`)
   so that two columns with the converter can be compared in a query.
 * The auto-applied converters (`@Converter(autoApply = true)`) are a JPA feature only.
-* The annotation processor generates the `Meta*` class for `@UEntity` and `@UTable` too.
+* The annotation processor generates the `Meta*` interface for `@UEntity` and `@UTable` too.
 * The generated handler, and so its `MODEL_HASH`, is the same for both annotation sets.
 
 See [UAnnotationOrmTest.java](project-m2/ujo-orm/src/test/java/org/ujorm/orm/uannotation/UAnnotationOrmTest.java) for an example.
@@ -349,6 +351,10 @@ public interface MetaEmployee {
     }
 }
 ```
+
+**Migration from 3.0.6:** the `Meta*` type was an abstract class before the release 3.0.7.
+The usage like `MetaEmployee.name` is unchanged; only a class extending the generated type must change
+`extends MetaEmployee` to `implements MetaEmployee`.
 
 Metamodel keys are singletons.
 Chaining them allows for strictly type-safe paths (e.g., `MetaEmployee.city, MetaCity.name`).
@@ -399,15 +405,18 @@ Ujorm3 requires **Java 17 or higher**.
     <dependency>
         <groupId>org.ujorm</groupId>
         <artifactId>ujo-core</artifactId>
-        <version>3.0.5</version>
+        <version>3.0.7</version>
     </dependency>
     <dependency>
         <groupId>org.ujorm</groupId>
         <artifactId>ujo-orm</artifactId>
-        <version>3.0.5</version>
+        <version>3.0.7</version>
     </dependency>
 </dependencies>
 ```
+
+The `jakarta.persistence-api` dependency is optional: add it to your project only when your domain classes
+use the Jakarta annotations; the [Ujorm annotations](#ujorm-annotations-without-jakarta) need no extra dependency.
 
 However, if you prefer a safer, strongly-typed coding style, you can optionally configure the `maven-compiler-plugin` to include the Ujorm3 Meta Processor.
 
@@ -425,7 +434,7 @@ However, if you prefer a safer, strongly-typed coding style, you can optionally 
                     <path>
                         <groupId>org.ujorm</groupId>
                         <artifactId>ujorm-meta-processor</artifactId>
-                        <version>3.0.5</version>
+                        <version>3.0.7</version>
                     </path>
                 </annotationProcessorPaths>
                 <compilerArgs>
@@ -458,8 +467,9 @@ In addition, the project includes automated integration tests for basic CRUD ope
   No, Ujorm3 works with stateless data structures and `Serializable` is not required.
 
 * **Is `@JoinColumn` required?**<br/>
-  No, it is optional — a relation is recognized by the `@Table` or `@Entity` annotation on the attribute type.
-  Use `@JoinColumn` to name the foreign-key column explicitly, or to map a foreign key kept as a raw value.
+  No, it is optional — a relation is recognized by the `@Table` or `@Entity` annotation
+  (or `@UTable`, `@UEntity`) on the attribute type.
+  Use `@JoinColumn` (or `@UJoinColumn`) to name the foreign-key column explicitly, or to map a foreign key kept as a raw value.
 
 * **Are core components thread-safe?**<br/>
   Yes, `EntityManager` and `Meta` classes are stateless and thread-safe.
